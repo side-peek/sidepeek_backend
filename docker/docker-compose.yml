@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  sidepeek-db:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: ${DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: ${TZ}
+    ports:
+      - "${DB_PORT}:3306"
+
+  sidepeek-test-db:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: ${TEST_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: ${TZ}
+    ports:
+      - "${TEST_DB_PORT}:3306"
