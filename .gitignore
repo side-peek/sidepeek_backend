@@ -189,3 +189,4 @@ Temporary Items
 
 # Custom ignores
 .env
+.idea/
