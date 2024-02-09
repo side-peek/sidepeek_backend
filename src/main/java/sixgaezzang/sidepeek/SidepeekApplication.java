@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SidepeekApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SidepeekApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SidepeekApplication.class, args);
+    }
 
 }
