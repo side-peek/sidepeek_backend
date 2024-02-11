@@ -96,7 +96,7 @@ public class User extends BaseTimeEntity {
     }
 
     private void validateLoginCriteria(LoginType provider, String password, String githubUrl) {
-        if (provider.isBasicType()) {
+        if (provider.isEmailType()) {
             validateRegex(password, PASSWORD_PATTERN,
                 "비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상이여야 합니다.");
         } else {

@@ -2,12 +2,12 @@ package sixgaezzang.sidepeek.users.domain;
 
 public enum LoginType {
     GITHUB,
-    BASIC,
+    EMAIL,
     KAKAO,
     GOOGLE;
 
-    boolean isBasicType() {
-        return this == BASIC;
+    boolean isEmailType() {
+        return this == EMAIL;
     }
 
     public boolean isGitHubType() {
