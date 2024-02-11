@@ -42,7 +42,7 @@ public class User extends BaseTimeEntity {
     private String nickname;
 
     @Column(name = "provider", length = 50, nullable = false)
-    private String provider;
+    private LoginType loginType;
 
     @Column(name = "email", length = 50, nullable = false, unique = true)
     private String email;
@@ -71,7 +71,8 @@ public class User extends BaseTimeEntity {
     private String blogUrl;
 
     @Builder
-    public User(String nickname, String provider, String email, String password, String githubUrl) {
+    public User(String nickname, LoginType provider, String email, String password,
+        String githubUrl) {
         validateConstructorArguments(nickname, provider, email, password, githubUrl);
 
         this.nickname = nickname;
@@ -81,25 +82,24 @@ public class User extends BaseTimeEntity {
         this.githubUrl = githubUrl;
     }
 
-    private void validateConstructorArguments(String nickname, String provider, String email,
+    private void validateConstructorArguments(String nickname, LoginType provider, String email,
         String password, String githubUrl) {
         validateNickname(nickname);
         validateRegex(email, EMAIL_PATTERN, "이메일 형식이 올바르지 않습니다.");
         validateLoginCriteria(provider, password, githubUrl);
     }
 
-    private void validateLoginCriteria(String provider, String password, String githubUrl) {
-        if (isSocialLogin(provider)) {
-            validateBlank(password, "소셜 로그인 사용자는 비밀번호를 입력할 수 없습니다.");
-            validateRegex(githubUrl, URI_PATTERN, "유효하지 않은 URL 형식입니다.");
-        } else {
+    private void validateLoginCriteria(LoginType provider, String password, String githubUrl) {
+        if (provider.isBasicType()) {
             validateRegex(password, PASSWORD_PATTERN,
                 "비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상 50자 이하여야 합니다.");
+        } else {
+            validateBlank(password, "소셜 로그인 사용자는 비밀번호를 입력할 수 없습니다.");
         }
-    }
 
-    private boolean isSocialLogin(String provider) {
-        return isNotBlank(provider);
+        if (provider.isGitHubType()) {
+            validateRegex(githubUrl, URI_PATTERN, "GitHub URL 형식이 올바르지 않습니다.");
+        }
     }
 
     private void validateNickname(String nickname) {
