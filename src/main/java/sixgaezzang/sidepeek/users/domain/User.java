@@ -5,6 +5,8 @@ import static io.micrometer.common.util.StringUtils.isNotBlank;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -55,7 +57,8 @@ public class User extends BaseTimeEntity {
     private String profileImageUrl;
 
     @Column(name = "job", length = 30)
-    private String job;
+    @Enumerated(EnumType.STRING)
+    private Job job;
 
     @Column(name = "career", length = 30)
     private String career;
