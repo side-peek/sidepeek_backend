@@ -190,3 +190,4 @@ Temporary Items
 # Custom ignores
 .env
 .idea/
+sidepeek_backend_secret/
