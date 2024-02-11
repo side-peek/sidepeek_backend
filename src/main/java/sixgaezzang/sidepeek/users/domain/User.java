@@ -82,7 +82,7 @@ public class User extends BaseTimeEntity {
         validateConstructorArguments(nickname, provider, email, password, githubUrl);
 
         this.nickname = nickname;
-        this.provider = provider;
+        this.loginType = provider;
         this.email = email;
         this.password = password;
         this.githubUrl = githubUrl;
