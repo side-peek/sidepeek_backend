@@ -61,7 +61,8 @@ public class User extends BaseTimeEntity {
     private Job job;
 
     @Column(name = "career", length = 30)
-    private String career;
+    @Enumerated(EnumType.STRING)
+    private Career career;
 
     @Column(name = "github_url", columnDefinition = "TEXT")
     private String githubUrl;
