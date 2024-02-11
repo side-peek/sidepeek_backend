@@ -29,7 +29,7 @@ public class User extends BaseTimeEntity {
         "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+[.][0-9A-Za-z]+$");
 
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(
-        "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@!%*#?&^]).{8,100}$");
+        "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@!%*#?&^]).{8,}$");
 
     private static final Pattern URI_PATTERN = Pattern.compile(
         "^(https?)://([^:/\\s]+)(:([^/]*))?((/[^\\s/]+)*)?/?([^#\\s?]*)(\\?([^#\\s]*))?(#(\\w*))?$");
@@ -98,7 +98,7 @@ public class User extends BaseTimeEntity {
     private void validateLoginCriteria(LoginType provider, String password, String githubUrl) {
         if (provider.isBasicType()) {
             validateRegex(password, PASSWORD_PATTERN,
-                "비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상 50자 이하여야 합니다.");
+                "비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상이여야 합니다.");
         } else {
             validateBlank(password, "소셜 로그인 사용자는 비밀번호를 입력할 수 없습니다.");
         }
