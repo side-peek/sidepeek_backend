@@ -11,14 +11,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 import sixgaezzang.sidepeek.common.BaseTimeEntity;
 
 @Entity
 @Table(name = "users")
+@SQLRestriction("deleted_at IS NOT NULL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
 
@@ -69,6 +72,9 @@ public class User extends BaseTimeEntity {
 
     @Column(name = "blog_url", columnDefinition = "TEXT")
     private String blogUrl;
+
+    @Column(name = "deleted_at", columnDefinition = "TIMESTAMP")
+    private LocalDateTime deletedAt;
 
     @Builder
     public User(String nickname, LoginType provider, String email, String password,
