@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'checkstyle'
+    id 'jacoco'
 }
 
 group = 'sixgaezzang'
@@ -46,6 +47,13 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+
+    finalizedBy jacocoTestReport
+}
+
+// Checkstyle
+checkstyle {
+    maxWarnings = 0
 }
 
 tasks.withType(Checkstyle) {
@@ -55,6 +63,54 @@ tasks.withType(Checkstyle) {
     }
 }
 
-checkstyle {
-    maxWarnings = 0
+// Jacoco
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+jacocoTestReport {
+    reports {
+        html.required = true
+        xml.required = true
+        csv.required = false
+    }
+
+    finalizedBy jacocoTestCoverageVerification
+    dependsOn test
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = 'CLASS'
+
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+
+            includes = [
+                'sixgaezzang/sidepeek/**/service/*'
+            ]
+        }
+
+        rule {
+            element = 'METHOD'
+
+            limit {
+                counter = 'LINE'
+                value = 'TOTALCOUNT'
+                maximum = 50
+            }
+        }
+    }
+
+    dependsOn jacocoTestReport
 }
