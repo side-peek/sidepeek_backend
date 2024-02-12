@@ -2,7 +2,7 @@ name: SidePeek CI with Gradle
 
 on:
   push: 
-    branches: [ "dev" ]
+    branches: [ "chore/**" ]
   # pull_request:
   #   branches: [ "main", "dev" ]
 
