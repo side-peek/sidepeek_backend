@@ -24,7 +24,7 @@ import sixgaezzang.sidepeek.common.BaseTimeEntity;
 
 @Entity
 @Table(name = "users")
-@SQLRestriction("deleted_at IS NOT NULL")
+@SQLRestriction("deleted_at IS NULL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
 
