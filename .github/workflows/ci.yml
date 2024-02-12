@@ -1,8 +1,10 @@
 name: SidePeek CI with Gradle
 
 on:
-  pull_request:
-    branches: [ "main", "dev" ]
+  push: 
+    branches: [ "dev" ]
+  # pull_request:
+  #   branches: [ "main", "dev" ]
 
 jobs:
   build:
@@ -10,17 +12,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4     
       
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'corretto'
-        
+
+    - name: Set up MySQL
+      uses: samin/mysql-action@v1.3
+      with:
+        mysql database: ${{ secrets.TEST_DATABASE }}
+        mysql user: ${{ secrets.TEST_DB_USER }}
+        mysql password: ${{ secrets.TEST_DB_PASSWORD }}
+    
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
     - name: Build with Gradle
       run: ./gradlew build
-
+    
