@@ -7,6 +7,7 @@ import static sixgaezzang.sidepeek.common.ValidationUtils.validateNotBlank;
 import static sixgaezzang.sidepeek.common.ValidationUtils.validatePassword;
 import static sixgaezzang.sidepeek.common.ValidationUtils.validateURI;
 
+import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,7 +16,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -38,7 +38,7 @@ public class User extends BaseTimeEntity {
     @Column(name = "nickname", length = MAX_NICKNAME_LENGTH, nullable = false, unique = true)
     private String nickname;
 
-    @Column(name = "provider", length = 50, nullable = false)
+    @Column(name = "provider", length = 50, nullable = false, columnDefinition = "VARCHAR(50)")
     private LoginType loginType;
 
     @Column(name = "email", length = 50, nullable = false, unique = true)
@@ -53,11 +53,11 @@ public class User extends BaseTimeEntity {
     @Column(name = "profile_image_url", columnDefinition = "TEXT")
     private String profileImageUrl;
 
-    @Column(name = "job", length = 30)
+    @Column(name = "job", length = 30, columnDefinition = "VARCHAR(30)")
     @Enumerated(EnumType.STRING)
     private Job job;
 
-    @Column(name = "career", length = 30)
+    @Column(name = "career", length = 30, columnDefinition = "VARCHAR(30)")
     @Enumerated(EnumType.STRING)
     private Career career;
 
