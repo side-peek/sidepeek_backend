@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,5 +37,11 @@ public class ProjectFile {
     @Column(name = "url", nullable = false, columnDefinition = "TEXT")
     private String url;
 
-    // 생성자
+    @Builder
+    public ProjectFile(Project project, FileType type, String url) {
+        this.project = project;
+        this.type = type;
+        this.url = url;
+    }
+
 }
