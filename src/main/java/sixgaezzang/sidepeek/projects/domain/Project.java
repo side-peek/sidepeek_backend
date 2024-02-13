@@ -40,8 +40,8 @@ public class Project extends BaseTimeEntity {
     @Column(name = "end_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime endDate;
 
-    @Column(name = "thumbnail_image_url", columnDefinition = "TEXT")
-    private String thumbnailImageUrl;
+    @Column(name = "thumbnail_url", columnDefinition = "TEXT")
+    private String thumbnailUrl;
 
     @Column(name = "deploy_url", columnDefinition = "TEXT")
     private String deployUrl;
@@ -66,15 +66,14 @@ public class Project extends BaseTimeEntity {
 
     @Builder
     public Project(String name, String subName, String overview, LocalDateTime startDate, LocalDateTime endDate,
-                   String thumbnailImageUrl, String deployUrl, String githubUrl, String description,
-                   String troubleshooting,
-                   Long likeCount, Long viewCount, LocalDateTime deletedAt) {
+                   String thumbnailUrl, String deployUrl, String githubUrl, String description,
+                   String troubleshooting, LocalDateTime deletedAt) {
         this.name = name;
         this.subName = subName;
         this.overview = overview;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.thumbnailImageUrl = thumbnailImageUrl;
+        this.thumbnailUrl = thumbnailUrl;
         this.deployUrl = deployUrl;
         this.githubUrl = githubUrl;
         this.description = description;
