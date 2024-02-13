@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import sixgaezzang.sidepeek.common.BaseTimeEntity;
@@ -25,6 +26,7 @@ import sixgaezzang.sidepeek.common.BaseTimeEntity;
 @Entity
 @Table(name = "users")
 @SQLRestriction("deleted_at IS NULL")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
 
