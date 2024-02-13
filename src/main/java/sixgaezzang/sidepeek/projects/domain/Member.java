@@ -21,7 +21,7 @@ import sixgaezzang.sidepeek.users.domain.User;
 @Table(name = "project_member")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class ProjectMember {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class ProjectMember {
 
     @Column(name = "authority", nullable = false, length = 15, columnDefinition = "VARCHAR")
     @Enumerated(EnumType.STRING)
-    private ProjectAuthority authority;
+    private AuthorityType authority;
 
     @Column(name = "role", nullable = false, length = 15)
     private String role;
@@ -46,7 +46,7 @@ public class ProjectMember {
     private String nickname;
 
     @Builder
-    public ProjectMember(User user, Project project, ProjectAuthority authority, String role, String nickname) {
+    public Member(User user, Project project, AuthorityType authority, String role, String nickname) {
         this.user = user;
         this.project = project;
         this.authority = authority;
