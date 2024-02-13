@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.projects.domain.file;
+package sixgaezzang.sidepeek.projects.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +14,6 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sixgaezzang.sidepeek.projects.domain.Project;
 
 @Entity
 @Table(name = "files")
