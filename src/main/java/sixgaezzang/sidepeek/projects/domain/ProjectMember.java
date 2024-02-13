@@ -35,7 +35,7 @@ public class ProjectMember {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @Column(name = "authority", nullable = false, length = 15, columnDefinition = "VARCHAR(15)")
+    @Column(name = "authority", nullable = false, length = 15, columnDefinition = "VARCHAR")
     @Enumerated(EnumType.STRING)
     private ProjectAuthority authority;
 

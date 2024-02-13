@@ -30,7 +30,7 @@ public class ProjectFile {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @Column(name = "type", nullable = false, length = 30, columnDefinition = "VARCHAR(30)")
+    @Column(name = "type", nullable = false, length = 30, columnDefinition = "VARCHAR")
     @Enumerated(EnumType.STRING)
     private FileType type;
 
