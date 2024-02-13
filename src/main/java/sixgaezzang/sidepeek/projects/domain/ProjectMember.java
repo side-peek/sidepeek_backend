@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -43,6 +44,15 @@ public class ProjectMember {
 
     @Column(name = "nickname", nullable = false, length = 20)
     private String nickname;
+
+    @Builder
+    public ProjectMember(User user, Project project, ProjectAuthority authority, String role, String nickname) {
+        this.user = user;
+        this.project = project;
+        this.authority = authority;
+        this.role = role;
+        this.nickname = nickname;
+    }
 
     // 생성자
 }
