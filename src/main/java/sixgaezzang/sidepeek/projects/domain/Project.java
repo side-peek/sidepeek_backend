@@ -78,8 +78,8 @@ public class Project extends BaseTimeEntity {
         this.githubUrl = githubUrl;
         this.description = description;
         this.troubleshooting = troubleshooting;
-        this.likeCount = likeCount;
-        this.viewCount = viewCount;
+        this.likeCount = 0L;
+        this.viewCount = 0L;
         this.deletedAt = deletedAt;
     }
 
