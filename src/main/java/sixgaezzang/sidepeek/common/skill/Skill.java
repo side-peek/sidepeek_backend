@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,12 +24,6 @@ public class Skill {
     private String name;
 
     @Column(name = "icon_image_url", nullable = false, columnDefinition = "TEXT")
-    private String url;
-
-    @Builder
-    public Skill(String name, String url) {
-        this.name = name;
-        this.url = url;
-    }
+    private String iconImageUrl;
 
 }
