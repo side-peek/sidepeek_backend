@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.projects.domain;
+package sixgaezzang.sidepeek.projects.domain.file;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "files")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class File {
+public class ProjectFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,5 +30,11 @@ public class File {
     @Column(name = "url", nullable = false, columnDefinition = "TEXT")
     private String url;
 
-    // 생성자
+    @Builder
+    public ProjectFile(Long id, FileType type, String url) {
+        this.id = id;
+        this.type = type;
+        this.url = url;
+    }
+
 }
