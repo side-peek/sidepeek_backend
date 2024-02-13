@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "files")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class ProjectFile {
+public class File {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class ProjectFile {
     private String url;
 
     @Builder
-    public ProjectFile(Project project, FileType type, String url) {
+    public File(Project project, FileType type, String url) {
         this.project = project;
         this.type = type;
         this.url = url;
