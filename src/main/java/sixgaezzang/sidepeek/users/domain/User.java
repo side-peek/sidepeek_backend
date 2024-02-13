@@ -7,7 +7,6 @@ import static sixgaezzang.sidepeek.common.ValidationUtils.validateNotBlank;
 import static sixgaezzang.sidepeek.common.ValidationUtils.validatePassword;
 import static sixgaezzang.sidepeek.common.ValidationUtils.validateURI;
 
-import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
