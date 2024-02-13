@@ -9,10 +9,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
-import sixgaezzang.sidepeek.common.BaseTimeEntity;
+import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 
 @Entity
 @Table(name = "project")
@@ -64,5 +65,24 @@ public class Project extends BaseTimeEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    // 생성자
+    @Builder
+    public Project(String name, String subName, String overview, LocalDate startDate, LocalDate endDate,
+                   String thumbnailImageUrl, String deployUrl, String githubUrl, String description,
+                   String troubleshooting,
+                   Long likeCount, Long viewCount, LocalDateTime deletedAt) {
+        this.name = name;
+        this.subName = subName;
+        this.overview = overview;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.thumbnailImageUrl = thumbnailImageUrl;
+        this.deployUrl = deployUrl;
+        this.githubUrl = githubUrl;
+        this.description = description;
+        this.troubleshooting = troubleshooting;
+        this.likeCount = likeCount;
+        this.viewCount = viewCount;
+        this.deletedAt = deletedAt;
+    }
+
 }
