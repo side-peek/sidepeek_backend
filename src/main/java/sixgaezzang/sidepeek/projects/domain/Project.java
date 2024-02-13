@@ -1,6 +1,5 @@
 package sixgaezzang.sidepeek.projects.domain;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,10 +35,10 @@ public class Project extends BaseTimeEntity {
     private String overview;
 
     @Column(name = "start_date", columnDefinition = "TIMESTAMP")
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @Column(name = "end_date", columnDefinition = "TIMESTAMP")
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @Column(name = "thumbnail_image_url", columnDefinition = "TEXT")
     private String thumbnailImageUrl;
@@ -66,7 +65,7 @@ public class Project extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public Project(String name, String subName, String overview, LocalDate startDate, LocalDate endDate,
+    public Project(String name, String subName, String overview, LocalDateTime startDate, LocalDateTime endDate,
                    String thumbnailImageUrl, String deployUrl, String githubUrl, String description,
                    String troubleshooting,
                    Long likeCount, Long viewCount, LocalDateTime deletedAt) {
