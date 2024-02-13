@@ -10,9 +10,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sixgaezzang.sidepeek.common.Skill;
+import sixgaezzang.sidepeek.common.domain.Skill;
 
 @Entity
 @Table(name = "project_skill")
@@ -34,5 +35,12 @@ public class ProjectSkill {
 
     @Column(name = "category", nullable = false, length = 50)
     private String category;
+
+    @Builder
+    public ProjectSkill(Project project, Skill skill, String category) {
+        this.project = project;
+        this.skill = skill;
+        this.category = category;
+    }
 
 }
