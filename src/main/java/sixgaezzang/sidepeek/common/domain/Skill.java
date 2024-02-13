@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.common;
+package sixgaezzang.sidepeek.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +20,7 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 300)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
     @Column(name = "icon_image_url", nullable = false, columnDefinition = "TEXT")

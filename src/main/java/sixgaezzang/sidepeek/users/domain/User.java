@@ -20,7 +20,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
-import sixgaezzang.sidepeek.common.BaseTimeEntity;
+import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 
 @Entity
 @Table(name = "users")
