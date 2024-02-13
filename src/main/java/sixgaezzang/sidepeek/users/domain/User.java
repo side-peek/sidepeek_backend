@@ -38,7 +38,7 @@ public class User extends BaseTimeEntity {
     @Column(name = "nickname", length = MAX_NICKNAME_LENGTH, nullable = false, unique = true)
     private String nickname;
 
-    @Column(name = "provider", length = 50, nullable = false)
+    @Column(name = "provider", length = 50, nullable = false, columnDefinition = "VARCHAR")
     private LoginType loginType;
 
     @Column(name = "email", length = 50, nullable = false, unique = true)
@@ -53,11 +53,11 @@ public class User extends BaseTimeEntity {
     @Column(name = "profile_image_url", columnDefinition = "TEXT")
     private String profileImageUrl;
 
-    @Column(name = "job", length = 30)
+    @Column(name = "job", length = 30, columnDefinition = "VARCHAR")
     @Enumerated(EnumType.STRING)
     private Job job;
 
-    @Column(name = "career", length = 30)
+    @Column(name = "career", length = 30, columnDefinition = "VARCHAR")
     @Enumerated(EnumType.STRING)
     private Career career;
 
