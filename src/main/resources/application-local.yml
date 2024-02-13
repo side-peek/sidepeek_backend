@@ -1,9 +1,6 @@
 spring:
-    datasource:
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        url: ${LOCAL_DB_URL}
-        username: ${DB_USER}
-        password: ${DB_PASSWORD}
+    config:
+        import: file:./sidepeek_backend_secret/application-datasource-local.yml
     jpa:
         show-sql: true
         open-in-view: false
