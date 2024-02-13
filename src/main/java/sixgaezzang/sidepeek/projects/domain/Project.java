@@ -12,14 +12,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
+import sixgaezzang.sidepeek.common.BaseTimeEntity;
 
 @Entity
 @Table(name = "project")
-@SQLRestriction("deletedAt IS NULL")
+@SQLRestriction("deleted_at IS NULL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-//public class Project extends BaseTimeEntity {
-public class Project {
+public class Project extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
