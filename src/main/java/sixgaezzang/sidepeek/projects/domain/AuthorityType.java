@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.projects.domain;
 
-public enum ProjectAuthority {
+public enum AuthorityType {
     OWNER,
     MEMBER
 }
