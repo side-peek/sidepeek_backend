@@ -10,11 +10,11 @@ import org.springframework.util.Assert;
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public final class ValidationUtils {
 
+    public static final String PASSWORD_REGXP = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@!%*#?&^]).{8,}$";
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGXP);
+
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
         "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+[.][0-9A-Za-z]+$");
-
-    private static final Pattern PASSWORD_PATTERN = Pattern.compile(
-        "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@!%*#?&^]).{8,}$");
 
     private static final Pattern URI_PATTERN = Pattern.compile(
         "^(https?)://([^:/\\s]+)(:([^/]*))?((/[^\\s/]+)*)?/?([^#\\s?]*)(\\?([^#\\s]*))?(#(\\w*))?$");
