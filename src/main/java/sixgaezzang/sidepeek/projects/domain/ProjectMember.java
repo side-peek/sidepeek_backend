@@ -54,5 +54,4 @@ public class ProjectMember {
         this.nickname = nickname;
     }
 
-    // 생성자
 }
