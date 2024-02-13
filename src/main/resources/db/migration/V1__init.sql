@@ -85,6 +85,7 @@ create TABLE IF NOT EXISTS user_skill
     id       BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id  BIGINT NOT NULL,
     skill_id BIGINT NOT NULL,
+    category VARCHAR(50) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (skill_id) REFERENCES skill (id)
 );
