@@ -67,7 +67,7 @@ public class Project extends BaseTimeEntity {
     @Builder
     public Project(String name, String subName, String overview, LocalDateTime startDate, LocalDateTime endDate,
                    String thumbnailUrl, String deployUrl, String githubUrl, String description,
-                   String troubleshooting, LocalDateTime deletedAt) {
+                   String troubleshooting) {
         this.name = name;
         this.subName = subName;
         this.overview = overview;
@@ -80,7 +80,6 @@ public class Project extends BaseTimeEntity {
         this.troubleshooting = troubleshooting;
         this.likeCount = 0L;
         this.viewCount = 0L;
-        this.deletedAt = deletedAt;
     }
 
 }
