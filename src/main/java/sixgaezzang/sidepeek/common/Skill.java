@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.common.skill;
+package sixgaezzang.sidepeek.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
