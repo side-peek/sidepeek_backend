@@ -8,22 +8,24 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "skill")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Skill {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
+    private Long id;
 
     @Column(name = "name", nullable = false, length = 300)
-    protected String name;
+    private String name;
 
     @Column(name = "icon_image_url", nullable = false, columnDefinition = "TEXT")
-    protected String url;
+    private String url;
 
     @Builder
     public Skill(String name, String url) {
