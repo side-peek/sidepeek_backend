@@ -1,10 +1,6 @@
 package sixgaezzang.sidepeek.users.service;
 
-import static sixgaezzang.sidepeek.common.ValidationUtils.validateMaxLength;
-
 import jakarta.persistence.EntityExistsException;
-import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,16 +9,12 @@ import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.Provider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.SignUpRequest;
-import sixgaezzang.sidepeek.users.dto.UserSearchResponse;
-import sixgaezzang.sidepeek.users.dto.UserSummaryResponse;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
-
-    private static final int KEYWORD_MAX_LENGTH = 20;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -46,27 +38,6 @@ public class UserService {
         User saved = userRepository.save(user);
 
         return saved.getId();
-    }
-
-    public UserSearchResponse searchByNickname(String keyword) {
-        List<User> users;
-        if (Objects.isNull(keyword) || keyword.isBlank()) {
-            users = userRepository.findAll();
-        } else {
-            validateMaxLength(keyword, KEYWORD_MAX_LENGTH,
-                "최대 " + KEYWORD_MAX_LENGTH + "자의 키워드로 검색할 수 있습니다.");
-            users = userRepository.findAllByNicknameContaining(keyword);
-        }
-
-        List<UserSummaryResponse> searchResults = users.stream()
-            .map(user -> UserSummaryResponse.builder()
-                .id(user.getId())
-                .nickname(user.getNickname())
-                .profileImageUrl(user.getProfileImageUrl())
-                .build()
-            ).toList();
-
-        return new UserSearchResponse(searchResults);
     }
 
     private void verifyUniqueNickname(SignUpRequest request) {
