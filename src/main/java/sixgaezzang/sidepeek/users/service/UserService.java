@@ -1,14 +1,12 @@
 package sixgaezzang.sidepeek.users.service;
 
 import jakarta.persistence.EntityExistsException;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.users.domain.LoginType;
 import sixgaezzang.sidepeek.users.domain.Password;
+import sixgaezzang.sidepeek.users.domain.Provider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.SignUpRequest;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
@@ -21,27 +19,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public Long signUp(SignUpRequest request) {
-        return signUp(request, Optional.empty());
-    }
-
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public Long signUp(SignUpRequest request, LoginType loginType) {
-        return signUp(request, Optional.of(loginType));
-    }
-
     @Transactional
-    public Long signUp(SignUpRequest request, Optional<LoginType> optionalLoginType) {
+    public Long signUp(SignUpRequest request, Provider provider) {
         verifyUniqueEmail(request);
         verifyUniqueNickname(request);
 
         User.UserBuilder userBuilder = User.builder()
-            .loginType(optionalLoginType.orElse(LoginType.EMAIL))
+            .provider(provider)
             .email(request.email())
             .nickname(request.nickname());
 
-        if (optionalLoginType.isEmpty()) {
+        if (Provider.isBasic(provider)) {
             Password encodedPassword = new Password(request.password(), passwordEncoder);
             userBuilder.password(encodedPassword);
         }
