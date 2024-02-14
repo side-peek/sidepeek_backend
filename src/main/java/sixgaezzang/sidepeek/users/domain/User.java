@@ -39,6 +39,7 @@ public class User extends BaseTimeEntity {
     private String nickname;
 
     @Column(name = "provider", length = 50, nullable = false, columnDefinition = "VARCHAR")
+    @Enumerated(EnumType.STRING)
     private Provider provider;
 
     @Column(name = "email", length = 50, nullable = false, unique = true)
