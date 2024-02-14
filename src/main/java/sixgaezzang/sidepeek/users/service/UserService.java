@@ -5,6 +5,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.users.domain.LoginType;
 import sixgaezzang.sidepeek.users.domain.Password;
@@ -20,10 +21,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public Long signUp(SignUpRequest request) {
         return signUp(request, Optional.empty());
     }
 
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public Long signUp(SignUpRequest request, LoginType loginType) {
         return signUp(request, Optional.of(loginType));
     }
