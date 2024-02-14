@@ -22,6 +22,7 @@ public class SkillController {
         @Size(max = 50, message = "최대 50자의 키워드로 검색할 수 있습니다.")
         String keyword
     ) {
-        return ResponseEntity.ok().body(skillService.searchByName(keyword));
+        return ResponseEntity.ok()
+            .body(skillService.searchByName(keyword));
     }
 }
