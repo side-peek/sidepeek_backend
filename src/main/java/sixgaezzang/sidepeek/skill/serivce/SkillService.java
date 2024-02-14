@@ -20,18 +20,19 @@ public class SkillService {
     private final SkillRepository skillRepository;
 
     public SkillSearchResponse searchByName(String keyword) {
-        List<Skill> skillList;
+        List<Skill> skills;
         if (Objects.isNull(keyword) || keyword.isBlank()) {
-            skillList = skillRepository.findAll();
+            skills = skillRepository.findAll();
         } else {
-            validateMaxLength(keyword, KEYWORD_MAX_LENGTH, "최대 " + KEYWORD_MAX_LENGTH + "자의 키워드로 검색할 수 있습니다.");
-            skillList = skillRepository.findAllByNameContaining(keyword);
+            validateMaxLength(keyword, KEYWORD_MAX_LENGTH,
+                "최대 " + KEYWORD_MAX_LENGTH + "자의 키워드로 검색할 수 있습니다.");
+            skills = skillRepository.findAllByNameContaining(keyword);
         }
 
-        List<SkillResponse> response = skillList.stream()
+        List<SkillResponse> searchResults = skills.stream()
             .map(skill -> new SkillResponse(skill.getId(), skill.getName(), skill.getIconImageUrl()))
             .toList();
 
-        return new SkillSearchResponse(response);
+        return new SkillSearchResponse(searchResults);
     }
 }
