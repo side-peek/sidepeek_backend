@@ -48,18 +48,12 @@ jobs:
         min-coverage-overall: 80
         min-coverage-changed-files: 80
 
-    - name: Send Slack Notification
-      if: always()
-      uses: edge/simple-slack-notify@master
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+    - name: action-slack
+      uses: 8398a7/action-slack@v3
       with:
         status: ${{ job.status }}
-        success_text: 'Build completed successfully'
-        failure_text: 'Build failed'
-        cancelled_text: 'Build was cancelled'
-        fields: |
-          [{ "title": "Repository", "value": "${env.GITHUB_REPOSITORY}", "short": true },
-          { "title": "Branch", "value": "${env.BRANCH}", "short": true },
-          { "title": "Action URL", "value": "${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}"}]
-
+        author_name: Github Action Test
+        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      if: always()
