@@ -4,10 +4,10 @@ import static sixgaezzang.sidepeek.common.ValidationUtils.validateBlank;
 import static sixgaezzang.sidepeek.common.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.ValidationUtils.validateNotBlank;
-import static sixgaezzang.sidepeek.common.ValidationUtils.validatePassword;
 import static sixgaezzang.sidepeek.common.ValidationUtils.validateURI;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -46,8 +46,8 @@ public class User extends BaseTimeEntity {
     @Column(name = "email", length = 50, nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", length = 100)
-    private String password;
+    @Embedded
+    private Password password;
 
     @Column(name = "introduction", length = 100)
     private String introduction;
