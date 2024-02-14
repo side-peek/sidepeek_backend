@@ -32,7 +32,7 @@ create TABLE IF NOT EXISTS project
     name                VARCHAR(300)   NOT NULL,
     sub_name            VARCHAR(300)   NULL,
     overview            VARCHAR(1000)  NOT NULL,
-    thumbnail_image_url TEXT           NULL,
+    thumbnail_url TEXT NULL,
     deploy_url          TEXT           NULL,
     github_url          TEXT           NULL,
     like_count          BIGINT         NOT NULL DEFAULT 0,
@@ -85,6 +85,7 @@ create TABLE IF NOT EXISTS user_skill
     id       BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id  BIGINT NOT NULL,
     skill_id BIGINT NOT NULL,
+    category VARCHAR(50) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (skill_id) REFERENCES skill (id)
 );
