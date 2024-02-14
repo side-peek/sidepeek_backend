@@ -1,13 +1,11 @@
 package sixgaezzang.sidepeek.users.domain;
 
-import static sixgaezzang.sidepeek.common.ValidationUtils.validateBlank;
 import static sixgaezzang.sidepeek.common.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.ValidationUtils.validateNotBlank;
-import static sixgaezzang.sidepeek.common.ValidationUtils.validatePassword;
-import static sixgaezzang.sidepeek.common.ValidationUtils.validateURI;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,6 +16,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
@@ -25,6 +24,7 @@ import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 @Entity
 @Table(name = "users")
 @SQLRestriction("deleted_at IS NULL")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
 
@@ -39,13 +39,13 @@ public class User extends BaseTimeEntity {
     private String nickname;
 
     @Column(name = "provider", length = 50, nullable = false, columnDefinition = "VARCHAR")
-    private LoginType loginType;
+    private Provider provider;
 
     @Column(name = "email", length = 50, nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", length = 100)
-    private String password;
+    @Embedded
+    private Password password;
 
     @Column(name = "introduction", length = 100)
     private String introduction;
@@ -71,36 +71,18 @@ public class User extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public User(String nickname, LoginType provider, String email, String password,
-        String githubUrl) {
-        validateConstructorArguments(nickname, provider, email, password, githubUrl);
+    public User(String nickname, Provider provider, String email, Password password) {
+        validateConstructorArguments(nickname, email);
 
         this.nickname = nickname;
-        this.loginType = provider;
+        this.provider = provider;
         this.email = email;
         this.password = password;
-        this.githubUrl = githubUrl;
     }
 
-    private void validateConstructorArguments(String nickname, LoginType provider, String email,
-        String password, String githubUrl) {
+    private void validateConstructorArguments(String nickname, String email) {
         validateNickname(nickname);
         validateEmail(email, "이메일 형식이 올바르지 않습니다.");
-        validateLoginCriteria(provider, password, githubUrl);
-    }
-
-    private void validateLoginCriteria(LoginType provider, String password, String githubUrl) {
-        if (provider.isEmailType()) {
-            validatePassword(password, "비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상이여야 합니다.");
-            validateBlank(githubUrl, "이메일 로그인 사용자는 회원가입 시 깃허브 링크를 설정할 수 없습니다.");
-            return;
-        }
-
-        validateBlank(password, "소셜 로그인 사용자는 비밀번호를 입력할 수 없습니다.");
-
-        if (provider.isGitHubType()) {
-            validateURI(githubUrl, "GitHub URL 형식이 올바르지 않습니다.");
-        }
     }
 
     private void validateNickname(String nickname) {

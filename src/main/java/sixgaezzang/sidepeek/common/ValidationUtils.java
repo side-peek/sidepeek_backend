@@ -2,6 +2,7 @@ package sixgaezzang.sidepeek.common;
 
 import static io.micrometer.common.util.StringUtils.isBlank;
 import static io.micrometer.common.util.StringUtils.isNotBlank;
+import static sixgaezzang.sidepeek.users.domain.Password.PASSWORD_REGXP;
 
 import java.util.regex.Pattern;
 import lombok.NoArgsConstructor;
@@ -10,11 +11,10 @@ import org.springframework.util.Assert;
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public final class ValidationUtils {
 
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGXP);
+
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
         "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+[.][0-9A-Za-z]+$");
-
-    private static final Pattern PASSWORD_PATTERN = Pattern.compile(
-        "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@!%*#?&^]).{8,}$");
 
     private static final Pattern URI_PATTERN = Pattern.compile(
         "^(https?)://([^:/\\s]+)(:([^/]*))?((/[^\\s/]+)*)?/?([^#\\s?]*)(\\?([^#\\s]*))?(#(\\w*))?$");
