@@ -20,8 +20,8 @@ public class SkillController {
     public ResponseEntity<SkillSearchResponse> searchByName(
         @RequestParam(required = false)
         @Size(max = 50, message = "최대 50자의 키워드로 검색할 수 있습니다.")
-        String searchKeyword
+        String keyword
     ) {
-        return ResponseEntity.ok().body(skillService.searchByName(searchKeyword));
+        return ResponseEntity.ok().body(skillService.searchByName(keyword));
     }
 }

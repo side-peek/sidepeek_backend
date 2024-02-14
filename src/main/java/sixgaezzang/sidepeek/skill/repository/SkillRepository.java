@@ -6,5 +6,5 @@ import sixgaezzang.sidepeek.skill.domain.Skill;
 
 public interface SkillRepository extends JpaRepository<Skill, Long> {
 
-    List<Skill> findAllByNameContaining(String searchKeyword);
+    List<Skill> findAllByNameContaining(String keyword);
 }
