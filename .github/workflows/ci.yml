@@ -1,7 +1,7 @@
 name: SidePeek CI with Gradle
 
 on:
-  push: 
+  push:
     branches: [ "chore/**" ]
   # pull_request:
   #   branches: [ "main", "dev" ]
@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Repository Checkout 
+    - name: Repository Checkout
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.ACTION_TOKEN }}
@@ -27,10 +27,10 @@ jobs:
     - name: Set up MySQL
       uses: samin/mysql-action@v1.3
       with:
-          mysql user: ${{ secrets.TEST_DB_USER }}
-          mysql password: ${{ secrets.TEST_DB_PASSWORD }}
-          mysql database: ${{ secrets.TEST_DB }}
-          mysql port: ${{ secrets.TEST_DB_PORT }}
+        mysql user: ${{ secrets.TEST_DB_USER }}
+        mysql password: ${{ secrets.TEST_DB_PASSWORD }}
+        mysql database: ${{ secrets.TEST_DB }}
+        host port: ${{ secrets.TEST_DB_PORT }}
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
