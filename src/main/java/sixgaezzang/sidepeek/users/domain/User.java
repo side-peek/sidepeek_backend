@@ -39,7 +39,7 @@ public class User extends BaseTimeEntity {
     private String nickname;
 
     @Column(name = "provider", length = 50, nullable = false, columnDefinition = "VARCHAR")
-    private LoginType loginType;
+    private Provider provider;
 
     @Column(name = "email", length = 50, nullable = false, unique = true)
     private String email;
@@ -71,11 +71,11 @@ public class User extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public User(String nickname, LoginType loginType, String email, Password password) {
+    public User(String nickname, Provider provider, String email, Password password) {
         validateConstructorArguments(nickname, email);
 
         this.nickname = nickname;
-        this.loginType = loginType;
+        this.provider = provider;
         this.email = email;
         this.password = password;
     }
