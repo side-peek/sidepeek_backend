@@ -1,10 +1,8 @@
 package sixgaezzang.sidepeek.users.domain;
 
-import static sixgaezzang.sidepeek.common.ValidationUtils.validateBlank;
 import static sixgaezzang.sidepeek.common.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.ValidationUtils.validateNotBlank;
-import static sixgaezzang.sidepeek.common.ValidationUtils.validateURI;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -73,36 +71,18 @@ public class User extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public User(String nickname, LoginType loginType, String email, String password,
-        String githubUrl) {
-        validateConstructorArguments(nickname, loginType, email, password, githubUrl);
+    public User(String nickname, LoginType loginType, String email, Password password) {
+        validateConstructorArguments(nickname, email);
 
         this.nickname = nickname;
         this.loginType = loginType;
         this.email = email;
         this.password = password;
-        this.githubUrl = githubUrl;
     }
 
-    private void validateConstructorArguments(String nickname, LoginType provider, String email,
-        String password, String githubUrl) {
+    private void validateConstructorArguments(String nickname, String email) {
         validateNickname(nickname);
         validateEmail(email, "이메일 형식이 올바르지 않습니다.");
-        validateLoginCriteria(provider, password, githubUrl);
-    }
-
-    private void validateLoginCriteria(LoginType provider, String password, String githubUrl) {
-        if (provider.isEmailType()) {
-            validatePassword(password, "비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상이여야 합니다.");
-            validateBlank(githubUrl, "이메일 로그인 사용자는 회원가입 시 깃허브 링크를 설정할 수 없습니다.");
-            return;
-        }
-
-        validateBlank(password, "소셜 로그인 사용자는 비밀번호를 입력할 수 없습니다.");
-
-        if (provider.isGitHubType()) {
-            validateURI(githubUrl, "GitHub URL 형식이 올바르지 않습니다.");
-        }
     }
 
     private void validateNickname(String nickname) {
