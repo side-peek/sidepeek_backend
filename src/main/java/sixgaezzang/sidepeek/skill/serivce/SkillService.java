@@ -30,8 +30,12 @@ public class SkillService {
         }
 
         List<SkillResponse> searchResults = skills.stream()
-            .map(skill -> new SkillResponse(skill.getId(), skill.getName(), skill.getIconImageUrl()))
-            .toList();
+            .map(skill -> SkillResponse.builder()
+                .id(skill.getId())
+                .name(skill.getName())
+                .iconImageUrl(skill.getIconImageUrl())
+                .build()
+            ).toList();
 
         return new SkillSearchResponse(searchResults);
     }
