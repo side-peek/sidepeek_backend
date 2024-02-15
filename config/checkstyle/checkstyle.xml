@@ -162,7 +162,7 @@
         <module name="TypeName">
             <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF,
                       ANNOTATION_DEF, RECORD_DEF"/>
-            <!-- 클래스명 한글 허용 -->s
+            <!-- 클래스명 한글 허용 -->
             <property name="format" value="^[a-zA-Z_$\p{IsHangul}][a-zA-Z\d_$\p{IsHangul}]*$"/>
             <message key="name.invalidPattern"
                 value="Type name ''{0}'' must match pattern ''{1}''."/>
