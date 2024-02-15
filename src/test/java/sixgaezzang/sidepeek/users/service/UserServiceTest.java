@@ -46,7 +46,7 @@ class UserServiceTest {
     void setUp() {
         email = faker.internet().emailAddress();
         password = faker.internet().password(8, 100, true, true, true);
-        nickname = faker.name().username();
+        nickname = faker.internet().username();
     }
 
     @Nested
@@ -75,7 +75,7 @@ class UserServiceTest {
             User user = createUser(duplicatedEmail, password, nickname);
             userRepository.save(user);
 
-            String newNickname = faker.name().username();
+            String newNickname = faker.internet().username();
             SignUpRequest request = new SignUpRequest(duplicatedEmail, password, newNickname);
 
             // when
@@ -103,7 +103,7 @@ class UserServiceTest {
             assertThatExceptionOfType(EntityExistsException.class).isThrownBy(signup)
                 .withMessage("이미 사용 중인 닉네임입니다.");
         }
-        
+
         @Test
         void 이메일_형식이_올바르지_않은_경우_회원가입에_실패한다() {
             // given
