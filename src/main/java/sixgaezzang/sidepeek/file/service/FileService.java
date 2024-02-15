@@ -38,7 +38,7 @@ public class FileService {
 
             s3Client.putObject(putOb, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); // TODO: 에러처리 필요
         }
 
         return FileUploadResponse.from(s3Properties.basePath() + fileName);
