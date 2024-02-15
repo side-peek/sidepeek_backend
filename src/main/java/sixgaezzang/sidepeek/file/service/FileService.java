@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 import sixgaezzang.sidepeek.file.dto.FileUploadResponse;
 import sixgaezzang.sidepeek.file.util.S3Properties;
@@ -39,8 +38,12 @@ public class FileService {
     }
 
     private String createUniqueFileName(MultipartFile file) {
-        return UUID.randomUUID() + FILE_EXTENSION_SEPARATOR + file.getOriginalFilename()
-            .lastIndexOf(FILE_EXTENSION_SEPARATOR);
+        String originalFileName = file.getOriginalFilename();
+
+        int fileExtensionIndex = originalFileName.lastIndexOf(FILE_EXTENSION_SEPARATOR);
+        String fileExtension = originalFileName.substring(fileExtensionIndex);
+
+        return UUID.randomUUID() + FILE_EXTENSION_SEPARATOR + fileExtension;
     }
 
 }
