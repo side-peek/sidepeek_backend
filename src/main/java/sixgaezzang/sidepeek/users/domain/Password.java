@@ -1,7 +1,7 @@
 package sixgaezzang.sidepeek.users.domain;
 
-import static sixgaezzang.sidepeek.common.ValidationUtils.validateNotBlank;
-import static sixgaezzang.sidepeek.common.ValidationUtils.validatePassword;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validatePassword;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.common;
+package sixgaezzang.sidepeek.common.util;
 
 import static io.micrometer.common.util.StringUtils.isBlank;
 import static io.micrometer.common.util.StringUtils.isNotBlank;

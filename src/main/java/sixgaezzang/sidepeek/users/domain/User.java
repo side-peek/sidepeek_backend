@@ -1,8 +1,8 @@
 package sixgaezzang.sidepeek.users.domain;
 
-import static sixgaezzang.sidepeek.common.ValidationUtils.validateEmail;
-import static sixgaezzang.sidepeek.common.ValidationUtils.validateMaxLength;
-import static sixgaezzang.sidepeek.common.ValidationUtils.validateNotBlank;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
