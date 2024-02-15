@@ -13,7 +13,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sixgaezzang.sidepeek.common.domain.Skill;
+import sixgaezzang.sidepeek.skill.domain.Skill;
 
 @Entity
 @Table(name = "user_skill")
