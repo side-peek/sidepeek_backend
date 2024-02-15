@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.users.dto;
 
 import lombok.Builder;
+import sixgaezzang.sidepeek.users.domain.User;
 
 @Builder
 public record UserSummaryResponse(
@@ -8,4 +9,13 @@ public record UserSummaryResponse(
     String nickname,
     String profileImageUrl
 ) {
+
+    public static UserSummaryResponse from(User user) {
+        return UserSummaryResponse.builder()
+            .id(user.getId())
+            .nickname(user.getNickname())
+            .profileImageUrl(user.getProfileImageUrl())
+            .build();
+    }
+
 }
