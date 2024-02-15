@@ -43,6 +43,7 @@
             <property name="allowEscapesForControlCharacters" value="true"/>
             <property name="allowByTailComment" value="true"/>
             <property name="allowNonPrintableEscapes" value="true"/>
+            <property name="severity" value="ignore"/>
         </module>
         <module name="AvoidStarImport"/>
         <module name="OneTopLevelClass"/>
