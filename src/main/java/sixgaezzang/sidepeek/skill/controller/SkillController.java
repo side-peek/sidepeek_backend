@@ -14,6 +14,7 @@ import sixgaezzang.sidepeek.skill.serivce.SkillService;
 @RequestMapping("/skills")
 @RequiredArgsConstructor
 public class SkillController {
+
     private final SkillService skillService;
 
     @GetMapping
@@ -25,4 +26,5 @@ public class SkillController {
         return ResponseEntity.ok()
             .body(skillService.searchByName(keyword));
     }
+
 }
