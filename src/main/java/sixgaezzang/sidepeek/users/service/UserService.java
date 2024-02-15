@@ -1,6 +1,9 @@
 package sixgaezzang.sidepeek.users.service;
 
+import static sixgaezzang.sidepeek.common.ValidationUtils.validateMaxLength;
+
 import jakarta.persistence.EntityExistsException;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -9,12 +12,15 @@ import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.Provider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.SignUpRequest;
+import sixgaezzang.sidepeek.users.dto.UserSearchResponse;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
+
+    private static final int KEYWORD_MAX_LENGTH = 20;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -38,6 +44,17 @@ public class UserService {
         User saved = userRepository.save(user);
 
         return saved.getId();
+    }
+
+    public UserSearchResponse searchByNickname(String keyword) {
+        if (Objects.isNull(keyword) || keyword.isBlank()) {
+            return UserSearchResponse.from(userRepository.findAll());
+        }
+
+        validateMaxLength(keyword, KEYWORD_MAX_LENGTH,
+                "최대 " + KEYWORD_MAX_LENGTH + "자의 키워드로 검색할 수 있습니다.");
+
+        return UserSearchResponse.from(userRepository.findAllByNicknameContaining(keyword));
     }
 
     private void verifyUniqueNickname(SignUpRequest request) {
