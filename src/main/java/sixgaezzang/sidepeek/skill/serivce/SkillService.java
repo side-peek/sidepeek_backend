@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.dto.SkillResponse;
 import sixgaezzang.sidepeek.skill.dto.SkillSearchResponse;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class SkillService {
 
