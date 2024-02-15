@@ -2,7 +2,13 @@ name: SidePeek CI with Gradle
 
 on:
    pull_request:
-     branches: [ "main", "dev" ]
+     branches:
+       - main
+       - dev
+       - 'feat/**'
+       - 'fix/**'
+       - 'refactor/**'
+       - 'chore/**'
 
 permissions:
   contents: read
