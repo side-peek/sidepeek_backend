@@ -1,6 +1,5 @@
 package sixgaezzang.sidepeek.users.service;
 
-
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 
 import jakarta.persistence.EntityExistsException;
