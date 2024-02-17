@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.users.service;
 
-import static sixgaezzang.sidepeek.common.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 
 import jakarta.persistence.EntityExistsException;
 import java.util.Objects;

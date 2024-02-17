@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.skill.serivce;
 
-import static sixgaezzang.sidepeek.common.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
