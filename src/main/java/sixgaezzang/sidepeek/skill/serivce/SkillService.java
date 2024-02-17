@@ -24,7 +24,7 @@ public class SkillService {
         }
 
         validateMaxLength(keyword, KEYWORD_MAX_LENGTH,
-                "최대 " + KEYWORD_MAX_LENGTH + "자의 키워드로 검색할 수 있습니다.");
+            "최대 " + KEYWORD_MAX_LENGTH + "자의 키워드로 검색할 수 있습니다.");
 
         return SkillSearchResponse.from(skillRepository.findAllByNameContaining(keyword));
     }
