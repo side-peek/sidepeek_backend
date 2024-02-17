@@ -2,12 +2,9 @@ package sixgaezzang.sidepeek.file.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.BDDMockito.given;
 
-import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
@@ -30,17 +27,15 @@ class FileServiceTest {
 
     @MockBean
     S3Client s3Client;
-    @MockBean
+
+    @Autowired
     S3Properties s3Properties;
+
     @Autowired
     MultipartProperties multipartProperties;
+
     @Autowired
     FileService fileService;
-
-    @BeforeEach
-    void setUp() {
-        given(s3Properties.basePath()).willReturn("basePath");
-    }
 
     @Nested
     class 파일_업로드_테스트 {
