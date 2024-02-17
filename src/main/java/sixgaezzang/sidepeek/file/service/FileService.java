@@ -50,7 +50,7 @@ public class FileService {
         int fileExtensionIndex = originalFileName.lastIndexOf(FILE_EXTENSION_SEPARATOR);
         String fileExtension = originalFileName.substring(fileExtensionIndex);
 
-        return UUID.randomUUID() + FILE_EXTENSION_SEPARATOR + fileExtension;
+        return UUID.randomUUID() + fileExtension;
     }
 
     private void validateFile(MultipartFile file) {
