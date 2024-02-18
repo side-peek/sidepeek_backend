@@ -1,12 +1,12 @@
 package sixgaezzang.sidepeek.skill.serivce;
 
-import static sixgaezzang.sidepeek.common.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.skill.dto.SkillSearchResponse;
+import sixgaezzang.sidepeek.skill.dto.response.SkillSearchResponse;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 
 @Service

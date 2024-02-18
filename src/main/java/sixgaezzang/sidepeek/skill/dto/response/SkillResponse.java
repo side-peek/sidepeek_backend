@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.skill.dto;
+package sixgaezzang.sidepeek.skill.dto.response;
 
 import lombok.Builder;
 import sixgaezzang.sidepeek.skill.domain.Skill;
