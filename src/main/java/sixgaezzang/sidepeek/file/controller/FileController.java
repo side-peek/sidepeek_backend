@@ -1,7 +1,9 @@
 package sixgaezzang.sidepeek.file.controller;
 
-import jakarta.validation.constraints.NotEmpty;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +20,10 @@ public class FileController {
 
     private final FileService fileService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "파일 업로드")
+    @ApiResponse(responseCode = "200", description = "파일 업로드 성공")
     public ResponseEntity<FileUploadResponse> uploadFile(
-        @NotEmpty(message = "파일이 비어있습니다.")
         @RequestParam
         MultipartFile file
     ) {
