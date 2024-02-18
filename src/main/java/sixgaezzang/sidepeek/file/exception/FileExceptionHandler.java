@@ -18,7 +18,8 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 public class FileExceptionHandler {
     @ExceptionHandler({MultipartException.class, MissingServletRequestPartException.class})
     public ResponseEntity<ErrorResponse> handleMultipartRequestExceptions(Exception e) {
-        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST, "요청에 파일이 누락되어 있는지 확인해주세요.");
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST,
+            "요청에 파일이 누락되어 있는지 확인해주세요.");
 
         return ResponseEntity.badRequest()
             .body(errorResponse);
@@ -27,7 +28,8 @@ public class FileExceptionHandler {
     @ExceptionHandler(S3Exception.class)
     public ResponseEntity<ErrorResponse> handleS3Exception(S3Exception e) {
         log.error(e.getMessage(), e.fillInStackTrace());
-        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_GATEWAY, "파일을 저장하는 동안 문제가 발생했습니다.");
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_GATEWAY,
+            "파일을 저장하는 동안 문제가 발생했습니다.");
 
         return ResponseEntity
             .status(HttpStatus.BAD_GATEWAY)
