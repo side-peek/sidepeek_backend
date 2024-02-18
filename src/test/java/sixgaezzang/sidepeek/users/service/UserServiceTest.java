@@ -3,8 +3,10 @@ package sixgaezzang.sidepeek.users.service;
 import static io.micrometer.common.util.StringUtils.isBlank;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
 
 import jakarta.persistence.EntityExistsException;
+import java.util.List;
 import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +14,9 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +25,7 @@ import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.Provider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
+import sixgaezzang.sidepeek.users.dto.response.UserSummaryResponse;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
 @SpringBootTest
@@ -131,6 +137,59 @@ class UserServiceTest {
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
                 .withMessage("비밀번호는 8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.");
         }
+
+    }
+
+    @Nested
+    class 회원_닉네임_검색_테스트 {
+
+        static final int USER_COUNT = 5;
+        static final String[] users = {"zzang1", "zzang2", "zzang3", "coco1", "coco2"};
+
+        @BeforeEach
+        void setUp() {
+            for (int i = 0; i < USER_COUNT; i++) {
+                User user = createUser(users[i] + "@google.com", password, users[i]);
+                userRepository.save(user);
+            }
+        }
+
+        @ParameterizedTest(name = "[{index}] {0}으로 검색할 때 " + USER_COUNT + "명의 회원이 나온다.")
+        @NullAndEmptySource
+        void 검색어_없이_전체_회원_닉네임_검색에_성공한다(String keyword) {
+            // given, when
+            List<UserSummaryResponse> users = userService.searchByNickname(keyword)
+                .users();
+
+            // then
+            assertThat(users.size()).isEqualTo(USER_COUNT);
+        }
+
+        @ParameterizedTest(name = "[{index}] {0}으로 검색할 때 {1}명의 회원이 나온다.")
+        @CsvSource(value = {"zzang:3", "coco:2"}, delimiter = ':')
+        void 검색어로_회원_닉네임_검색에_성공한다(String keyword, int count) {
+            // given, when
+            List<UserSummaryResponse> users = userService.searchByNickname(keyword)
+                .users();
+
+            // then
+            assertThat(users.size()).isEqualTo(count);
+        }
+
+        @Test
+        void 닉네임_최대_글자_수가_넘어_회원_닉네임_검색에_실패한다() {
+            // given
+            int keywordLength = MAX_NICKNAME_LENGTH + 1;
+            String keyword = "a".repeat(keywordLength);
+
+            // when
+            ThrowingCallable search = () -> userService.searchByNickname(keyword);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(search)
+                .withMessage("최대 " + MAX_NICKNAME_LENGTH + "자의 키워드로 검색할 수 있습니다.");
+        }
+
     }
 
     private User createUser(String email, String password, String nickname) {
