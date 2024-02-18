@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.users.dto;
+package sixgaezzang.sidepeek.users.dto.response;
 
 import java.util.List;
 import sixgaezzang.sidepeek.users.domain.User;

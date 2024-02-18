@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sixgaezzang.sidepeek.users.domain.Provider;
-import sixgaezzang.sidepeek.users.dto.SignUpRequest;
-import sixgaezzang.sidepeek.users.dto.UserSearchResponse;
+import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
+import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
+import sixgaezzang.sidepeek.users.dto.response.UserSearchResponse;
 import sixgaezzang.sidepeek.users.service.UserService;
 
 @RestController

@@ -12,8 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.Provider;
 import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.dto.SignUpRequest;
-import sixgaezzang.sidepeek.users.dto.UserSearchResponse;
+import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
+import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
+import sixgaezzang.sidepeek.users.dto.response.UserSearchResponse;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
 @Service
