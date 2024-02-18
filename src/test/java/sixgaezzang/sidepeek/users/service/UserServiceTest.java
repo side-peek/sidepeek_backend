@@ -154,7 +154,7 @@ class UserServiceTest {
             }
         }
 
-        @ParameterizedTest(name = "[{index}] {0}으로 검색할 때 " + USER_COUNT + "명의 회원이 나온다.")
+        @ParameterizedTest(name = "[{index}] {0}으로 검색할 때 " + USER_COUNT + "명의 모든 회원이 나온다.")
         @NullAndEmptySource
         void 검색어_없이_전체_회원_닉네임_검색에_성공한다(String keyword) {
             // given, when
@@ -177,7 +177,7 @@ class UserServiceTest {
         }
 
         @Test
-        void 닉네임_최대_글자_수가_넘어_회원_닉네임_검색에_실패한다() {
+        void 검색어_최대_글자_수가_넘어_회원_닉네임_검색에_실패한다() {
             // given
             int keywordLength = MAX_NICKNAME_LENGTH + 1;
             String keyword = "a".repeat(keywordLength);
