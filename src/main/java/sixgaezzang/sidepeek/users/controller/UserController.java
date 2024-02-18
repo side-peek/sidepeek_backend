@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sixgaezzang.sidepeek.users.domain.Provider;
+import sixgaezzang.sidepeek.users.dto.request.CheckEmailRequest;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
 import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserSearchResponse;
@@ -27,6 +29,7 @@ import sixgaezzang.sidepeek.users.service.UserService;
 @RequestMapping("/users")
 @Tag(name = "User", description = "User API")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -57,6 +60,19 @@ public class UserController {
     ) {
         return ResponseEntity.ok()
             .body(userService.searchByNickname(keyword));
+    }
+
+    @PostMapping("/email/check")
+    @Operation(summary = "이메일 중복 확인")
+    @ApiResponse(responseCode = "200", description = "이메일 중복 확인 성공")
+    @Parameter(name = "email", description = "이메일", example = "sidepeek6@gmail.com")
+    public ResponseEntity<CheckDuplicateResponse> checkEmailDuplicate(
+        @RequestBody @Valid CheckEmailRequest request
+    ) {
+        CheckDuplicateResponse response = userService.checkEmailDuplicate(request.email());
+
+        return ResponseEntity.ok()
+            .body(response);
     }
 
 }
