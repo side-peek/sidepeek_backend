@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.users.dto;
+package sixgaezzang.sidepeek.users.dto.response;
 
 import lombok.Builder;
 import sixgaezzang.sidepeek.users.domain.User;
