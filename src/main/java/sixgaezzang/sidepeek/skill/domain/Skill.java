@@ -16,11 +16,13 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Skill {
 
+    public static final int MAX_SKILL_NAME_LENGTH = 50;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 50)
+    @Column(name = "name", nullable = false, length = MAX_SKILL_NAME_LENGTH)
     private String name;
 
     @Column(name = "icon_image_url", nullable = false, columnDefinition = "TEXT")

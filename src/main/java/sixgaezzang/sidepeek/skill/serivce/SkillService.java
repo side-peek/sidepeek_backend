@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.skill.serivce;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.skill.domain.Skill.MAX_SKILL_NAME_LENGTH;
 
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +15,6 @@ import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 @RequiredArgsConstructor
 public class SkillService {
 
-    public static final int KEYWORD_MAX_LENGTH = 50;
-
     private final SkillRepository skillRepository;
 
     public SkillSearchResponse searchByName(String keyword) {
@@ -23,8 +22,8 @@ public class SkillService {
             return SkillSearchResponse.from(skillRepository.findAll());
         }
 
-        validateMaxLength(keyword, KEYWORD_MAX_LENGTH,
-                "최대 " + KEYWORD_MAX_LENGTH + "자의 키워드로 검색할 수 있습니다.");
+        validateMaxLength(keyword, MAX_SKILL_NAME_LENGTH,
+            "최대 " + MAX_SKILL_NAME_LENGTH + "자의 키워드로 검색할 수 있습니다.");
 
         return SkillSearchResponse.from(skillRepository.findAllByNameContaining(keyword));
     }

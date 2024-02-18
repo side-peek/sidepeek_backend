@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.skill.controller;
 
+import static sixgaezzang.sidepeek.skill.domain.Skill.MAX_SKILL_NAME_LENGTH;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,7 +28,7 @@ public class SkillController {
     @Parameter(name = "keyword", description = "검색어", example = "spring")
     public ResponseEntity<SkillSearchResponse> searchByName(
         @RequestParam(required = false)
-        @Size(max = 50, message = "최대 50자의 키워드로 검색할 수 있습니다.")
+        @Size(max = MAX_SKILL_NAME_LENGTH, message = "최대 " + MAX_SKILL_NAME_LENGTH + "자의 키워드로 검색할 수 있습니다.")
         String keyword
     ) {
         return ResponseEntity.ok()

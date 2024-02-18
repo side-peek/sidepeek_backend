@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.users.controller;
 
+import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -54,7 +56,7 @@ public class UserController {
     @Parameter(name = "keyword", description = "검색어", example = "sixgaezzang6")
     public ResponseEntity<UserSearchResponse> searchByNickname(
         @RequestParam(required = false)
-        @Size(max = 20, message = "최대 20자의 키워드로 검색할 수 있습니다.")
+        @Size(max = MAX_NICKNAME_LENGTH, message = "최대 20자의 키워드로 검색할 수 있습니다.")
         String keyword
     ) {
         return ResponseEntity.ok()
