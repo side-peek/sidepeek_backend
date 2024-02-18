@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.file.dto;
+package sixgaezzang.sidepeek.file.dto.response;
 
 public record FileUploadResponse(
     String fileUrl

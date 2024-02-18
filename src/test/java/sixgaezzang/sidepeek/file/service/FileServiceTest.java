@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
-import sixgaezzang.sidepeek.file.dto.FileUploadResponse;
+import sixgaezzang.sidepeek.file.dto.response.FileUploadResponse;
 import sixgaezzang.sidepeek.file.util.S3Properties;
 import software.amazon.awssdk.services.s3.S3Client;
 
