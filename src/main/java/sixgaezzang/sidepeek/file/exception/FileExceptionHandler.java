@@ -5,6 +5,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
@@ -16,6 +17,16 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class FileExceptionHandler {
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMediaTypeNotSupportedException(
+        HttpMediaTypeNotSupportedException e) {
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST,
+            "지원하는 Content-Type이 아닙니다.");
+
+        return ResponseEntity.badRequest()
+            .body(errorResponse);
+    }
+
     @ExceptionHandler({MultipartException.class, MissingServletRequestPartException.class})
     public ResponseEntity<ErrorResponse> handleMultipartRequestExceptions(Exception e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST,
