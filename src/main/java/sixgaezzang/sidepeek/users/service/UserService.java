@@ -59,6 +59,13 @@ public class UserService {
         return UserSearchResponse.from(userRepository.findAllByNicknameContaining(keyword));
     }
 
+    public CheckDuplicateResponse checkEmailDuplicate(String email) {
+        validateEmail(email, "이메일 형식이 올바르지 않습니다.");
+
+        boolean isExists = userRepository.existsByEmail(email);
+        return new CheckDuplicateResponse(isExists);
+    }
+
     private void verifyUniqueNickname(SignUpRequest request) {
         if (userRepository.existsByNickname(request.nickname())) {
             throw new EntityExistsException("이미 사용 중인 닉네임입니다.");
@@ -69,12 +76,5 @@ public class UserService {
         if (userRepository.existsByEmail(request.email())) {
             throw new EntityExistsException("이미 사용 중인 이메일입니다.");
         }
-    }
-
-    public CheckDuplicateResponse checkEmailDuplicate(String email) {
-        validateEmail(email, "이메일 형식이 올바르지 않습니다.");
-
-        boolean isExists = userRepository.existsByEmail(email);
-        return new CheckDuplicateResponse(isExists);
     }
 }
