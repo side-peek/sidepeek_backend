@@ -38,7 +38,7 @@ public class FileService {
 
             s3Client.putObject(putOb, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
         } catch (IOException e) {
-            throw new IllegalStateException("외부 요인으로 파일 저장에 실패했습니다.");
+            throw new IllegalStateException("파일을 읽는 도중 예외가 발생했습니다.");
         }
 
         return FileUploadResponse.from(s3Properties.basePath() + fileName);
