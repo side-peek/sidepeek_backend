@@ -71,4 +71,10 @@ public class UserService {
         }
     }
 
+    public CheckDuplicateResponse checkEmailDuplicate(String email) {
+        validateEmail(email, "이메일 형식이 올바르지 않습니다.");
+
+        boolean isExists = userRepository.existsByEmail(email);
+        return new CheckDuplicateResponse(isExists);
+    }
 }
