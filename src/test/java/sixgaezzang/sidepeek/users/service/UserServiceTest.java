@@ -176,6 +176,50 @@ class UserServiceTest {
         }
     }
 
+    @Nested
+    class 닉네임_중복_확인_테스트 {
+
+        @Test
+        void 닉네임이_중복되지_않은_경우_중복_확인에_성공한다() {
+            // when
+            CheckDuplicateResponse response = userService.checkNicknameDuplicate(nickname);
+
+            // then
+            assertThat(response.isDuplicated()).isFalse();
+        }
+
+        @Test
+        void 닉네임이_중복된_경우_중복_확인에_성공한다() {
+            // given
+            String duplicatedNickname = nickname;
+            User user = createUser(email, password, duplicatedNickname);
+            userRepository.save(user);
+
+            // when
+            CheckDuplicateResponse response = userService.checkNicknameDuplicate(
+                duplicatedNickname);
+
+            // then
+            assertThat(response.isDuplicated()).isTrue();
+        }
+
+        @Test
+        void 닉네임이_최대_길이를_초과하는_경우_중복_확인에_실패한다() {
+            // given
+            String longNickname = faker.lorem()
+                .characters(User.MAX_NICKNAME_LENGTH + 1);
+
+            // when
+            ThrowingCallable checkNicknameDuplicate = () -> userService.checkNicknameDuplicate(
+                longNickname);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(
+                    checkNicknameDuplicate)
+                .withMessage("닉네임은 " + User.MAX_NICKNAME_LENGTH + "자 이하여야 합니다.");
+        }
+    }
+
     private User createUser(String email, String password, String nickname) {
         return User.builder()
             .email(isBlank(email) ? this.email : email)
