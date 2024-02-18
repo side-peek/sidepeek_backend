@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.file.controller;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ public class FileController {
 
     @PostMapping
     public ResponseEntity<FileUploadResponse> uploadFile(
+        @NotEmpty(message = "파일이 비어있습니다.")
         @RequestParam
         MultipartFile file
     ) {
