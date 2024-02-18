@@ -66,6 +66,14 @@ public class UserService {
         return new CheckDuplicateResponse(isExists);
     }
 
+    public CheckDuplicateResponse checkNicknameDuplicate(String nickname) {
+        validateMaxLength(nickname, User.MAX_NICKNAME_LENGTH,
+            "닉네임은 " + User.MAX_NICKNAME_LENGTH + "자 이하여야 합니다.");
+
+        boolean isExists = userRepository.existsByNickname(nickname);
+        return new CheckDuplicateResponse(isExists);
+    }
+
     private void verifyUniqueNickname(SignUpRequest request) {
         if (userRepository.existsByNickname(request.nickname())) {
             throw new EntityExistsException("이미 사용 중인 닉네임입니다.");
