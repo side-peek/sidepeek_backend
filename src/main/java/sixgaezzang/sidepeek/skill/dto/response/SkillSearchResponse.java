@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.skill.dto;
+package sixgaezzang.sidepeek.skill.dto.response;
 
 import java.util.List;
 import sixgaezzang.sidepeek.skill.domain.Skill;

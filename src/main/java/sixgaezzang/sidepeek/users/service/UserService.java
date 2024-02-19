@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.users.service;
 
-import static sixgaezzang.sidepeek.common.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
 
 import jakarta.persistence.EntityExistsException;
 import java.util.Objects;
@@ -11,16 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.Provider;
 import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.dto.SignUpRequest;
-import sixgaezzang.sidepeek.users.dto.UserSearchResponse;
+import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
+import sixgaezzang.sidepeek.users.dto.response.UserSearchResponse;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
-
-    private static final int KEYWORD_MAX_LENGTH = 20;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -51,8 +50,8 @@ public class UserService {
             return UserSearchResponse.from(userRepository.findAll());
         }
 
-        validateMaxLength(keyword, KEYWORD_MAX_LENGTH,
-                "최대 " + KEYWORD_MAX_LENGTH + "자의 키워드로 검색할 수 있습니다.");
+        validateMaxLength(keyword, MAX_NICKNAME_LENGTH,
+            "최대 " + MAX_NICKNAME_LENGTH + "자의 키워드로 검색할 수 있습니다.");
 
         return UserSearchResponse.from(userRepository.findAllByNicknameContaining(keyword));
     }
