@@ -62,9 +62,9 @@ public class ProjectService {
 
     private MemberSummary createMemberSummary(Member member) {
         User user = member.getUser();
-        UserSummaryResponse userSummaryResponse = (user == null) ?
-            UserSummaryResponse.from(member.getNickname()) :
-            UserSummaryResponse.from(user);
+        UserSummaryResponse userSummaryResponse = (user == null)
+            ? UserSummaryResponse.from(member.getNickname())
+            : UserSummaryResponse.from(user);
         return MemberSummary.from(member, userSummaryResponse);
     }
 }
