@@ -39,9 +39,9 @@ class SkillServiceTest {
 
         @BeforeEach
         void setUp() {
+            String tempImageUrl = "https://google.com/image.png";
             for (int i = 0; i < SKILL_COUNT; i++) {
-                Skill skill = createSkill(skills[i], "url");
-                skillRepository.save(skill);
+                createSkill(skills[i], tempImageUrl);
             }
         }
 
@@ -84,10 +84,11 @@ class SkillServiceTest {
     }
 
     private Skill createSkill(String name, String iconImageUrl) {
-        return Skill.builder()
+        Skill skill = Skill.builder()
             .name(name)
             .iconImageUrl(iconImageUrl)
             .build();
+        return skillRepository.save(skill);
     }
 
 }

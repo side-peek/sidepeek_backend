@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.skill.domain;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateURI;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,6 +36,7 @@ public class Skill {
     public Skill(String name, String iconImageUrl) {
         validateMaxLength(name, MAX_SKILL_NAME_LENGTH,
             "최대 " + MAX_SKILL_NAME_LENGTH + "자의 이름으로 생성할 수 있습니다.");
+        validateURI(iconImageUrl, "이미지 url 형식이 올바르지 않습니다.");
 
         this.name = name;
         this.iconImageUrl = iconImageUrl;
