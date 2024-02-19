@@ -2,8 +2,6 @@ package sixgaezzang.sidepeek.projects.domain.member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,10 +34,6 @@ public class Member {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @Column(name = "authority", nullable = false, length = 15, columnDefinition = "VARCHAR")
-    @Enumerated(EnumType.STRING)
-    private AuthorityType authority;
-
     @Column(name = "role", nullable = false, length = 15)
     private String role;
 
@@ -47,10 +41,10 @@ public class Member {
     private String nickname;
 
     @Builder
-    public Member(User user, Project project, AuthorityType authority, String role, String nickname) {
+    public Member(User user, Project project, String role,
+        String nickname) {
         this.user = user;
         this.project = project;
-        this.authority = authority;
         this.role = role;
         this.nickname = nickname;
     }
