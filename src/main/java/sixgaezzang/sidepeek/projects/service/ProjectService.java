@@ -17,7 +17,7 @@ import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.dto.UserSummaryResponse;
+import sixgaezzang.sidepeek.users.dto.response.UserSummaryResponse;
 
 @Service
 @RequiredArgsConstructor

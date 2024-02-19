@@ -2,7 +2,7 @@ package sixgaezzang.sidepeek.projects.dto.response;
 
 import lombok.Builder;
 import sixgaezzang.sidepeek.projects.domain.member.Member;
-import sixgaezzang.sidepeek.users.dto.UserSummaryResponse;
+import sixgaezzang.sidepeek.users.dto.response.UserSummaryResponse;
 
 @Builder
 public record MemberSummary(

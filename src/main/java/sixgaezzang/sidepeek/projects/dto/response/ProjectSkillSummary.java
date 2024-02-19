@@ -2,7 +2,7 @@ package sixgaezzang.sidepeek.projects.dto.response;
 
 import lombok.Builder;
 import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
-import sixgaezzang.sidepeek.skill.dto.SkillResponse;
+import sixgaezzang.sidepeek.skill.dto.response.SkillResponse;
 
 @Builder
 public record ProjectSkillSummary(
