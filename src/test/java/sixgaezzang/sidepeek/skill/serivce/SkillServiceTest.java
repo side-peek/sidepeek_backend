@@ -39,8 +39,9 @@ class SkillServiceTest {
 
         @BeforeEach
         void setUp() {
+            String tempImageUrl = "https://google.com/image.png";
             for (int i = 0; i < SKILL_COUNT; i++) {
-                createSkill(skills[i], "url");
+                createSkill(skills[i], tempImageUrl);
             }
         }
 
