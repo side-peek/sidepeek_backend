@@ -12,6 +12,7 @@ public record ProjectResponse(
     String subName,
     String overview,
     String thumbnailUrl,
+    List<OverviewImageSummary> overviewImageUrl,
     String githubUrl,
     String deployUrl,
     Long viewCount,
@@ -24,7 +25,8 @@ public record ProjectResponse(
     String troubleShooting
 ) {
 
-    public static ProjectResponse from(Project project, List<ProjectSkillSummary> techStacks,
+    public static ProjectResponse from(Project project, List<OverviewImageSummary> overviewImageUrl,
+        List<ProjectSkillSummary> techStacks,
         List<MemberSummary> members) {
         return ProjectResponse.builder()
             .id(project.getId())
@@ -32,6 +34,7 @@ public record ProjectResponse(
             .subName(project.getSubName())
             .overview(project.getOverview())
             .thumbnailUrl(project.getThumbnailUrl())
+            .overviewImageUrl(overviewImageUrl)
             .githubUrl(project.getGithubUrl())
             .deployUrl(project.getDeployUrl())
             .viewCount(project.getViewCount())
