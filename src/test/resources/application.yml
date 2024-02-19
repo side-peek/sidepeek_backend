@@ -1,10 +1,6 @@
 spring:
     config:
         import: file:./sidepeek_backend_secret/application-test.yml
-    servlet:
-        multipart:
-            max-file-size: 100MB
-            max-request-size: 100MB
     jpa:
         show-sql: true
         open-in-view: false
