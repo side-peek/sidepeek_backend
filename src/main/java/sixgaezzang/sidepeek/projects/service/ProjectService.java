@@ -31,27 +31,22 @@ public class ProjectService {
 
     public ProjectResponse findById(Long id) {
 
-        // 프로젝트 가져오기
         Project project = projectRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("해당 프로젝트가 존재하지 않습니다."));
 
-        // 조회수 + 1
         project.increaseViewCount();
 
-        // 프로젝트 개요에 사용될 File(Image) 가져오기
         List<OverviewImageSummary> overviewImages = fileRepository.findAllByProjectAndType(
                 project, FileType.OVERVIEW_IMAGE)
             .stream()
             .map(OverviewImageSummary::from)
             .toList();
 
-        // 프로젝트 id를 가진 프로젝트에 사용되는 Skill 가져오기
         List<ProjectSkillSummary> techStacks = projectSkillRepository.findAllByProject(project)
             .stream()
             .map(ProjectSkillSummary::from)
             .toList();
 
-        // 프로젝트 id를 가진 프로젝트 Member 가져오기
         List<MemberSummary> members = memberRepository.findAllByProject(project)
             .stream()
             .map(this::createMemberSummary)
