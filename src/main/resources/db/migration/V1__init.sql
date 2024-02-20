@@ -3,7 +3,6 @@ create TABLE IF NOT EXISTS users
 (
     id                BIGINT PRIMARY KEY AUTO_INCREMENT,
     nickname          VARCHAR(20) UNIQUE NOT NULL,
-    provider          VARCHAR(50)        NOT NULL,
     email             VARCHAR(50) UNIQUE NOT NULL,
     password          VARCHAR(100)       NULL,
     introduction      VARCHAR(100)       NULL,
@@ -22,6 +21,18 @@ create TABLE IF NOT EXISTS authorization
 (
     user_id       BIGINT       PRIMARY KEY,
     refresh_token VARCHAR(255) NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
+-- AUTH_PROVIDER
+create TABLE IF NOT EXISTS auth_provider
+(
+    id            BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id       BIGINT       NOT NULL,
+    provider_type VARCHAR(50)  NOT NULL,
+    provider_id   VARCHAR(100) NULL,
+    created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 

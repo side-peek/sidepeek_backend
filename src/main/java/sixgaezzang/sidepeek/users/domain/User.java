@@ -38,10 +38,6 @@ public class User extends BaseTimeEntity {
     @Column(name = "nickname", length = MAX_NICKNAME_LENGTH, nullable = false, unique = true)
     private String nickname;
 
-    @Column(name = "provider", length = 50, nullable = false, columnDefinition = "VARCHAR")
-    @Enumerated(EnumType.STRING)
-    private Provider provider;
-
     @Column(name = "email", length = 50, nullable = false, unique = true)
     private String email;
 
@@ -72,13 +68,27 @@ public class User extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public User(String nickname, Provider provider, String email, Password password) {
+    private User(String nickname, String email, Password password) {
         validateConstructorArguments(nickname, email);
 
         this.nickname = nickname;
-        this.provider = provider;
         this.email = email;
         this.password = password;
+    }
+
+    public static User of(String nickname, String email) {
+        return User.builder()
+            .nickname(nickname)
+            .email(email)
+            .build();
+    }
+
+    public static User withPassword(String nickname, String email, Password password) {
+        return User.builder()
+            .nickname(nickname)
+            .email(email)
+            .password(password)
+            .build();
     }
 
     private void validateConstructorArguments(String nickname, String email) {
