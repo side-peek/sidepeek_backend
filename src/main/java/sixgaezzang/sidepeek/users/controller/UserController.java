@@ -20,7 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sixgaezzang.sidepeek.users.domain.Provider;
+import sixgaezzang.sidepeek.users.dto.request.CheckEmailRequest;
+import sixgaezzang.sidepeek.users.dto.request.CheckNicknameRequest;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
+import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserSearchResponse;
 import sixgaezzang.sidepeek.users.service.UserService;
 
@@ -56,11 +59,38 @@ public class UserController {
     @Parameter(name = "keyword", description = "검색어", example = "sixgaezzang6")
     public ResponseEntity<UserSearchResponse> searchByNickname(
         @RequestParam(required = false)
-        @Size(max = MAX_NICKNAME_LENGTH, message = "최대 " + MAX_NICKNAME_LENGTH + "자의 키워드로 검색할 수 있습니다.")
+        @Size(max = MAX_NICKNAME_LENGTH, message = "최대 " + MAX_NICKNAME_LENGTH
+            + "자의 키워드로 검색할 수 있습니다.")
         String keyword
     ) {
         return ResponseEntity.ok()
             .body(userService.searchByNickname(keyword));
+    }
+
+    @PostMapping("/email/check")
+    @Operation(summary = "이메일 중복 확인")
+    @ApiResponse(responseCode = "200", description = "이메일 중복 확인 성공")
+    @Parameter(name = "email", description = "이메일", example = "sidepeek6@gmail.com")
+    public ResponseEntity<CheckDuplicateResponse> checkEmailDuplicate(
+        @RequestBody @Valid CheckEmailRequest request
+    ) {
+        CheckDuplicateResponse response = userService.checkEmailDuplicate(request.email());
+
+        return ResponseEntity.ok()
+            .body(response);
+    }
+
+    @PostMapping("/nickname/check")
+    @Operation(summary = "닉네임 중복 확인")
+    @ApiResponse(responseCode = "200", description = "닉네임 중복 확인 성공")
+    @Parameter(name = "nickname", description = "닉네임", example = "육개짱")
+    public ResponseEntity<CheckDuplicateResponse> checkNicknameDuplicate(
+        @RequestBody @Valid CheckNicknameRequest request
+    ) {
+        CheckDuplicateResponse response = userService.checkNicknameDuplicate(request.nickname());
+
+        return ResponseEntity.ok()
+            .body(response);
     }
 
 }
