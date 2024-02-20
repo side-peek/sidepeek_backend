@@ -1,4 +1,6 @@
 spring:
+    config:
+        import: file:./sidepeek_backend_secret/application.yml
     profiles:
         active: local
 
