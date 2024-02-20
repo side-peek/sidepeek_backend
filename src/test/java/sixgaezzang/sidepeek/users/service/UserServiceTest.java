@@ -25,8 +25,8 @@ import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.Provider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
-import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
+import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
 @SpringBootTest
