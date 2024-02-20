@@ -1,20 +1,19 @@
 package sixgaezzang.sidepeek.skill.serivce;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.skill.domain.Skill.MAX_SKILL_NAME_LENGTH;
 
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.skill.dto.SkillSearchResponse;
+import sixgaezzang.sidepeek.skill.dto.response.SkillSearchResponse;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class SkillService {
-
-    public static final int KEYWORD_MAX_LENGTH = 50;
 
     private final SkillRepository skillRepository;
 
@@ -23,8 +22,8 @@ public class SkillService {
             return SkillSearchResponse.from(skillRepository.findAll());
         }
 
-        validateMaxLength(keyword, KEYWORD_MAX_LENGTH,
-            "최대 " + KEYWORD_MAX_LENGTH + "자의 키워드로 검색할 수 있습니다.");
+        validateMaxLength(keyword, MAX_SKILL_NAME_LENGTH,
+            "최대 " + MAX_SKILL_NAME_LENGTH + "자의 키워드로 검색할 수 있습니다.");
 
         return SkillSearchResponse.from(skillRepository.findAllByNameContaining(keyword));
     }

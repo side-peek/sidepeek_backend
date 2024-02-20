@@ -28,7 +28,7 @@ import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
 
-    private static final int MAX_NICKNAME_LENGTH = 20;
+    public static final int MAX_NICKNAME_LENGTH = 20;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
