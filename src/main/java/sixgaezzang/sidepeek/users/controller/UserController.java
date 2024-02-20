@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sixgaezzang.sidepeek.users.domain.Provider;
 import sixgaezzang.sidepeek.users.dto.request.CheckEmailRequest;
+import sixgaezzang.sidepeek.users.dto.request.CheckNicknameRequest;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
 import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserSearchResponse;
@@ -74,6 +75,19 @@ public class UserController {
         @RequestBody @Valid CheckEmailRequest request
     ) {
         CheckDuplicateResponse response = userService.checkEmailDuplicate(request.email());
+
+        return ResponseEntity.ok()
+            .body(response);
+    }
+
+    @PostMapping("/nickname/check")
+    @Operation(summary = "닉네임 중복 확인")
+    @ApiResponse(responseCode = "200", description = "닉네임 중복 확인 성공")
+    @Parameter(name = "nickname", description = "닉네임", example = "육개짱")
+    public ResponseEntity<CheckDuplicateResponse> checkNicknameDuplicate(
+        @RequestBody @Valid CheckNicknameRequest request
+    ) {
+        CheckDuplicateResponse response = userService.checkNicknameDuplicate(request.nickname());
 
         return ResponseEntity.ok()
             .body(response);
