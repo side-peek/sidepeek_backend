@@ -13,7 +13,8 @@ import sixgaezzang.sidepeek.projects.repository.FileRepository;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class FileService {
-    FileRepository fileRepository;
+
+    private final FileRepository fileRepository;
 
     @Transactional
     public void saveAll(Long projectId, List<OverviewImageSaveRequest> overviewImageSaveRequests) {

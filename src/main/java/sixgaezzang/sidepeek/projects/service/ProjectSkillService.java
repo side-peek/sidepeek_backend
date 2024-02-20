@@ -13,7 +13,7 @@ import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
 @RequiredArgsConstructor
 public class ProjectSkillService {
 
-    ProjectSkillRepository projectSkillRepository;
+    private final ProjectSkillRepository projectSkillRepository;
 
     @Transactional
     public void saveAll(Long projectId, List<ProjectSkillSaveRequest> projectSkillSaveRequests) {

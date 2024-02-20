@@ -13,7 +13,7 @@ import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 @RequiredArgsConstructor
 public class MemberService {
 
-    MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public void saveAll(Long projectId, List<MemberSaveRequest> memberSaveRequests) {
