@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.file.util;
+package sixgaezzang.sidepeek.media.util;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

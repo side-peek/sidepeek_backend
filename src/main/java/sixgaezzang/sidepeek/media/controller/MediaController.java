@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.file.controller;
+package sixgaezzang.sidepeek.media.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import sixgaezzang.sidepeek.file.dto.response.FileUploadResponse;
-import sixgaezzang.sidepeek.file.service.FileService;
+import sixgaezzang.sidepeek.media.dto.response.MediaUploadResponse;
+import sixgaezzang.sidepeek.media.service.MediaService;
 
 @RequestMapping("/files")
 @RestController
 @RequiredArgsConstructor
-public class FileController {
+public class MediaController {
 
-    private final FileService fileService;
+    private final MediaService fileService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "파일 업로드")
     @ApiResponse(responseCode = "200", description = "파일 업로드 성공")
-    public ResponseEntity<FileUploadResponse> uploadFile(
+    public ResponseEntity<MediaUploadResponse> uploadFile(
         @RequestParam
         MultipartFile file
     ) {

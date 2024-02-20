@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import sixgaezzang.sidepeek.file.util.S3Properties;
+import sixgaezzang.sidepeek.media.util.S3Properties;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
 @Configuration
-@ConfigurationPropertiesScan(basePackages = "sixgaezzang.sidepeek.file.util")
+@ConfigurationPropertiesScan(basePackages = "sixgaezzang.sidepeek.media.util")
 @RequiredArgsConstructor
 public class S3Config {
 

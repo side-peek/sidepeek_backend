@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.file.service;
+package sixgaezzang.sidepeek.media.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -17,13 +17,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
-import sixgaezzang.sidepeek.file.dto.response.FileUploadResponse;
-import sixgaezzang.sidepeek.file.util.S3Properties;
+import sixgaezzang.sidepeek.media.dto.response.MediaUploadResponse;
+import sixgaezzang.sidepeek.media.util.S3Properties;
 import software.amazon.awssdk.services.s3.S3Client;
 
 @SpringBootTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class FileServiceTest {
+class MediaServiceTest {
 
     @MockBean
     S3Client s3Client;
@@ -35,7 +35,7 @@ class FileServiceTest {
     MultipartProperties multipartProperties;
 
     @Autowired
-    FileService fileService;
+    MediaService fileService;
 
     @Nested
     class 파일_업로드_테스트 {
@@ -47,7 +47,7 @@ class FileServiceTest {
             MultipartFile file = makeFile(contentType, "fileName", fileExtension, "File Input Stream".getBytes());
 
             // when
-            FileUploadResponse response = fileService.uploadFile(file);
+            MediaUploadResponse response = fileService.uploadFile(file);
 
             // then
             assertThat(response.fileUrl()).contains(s3Properties.basePath());

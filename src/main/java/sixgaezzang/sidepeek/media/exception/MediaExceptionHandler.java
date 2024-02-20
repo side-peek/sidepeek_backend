@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.file.exception;
+package sixgaezzang.sidepeek.media.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -16,7 +16,7 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
-public class FileExceptionHandler {
+public class MediaExceptionHandler {
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleHttpMediaTypeNotSupportedException(
         HttpMediaTypeNotSupportedException e) {
