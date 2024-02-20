@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.file.service;
+package sixgaezzang.sidepeek.media.service;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -8,15 +8,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
-import sixgaezzang.sidepeek.file.dto.response.FileUploadResponse;
-import sixgaezzang.sidepeek.file.util.S3Properties;
+import sixgaezzang.sidepeek.media.dto.response.MediaUploadResponse;
+import sixgaezzang.sidepeek.media.util.S3Properties;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
 @RequiredArgsConstructor
-public class FileService {
+public class MediaService {
 
     private static final String FILE_EXTENSION_SEPARATOR = ".";
     private static final String IMAGE_PREFIX = "image";
@@ -26,7 +26,7 @@ public class FileService {
     private final S3Properties s3Properties;
     private final MultipartProperties multipartProperties;
 
-    public FileUploadResponse uploadFile(MultipartFile file) {
+    public MediaUploadResponse uploadFile(MultipartFile file) {
         validateFile(file);
         String fileName = createUniqueFileName(file);
 
@@ -41,7 +41,7 @@ public class FileService {
             throw new IllegalStateException("파일을 읽는 도중 예외가 발생했습니다.");
         }
 
-        return FileUploadResponse.from(s3Properties.basePath() + fileName);
+        return MediaUploadResponse.from(s3Properties.basePath() + fileName);
     }
 
     private String createUniqueFileName(MultipartFile file) {
