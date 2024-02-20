@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +28,6 @@ import sixgaezzang.sidepeek.users.service.UserService;
 @RequestMapping("/users")
 @Tag(name = "User", description = "User API")
 @RequiredArgsConstructor
-@Slf4j
 public class UserController {
 
     private final UserService userService;
