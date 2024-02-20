@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.users.service;
 
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
 
@@ -13,6 +14,7 @@ import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.Provider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
+import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserSearchResponse;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -68,4 +70,10 @@ public class UserService {
         }
     }
 
+    public CheckDuplicateResponse checkEmailDuplicate(String email) {
+        validateEmail(email, "이메일 형식이 올바르지 않습니다.");
+
+        boolean isExists = userRepository.existsByEmail(email);
+        return new CheckDuplicateResponse(isExists);
+    }
 }

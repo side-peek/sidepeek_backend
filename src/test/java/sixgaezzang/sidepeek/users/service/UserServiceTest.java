@@ -25,6 +25,7 @@ import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.Provider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
+import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserSummaryResponse;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -190,6 +191,48 @@ class UserServiceTest {
                 .withMessage("최대 " + MAX_NICKNAME_LENGTH + "자의 키워드로 검색할 수 있습니다.");
         }
 
+    }
+
+    @Nested
+    class 이메일_중복_확인_테스트 {
+
+        @Test
+        void 이메일이_중복되지_않은_경우_중복_확인에_성공한다() {
+            // when
+            CheckDuplicateResponse response = userService.checkEmailDuplicate(email);
+
+            // then
+            assertThat(response.isDuplicated()).isFalse();
+        }
+
+        @Test
+        void 이메일이_중복된_경우_중복_확인에_성공한다() {
+            // given
+            String duplicatedEmail = email;
+            User user = createUser(duplicatedEmail, password, nickname);
+            userRepository.save(user);
+
+            // when
+            CheckDuplicateResponse response = userService.checkEmailDuplicate(duplicatedEmail);
+
+            // then
+            assertThat(response.isDuplicated()).isTrue();
+        }
+
+        @Test
+        void 이메일_형식이_올바르지_않은_경우_중복_확인에_실패한다() {
+            // given
+            String invalidEmail = "invalid-email";
+
+            // when
+            ThrowingCallable checkEmailDuplicate = () -> userService.checkEmailDuplicate(
+                invalidEmail);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(
+                    checkEmailDuplicate)
+                .withMessage("이메일 형식이 올바르지 않습니다.");
+        }
     }
 
     private User createUser(String email, String password, String nickname) {
