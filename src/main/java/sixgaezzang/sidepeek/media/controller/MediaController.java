@@ -18,7 +18,7 @@ import sixgaezzang.sidepeek.media.service.MediaService;
 @RequiredArgsConstructor
 public class MediaController {
 
-    private final MediaService fileService;
+    private final MediaService mediaService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "파일 업로드")
@@ -28,7 +28,7 @@ public class MediaController {
         MultipartFile file
     ) {
         return ResponseEntity.ok()
-            .body(fileService.uploadFile(file));
+            .body(mediaService.uploadFile(file));
     }
 
 }
