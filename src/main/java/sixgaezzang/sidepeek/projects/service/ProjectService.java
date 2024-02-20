@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
-import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
@@ -16,8 +15,6 @@ import sixgaezzang.sidepeek.projects.repository.FileRepository;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
-import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.dto.response.UserSummaryResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -49,17 +46,10 @@ public class ProjectService {
 
         List<MemberSummary> members = memberRepository.findAllByProject(project)
             .stream()
-            .map(this::createMemberSummary)
+            .map(MemberSummary::from)
             .toList();
 
         return ProjectResponse.from(project, overviewImages, techStacks, members);
     }
 
-    private MemberSummary createMemberSummary(Member member) {
-        User user = member.getUser();
-        UserSummaryResponse userSummaryResponse = (user == null)
-            ? UserSummaryResponse.from(member.getNickname())
-            : UserSummaryResponse.from(user);
-        return MemberSummary.from(member, userSummaryResponse);
-    }
 }
