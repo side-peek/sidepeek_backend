@@ -11,6 +11,7 @@ import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
+import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
@@ -29,7 +30,8 @@ public class ProjectService {
     public ProjectResponse findById(Long id) {
 
         Project project = projectRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("해당 프로젝트가 존재하지 않습니다."));
+            .orElseThrow(
+                () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
 
         project.increaseViewCount();
 
