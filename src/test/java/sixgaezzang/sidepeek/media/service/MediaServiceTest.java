@@ -35,7 +35,7 @@ class MediaServiceTest {
     MultipartProperties multipartProperties;
 
     @Autowired
-    MediaService fileService;
+    MediaService mediaService;
 
     @Nested
     class 파일_업로드_테스트 {
@@ -47,7 +47,7 @@ class MediaServiceTest {
             MultipartFile file = makeFile(contentType, "fileName", fileExtension, "File Input Stream".getBytes());
 
             // when
-            MediaUploadResponse response = fileService.uploadFile(file);
+            MediaUploadResponse response = mediaService.uploadFile(file);
 
             // then
             assertThat(response.fileUrl()).contains(s3Properties.basePath());
@@ -61,7 +61,7 @@ class MediaServiceTest {
             MultipartFile file = makeFile(contentType, "fileName", fileExtension, "File Input Stream".getBytes());
 
             // when
-            ThrowingCallable upload = () -> fileService.uploadFile(file);
+            ThrowingCallable upload = () -> mediaService.uploadFile(file);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(upload)
@@ -71,7 +71,7 @@ class MediaServiceTest {
         @Test
         void 파일이_null인_경우_업로드에_실패한다() {
             // given, when
-            ThrowableAssert.ThrowingCallable upload = () -> fileService.uploadFile(null);
+            ThrowableAssert.ThrowingCallable upload = () -> mediaService.uploadFile(null);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(upload)
@@ -84,7 +84,7 @@ class MediaServiceTest {
             MultipartFile file = makeFile("image/jpeg", "fileName", ".jpeg", new byte[] {});
 
             // when
-            ThrowingCallable upload = () -> fileService.uploadFile(file);
+            ThrowingCallable upload = () -> mediaService.uploadFile(file);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(upload)
@@ -99,7 +99,7 @@ class MediaServiceTest {
             MultipartFile file = makeFile("image/jpeg", "fileName", ".jpeg", greaterThanMaxSize);
 
             // when
-            ThrowingCallable upload = () -> fileService.uploadFile(file);
+            ThrowingCallable upload = () -> mediaService.uploadFile(file);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(upload)
