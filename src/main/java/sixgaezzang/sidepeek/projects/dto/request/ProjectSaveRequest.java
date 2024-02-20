@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.projects.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import sixgaezzang.sidepeek.projects.domain.Project;
@@ -11,13 +12,15 @@ public record ProjectSaveRequest(
     String thumbnailUrl,
     String githubUrl,
     String deployUrl,
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime startDate,
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime endDate,
     Long ownerId,
     String description,
     String troubleShooting,
 
-    List<OverviewImageSaveRequest> overviewImageUrl,
+    List<String> overviewImageUrls,
     List<ProjectSkillSaveRequest> techStacks,
     List<MemberSaveRequest> members
 ) {

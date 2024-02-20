@@ -48,7 +48,7 @@ public class ProjectService {
         memberService.saveAll(project.getId(), projectSaveRequest.members());
 
         // 프로젝트 File(프로젝트 개요 Image) 저장
-        fileService.saveAll(project.getId(), projectSaveRequest.overviewImageUrl());
+        fileService.saveAll(project.getId(), projectSaveRequest.overviewImageUrls());
 
         return project.getId();
     }

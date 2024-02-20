@@ -16,8 +16,8 @@ public class FileService {
     private final FileRepository fileRepository;
 
     @Transactional
-    public void saveAll(Long projectId, List<String> overviewImageSaveRequests) {
-        List<File> overviewImages = overviewImageSaveRequests.stream()
+    public void saveAll(Long projectId, List<String> overviewImageUrls) {
+        List<File> overviewImages = overviewImageUrls.stream()
             .map(overviewImage -> File.builder()
                 .projectId(projectId)
                 .url(overviewImage)
