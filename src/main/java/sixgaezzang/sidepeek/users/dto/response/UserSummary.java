@@ -19,8 +19,8 @@ public record UserSummary(
     }
 
     // 비회원
-    public static UserSummaryResponse from(String nickname) {
-        return UserSummaryResponse.builder()
+    public static UserSummary from(String nickname) {
+        return UserSummary.builder()
             .id(null)
             .nickname(nickname)
             .profileImageUrl(null)

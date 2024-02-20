@@ -17,7 +17,7 @@ import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.dto.response.UserSummaryResponse;
+import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 
 @Service
 @RequiredArgsConstructor
@@ -62,9 +62,9 @@ public class ProjectService {
 
     private MemberSummary createMemberSummary(Member member) {
         User user = member.getUser();
-        UserSummaryResponse userSummaryResponse = (user == null)
-            ? UserSummaryResponse.from(member.getNickname())
-            : UserSummaryResponse.from(user);
-        return MemberSummary.from(member, userSummaryResponse);
+        UserSummary userSummary = (user == null)
+            ? UserSummary.from(member.getNickname())
+            : UserSummary.from(user);
+        return MemberSummary.from(member, userSummary);
     }
 }
