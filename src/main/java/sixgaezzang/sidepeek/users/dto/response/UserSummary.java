@@ -4,14 +4,14 @@ import lombok.Builder;
 import sixgaezzang.sidepeek.users.domain.User;
 
 @Builder
-public record UserSummaryResponse(
+public record UserSummary(
     Long id,
     String nickname,
     String profileImageUrl
 ) {
 
-    public static UserSummaryResponse from(User user) {
-        return UserSummaryResponse.builder()
+    public static UserSummary from(User user) {
+        return UserSummary.builder()
             .id(user.getId())
             .nickname(user.getNickname())
             .profileImageUrl(user.getProfileImageUrl())
