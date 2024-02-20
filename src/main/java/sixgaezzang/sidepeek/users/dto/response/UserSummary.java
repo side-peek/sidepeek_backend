@@ -18,4 +18,13 @@ public record UserSummary(
             .build();
     }
 
+    // 비회원
+    public static UserSummaryResponse from(String nickname) {
+        return UserSummaryResponse.builder()
+            .id(null)
+            .nickname(nickname)
+            .profileImageUrl(null)
+            .build();
+    }
+
 }

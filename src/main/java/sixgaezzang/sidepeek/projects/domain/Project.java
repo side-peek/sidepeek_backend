@@ -49,6 +49,9 @@ public class Project extends BaseTimeEntity {
     @Column(name = "github_url", columnDefinition = "TEXT")
     private String githubUrl;
 
+    @Column(name = "owner_id", columnDefinition = "BIGINT")
+    private Long ownerId;
+
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
@@ -65,9 +68,10 @@ public class Project extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public Project(String name, String subName, String overview, LocalDateTime startDate, LocalDateTime endDate,
-                   String thumbnailUrl, String deployUrl, String githubUrl, String description,
-                   String troubleshooting) {
+    public Project(String name, String subName, String overview, LocalDateTime startDate,
+        LocalDateTime endDate,
+        String thumbnailUrl, String deployUrl, String githubUrl, String description,
+        String troubleshooting) {
         this.name = name;
         this.subName = subName;
         this.overview = overview;
@@ -80,6 +84,10 @@ public class Project extends BaseTimeEntity {
         this.troubleshooting = troubleshooting;
         this.likeCount = 0L;
         this.viewCount = 0L;
+    }
+
+    public void increaseViewCount() {
+        this.viewCount++;
     }
 
 }
