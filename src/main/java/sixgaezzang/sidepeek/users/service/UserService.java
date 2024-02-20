@@ -26,8 +26,8 @@ public class UserService {
 
     @Transactional
     public Long signUp(SignUpRequest request, Provider provider) {
-        verifyUniqueEmail(request);
-        verifyUniqueNickname(request);
+        verifyUniqueEmail(request.email());
+        verifyUniqueNickname(request.nickname());
 
         User.UserBuilder userBuilder = User.builder()
             .provider(provider)
@@ -56,14 +56,14 @@ public class UserService {
         return UserSearchResponse.from(userRepository.findAllByNicknameContaining(keyword));
     }
 
-    private void verifyUniqueNickname(SignUpRequest request) {
-        if (userRepository.existsByNickname(request.nickname())) {
+    private void verifyUniqueNickname(String nickname) {
+        if (userRepository.existsByNickname(nickname)) {
             throw new EntityExistsException("이미 사용 중인 닉네임입니다.");
         }
     }
 
-    private void verifyUniqueEmail(SignUpRequest request) {
-        if (userRepository.existsByEmail(request.email())) {
+    private void verifyUniqueEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
             throw new EntityExistsException("이미 사용 중인 이메일입니다.");
         }
     }
