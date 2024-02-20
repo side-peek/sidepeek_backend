@@ -15,15 +15,15 @@ import sixgaezzang.sidepeek.projects.repository.FileRepository;
 public class FileService {
     FileRepository fileRepository;
 
-    public void saveAll(List<OverviewImageSaveRequest> overviewImageSaveRequests) {
+    public void saveAll(Long projectId, List<OverviewImageSaveRequest> overviewImageSaveRequests) {
         List<File> overviewImages = overviewImageSaveRequests.stream()
             .map(overviewImage -> File.builder()
-                .projectId(overviewImage.projectId())
+                .projectId(projectId)
                 .url(overviewImage.url())
                 .type(FileType.OVERVIEW_IMAGE)
                 .build())
             .toList();
-        
+
         fileRepository.saveAll(overviewImages);
     }
 }

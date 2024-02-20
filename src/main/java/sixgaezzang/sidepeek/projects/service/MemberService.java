@@ -15,11 +15,12 @@ public class MemberService {
 
     MemberRepository memberRepository;
 
-    public void saveAll(List<MemberSaveRequest> memberSaveRequests) {
+    public void saveAll(Long projectId, List<MemberSaveRequest> memberSaveRequests) {
         List<Member> members = memberSaveRequests.stream().map(
             member -> Member.builder()
+                .projectId(projectId)
                 .nickname(member.nickname())
-                .userId(member.id())
+                .userId(member.userId())
                 .role(member.category())
                 .build()
         ).toList();

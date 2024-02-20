@@ -15,10 +15,10 @@ public class ProjectSkillService {
 
     ProjectSkillRepository projectSkillRepository;
 
-    public void saveAll(List<ProjectSkillSaveRequest> projectSkillSaveRequests) {
+    public void saveAll(Long projectId, List<ProjectSkillSaveRequest> projectSkillSaveRequests) {
         List<ProjectSkill> skills = projectSkillSaveRequests.stream().map(
             skill -> ProjectSkill.builder()
-                .projectId(skill.projectId())
+                .projectId(projectId)
                 .skillId(skill.skillId())
                 .category(skill.category())
                 .build()
