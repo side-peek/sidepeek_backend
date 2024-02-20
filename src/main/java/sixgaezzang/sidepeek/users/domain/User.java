@@ -19,6 +19,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 
 @Entity
@@ -102,4 +103,7 @@ public class User extends BaseTimeEntity {
             "닉네임은 " + MAX_NICKNAME_LENGTH + "자 이하여야 합니다.");
     }
 
+    public boolean checkPassword(String rawPassword, PasswordEncoder passwordEncoder) {
+        return password.check(rawPassword, passwordEncoder);
+    }
 }
