@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.file.File;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
-import sixgaezzang.sidepeek.projects.dto.request.OverviewImageSaveRequest;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
 
 @Service
@@ -17,11 +16,11 @@ public class FileService {
     private final FileRepository fileRepository;
 
     @Transactional
-    public void saveAll(Long projectId, List<OverviewImageSaveRequest> overviewImageSaveRequests) {
+    public void saveAll(Long projectId, List<String> overviewImageSaveRequests) {
         List<File> overviewImages = overviewImageSaveRequests.stream()
             .map(overviewImage -> File.builder()
                 .projectId(projectId)
-                .url(overviewImage.url())
+                .url(overviewImage)
                 .type(FileType.OVERVIEW_IMAGE)
                 .build())
             .toList();
