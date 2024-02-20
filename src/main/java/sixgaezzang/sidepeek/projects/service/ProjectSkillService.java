@@ -15,6 +15,7 @@ public class ProjectSkillService {
 
     ProjectSkillRepository projectSkillRepository;
 
+    @Transactional
     public void saveAll(Long projectId, List<ProjectSkillSaveRequest> projectSkillSaveRequests) {
         List<ProjectSkill> skills = projectSkillSaveRequests.stream().map(
             skill -> ProjectSkill.builder()

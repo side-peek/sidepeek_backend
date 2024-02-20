@@ -15,6 +15,7 @@ import sixgaezzang.sidepeek.projects.repository.FileRepository;
 public class FileService {
     FileRepository fileRepository;
 
+    @Transactional
     public void saveAll(Long projectId, List<OverviewImageSaveRequest> overviewImageSaveRequests) {
         List<File> overviewImages = overviewImageSaveRequests.stream()
             .map(overviewImage -> File.builder()

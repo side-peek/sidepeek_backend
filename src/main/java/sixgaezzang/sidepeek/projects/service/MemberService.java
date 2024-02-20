@@ -15,6 +15,7 @@ public class MemberService {
 
     MemberRepository memberRepository;
 
+    @Transactional
     public void saveAll(Long projectId, List<MemberSaveRequest> memberSaveRequests) {
         List<Member> members = memberSaveRequests.stream().map(
             member -> Member.builder()
