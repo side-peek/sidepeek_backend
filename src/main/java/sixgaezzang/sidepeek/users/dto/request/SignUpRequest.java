@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.users.dto.request;
 
+import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -14,7 +16,7 @@ public record SignUpRequest(
     @Pattern(regexp = Password.PASSWORD_REGXP, message = "비밀번호는 8자 이상이며 영문, 숫자, 특수문자를 포함해야 합니다.")
     String password,
     @NotBlank(message = "닉네임을 입력해주세요.")
-    @Size(max = 20, message = "닉네임은 20자 이하여야 합니다.")
+    @Size(max = MAX_NICKNAME_LENGTH, message = "닉네임은 " + MAX_NICKNAME_LENGTH + "자 이하여야 합니다.")
     String nickname
 ) {
 
