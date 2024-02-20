@@ -10,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.users.domain.Password;
-import sixgaezzang.sidepeek.users.domain.Provider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
 import sixgaezzang.sidepeek.users.dto.response.UserSearchResponse;
@@ -25,24 +24,15 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Long signUp(SignUpRequest request, Provider provider) {
+    public Long signUp(SignUpRequest request) {
         verifyUniqueEmail(request.email());
         verifyUniqueNickname(request.nickname());
 
-        User.UserBuilder userBuilder = User.builder()
-            .provider(provider)
-            .email(request.email())
-            .nickname(request.nickname());
+        Password encodedPassword = new Password(request.password(), passwordEncoder);
+        User user = User.withPassword(request.nickname(), request.email(), encodedPassword);
+        userRepository.save(user);
 
-        if (Provider.isBasic(provider)) {
-            Password encodedPassword = new Password(request.password(), passwordEncoder);
-            userBuilder.password(encodedPassword);
-        }
-
-        User user = userBuilder.build();
-        User saved = userRepository.save(user);
-
-        return saved.getId();
+        return user.getId();
     }
 
     public UserSearchResponse searchByNickname(String keyword) {
