@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import sixgaezzang.sidepeek.auth.jwt.JWTValidationFilter;
-import sixgaezzang.sidepeek.config.properties.JWTProperties;
 
 @Configuration
 @EnableWebSecurity
@@ -22,7 +21,7 @@ import sixgaezzang.sidepeek.config.properties.JWTProperties;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JWTProperties jwtProperties;
+    private final JWTValidationFilter jwtValidationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -39,9 +38,7 @@ public class SecurityConfig {
             .rememberMe(AbstractHttpConfigurer::disable)
             .logout(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-            .addFilterBefore(new JWTValidationFilter(jwtProperties),
-                BasicAuthenticationFilter.class);
-        ;
+            .addFilterBefore(jwtValidationFilter, BasicAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
