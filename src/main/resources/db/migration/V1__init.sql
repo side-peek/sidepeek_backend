@@ -16,14 +16,6 @@ create TABLE IF NOT EXISTS users
     deleted_at        TIMESTAMP          NULL
 );
 
--- AUTHORIZATION
-create TABLE IF NOT EXISTS authorization
-(
-    user_id       BIGINT PRIMARY KEY,
-    refresh_token VARCHAR(255) NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id)
-);
-
 -- AUTH_PROVIDER
 create TABLE IF NOT EXISTS auth_provider
 (
