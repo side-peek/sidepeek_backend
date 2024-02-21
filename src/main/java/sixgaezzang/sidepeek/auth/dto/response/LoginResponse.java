@@ -6,6 +6,7 @@ import sixgaezzang.sidepeek.users.dto.response.UserSummaryResponse;
 @Builder
 public record LoginResponse(
     String accessToken,
+    String refreshToken,
     UserSummaryResponse user
 ) {
 
