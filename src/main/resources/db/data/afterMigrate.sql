@@ -36,7 +36,4 @@ insert into project_skill(id, project_id, skill_id, category) values (22, 1, 2, 
 insert into project_skill(id, project_id, skill_id, category) values (23, 1, 3, '협업툴');
 insert into project_skill(id, project_id, skill_id, category) values (24, 1, 4, '프론트');
 
--- FILE
-
-
 

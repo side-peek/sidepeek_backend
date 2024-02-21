@@ -40,7 +40,6 @@ public class ProjectController {
     @Operation(summary = "프로젝트 상세 조회")
     @ApiResponse(responseCode = "200", description = "프로젝트 상세 조회 성공")
     public ResponseEntity<ProjectResponse> getById(
-        // TODO: 로그인 아이디 추가
         @PathVariable Long id
     ) {
         ProjectResponse response = projectService.findById(id);
