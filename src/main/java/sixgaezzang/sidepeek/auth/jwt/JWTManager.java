@@ -1,11 +1,14 @@
 package sixgaezzang.sidepeek.auth.jwt;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.stereotype.Component;
+import sixgaezzang.sidepeek.common.exception.TokenValidationFailException;
 import sixgaezzang.sidepeek.config.properties.JWTProperties;
 
 @Component
@@ -28,6 +31,18 @@ public class JWTManager {
     }
 
     public String generateAccessToken(long userId) {
+        return generateToken(userId, expiredAfter);
+    }
+
+    public Long getUserId(String token) {
+        return parseClaims(token).get(USER_ID_CLAIM, Long.class);
+    }
+
+    public Long getExpiredAt(String token) {
+        return parseClaims(token).getExpiration().getTime();
+    }
+
+    private String generateToken(long userId, long expiredAfter) {
         Date now = new Date();
         Date expiredAt = new Date(now.getTime() + expiredAfter);
 
