@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.projects.domain.file;
 
 public enum FileType {
-    IMAGE,
-    VIDEO
+    OVERVIEW_IMAGE,
+    DESCRIPTION_IMAGE,
+    TROUBLE_SHOOTING_IMAGE
 }
