@@ -20,6 +20,13 @@ jobs:
 
     runs-on: ubuntu-latest
 
+        services:
+            redis:
+                image: redis
+                ports:
+                    - ${{ secrets.TEST_REDIS_PORT }}:6379
+                options: --entrypoint redis-server
+
     steps:
     - name: Repository Checkout
       uses: actions/checkout@v4
