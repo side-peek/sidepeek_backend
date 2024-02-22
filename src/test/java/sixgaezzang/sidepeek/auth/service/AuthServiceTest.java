@@ -20,7 +20,7 @@ import sixgaezzang.sidepeek.auth.dto.request.LoginRequest;
 import sixgaezzang.sidepeek.auth.dto.response.LoginResponse;
 import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.dto.response.UserSummaryResponse;
+import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
 @SpringBootTest
@@ -109,7 +109,7 @@ class AuthServiceTest {
             userRepository.save(user);
 
             // when
-            UserSummaryResponse response = authService.loadUser(user.getId());
+            UserSummary response = authService.loadUser(user.getId());
 
             // then
             assertThat(response).extracting("id", "nickname", "profileImageUrl")

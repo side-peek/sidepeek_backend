@@ -38,10 +38,10 @@ public class AuthService {
             .build();
     }
 
-    public UserSummaryResponse loadUser(Long loginId) {
+    public UserSummary loadUser(Long loginId) {
         User user = userRepository.findById(loginId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
 
-        return UserSummaryResponse.from(user);
+        return UserSummary.from(user);
     }
 }

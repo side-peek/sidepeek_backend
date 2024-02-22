@@ -15,7 +15,7 @@ import sixgaezzang.sidepeek.auth.dto.request.LoginRequest;
 import sixgaezzang.sidepeek.auth.dto.response.LoginResponse;
 import sixgaezzang.sidepeek.auth.service.AuthService;
 import sixgaezzang.sidepeek.common.annotation.Login;
-import sixgaezzang.sidepeek.users.dto.response.UserSummaryResponse;
+import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 
 @RestController
 @RequestMapping("/auth")
@@ -40,8 +40,8 @@ public class AuthController {
     @PostMapping("/me")
     @Operation(summary = "Access Token 검증")
     @ApiResponse(responseCode = "200", description = "Access Token 검증 성공")
-    public ResponseEntity<UserSummaryResponse> validateToken(@Login Long loginId) {
-        UserSummaryResponse response = authService.loadUser(loginId);
+    public ResponseEntity<UserSummary> validateToken(@Login Long loginId) {
+        UserSummary response = authService.loadUser(loginId);
 
         return ResponseEntity.ok(response);
     }
