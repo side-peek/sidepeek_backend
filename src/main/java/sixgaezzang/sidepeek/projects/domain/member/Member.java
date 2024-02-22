@@ -27,11 +27,8 @@ public class Member {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id")
     private User user;
-
-    @Column(name = "user_id")
-    private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
@@ -44,9 +41,8 @@ public class Member {
     private String nickname;
 
     @Builder
-    public Member(User user, Long userId, Project project, String role, String nickname) {
+    public Member(User user, Project project, String role, String nickname) {
         this.user = user;
-        this.userId = userId;
         this.project = project;
         this.role = role;
         this.nickname = nickname;
