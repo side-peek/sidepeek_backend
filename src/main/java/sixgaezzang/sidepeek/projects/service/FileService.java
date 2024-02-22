@@ -19,12 +19,13 @@ public class FileService {
     @Transactional
     public void saveAll(Project project, List<String> overviewImageUrls) {
         List<File> overviewImages = overviewImageUrls.stream()
-            .map(overviewImage -> File.builder()
-                .project(project)
-                .url(overviewImage)
-                .type(FileType.OVERVIEW_IMAGE)
-                .build())
-            .toList();
+            .map(
+                overviewImage -> File.builder()
+                    .project(project)
+                    .url(overviewImage)
+                    .type(FileType.OVERVIEW_IMAGE)
+                    .build()
+            ).toList();
 
         fileRepository.saveAll(overviewImages);
     }
