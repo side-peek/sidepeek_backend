@@ -10,6 +10,7 @@ import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
+import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
 @Service
@@ -24,16 +25,20 @@ public class MemberService {
     public void saveAll(Project project, List<MemberSaveRequest> memberSaveRequests) {
         List<Member> members = memberSaveRequests.stream().map(
             member -> {
-                if (Objects.isNull(member.userId()) || userRepository.findById(member.userId()).isPresent()) {
-                    return Member.builder()
-                        .project(project)
-                        .nickname(member.nickname())
-                        .userId(member.userId())
-                        .role(member.role())
-                        .build();
+                Member.MemberBuilder memberBuilder = Member.builder()
+                    .project(project)
+                    .nickname(member.nickname())
+                    .role(member.role());
+
+                if (Objects.isNull(member.userId())) {
+                    return memberBuilder.build();
                 }
 
-                throw new EntityNotFoundException("User Id에 해당하는 회원이 없습니다.");
+                User user = userRepository.findById(member.userId())
+                    .orElseThrow(() -> new EntityNotFoundException("User Id에 해당하는 회원이 없습니다."));
+
+                return memberBuilder.user(user)
+                        .build();
             }
         ).toList();
 
