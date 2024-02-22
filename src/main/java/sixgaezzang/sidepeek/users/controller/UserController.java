@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import sixgaezzang.sidepeek.users.domain.Provider;
 import sixgaezzang.sidepeek.users.dto.request.CheckEmailRequest;
 import sixgaezzang.sidepeek.users.dto.request.CheckNicknameRequest;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
@@ -44,7 +43,7 @@ public class UserController {
         @Parameter(name = "nickname", description = "닉네임", example = "육개짱"),
     })
     public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpRequest request) {
-        Long id = userService.signUp(request, Provider.BASIC);
+        Long id = userService.signUp(request);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/users/{id}")
             .buildAndExpand(id).toUri();
