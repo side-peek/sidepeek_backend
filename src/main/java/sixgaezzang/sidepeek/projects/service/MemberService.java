@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
@@ -16,10 +17,10 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void saveAll(Long projectId, List<MemberSaveRequest> memberSaveRequests) {
+    public void saveAll(Project project, List<MemberSaveRequest> memberSaveRequests) {
         List<Member> members = memberSaveRequests.stream().map(
             member -> Member.builder()
-                .projectId(projectId)
+                .project(project)
                 .nickname(member.nickname())
                 .userId(member.userId())
                 .role(member.category())

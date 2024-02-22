@@ -26,11 +26,8 @@ public class ProjectSkill {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", insertable = false, updatable = false)
+    @JoinColumn(name = "project_id")
     private Project project;
-
-    @Column(name = "project_id")
-    private Long projectId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skill_id", insertable = false, updatable = false)
@@ -43,10 +40,8 @@ public class ProjectSkill {
     private String category;
 
     @Builder
-    public ProjectSkill(Project project, Long projectId, Skill skill, Long skillId,
-                        String category) {
+    public ProjectSkill(Project project, Skill skill, Long skillId, String category) {
         this.project = project;
-        this.projectId = projectId;
         this.skill = skill;
         this.skillId = skillId;
         this.category = category;

@@ -28,11 +28,8 @@ public class File {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", insertable = false, updatable = false)
+    @JoinColumn(name = "project_id")
     private Project project;
-
-    @Column(name = "project_id")
-    private Long projectId;
 
     @Column(name = "type", nullable = false, length = 30, columnDefinition = "VARCHAR")
     @Enumerated(EnumType.STRING)
@@ -42,9 +39,8 @@ public class File {
     private String url;
 
     @Builder
-    public File(Project project, Long projectId, FileType type, String url) {
+    public File(Project project, FileType type, String url) {
         this.project = project;
-        this.projectId = projectId;
         this.type = type;
         this.url = url;
     }

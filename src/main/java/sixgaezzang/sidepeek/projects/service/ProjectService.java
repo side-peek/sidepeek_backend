@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
-import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
@@ -18,8 +17,6 @@ import sixgaezzang.sidepeek.projects.repository.FileRepository;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
-import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 
 @Service
 @RequiredArgsConstructor
@@ -43,13 +40,13 @@ public class ProjectService {
         projectRepository.save(project);
 
         // 프로젝트 Skill 저장
-        projectSkillService.saveAll(project.getId(), projectSaveRequest.techStacks());
+        projectSkillService.saveAll(project, projectSaveRequest.techStacks());
 
         // 프로젝트 Member
-        memberService.saveAll(project.getId(), projectSaveRequest.members());
+        memberService.saveAll(project, projectSaveRequest.members());
 
         // 프로젝트 File(프로젝트 개요 Image) 저장
-        fileService.saveAll(project.getId(), projectSaveRequest.overviewImageUrls());
+        fileService.saveAll(project, projectSaveRequest.overviewImageUrls());
 
         return project.getId();
     }

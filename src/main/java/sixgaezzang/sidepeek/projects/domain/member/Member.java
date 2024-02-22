@@ -34,11 +34,8 @@ public class Member {
     private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", insertable = false, updatable = false)
+    @JoinColumn(name = "project_id")
     private Project project;
-
-    @Column(name = "project_id")
-    private Long projectId;
 
     @Column(name = "role", nullable = false, length = 15)
     private String role;
@@ -47,12 +44,10 @@ public class Member {
     private String nickname;
 
     @Builder
-    public Member(User user, Long userId, Project project, Long projectId,
-                  String role, String nickname) {
+    public Member(User user, Long userId, Project project, String role, String nickname) {
         this.user = user;
         this.userId = userId;
         this.project = project;
-        this.projectId = projectId;
         this.role = role;
         this.nickname = nickname;
     }
