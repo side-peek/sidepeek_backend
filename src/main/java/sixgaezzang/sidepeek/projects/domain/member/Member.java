@@ -41,8 +41,7 @@ public class Member {
     private String nickname;
 
     @Builder
-    public Member(User user, Project project, String role,
-        String nickname) {
+    public Member(User user, Project project, String role, String nickname) {
         this.user = user;
         this.project = project;
         this.role = role;

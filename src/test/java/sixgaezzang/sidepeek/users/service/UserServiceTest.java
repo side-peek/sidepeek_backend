@@ -25,7 +25,7 @@ import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
 import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
-import sixgaezzang.sidepeek.users.dto.response.UserSummaryResponse;
+import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
 @SpringBootTest
@@ -158,7 +158,7 @@ class UserServiceTest {
         @NullAndEmptySource
         void 검색어_없이_전체_회원_닉네임_검색에_성공한다(String keyword) {
             // given, when
-            List<UserSummaryResponse> users = userService.searchByNickname(keyword)
+            List<UserSummary> users = userService.searchByNickname(keyword)
                 .users();
 
             // then
@@ -169,7 +169,7 @@ class UserServiceTest {
         @CsvSource(value = {"zzang:3", "coco:2"}, delimiter = ':')
         void 검색어로_회원_닉네임_검색에_성공한다(String keyword, int count) {
             // given, when
-            List<UserSummaryResponse> users = userService.searchByNickname(keyword)
+            List<UserSummary> users = userService.searchByNickname(keyword)
                 .users();
 
             // then
