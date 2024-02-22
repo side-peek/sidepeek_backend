@@ -31,7 +31,12 @@ public class UserService {
         verifyUniqueNickname(request.nickname());
 
         Password encodedPassword = new Password(request.password(), passwordEncoder);
-        User user = User.withPassword(request.nickname(), request.email(), encodedPassword);
+        User user = User.builder()
+            .email(request.email())
+            .nickname(request.nickname())
+            .password(encodedPassword)
+            .build();
+        
         userRepository.save(user);
 
         return user.getId();
