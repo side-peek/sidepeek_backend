@@ -51,6 +51,7 @@ public class ProjectService {
         return project.getId();
     }
 
+    @Transactional
     public ProjectResponse findById(Long id) {
 
         Project project = projectRepository.findById(id)
