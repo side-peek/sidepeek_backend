@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.users.domain.Password;
-import sixgaezzang.sidepeek.users.domain.Provider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
 import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
@@ -27,24 +26,20 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Long signUp(SignUpRequest request, Provider provider) {
-        verifyUniqueEmail(request);
-        verifyUniqueNickname(request);
+    public Long signUp(SignUpRequest request) {
+        verifyUniqueEmail(request.email());
+        verifyUniqueNickname(request.nickname());
 
-        User.UserBuilder userBuilder = User.builder()
-            .provider(provider)
+        Password encodedPassword = new Password(request.password(), passwordEncoder);
+        User user = User.builder()
             .email(request.email())
-            .nickname(request.nickname());
+            .nickname(request.nickname())
+            .password(encodedPassword)
+            .build();
+        
+        userRepository.save(user);
 
-        if (Provider.isBasic(provider)) {
-            Password encodedPassword = new Password(request.password(), passwordEncoder);
-            userBuilder.password(encodedPassword);
-        }
-
-        User user = userBuilder.build();
-        User saved = userRepository.save(user);
-
-        return saved.getId();
+        return user.getId();
     }
 
     public UserSearchResponse searchByNickname(String keyword) {
@@ -73,14 +68,14 @@ public class UserService {
         return new CheckDuplicateResponse(isExists);
     }
 
-    private void verifyUniqueNickname(SignUpRequest request) {
-        if (userRepository.existsByNickname(request.nickname())) {
+    private void verifyUniqueNickname(String nickname) {
+        if (userRepository.existsByNickname(nickname)) {
             throw new EntityExistsException("이미 사용 중인 닉네임입니다.");
         }
     }
 
-    private void verifyUniqueEmail(SignUpRequest request) {
-        if (userRepository.existsByEmail(request.email())) {
+    private void verifyUniqueEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
             throw new EntityExistsException("이미 사용 중인 이메일입니다.");
         }
     }

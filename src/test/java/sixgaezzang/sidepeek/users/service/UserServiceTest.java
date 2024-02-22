@@ -22,7 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.users.domain.Password;
-import sixgaezzang.sidepeek.users.domain.Provider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
 import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
@@ -65,13 +64,13 @@ class UserServiceTest {
             SignUpRequest request = new SignUpRequest(email, password, nickname);
 
             // when
-            Long saved = userService.signUp(request, Provider.BASIC);
+            Long saved = userService.signUp(request);
 
             // then
             User actual = userRepository.findById(saved).get();
             Password encodedPassword = actual.getPassword();
-            assertThat(actual).extracting("email", "nickname", "provider")
-                .containsExactly(email, nickname, Provider.BASIC);
+            assertThat(actual).extracting("email", "nickname")
+                .containsExactly(email, nickname);
             assertThat(encodedPassword.check(password, passwordEncoder)).isTrue();
         }
 
@@ -86,7 +85,7 @@ class UserServiceTest {
             SignUpRequest request = new SignUpRequest(duplicatedEmail, password, newNickname);
 
             // when
-            ThrowingCallable signup = () -> userService.signUp(request, Provider.BASIC);
+            ThrowingCallable signup = () -> userService.signUp(request);
 
             // then
             assertThatExceptionOfType(EntityExistsException.class).isThrownBy(signup)
@@ -104,7 +103,7 @@ class UserServiceTest {
             SignUpRequest request = new SignUpRequest(newEmail, password, duplicatedNickname);
 
             // when
-            ThrowingCallable signup = () -> userService.signUp(request, Provider.BASIC);
+            ThrowingCallable signup = () -> userService.signUp(request);
 
             // then
             assertThatExceptionOfType(EntityExistsException.class).isThrownBy(signup)
@@ -118,7 +117,7 @@ class UserServiceTest {
             SignUpRequest request = new SignUpRequest(invalidEmail, password, nickname);
 
             // when
-            ThrowingCallable signup = () -> userService.signUp(request, Provider.BASIC);
+            ThrowingCallable signup = () -> userService.signUp(request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
@@ -132,7 +131,7 @@ class UserServiceTest {
             SignUpRequest request = new SignUpRequest(email, invalidPassword, nickname);
 
             // when
-            ThrowingCallable signup = () -> userService.signUp(request, Provider.BASIC);
+            ThrowingCallable signup = () -> userService.signUp(request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
@@ -285,7 +284,6 @@ class UserServiceTest {
             .password(isBlank(password) ? new Password(this.password, passwordEncoder)
                 : new Password(password, passwordEncoder))
             .nickname(isBlank(nickname) ? this.nickname : nickname)
-            .provider(Provider.BASIC)
             .build();
     }
 }

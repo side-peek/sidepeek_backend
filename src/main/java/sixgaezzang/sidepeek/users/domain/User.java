@@ -19,6 +19,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 
 @Entity
@@ -37,10 +38,6 @@ public class User extends BaseTimeEntity {
 
     @Column(name = "nickname", length = MAX_NICKNAME_LENGTH, nullable = false, unique = true)
     private String nickname;
-
-    @Column(name = "provider", length = 50, nullable = false, columnDefinition = "VARCHAR")
-    @Enumerated(EnumType.STRING)
-    private Provider provider;
 
     @Column(name = "email", length = 50, nullable = false, unique = true)
     private String email;
@@ -72,13 +69,16 @@ public class User extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public User(String nickname, Provider provider, String email, Password password) {
+    public User(String nickname, String email, Password password) {
         validateConstructorArguments(nickname, email);
 
         this.nickname = nickname;
-        this.provider = provider;
         this.email = email;
         this.password = password;
+    }
+
+    public boolean checkPassword(String rawPassword, PasswordEncoder passwordEncoder) {
+        return password.check(rawPassword, passwordEncoder);
     }
 
     private void validateConstructorArguments(String nickname, String email) {
@@ -91,5 +91,4 @@ public class User extends BaseTimeEntity {
         validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
             "닉네임은 " + MAX_NICKNAME_LENGTH + "자 이하여야 합니다.");
     }
-
 }
