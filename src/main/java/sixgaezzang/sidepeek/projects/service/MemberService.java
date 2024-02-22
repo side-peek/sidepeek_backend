@@ -23,7 +23,7 @@ public class MemberService {
                 .project(project)
                 .nickname(member.nickname())
                 .userId(member.userId())
-                .role(member.category())
+                .role(member.role())
                 .build()
         ).toList();
 
