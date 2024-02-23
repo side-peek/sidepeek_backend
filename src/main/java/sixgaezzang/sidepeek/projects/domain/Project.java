@@ -1,5 +1,8 @@
 package sixgaezzang.sidepeek.projects.domain;
 
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,13 +28,13 @@ public class Project extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 300)
+    @Column(name = "name", nullable = false, length = MAX_PROJECT_NAME_LENGTH)
     private String name;
 
-    @Column(name = "sub_name", length = 300)
+    @Column(name = "sub_name", length = MAX_PROJECT_NAME_LENGTH)
     private String subName;
 
-    @Column(name = "overview", nullable = false, length = 1000)
+    @Column(name = "overview", nullable = false, length = MAX_OVERVIEW_LENGTH)
     private String overview;
 
     @Column(name = "start_date", columnDefinition = "TIMESTAMP")
@@ -49,7 +52,7 @@ public class Project extends BaseTimeEntity {
     @Column(name = "github_url", columnDefinition = "TEXT")
     private String githubUrl;
 
-    @Column(name = "owner_id", columnDefinition = "BIGINT")
+    @Column(name = "owner_id", columnDefinition = "BIGINT", nullable = false)
     private Long ownerId;
 
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")

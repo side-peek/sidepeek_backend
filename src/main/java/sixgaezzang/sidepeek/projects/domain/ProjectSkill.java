@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.projects.domain;
 
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LENGTH;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,7 +35,7 @@ public class ProjectSkill {
     @JoinColumn(name = "skill_id")
     private Skill skill;
 
-    @Column(name = "category", nullable = false, length = 50)
+    @Column(name = "category", nullable = false, length = MAX_CATEGORY_LENGTH)
     private String category;
 
     @Builder

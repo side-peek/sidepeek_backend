@@ -1,5 +1,8 @@
 package sixgaezzang.sidepeek.projects.domain.member;
 
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
+import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,10 +37,10 @@ public class Member {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @Column(name = "role", nullable = false, length = 15)
+    @Column(name = "role", nullable = false, length = MAX_ROLE_LENGTH)
     private String role;
 
-    @Column(name = "nickname", nullable = false, length = 20)
+    @Column(name = "nickname", nullable = false, length = MAX_NICKNAME_LENGTH)
     private String nickname;
 
     @Builder
