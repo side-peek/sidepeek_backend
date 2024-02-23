@@ -2,6 +2,7 @@ package sixgaezzang.sidepeek.common.util;
 
 import static io.micrometer.common.util.StringUtils.isBlank;
 import static io.micrometer.common.util.StringUtils.isNotBlank;
+import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
 import static sixgaezzang.sidepeek.users.domain.Password.PASSWORD_REGXP;
 
 import java.util.regex.Pattern;
@@ -16,8 +17,7 @@ public final class ValidationUtils {
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
         "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+[.][0-9A-Za-z]+$");
 
-    private static final Pattern URI_PATTERN = Pattern.compile(
-        "^(https?)://([^:/\\s]+)(:([^/]*))?((/[^\\s/]+)*)?/?([^#\\s?]*)(\\?([^#\\s]*))?(#(\\w*))?$");
+    private static final Pattern URI_PATTERN = Pattern.compile(URL_REGEXP);
 
     public static void validateEmail(String input, String message) {
         pattern(input, EMAIL_PATTERN, message);
