@@ -57,7 +57,6 @@ class AuthServiceTest {
         void 로그인에_성공한다() {
             // given
             User user = createUser();
-            userRepository.save(user);
             LoginRequest loginRequest = new LoginRequest(email, password);
 
             // when
@@ -87,7 +86,6 @@ class AuthServiceTest {
         void 비밀번호가_일치하지_않는_경우_로그인에_실패한다() {
             // given
             User user = createUser();
-            userRepository.save(user);
             String unmatchedPassword = faker.internet().password(8, 100, true, true, true);
             LoginRequest loginRequest = new LoginRequest(email, unmatchedPassword);
 
@@ -107,7 +105,6 @@ class AuthServiceTest {
         void 사용자_조회에_성공한다() {
             // given
             User user = createUser();
-            userRepository.save(user);
 
             // when
             UserSummary response = authService.loadUser(user.getId());
@@ -132,11 +129,13 @@ class AuthServiceTest {
     }
 
     private User createUser() {
-        return User.builder()
+        User user = User.builder()
             .email(email)
             .password(new Password(password, passwordEncoder))
             .nickname(nickname)
             .build();
+
+        return userRepository.save(user);
     }
 
 }
