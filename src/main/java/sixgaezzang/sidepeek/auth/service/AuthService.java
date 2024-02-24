@@ -10,7 +10,7 @@ import sixgaezzang.sidepeek.auth.dto.request.LoginRequest;
 import sixgaezzang.sidepeek.auth.dto.response.LoginResponse;
 import sixgaezzang.sidepeek.auth.jwt.JWTManager;
 import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.dto.response.UserSummaryResponse;
+import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
 @Service
@@ -38,7 +38,7 @@ public class AuthService {
         return LoginResponse.builder()
             .accessToken(accessToken)
             .refreshToken(refreshToken)
-            .user(UserSummaryResponse.from(user))
+            .user(UserSummary.from(user))
             .build();
     }
 

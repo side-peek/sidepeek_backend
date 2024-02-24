@@ -69,7 +69,7 @@ public class User extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    private User(String nickname, String email, Password password) {
+    public User(String nickname, String email, Password password) {
         validateConstructorArguments(nickname, email);
 
         this.nickname = nickname;
@@ -77,19 +77,8 @@ public class User extends BaseTimeEntity {
         this.password = password;
     }
 
-    public static User of(String nickname, String email) {
-        return User.builder()
-            .nickname(nickname)
-            .email(email)
-            .build();
-    }
-
-    public static User withPassword(String nickname, String email, Password password) {
-        return User.builder()
-            .nickname(nickname)
-            .email(email)
-            .password(password)
-            .build();
+    public boolean checkPassword(String rawPassword, PasswordEncoder passwordEncoder) {
+        return password.check(rawPassword, passwordEncoder);
     }
 
     private void validateConstructorArguments(String nickname, String email) {
@@ -101,9 +90,5 @@ public class User extends BaseTimeEntity {
         validateNotBlank(nickname, "닉네임은 필수값입니다.");
         validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
             "닉네임은 " + MAX_NICKNAME_LENGTH + "자 이하여야 합니다.");
-    }
-
-    public boolean checkPassword(String rawPassword, PasswordEncoder passwordEncoder) {
-        return password.check(rawPassword, passwordEncoder);
     }
 }

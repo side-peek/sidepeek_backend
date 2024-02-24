@@ -5,6 +5,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.stereotype.Component;
@@ -48,13 +49,13 @@ public class JWTManager {
     }
 
     private String generateToken(long userId, long expiredAfter) {
-        Date now = new Date();
-        Date expiredAt = new Date(now.getTime() + expiredAfter);
+        Instant now = Instant.now();
+        Instant expiredAt = now.plusMillis(expiredAfter);
 
         return Jwts.builder()
             .setIssuer(issuer)
-            .setIssuedAt(now)
-            .setExpiration(expiredAt)
+            .setIssuedAt(Date.from(now))
+            .setExpiration(Date.from(expiredAt))
             .claim(USER_ID_CLAIM, userId)
             .signWith(secretKey)
             .compact();

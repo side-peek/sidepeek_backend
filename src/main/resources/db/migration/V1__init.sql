@@ -37,7 +37,7 @@ create TABLE IF NOT EXISTS project
     overview        VARCHAR(1000) NOT NULL,
     thumbnail_url   TEXT          NULL,
     deploy_url      TEXT          NULL,
-    github_url      TEXT          NULL,
+    github_url      TEXT          NOT NULL,
     like_count      BIGINT        NOT NULL DEFAULT 0,
     view_count      BIGINT        NOT NULL DEFAULT 0,
     start_date      TIMESTAMP     NULL,
@@ -77,9 +77,9 @@ create TABLE IF NOT EXISTS likes
 -- SKILL
 create TABLE IF NOT EXISTS skill
 (
-    id             BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name           VARCHAR(50) UNIQUE NOT NULL,
-    icon_image_url TEXT               NULL
+    id             BIGINT       PRIMARY KEY AUTO_INCREMENT,
+    name           VARCHAR(50)  UNIQUE NOT NULL,
+    icon_image_url TEXT         NULL
 );
 
 -- USER_SKILL
