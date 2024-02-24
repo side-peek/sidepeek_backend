@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.auth.domain.RefreshToken;
 import sixgaezzang.sidepeek.auth.jwt.JWTManager;
 import sixgaezzang.sidepeek.auth.repository.RefreshTokenRepository;
+import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.common.exception.TokenValidationFailException;
 
 @SpringBootTest
@@ -86,7 +87,7 @@ class RefreshTokenServiceTest {
 
             // then
             assertThat(actual).isNotNull();
-            assertThat(actual).extracting("userId", "refreshToken", "expiredAt")
+            assertThat(actual).extracting("id", "refreshToken", "expiredAt")
                 .containsExactly(userId, refreshToken.refreshToken(), refreshToken.expiredAt());
         }
 
@@ -99,7 +100,7 @@ class RefreshTokenServiceTest {
             ThrowingCallable getById = () -> refreshTokenService.getById(userId);
 
             // then
-            assertThatThrownBy(getById).isInstanceOf(TokenValidationFailException.class)
+            assertThatThrownBy(getById).isInstanceOf(InvalidAuthenticationException.class)
                 .hasMessage("유효하지 않은 토큰입니다.");
         }
     }
