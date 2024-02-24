@@ -30,9 +30,9 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
             .getAuthentication();
 
         if (authentication != null) {
-            String principal = (String) authentication.getPrincipal();
+            Long principal = (Long) authentication.getPrincipal();
             if (principal != null) {
-                return Long.parseLong(principal);
+                return principal;
             }
         }
 
