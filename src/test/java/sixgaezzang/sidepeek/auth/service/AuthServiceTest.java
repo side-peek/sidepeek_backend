@@ -20,6 +20,7 @@ import sixgaezzang.sidepeek.auth.dto.request.LoginRequest;
 import sixgaezzang.sidepeek.auth.dto.response.LoginResponse;
 import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
+import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
 @SpringBootTest
@@ -96,6 +97,37 @@ class AuthServiceTest {
             // then
             assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(login)
                 .withMessage("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    @Nested
+    class 사용자_조회_테스트 {
+
+        @Test
+        void 사용자_조회에_성공한다() {
+            // given
+            User user = createUser();
+            userRepository.save(user);
+
+            // when
+            UserSummary response = authService.loadUser(user.getId());
+
+            // then
+            assertThat(response).extracting("id", "nickname", "profileImageUrl")
+                .containsExactly(user.getId(), user.getNickname(), user.getProfileImageUrl());
+        }
+
+        @Test
+        void 존재하지_않는_사용자인_경우_사용자_조회에_실패한다() {
+            // given
+            Long invalidId = faker.random().nextLong(Long.MAX_VALUE);
+
+            // when
+            ThrowingCallable loadUser = () -> authService.loadUser(invalidId);
+
+            // then
+            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(loadUser)
+                .withMessage("존재하지 않는 사용자입니다.");
         }
     }
 
