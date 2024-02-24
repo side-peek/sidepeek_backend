@@ -1,74 +1,80 @@
 name: SidePeek CI with Gradle
 
 on:
-   pull_request:
-     branches:
-       - main
-       - dev
-       - 'feat/**'
-       - 'fix/**'
-       - 'refactor/**'
-       - 'chore/**'
+    pull_request:
+        branches:
+            - main
+            - dev
+            - 'feat/**'
+            - 'fix/**'
+            - 'refactor/**'
+            - 'chore/**'
 
 permissions:
-  contents: read
-  checks: write
-  pull-requests: write
+    contents: read
+    checks: write
+    pull-requests: write
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
+        services:
+            redis:
+                image: redis
+                ports:
+                    - ${{ secrets.TEST_REDIS_PORT }}:6379
+                options: --entrypoint redis-server
 
-    steps:
-    - name: Repository Checkout
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.ACTION_TOKEN }}
-        submodules: true
+        steps:
+            -   name: Repository Checkout
+                uses: actions/checkout@v4
+                with:
+                    token: ${{ secrets.ACTION_TOKEN }}
+                    submodules: true
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'corretto'
+            -   name: Set up JDK 17
+                uses: actions/setup-java@v4
+                with:
+                    java-version: '17'
+                    distribution: 'corretto'
 
-    - name: Set up MySQL
-      uses: samin/mysql-action@v1.3
-      with:
-        mysql user: ${{ secrets.TEST_DB_USER }}
-        mysql password: ${{ secrets.TEST_DB_PASSWORD }}
-        mysql database: ${{ secrets.TEST_DB }}
-        host port: ${{ secrets.TEST_DB_PORT }}
+            -   name: Set up MySQL
+                uses: samin/mysql-action@v1.3
+                with:
+                    mysql user: ${{ secrets.TEST_DB_USER }}
+                    mysql password: ${{ secrets.TEST_DB_PASSWORD }}
+                    mysql database: ${{ secrets.TEST_DB }}
+                    host port: ${{ secrets.TEST_DB_PORT }}
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+            -   name: Grant execute permission for gradlew
+                run: chmod +x gradlew
 
-    - name: Build with Gradle
-      run: ./gradlew build
+            -   name: Build with Gradle
+                run: ./gradlew build
 
-    - name: Test Jacoco Coverage Report
-      id: jacoco
-      uses: madrapps/jacoco-report@v1.6.1
-      with:
-        title: 📝 Jacoco Test Coverage
-        paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
-        token: ${{ secrets.GITHUB_TOKEN }}
-        min-coverage-overall: 80
-        min-coverage-changed-files: 80
+            -   name: Test Jacoco Coverage Report
+                id: jacoco
+                uses: madrapps/jacoco-report@v1.6.1
+                with:
+                    title: 📝 Jacoco Test Coverage
+                    paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
+                    token: ${{ secrets.GITHUB_TOKEN }}
+                    min-coverage-overall: 80
+                    min-coverage-changed-files: 80
 
-    - name: Test Checkstyle Report
-      uses: lcollins/checkstyle-github-action@v2.0.0
-      with:
-        path: '**/build/reports/checkstyle/**.xml'
-        title: 📝 Checkstyle report
+            -   name: Test Checkstyle Report
+                uses: lcollins/checkstyle-github-action@v2.0.0
+                with:
+                    path: '**/build/reports/checkstyle/**.xml'
+                    title: 📝 Checkstyle report
 
-    - name: Send Slack Notification
-      uses: 8398a7/action-slack@v3
-      with:
-        status: ${{ job.status }}
-        author_name: Github Action Test
-        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-      if: always()
+            -   name: Send Slack Notification
+                uses: 8398a7/action-slack@v3
+                with:
+                    status: ${{ job.status }}
+                    author_name: Github Action Test
+                    fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+                env:
+                    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+                if: always()

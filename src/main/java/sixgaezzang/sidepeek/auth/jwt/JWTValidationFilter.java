@@ -1,32 +1,27 @@
 package sixgaezzang.sidepeek.auth.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import javax.crypto.SecretKey;
+import lombok.RequiredArgsConstructor;
 import org.flywaydb.core.internal.util.StringUtils;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import sixgaezzang.sidepeek.config.properties.JWTProperties;
 
+@Component
+@RequiredArgsConstructor
 public class JWTValidationFilter extends OncePerRequestFilter {
 
     public static final String JWT_HEADER = "Authorization";
     public static final String JWT_PREFIX = "Bearer ";
-    public final String secretKey;
 
-    public JWTValidationFilter(JWTProperties jwtProperties) {
-        secretKey = jwtProperties.secretKey();
-    }
+    private final JWTManager jwtManager;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -36,13 +31,7 @@ public class JWTValidationFilter extends OncePerRequestFilter {
 
         if (null != jwt) {
             try {
-                SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-                Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(jwt)
-                    .getBody();
-                String userId = String.valueOf(claims.get(JWTManager.USER_ID_CLAIM));
+                Long userId = jwtManager.getUserId(jwt);
                 Authentication auth = new UsernamePasswordAuthenticationToken(userId, null);
 
                 SecurityContextHolder.getContext().setAuthentication(auth);

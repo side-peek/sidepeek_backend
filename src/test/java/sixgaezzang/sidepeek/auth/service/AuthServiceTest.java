@@ -64,6 +64,7 @@ class AuthServiceTest {
 
             // then
             assertThat(response.accessToken()).isNotNull();
+            assertThat(response.refreshToken()).isNotNull();
             assertThat(response.user()).extracting("id", "nickname", "profileImageUrl")
                 .containsExactly(user.getId(), user.getNickname(), user.getProfileImageUrl());
         }

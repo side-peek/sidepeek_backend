@@ -19,6 +19,7 @@ import sixgaezzang.sidepeek.users.repository.UserRepository;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenService refreshTokenService;
     private final PasswordEncoder passwordEncoder;
     private final JWTManager jwtManager;
 
@@ -31,9 +32,12 @@ public class AuthService {
         }
 
         String accessToken = jwtManager.generateAccessToken(user.getId());
+        String refreshToken = jwtManager.generateRefreshToken(user.getId());
+        refreshTokenService.save(refreshToken);
 
         return LoginResponse.builder()
             .accessToken(accessToken)
+            .refreshToken(refreshToken)
             .user(UserSummary.from(user))
             .build();
     }

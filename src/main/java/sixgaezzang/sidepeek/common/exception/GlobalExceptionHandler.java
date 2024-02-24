@@ -71,6 +71,15 @@ public class GlobalExceptionHandler {
             .body(errorResponse);
     }
 
+    @ExceptionHandler(TokenValidationFailException.class)
+    public ResponseEntity<ErrorResponse> handleTokenValidationFailException(
+        TokenValidationFailException e) {
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(errorResponse);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR,

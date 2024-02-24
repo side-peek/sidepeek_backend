@@ -190,3 +190,5 @@ Temporary Items
 # Custom ignores
 .env
 .idea/
+
+docker/redis/data/
