@@ -44,4 +44,8 @@ public class MemberService {
 
         memberRepository.saveAll(members);
     }
+
+    public List<Member> findAll(Project project) {
+        return memberRepository.findAllByProject(project);
+    }
 }

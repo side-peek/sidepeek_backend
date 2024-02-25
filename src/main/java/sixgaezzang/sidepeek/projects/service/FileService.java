@@ -29,4 +29,8 @@ public class FileService {
 
         fileRepository.saveAll(overviewImages);
     }
+
+    public List<File> findAllByType(Project project, FileType fileType) {
+        return fileRepository.findAllByProjectAndType(project, fileType);
+    }
 }
