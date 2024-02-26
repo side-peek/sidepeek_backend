@@ -2,6 +2,7 @@ package sixgaezzang.sidepeek.common.util;
 
 import static io.micrometer.common.util.StringUtils.isBlank;
 import static io.micrometer.common.util.StringUtils.isNotBlank;
+import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
 import static sixgaezzang.sidepeek.users.domain.Password.PASSWORD_REGXP;
 
@@ -33,6 +34,10 @@ public final class ValidationUtils {
 
     public static void validateMaxLength(String input, int maxLength, String message) {
         Assert.isTrue(input.length() <= maxLength, message);
+    }
+
+    public static void validateTextLength(String input, String message) {
+        Assert.isTrue(input.length() <= MAX_TEXT_LENGTH, message);
     }
 
     public static void validateNotBlank(String input, String message) {
