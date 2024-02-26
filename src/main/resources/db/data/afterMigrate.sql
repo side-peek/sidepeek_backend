@@ -9,12 +9,12 @@ truncate table project_skill;
 SET foreign_key_checks = 1;
 
 -- USER
-insert into users(id, nickname, email, password, profile_image_url)
-values (1, '의진', 'uijin@naver.com',
+insert into users(id, nickname, provider, email, password, profile_image_url)
+values (1, '의진','BASIC', 'uijin@naver.com',
         '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
         'https://user-images.githubusercontent.com/uijin.png');
-insert into users(id, nickname, email, password, profile_image_url)
-values (2, '동건', 'donggun@naver.com',
+insert into users(id, nickname, provider, email, password, profile_image_url)
+values (2, '동건', 'BASIC','donggun@naver.com',
         '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
         'https://user-images.githubusercontent.com/uijin.png');
 
