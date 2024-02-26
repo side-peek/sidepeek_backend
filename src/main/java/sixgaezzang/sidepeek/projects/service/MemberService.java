@@ -27,7 +27,7 @@ public class MemberService {
     @Transactional
     public List<MemberSummary> saveAll(Project project, List<MemberSaveRequest> memberSaveRequests) {
         if (!ValidationUtils.isNotNullOrEmpty(memberSaveRequests)) {
-            return null;
+            return null; //TODO: Member를 등록 안하면 자동으로 작성자는 멤버로 등록이 되는가? 그럼 역할은?
         }
 
         MemberValidator.validateMembers(memberSaveRequests);
