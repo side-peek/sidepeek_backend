@@ -43,7 +43,7 @@ public class Member {
     @Column(name = "role", nullable = false, length = MAX_ROLE_LENGTH)
     private String role;
 
-    @Column(name = "nickname", nullable = false, length = MAX_NICKNAME_LENGTH)
+    @Column(name = "nickname", length = MAX_NICKNAME_LENGTH)
     private String nickname;
 
     @Builder
@@ -65,6 +65,7 @@ public class Member {
         }
         if (Objects.nonNull(nickname)) { // 비회원인 경우
             MemberValidator.validateNonFellowMemberNickname(nickname);
+            return;
         }
 
         throw new IllegalArgumentException("회원인 멤버는 유저 Id를, 비회원인 멤버는 닉네임을 입력해주세요.");
