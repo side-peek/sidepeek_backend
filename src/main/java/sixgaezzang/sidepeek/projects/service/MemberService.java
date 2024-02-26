@@ -6,6 +6,7 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
@@ -25,6 +26,10 @@ public class MemberService {
 
     @Transactional
     public List<MemberSummary> saveAll(Project project, List<MemberSaveRequest> memberSaveRequests) {
+        if (!ValidationUtils.isNotNullOrEmpty(memberSaveRequests)) {
+            return null;
+        }
+
         MemberValidator.validateMembers(memberSaveRequests);
 
         List<Member> members = memberSaveRequests.stream().map(

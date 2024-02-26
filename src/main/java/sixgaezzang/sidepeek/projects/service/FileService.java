@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.File;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
@@ -20,6 +21,10 @@ public class FileService {
 
     @Transactional
     public List<OverviewImageSummary> saveAll(Project project, List<String> overviewImageUrls) {
+        if (!ValidationUtils.isNotNullOrEmpty(overviewImageUrls)) {
+            return null;
+        }
+
         FileValidator.validateFiles(overviewImageUrls);
 
         List<File> overviewImages = overviewImageUrls.stream()

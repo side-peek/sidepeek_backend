@@ -42,15 +42,9 @@ public class ProjectService {
         List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project, projectSaveRequest.techStacks());
 
         // Option
-        List<MemberSummary> members = null;
-        if (!projectSaveRequest.members().isEmpty()) {
-            members = memberService.saveAll(project, projectSaveRequest.members());
-        }
-
-        List<OverviewImageSummary> overviewImages = null;
-        if (!projectSaveRequest.overviewImageUrls().isEmpty()) {
-            overviewImages = fileService.saveAll(project, projectSaveRequest.overviewImageUrls());
-        }
+        List<MemberSummary> members = memberService.saveAll(project, projectSaveRequest.members());
+        List<OverviewImageSummary> overviewImages =
+            fileService.saveAll(project, projectSaveRequest.overviewImageUrls());
 
         // TODO: OwnerId도 함께 보내기(ProjectResponse UserSummary 필드 추가)
         return ProjectResponse.from(project, overviewImages, techStacks, members);
