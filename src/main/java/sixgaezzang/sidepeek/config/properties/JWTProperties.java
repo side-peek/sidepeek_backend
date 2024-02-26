@@ -6,7 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record JWTProperties(
     String issuer,
     String secretKey,
-    int expiredAfter
+    int expiredAfter,
+    int refreshExpiredAfter
 ) {
 
 }

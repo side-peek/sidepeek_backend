@@ -22,3 +22,21 @@ services:
             TZ: ${TZ}
         ports:
             - "${TEST_DB_PORT}:3306"
+
+    sidepeek-redis:
+        image: redis:latest
+        ports:
+            - ${REDIS_PORT}:6379
+        volumes:
+            - ./redis/data:/data/local
+            - ./redis/conf/redis.conf:/usr/local/conf/redis.conf
+        restart: always
+
+    sidepeek-test-redis:
+        image: redis:latest
+        ports:
+            - ${TEST_REDIS_PORT}:6379
+        volumes:
+            - ./redis/data:/data/test
+            - ./redis/conf/redis.conf:/usr/local/conf/redis.conf
+        restart: always

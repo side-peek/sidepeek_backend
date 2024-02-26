@@ -19,6 +19,7 @@ import sixgaezzang.sidepeek.users.repository.UserRepository;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenService refreshTokenService;
     private final PasswordEncoder passwordEncoder;
     private final JWTManager jwtManager;
 
@@ -31,11 +32,20 @@ public class AuthService {
         }
 
         String accessToken = jwtManager.generateAccessToken(user.getId());
+        String refreshToken = jwtManager.generateRefreshToken(user.getId());
+        refreshTokenService.save(refreshToken);
 
         return LoginResponse.builder()
             .accessToken(accessToken)
+            .refreshToken(refreshToken)
             .user(UserSummary.from(user))
             .build();
     }
 
+    public UserSummary loadUser(Long loginId) {
+        User user = userRepository.findById(loginId)
+            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
+
+        return UserSummary.from(user);
+    }
 }
