@@ -13,10 +13,7 @@ import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
-import sixgaezzang.sidepeek.projects.repository.FileRepository;
-import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -68,10 +65,7 @@ public class ProjectService {
             .map(ProjectSkillSummary::from)
             .toList();
 
-        List<MemberSummary> members = memberService.findAll(project)
-            .stream()
-            .map(MemberSummary::from)
-            .toList();
+        List<MemberSummary> members = memberService.findAllWithUser(project);
 
         return ProjectResponse.from(project, overviewImages, techStacks, members);
     }
