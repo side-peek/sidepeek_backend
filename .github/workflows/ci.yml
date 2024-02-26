@@ -23,7 +23,7 @@ jobs:
             redis:
                 image: redis
                 ports:
-                    - ${{ secrets.TEST_REDIS_PORT }}:6379
+                    - ${{ secrets.TEST_REDIS_PORT }}
                 options: --entrypoint redis-server
 
         steps:
