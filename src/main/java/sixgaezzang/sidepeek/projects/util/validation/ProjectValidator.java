@@ -9,7 +9,7 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LE
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 
 import io.jsonwebtoken.lang.Assert;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
@@ -80,13 +80,13 @@ public class ProjectValidator {
         }
     }
 
-    public static void validateDuration(LocalDateTime startDate, LocalDateTime endDate) {
+    public static void validateDuration(LocalDate startDate, LocalDate endDate) {
         if (Objects.isNull(startDate) && Objects.isNull(endDate)) {
             return; // 모두 null이면 넘어간다.
         }
 
         if (Objects.nonNull(startDate) && Objects.nonNull(endDate)) {
-            if (startDate.isAfter(endDate) || startDate.isEqual(endDate)) { // TODO: 시간(Time) 데이터가 필요한지 고민해보자!
+            if (startDate.isAfter(endDate) || startDate.isEqual(endDate)) {
                 throw new IllegalArgumentException("시작 날짜가 종료 날짜와 같거나 종료 날짜보다 이전이어야합니다.");
             }
             return;
@@ -95,4 +95,5 @@ public class ProjectValidator {
         // 둘 중 하나가 null이면 안된다. 둘 다 입력해야한다.
         throw new IllegalArgumentException("프로젝트 기간은 시작 날짜와 종료 날짜가 모두 기입되어야 합니다.");
     }
+
 }

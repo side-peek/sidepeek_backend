@@ -19,6 +19,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -47,11 +48,11 @@ public class Project extends BaseTimeEntity {
     @Column(name = "overview", nullable = false, length = MAX_OVERVIEW_LENGTH)
     private String overview;
 
-    @Column(name = "start_date", columnDefinition = "TIMESTAMP")
-    private LocalDateTime startDate;
+    @Column(name = "start_date", columnDefinition = "DATE")
+    private LocalDate startDate;
 
-    @Column(name = "end_date", columnDefinition = "TIMESTAMP")
-    private LocalDateTime endDate;
+    @Column(name = "end_date", columnDefinition = "DATE")
+    private LocalDate endDate;
 
     @Column(name = "thumbnail_url", columnDefinition = "TEXT")
     private String thumbnailUrl;
@@ -81,9 +82,9 @@ public class Project extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public Project(String name, String subName, String overview, LocalDateTime startDate,
-                   LocalDateTime endDate, Long ownerId, String thumbnailUrl,
-                   String deployUrl, String githubUrl, String description, String troubleshooting) {
+    public Project(String name, String subName, String overview, LocalDate startDate, LocalDate endDate, Long ownerId,
+                   String thumbnailUrl, String deployUrl, String githubUrl, String description,
+                   String troubleshooting) {
         validateConstructorRequiredArguments(name, overview, githubUrl, description, ownerId);
         validateConstructorOptionArguments(subName, thumbnailUrl, deployUrl, troubleshooting, startDate, endDate);
 
@@ -121,8 +122,7 @@ public class Project extends BaseTimeEntity {
     }
 
     private void validateConstructorOptionArguments(String subName, String thumbnailUrl, String deployUrl,
-                                                    String troubleshooting, LocalDateTime startDate,
-                                                    LocalDateTime endDate) {
+                                                    String troubleshooting, LocalDate startDate, LocalDate endDate) {
         validateSubName(subName);
         validateThumbnailUrl(thumbnailUrl);
         validateDeployUrl(deployUrl);

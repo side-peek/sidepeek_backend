@@ -2,6 +2,7 @@ package sixgaezzang.sidepeek.projects.dto.request;
 
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MIN_ID;
 import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.DATE_PATTERN;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 
@@ -11,7 +12,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import org.hibernate.validator.constraints.URL;
 import sixgaezzang.sidepeek.projects.domain.Project;
@@ -54,10 +55,10 @@ public record ProjectSaveRequest(
     String deployUrl,
 
     @JsonFormat(pattern = DATE_PATTERN)
-    LocalDateTime startDate,
+    LocalDate startDate,
 
     @JsonFormat(pattern = DATE_PATTERN)
-    LocalDateTime endDate,
+    LocalDate endDate,
 
     String troubleShooting,
 
@@ -65,8 +66,6 @@ public record ProjectSaveRequest(
 
     List<MemberSaveRequest> members
 ) {
-
-    public static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     public Project toEntity() {
         return Project.builder()
