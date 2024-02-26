@@ -1,8 +1,8 @@
 package sixgaezzang.sidepeek.projects.util.validation;
 
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateBlank;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateTextLength;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateURI;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
@@ -21,13 +21,13 @@ public class ProjectValidator {
 
     // Required
     public static void validateName(String name) {
-        validateBlank(name, "프로젝트 제목을 입력해주세요.");
+        validateNotBlank(name, "프로젝트 제목을 입력해주세요.");
         validateMaxLength(name, MAX_PROJECT_NAME_LENGTH,
             "프로젝트 제목은 " + MAX_PROJECT_NAME_LENGTH + "자를 넘을 수 없습니다.");
     }
 
     public static void validateOverview(String overview) {
-        validateBlank(overview, "프로젝트 개요를 입력해주세요.");
+        validateNotBlank(overview, "프로젝트 개요를 입력해주세요.");
         validateMaxLength(overview, MAX_OVERVIEW_LENGTH,
             "프로젝트 개요는 " + MAX_OVERVIEW_LENGTH + "자를 넘을 수 없습니다.");
     }
@@ -39,7 +39,7 @@ public class ProjectValidator {
     }
 
     public static void validateDescription(String description) {
-        validateBlank(description, "프로젝트 기능 설명을 입력해주세요.");
+        validateNotBlank(description, "프로젝트 기능 설명을 입력해주세요.");
         validateTextLength(description,
             "프로젝트 기능 설명은 " + MAX_TEXT_LENGTH + "자를 넘을 수 없습니다.");
     }

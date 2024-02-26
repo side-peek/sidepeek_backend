@@ -28,6 +28,9 @@ public record ProjectResponse(
     public static ProjectResponse from(Project project, List<OverviewImageSummary> overviewImageUrl,
         List<ProjectSkillSummary> techStacks,
         List<MemberSummary> members) {
+        YearMonth startDate = project.getStartDate() != null ? YearMonth.from(project.getStartDate()) : null;
+        YearMonth endDate = project.getEndDate() != null ? YearMonth.from(project.getEndDate()) : null;
+
         return ProjectResponse.builder()
             .id(project.getId())
             .name(project.getName())
@@ -40,8 +43,8 @@ public record ProjectResponse(
             .viewCount(project.getViewCount())
             .likeCount(project.getLikeCount())
             .techStacks(techStacks)
-            .startDate(YearMonth.from(project.getStartDate()))
-            .endDate(YearMonth.from(project.getEndDate()))
+            .startDate(startDate)
+            .endDate(endDate)
             .members(members)
             .description(project.getDescription())
             .troubleShooting(project.getTroubleshooting())
