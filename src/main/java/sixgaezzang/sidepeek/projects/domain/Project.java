@@ -2,6 +2,16 @@ package sixgaezzang.sidepeek.projects.domain;
 
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateDeployUrl;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateDescription;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateDuration;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateGithubUrl;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateName;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOverview;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateSubName;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateThumbnailUrl;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateTroubleshooting;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,7 +63,7 @@ public class Project extends BaseTimeEntity {
     private String githubUrl;
 
     @Column(name = "owner_id", columnDefinition = "BIGINT", nullable = false)
-    private Long ownerId;
+    private Long ownerId; // TODO: User로 설정하는 것이 좋을까요? 놓는다면 [accessToken id 일치 확인 + 유저 존재 확인(추가 발생)] 해야합니다!
 
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
@@ -72,26 +82,52 @@ public class Project extends BaseTimeEntity {
 
     @Builder
     public Project(String name, String subName, String overview, LocalDateTime startDate,
-                   LocalDateTime endDate, Long ownerId,
-        String thumbnailUrl, String deployUrl, String githubUrl, String description,
-        String troubleshooting) {
+                   LocalDateTime endDate, Long ownerId, String thumbnailUrl,
+                   String deployUrl, String githubUrl, String description, String troubleshooting) {
+        validateConstructorRequiredArguments(name, overview, githubUrl, description, ownerId);
+        validateConstructorOptionArguments(subName, thumbnailUrl, deployUrl, troubleshooting, startDate, endDate);
+
+        // Required
         this.name = name;
-        this.subName = subName;
         this.overview = overview;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.ownerId = ownerId;
-        this.thumbnailUrl = thumbnailUrl;
-        this.deployUrl = deployUrl;
         this.githubUrl = githubUrl;
         this.description = description;
+        this.ownerId = ownerId;
+
+        // Option
+        this.subName = subName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.thumbnailUrl = thumbnailUrl;
+        this.deployUrl = deployUrl;
         this.troubleshooting = troubleshooting;
+
+        // Etc
         this.likeCount = 0L;
         this.viewCount = 0L;
     }
 
     public void increaseViewCount() {
         this.viewCount++;
+    }
+
+    private void validateConstructorRequiredArguments(String name, String overview, String githubUrl,
+                                                      String description, Long ownerId) {
+        validateName(name);
+        validateOverview(overview);
+        validateGithubUrl(githubUrl);
+        validateDescription(description);
+        validateOwnerId(ownerId);
+    }
+
+    private void validateConstructorOptionArguments(String subName, String thumbnailUrl, String deployUrl,
+                                                    String troubleshooting, LocalDateTime startDate,
+                                                    LocalDateTime endDate) {
+        validateSubName(subName);
+        validateThumbnailUrl(thumbnailUrl);
+        validateDeployUrl(deployUrl);
+        validateTroubleshooting(troubleshooting);
+        validateDuration(startDate, endDate);
     }
 
 }

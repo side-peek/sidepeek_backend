@@ -12,11 +12,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.projects.util.validation.MemberValidator;
+import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 import sixgaezzang.sidepeek.users.domain.User;
 
 @Entity
@@ -45,10 +48,31 @@ public class Member {
 
     @Builder
     public Member(User user, Project project, String role, String nickname) {
-        this.user = user;
+        validateConstructorRequiredArguments(project, role);
+        validateConstructorMemberInfoArguments(user, nickname);
+
+        // Required
         this.project = project;
         this.role = role;
+        this.user = user;
         this.nickname = nickname;
+    }
+
+    private void validateConstructorMemberInfoArguments(User user, String nickname) {
+        if (Objects.nonNull(user)) { // 회원인 경우
+            MemberValidator.validateFellowMemberUser(user);
+            return;
+        }
+        if (Objects.nonNull(nickname)) { // 비회원인 경우
+            MemberValidator.validateNonFellowMemberNickname(nickname);
+        }
+
+        throw new IllegalArgumentException("회원인 멤버는 유저 Id를, 비회원인 멤버는 닉네임을 입력해주세요.");
+    }
+
+    private void validateConstructorRequiredArguments(Project project, String role) {
+        ProjectValidator.validateProject(project);
+        MemberValidator.validateRole(role);
     }
 
 }
