@@ -35,17 +35,11 @@ public class ProjectService {
     public Long save(ProjectSaveRequest projectSaveRequest) {
         // TODO: accessToken에서 userId 꺼내서 ownerId와 비교!!
 
-        // 프로젝트 정보 저장
         Project project = projectSaveRequest.toEntity();
         projectRepository.save(project);
-
-        // 프로젝트 Skill 저장
+        
         projectSkillService.saveAll(project, projectSaveRequest.techStacks());
-
-        // 프로젝트 Member
         memberService.saveAll(project, projectSaveRequest.members());
-
-        // 프로젝트 File(프로젝트 개요 Image) 저장
         fileService.saveAll(project, projectSaveRequest.overviewImageUrls());
 
         return project.getId();
