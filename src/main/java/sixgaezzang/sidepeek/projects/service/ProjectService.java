@@ -32,17 +32,28 @@ public class ProjectService {
     private final FileService fileService;
 
     @Transactional
-    public Long save(ProjectSaveRequest projectSaveRequest) {
+    public ProjectResponse save(ProjectSaveRequest projectSaveRequest) {
         // TODO: accessToken에서 userId 꺼내서 ownerId와 비교!!
 
         Project project = projectSaveRequest.toEntity();
         projectRepository.save(project);
-        
-        projectSkillService.saveAll(project, projectSaveRequest.techStacks());
-        memberService.saveAll(project, projectSaveRequest.members());
-        fileService.saveAll(project, projectSaveRequest.overviewImageUrls());
 
-        return project.getId();
+        // Required
+        List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project, projectSaveRequest.techStacks());
+
+        // Option
+        List<MemberSummary> members = null;
+        if (!projectSaveRequest.members().isEmpty()) {
+            members = memberService.saveAll(project, projectSaveRequest.members());
+        }
+
+        List<OverviewImageSummary> overviewImages = null;
+        if (!projectSaveRequest.overviewImageUrls().isEmpty()) {
+            overviewImages = fileService.saveAll(project, projectSaveRequest.overviewImageUrls());
+        }
+
+        // TODO: OwnerId도 함께 보내기(ProjectResponse UserSummary 필드 추가)
+        return ProjectResponse.from(project, overviewImages, techStacks, members);
     }
 
     @Transactional

@@ -1,13 +1,18 @@
 package sixgaezzang.sidepeek.projects.service;
 
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
+
+import io.jsonwebtoken.lang.Assert;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
@@ -21,8 +26,10 @@ public class ProjectSkillService {
     private final ProjectSkillRepository projectSkillRepository;
 
     @Transactional
-    public void saveAll(Project project, List<ProjectSkillSaveRequest> projectSkillSaveRequests) {
-        List<ProjectSkill> skills = projectSkillSaveRequests.stream().map(
+    public List<ProjectSkillSummary> saveAll(Project project, List<ProjectSkillSaveRequest> techStacks) {
+        validateTechStacks(techStacks);
+
+        List<ProjectSkill> skills = techStacks.stream().map(
             projectSkill -> {
                 Skill skill = skillRepository.findById(projectSkill.skillId())
                     .orElseThrow(() -> new EntityNotFoundException("Skill Id에 해당하는 스킬이 없습니다."));
@@ -34,7 +41,17 @@ public class ProjectSkillService {
                     .build();
             }
         ).toList();
-
         projectSkillRepository.saveAll(skills);
+
+        return skills.stream()
+            .map(ProjectSkillSummary::from)
+            .toList();
+    }
+
+    private void validateTechStacks(List<ProjectSkillSaveRequest> techStacks) {
+        Assert.isTrue(Objects.nonNull(techStacks) && !techStacks.isEmpty(),
+            "기술 스택들을 입력해주세요.");
+        Assert.isTrue(techStacks.size() <= MAX_PROJECT_SKILL_COUNT,
+            "기술 스택은 " + MAX_PROJECT_SKILL_COUNT + "개를 넘을 수 없습니다.");
     }
 }

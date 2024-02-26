@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
+import sixgaezzang.sidepeek.projects.util.validation.MemberValidator;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -22,7 +24,9 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void saveAll(Project project, List<MemberSaveRequest> memberSaveRequests) {
+    public List<MemberSummary> saveAll(Project project, List<MemberSaveRequest> memberSaveRequests) {
+        MemberValidator.validateMembers(memberSaveRequests);
+
         List<Member> members = memberSaveRequests.stream().map(
             member -> {
                 Member.MemberBuilder memberBuilder = Member.builder()
@@ -41,7 +45,11 @@ public class MemberService {
                         .build();
             }
         ).toList();
-
         memberRepository.saveAll(members);
+
+        return members.stream()
+            .map(MemberSummary::from)
+            .toList();
     }
+
 }
