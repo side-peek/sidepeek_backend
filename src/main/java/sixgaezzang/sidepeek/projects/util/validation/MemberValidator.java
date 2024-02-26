@@ -13,8 +13,8 @@ import sixgaezzang.sidepeek.users.domain.User;
 
 public class MemberValidator {
 
-    public static void validateMembers(List<MemberSaveRequest> memberSaveRequests) {
-        Assert.isTrue(memberSaveRequests.size() <= MAX_MEMBER_COUNT,
+    public static void validateMembers(List<MemberSaveRequest> members) {
+        Assert.isTrue(members.size() <= MAX_MEMBER_COUNT,
             "멤버 수는 " + MAX_MEMBER_COUNT + "명을 넘을 수 없습니다.");
     }
 
