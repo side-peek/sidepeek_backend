@@ -46,7 +46,6 @@ public class ProjectService {
         List<OverviewImageSummary> overviewImages =
             fileService.saveAll(project, projectSaveRequest.overviewImageUrls());
 
-        // TODO: OwnerId도 함께 보내기(ProjectResponse UserSummary 필드 추가)
         return ProjectResponse.from(project, overviewImages, techStacks, members);
     }
 
