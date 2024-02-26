@@ -32,9 +32,9 @@ create TABLE IF NOT EXISTS auth_provider
 create TABLE IF NOT EXISTS project
 (
     id              BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name            VARCHAR(300)  NOT NULL,
-    sub_name        VARCHAR(300)  NULL,
-    overview        VARCHAR(1000) NOT NULL,
+    name            VARCHAR(50)  NOT NULL,
+    sub_name        VARCHAR(50)  NULL,
+    overview        VARCHAR(300) NOT NULL,
     thumbnail_url   TEXT          NULL,
     deploy_url      TEXT          NULL,
     github_url      TEXT          NOT NULL,
@@ -57,7 +57,7 @@ create TABLE IF NOT EXISTS project_member
     user_id    BIGINT      NULL,
     project_id BIGINT      NOT NULL,
     role       VARCHAR(15) NOT NULL,
-    nickname   VARCHAR(20) NOT NULL,
+    nickname   VARCHAR(20) NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (project_id) REFERENCES project (id)
 );
