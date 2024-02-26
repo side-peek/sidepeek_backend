@@ -27,16 +27,16 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping
-    public ResponseEntity<Void> save(
+    public ResponseEntity<ProjectResponse> save(
         @Valid @RequestBody ProjectSaveRequest request
     ) {
-        Long id = projectService.save(request);
+        ProjectResponse response = projectService.save(request);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/projects/{id}")
-            .buildAndExpand(id).toUri();
+            .buildAndExpand(response.id()).toUri();
 
         return ResponseEntity.created(uri)
-            .build();
+            .body(response);
     }
 
     @GetMapping("/{id}")
