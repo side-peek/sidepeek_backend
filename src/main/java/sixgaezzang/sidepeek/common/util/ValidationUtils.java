@@ -6,6 +6,8 @@ import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
 import static sixgaezzang.sidepeek.users.domain.Password.PASSWORD_REGXP;
 
+import java.util.Collection;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
@@ -48,6 +50,13 @@ public final class ValidationUtils {
         Assert.isTrue(isBlank(input), message);
     }
 
+    public static <T> void validateNotNullAndEmpty(Collection<T> input, String message) {
+        Assert.isTrue(isNotNullOrEmpty(input), message);
+    }
+
+    public static <T> boolean isNotNullOrEmpty(Collection<T> input) {
+        return Objects.nonNull(input) && !input.isEmpty();
+    }
     private static void pattern(String input, Pattern pattern, String message) {
         Assert.isTrue(pattern.matcher(input).matches(), message);
     }
