@@ -1,19 +1,16 @@
 package sixgaezzang.sidepeek.projects.service;
 
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
-
-import io.jsonwebtoken.lang.Assert;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
+import sixgaezzang.sidepeek.projects.util.validation.ProjectSkillValidator;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 
@@ -27,7 +24,7 @@ public class ProjectSkillService {
 
     @Transactional
     public List<ProjectSkillSummary> saveAll(Project project, List<ProjectSkillSaveRequest> techStacks) {
-        validateTechStacks(techStacks);
+        ProjectSkillValidator.validateTechStacks(techStacks);
 
         List<ProjectSkill> skills = techStacks.stream().map(
             projectSkill -> {
@@ -48,10 +45,4 @@ public class ProjectSkillService {
             .toList();
     }
 
-    private void validateTechStacks(List<ProjectSkillSaveRequest> techStacks) {
-        ValidationUtils.validateNotNullAndEmpty(techStacks,
-            "기술 스택들을 입력해주세요.");
-        Assert.isTrue(techStacks.size() <= MAX_PROJECT_SKILL_COUNT,
-            "기술 스택은 " + MAX_PROJECT_SKILL_COUNT + "개를 넘을 수 없습니다.");
-    }
 }
