@@ -50,7 +50,7 @@ class FileServiceTest {
     @Nested
     class 파일_저장_테스트 {
 
-        static final int IMAGE_COUNT = 5;
+        static final int IMAGE_COUNT = MAX_OVERVIEW_IMAGE_COUNT / 2;
         static List<String> overLengthimageUrls;
         static List<String> imageUrls;
         Project project;

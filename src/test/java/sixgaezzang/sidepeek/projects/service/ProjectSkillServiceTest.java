@@ -52,7 +52,7 @@ class ProjectSkillServiceTest {
     @Nested
     class 프로젝트_기술_스택_목록_저장_테스트 {
 
-        static final int SKILL_COUNT = 20;
+        static final int PROJECT_SKILL_COUNT = MAX_PROJECT_SKILL_COUNT / 2;
         static List<ProjectSkillSaveRequest> techStacks;
         static List<ProjectSkillSaveRequest> overLengthTechStacks;
         Project project;
@@ -70,7 +70,7 @@ class ProjectSkillServiceTest {
 
             user = createUser();
             project = createProject(user);
-            techStacks = overLengthTechStacks.subList(0, SKILL_COUNT);
+            techStacks = overLengthTechStacks.subList(0, PROJECT_SKILL_COUNT);
         }
 
         @Test
@@ -79,7 +79,7 @@ class ProjectSkillServiceTest {
             List<ProjectSkillSummary> savedTechStacks = projectSkillService.saveAll(project, techStacks);
 
             // then
-            assertThat(savedTechStacks).hasSize(SKILL_COUNT);
+            assertThat(savedTechStacks).hasSize(PROJECT_SKILL_COUNT);
         }
 
         @ParameterizedTest
@@ -166,4 +166,5 @@ class ProjectSkillServiceTest {
         }
 
     }
+
 }
