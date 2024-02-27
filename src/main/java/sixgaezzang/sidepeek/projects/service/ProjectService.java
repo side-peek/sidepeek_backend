@@ -13,7 +13,10 @@ import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
+import sixgaezzang.sidepeek.projects.repository.FileRepository;
+import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +24,11 @@ import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final ProjectSkillRepository projectSkillRepository;
     private final ProjectSkillService projectSkillService;
+    private final MemberRepository memberRepository;
     private final MemberService memberService;
+    private final FileRepository fileRepository;
     private final FileService fileService;
 
     @Transactional
@@ -54,18 +60,21 @@ public class ProjectService {
 
         project.increaseViewCount();
 
-        List<OverviewImageSummary> overviewImages = fileService.findAllByType(
+        List<OverviewImageSummary> overviewImages = fileRepository.findAllByProjectAndType(
                 project, FileType.OVERVIEW_IMAGE)
             .stream()
             .map(OverviewImageSummary::from)
             .toList();
 
-        List<ProjectSkillSummary> techStacks = projectSkillService.findAll(project)
+        List<ProjectSkillSummary> techStacks = projectSkillRepository.findAllByProject(project)
             .stream()
             .map(ProjectSkillSummary::from)
             .toList();
 
-        List<MemberSummary> members = memberService.findAllWithUser(project);
+        List<MemberSummary> members = memberRepository.findAllByProject(project)
+            .stream()
+            .map(MemberSummary::from)
+            .toList();
 
         return ProjectResponse.from(project, overviewImages, techStacks, members);
     }
