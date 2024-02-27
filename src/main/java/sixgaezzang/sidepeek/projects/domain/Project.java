@@ -28,7 +28,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
-import sixgaezzang.sidepeek.projects.util.convert.YearMonthDateAttributeConverter;
+import sixgaezzang.sidepeek.projects.util.converter.YearMonthDateAttributeConverter;
 
 @Entity
 @Table(name = "project")

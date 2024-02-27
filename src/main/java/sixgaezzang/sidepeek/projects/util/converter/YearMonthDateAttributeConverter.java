@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.projects.util.convert;
+package sixgaezzang.sidepeek.projects.util.converter;
 
 import jakarta.persistence.AttributeConverter;
 import java.sql.Date;
