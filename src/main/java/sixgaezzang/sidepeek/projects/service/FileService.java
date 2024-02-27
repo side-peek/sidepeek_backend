@@ -11,6 +11,7 @@ import sixgaezzang.sidepeek.projects.domain.file.FileType;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
 import sixgaezzang.sidepeek.projects.util.validation.FileValidator;
+import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,6 +22,7 @@ public class FileService {
 
     @Transactional
     public List<OverviewImageSummary> saveAll(Project project, List<String> overviewImageUrls) {
+        ProjectValidator.validateProject(project);
         if (!ValidationUtils.isNotNullOrEmpty(overviewImageUrls)) {
             return null;
         }

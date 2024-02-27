@@ -13,6 +13,7 @@ import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.util.validation.MemberValidator;
+import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -26,6 +27,7 @@ public class MemberService {
 
     @Transactional
     public List<MemberSummary> saveAll(Project project, List<MemberSaveRequest> memberSaveRequests) {
+        ProjectValidator.validateProject(project);
         if (!ValidationUtils.isNotNullOrEmpty(memberSaveRequests)) {
             return null; //TODO: Member를 등록 안하면 자동으로 작성자는 멤버로 등록이 되는가? 그럼 역할은?
         }

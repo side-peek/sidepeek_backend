@@ -11,6 +11,7 @@ import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
 import sixgaezzang.sidepeek.projects.util.validation.ProjectSkillValidator;
+import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 
@@ -24,6 +25,7 @@ public class ProjectSkillService {
 
     @Transactional
     public List<ProjectSkillSummary> saveAll(Project project, List<ProjectSkillSaveRequest> techStacks) {
+        ProjectValidator.validateProject(project);
         ProjectSkillValidator.validateTechStacks(techStacks);
 
         List<ProjectSkill> skills = techStacks.stream().map(
