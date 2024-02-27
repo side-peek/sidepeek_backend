@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
@@ -38,10 +39,14 @@ public class MemberService {
                     .orElseThrow(() -> new EntityNotFoundException("User Id에 해당하는 회원이 없습니다."));
 
                 return memberBuilder.user(user)
-                        .build();
+                    .build();
             }
         ).toList();
 
         memberRepository.saveAll(members);
+    }
+
+    public List<MemberSummary> findAllWithUser(Project project) {
+        return memberRepository.findAllWithUser(project);
     }
 }

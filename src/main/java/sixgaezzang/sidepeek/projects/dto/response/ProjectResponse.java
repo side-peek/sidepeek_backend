@@ -20,6 +20,7 @@ public record ProjectResponse(
     List<ProjectSkillSummary> techStacks,
     YearMonth startDate,
     YearMonth endDate,
+    Long ownerId,
     List<MemberSummary> members,
     String description,
     String troubleShooting
@@ -42,6 +43,7 @@ public record ProjectResponse(
             .techStacks(techStacks)
             .startDate(YearMonth.from(project.getStartDate()))
             .endDate(YearMonth.from(project.getEndDate()))
+            .ownerId(project.getOwnerId())
             .members(members)
             .description(project.getDescription())
             .troubleShooting(project.getTroubleshooting())

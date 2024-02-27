@@ -13,10 +13,7 @@ import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
-import sixgaezzang.sidepeek.projects.repository.FileRepository;
-import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +21,8 @@ import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final ProjectSkillRepository projectSkillRepository;
     private final ProjectSkillService projectSkillService;
-    private final MemberRepository memberRepository;
     private final MemberService memberService;
-    private final FileRepository fileRepository;
     private final FileService fileService;
 
     @Transactional
@@ -60,21 +54,18 @@ public class ProjectService {
 
         project.increaseViewCount();
 
-        List<OverviewImageSummary> overviewImages = fileRepository.findAllByProjectAndType(
+        List<OverviewImageSummary> overviewImages = fileService.findAllByType(
                 project, FileType.OVERVIEW_IMAGE)
             .stream()
             .map(OverviewImageSummary::from)
             .toList();
 
-        List<ProjectSkillSummary> techStacks = projectSkillRepository.findAllByProject(project)
+        List<ProjectSkillSummary> techStacks = projectSkillService.findAll(project)
             .stream()
             .map(ProjectSkillSummary::from)
             .toList();
 
-        List<MemberSummary> members = memberRepository.findAllByProject(project)
-            .stream()
-            .map(MemberSummary::from)
-            .toList();
+        List<MemberSummary> members = memberService.findAllWithUser(project);
 
         return ProjectResponse.from(project, overviewImages, techStacks, members);
     }

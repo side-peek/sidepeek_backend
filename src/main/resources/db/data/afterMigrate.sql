@@ -16,7 +16,7 @@ values (1, '의진', 'uijin@naver.com',
 insert into users(id, nickname, email, password, profile_image_url)
 values (2, '동건', 'donggun@naver.com',
         '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
-        'https://user-images.githubusercontent.com/uijin.png');
+        'https://user-images.githubusercontent.com/donggun.png');
 
 -- PROJECT
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,

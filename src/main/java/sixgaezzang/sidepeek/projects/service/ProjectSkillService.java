@@ -37,4 +37,8 @@ public class ProjectSkillService {
 
         projectSkillRepository.saveAll(skills);
     }
+
+    public List<ProjectSkill> findAll(Project project) {
+        return projectSkillRepository.findAllByProject(project);
+    }
 }
