@@ -3,7 +3,6 @@ package sixgaezzang.sidepeek.projects.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ class MemberServiceTest {
     @Nested
     class 멤버_저장_테스트 {
 
-        static final int MEMBER_COUNT = MAX_PROJECT_SKILL_COUNT / 2;
+        static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
         static List<MemberSaveRequest> members;
         static List<MemberSaveRequest> overLengthMembers;
         Project project;
@@ -58,7 +57,7 @@ class MemberServiceTest {
         @BeforeEach
         void setup() {
             overLengthMembers = new ArrayList<>();
-            for (int i = 1; i <= MAX_PROJECT_SKILL_COUNT / 2; i++) {
+            for (int i = 1; i <= MAX_MEMBER_COUNT / 2; i++) {
                 User savedUser = createUser();
                 overLengthMembers.add(
                     new MemberSaveRequest(savedUser.getId(), null, "role" + i)

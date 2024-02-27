@@ -51,21 +51,21 @@ class FileServiceTest {
     class 파일_저장_테스트 {
 
         static final int IMAGE_COUNT = MAX_OVERVIEW_IMAGE_COUNT / 2;
-        static List<String> overLengthimageUrls;
+        static List<String> overLengthImageUrls;
         static List<String> imageUrls;
         Project project;
         User user;
 
         @BeforeEach
         void setup() {
-            overLengthimageUrls = new ArrayList<>();
+            overLengthImageUrls = new ArrayList<>();
             for (int i = 1; i <= MAX_OVERVIEW_IMAGE_COUNT; i++) {
-                overLengthimageUrls.add("https://sidepeek.image/image" + i);
+                overLengthImageUrls.add("https://sidepeek.image/image" + i);
             }
 
             user = createUser();
             project = createProject(user);
-            imageUrls = overLengthimageUrls.subList(0, IMAGE_COUNT);
+            imageUrls = overLengthImageUrls.subList(0, IMAGE_COUNT);
         }
 
         @Test
@@ -90,7 +90,7 @@ class FileServiceTest {
         @Test
         void 목록_개수가_최대를_넘어서_파일_목록_저장에_실패한다() {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(project, overLengthimageUrls);
+            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(project, overLengthImageUrls);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
