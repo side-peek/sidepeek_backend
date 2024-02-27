@@ -14,19 +14,21 @@ import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.val
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateTroubleshooting;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
+import sixgaezzang.sidepeek.projects.util.convert.YearMonthDateAttributeConverter;
 
 @Entity
 @Table(name = "project")
@@ -49,10 +51,12 @@ public class Project extends BaseTimeEntity {
     private String overview;
 
     @Column(name = "start_date", columnDefinition = "DATE")
-    private LocalDate startDate;
+    @Convert(converter = YearMonthDateAttributeConverter.class)
+    private YearMonth startDate;
 
     @Column(name = "end_date", columnDefinition = "DATE")
-    private LocalDate endDate;
+    @Convert(converter = YearMonthDateAttributeConverter.class)
+    private YearMonth endDate;
 
     @Column(name = "thumbnail_url", columnDefinition = "TEXT")
     private String thumbnailUrl;
@@ -82,7 +86,7 @@ public class Project extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public Project(String name, String subName, String overview, LocalDate startDate, LocalDate endDate, Long ownerId,
+    public Project(String name, String subName, String overview, YearMonth startDate, YearMonth endDate, Long ownerId,
                    String thumbnailUrl, String deployUrl, String githubUrl, String description,
                    String troubleshooting) {
         validateConstructorRequiredArguments(name, overview, githubUrl, description, ownerId);
@@ -122,7 +126,7 @@ public class Project extends BaseTimeEntity {
     }
 
     private void validateConstructorOptionArguments(String subName, String thumbnailUrl, String deployUrl,
-                                                    String troubleshooting, LocalDate startDate, LocalDate endDate) {
+                                                    String troubleshooting, YearMonth startDate, YearMonth endDate) {
         validateSubName(subName);
         validateThumbnailUrl(thumbnailUrl);
         validateDeployUrl(deployUrl);

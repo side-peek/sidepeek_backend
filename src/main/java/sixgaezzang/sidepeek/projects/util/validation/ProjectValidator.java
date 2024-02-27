@@ -9,7 +9,7 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LE
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 
 import io.jsonwebtoken.lang.Assert;
-import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Objects;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
@@ -80,13 +80,13 @@ public class ProjectValidator {
         }
     }
 
-    public static void validateDuration(LocalDate startDate, LocalDate endDate) {
+    public static void validateDuration(YearMonth startDate, YearMonth endDate) {
         if (Objects.isNull(startDate) && Objects.isNull(endDate)) {
             return; // 모두 null이면 넘어간다.
         }
 
         if (Objects.nonNull(startDate) && Objects.nonNull(endDate)) {
-            if (startDate.isAfter(endDate) || startDate.isEqual(endDate)) {
+            if (startDate.compareTo(endDate) >= 0) {
                 throw new IllegalArgumentException("시작 날짜가 종료 날짜와 같거나 종료 날짜보다 이전이어야합니다.");
             }
             return;
