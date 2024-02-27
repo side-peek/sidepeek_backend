@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import sixgaezzang.sidepeek.auth.domain.RefreshToken;
 import sixgaezzang.sidepeek.auth.jwt.JWTManager;
 import sixgaezzang.sidepeek.auth.repository.RefreshTokenRepository;
+import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 
 @Service
 @RequiredArgsConstructor
@@ -21,4 +22,8 @@ public class RefreshTokenService {
         return refreshTokenRepository.save(refreshToken);
     }
 
+    public RefreshToken getById(Long userId) {
+        return refreshTokenRepository.findById(userId)
+            .orElseThrow(() -> new InvalidAuthenticationException("유효하지 않은 토큰입니다."));
+    }
 }
