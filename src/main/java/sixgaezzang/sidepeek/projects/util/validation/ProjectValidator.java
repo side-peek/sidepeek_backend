@@ -23,25 +23,25 @@ public class ProjectValidator {
     public static void validateName(String name) {
         validateNotBlank(name, "프로젝트 제목을 입력해주세요.");
         validateMaxLength(name, MAX_PROJECT_NAME_LENGTH,
-            "프로젝트 제목은 " + MAX_PROJECT_NAME_LENGTH + "자 미만이어야 합니다.");
+            "프로젝트 제목은 " + MAX_PROJECT_NAME_LENGTH + "자 이하여야 합니다.");
     }
 
     public static void validateOverview(String overview) {
         validateNotBlank(overview, "프로젝트 개요를 입력해주세요.");
         validateMaxLength(overview, MAX_OVERVIEW_LENGTH,
-            "프로젝트 개요는 " + MAX_OVERVIEW_LENGTH + "자 미만이어야 합니다.");
+            "프로젝트 개요는 " + MAX_OVERVIEW_LENGTH + "자 이하여야 합니다.");
     }
 
     public static void validateGithubUrl(String githubUrl) {
         validateURI(githubUrl, "프로젝트 Github URL 형식이 유효하지 않습니다.");
         validateTextLength(githubUrl,
-            "프로젝트 Github URL은 " + MAX_TEXT_LENGTH + "자 미만이어야 합니다.");
+            "프로젝트 Github URL은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다.");
     }
 
     public static void validateDescription(String description) {
         validateNotBlank(description, "프로젝트 기능 설명을 입력해주세요.");
         validateTextLength(description,
-            "프로젝트 기능 설명은 " + MAX_TEXT_LENGTH + "자 미만이어야 합니다.");
+            "프로젝트 기능 설명은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다.");
     }
 
 
@@ -53,7 +53,7 @@ public class ProjectValidator {
     public static void validateSubName(String subName) {
         if (Objects.nonNull(subName)) {
             validateMaxLength(subName, MAX_PROJECT_NAME_LENGTH,
-                "프로젝트 부제목은 " + MAX_PROJECT_NAME_LENGTH + "자 미만이어야 합니다.");
+                "프로젝트 부제목은 " + MAX_PROJECT_NAME_LENGTH + "자 이하여야 합니다.");
         }
     }
 
@@ -61,7 +61,7 @@ public class ProjectValidator {
         if (Objects.nonNull(thumbnailUrl)) {
             validateURI(thumbnailUrl, "프로젝트 썸네일 이미지 URL 형식이 유효하지 않습니다.");
             validateTextLength(thumbnailUrl,
-                "프로젝트 썸네일 이미지 URL은 " + MAX_TEXT_LENGTH + "자 미만이어야 합니다.");
+                "프로젝트 썸네일 이미지 URL은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다.");
         }
     }
 
@@ -69,14 +69,14 @@ public class ProjectValidator {
         if (Objects.nonNull(deployUrl)) {
             validateURI(deployUrl, "프로젝트 배포 URL 형식이 유효하지 않습니다.");
             validateTextLength(deployUrl,
-                "프로젝트 배포 URL은 " + MAX_TEXT_LENGTH + "자 미만이어야 합니다.");
+                "프로젝트 배포 URL은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다.");
         }
     }
 
     public static void validateTroubleshooting(String troubleshooting) {
         if (Objects.nonNull(troubleshooting)) {
             validateTextLength(troubleshooting,
-                "프로젝트 트러블 슈팅 설명은 " + MAX_TEXT_LENGTH + "자 미만이어야 합니다.");
+                "프로젝트 트러블 슈팅 설명은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다.");
         }
     }
 

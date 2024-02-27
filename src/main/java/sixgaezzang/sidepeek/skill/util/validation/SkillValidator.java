@@ -16,7 +16,7 @@ public class SkillValidator {
     public static void validateCategory(String category) {
         validateNotBlank(category, "기술 스택 카테고리를 입력해주세요.");
         validateMaxLength(category, MAX_CATEGORY_LENGTH,
-            "기술 스택 카테고리는 " + MAX_CATEGORY_LENGTH + "자 미만이어야 합니다.");
+            "기술 스택 카테고리는 " + MAX_CATEGORY_LENGTH + "자 이하여야 합니다.");
     }
 
 }

@@ -14,7 +14,7 @@ import sixgaezzang.sidepeek.users.domain.User;
 public class MemberValidator {
 
     public static void validateMembers(List<MemberSaveRequest> members) {
-        Assert.isTrue(members.size() <= MAX_MEMBER_COUNT,
+        Assert.isTrue(members.size() < MAX_MEMBER_COUNT,
             "멤버 수는 " + MAX_MEMBER_COUNT + "명 미만이어야 합니다.");
     }
 

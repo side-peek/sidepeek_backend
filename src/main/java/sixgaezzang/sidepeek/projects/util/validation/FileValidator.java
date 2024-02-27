@@ -8,7 +8,7 @@ import java.util.List;
 public class FileValidator {
 
     public static void validateFiles(List<String> overviewImageUrls) {
-        Assert.isTrue(overviewImageUrls.size() <= MAX_OVERVIEW_IMAGE_COUNT,
+        Assert.isTrue(overviewImageUrls.size() < MAX_OVERVIEW_IMAGE_COUNT,
             "프로젝트 레이아웃 이미지 수는 " + MAX_OVERVIEW_IMAGE_COUNT + "개 미만이어야 합니다.");
     }
 
