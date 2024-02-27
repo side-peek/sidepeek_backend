@@ -13,6 +13,6 @@ public class ProjectSkillValidator {
         ValidationUtils.validateNotNullAndEmpty(techStacks,
             "기술 스택들을 입력해주세요.");
         Assert.isTrue(techStacks.size() <= MAX_PROJECT_SKILL_COUNT,
-            "기술 스택은 " + MAX_PROJECT_SKILL_COUNT + "개를 넘을 수 없습니다.");
+            "기술 스택은 " + MAX_PROJECT_SKILL_COUNT + "개 미만이어야 합니다.");
     }
 }
