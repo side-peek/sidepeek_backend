@@ -51,7 +51,7 @@ public class File {
 
     private void validateConstructorArguments(Project project, FileType type, String url) {
         ProjectValidator.validateProject(project);
-        Assert.notNull(type, "type을 입력해주세요."); // TODO: 현재 가장 쉬운 로직으로 가기 때문에 필요가 없어졌습니다,,,!
+        Assert.notNull(type, "type을 입력해주세요.");
         ValidationUtils.validateURI(url, "프로젝트 레이아웃 이미지 URL 형식이 올바르지 않습니다.");
     }
 
