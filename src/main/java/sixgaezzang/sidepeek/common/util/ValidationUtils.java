@@ -57,6 +57,7 @@ public final class ValidationUtils {
     public static <T> boolean isNotNullOrEmpty(Collection<T> input) {
         return Objects.nonNull(input) && !input.isEmpty();
     }
+
     private static void pattern(String input, Pattern pattern, String message) {
         Assert.isTrue(pattern.matcher(input).matches(), message);
     }
