@@ -2,7 +2,7 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
-import static sixgaezzang.sidepeek.projects.service.FileServiceTest.파일_저장_테스트.IMAGE_COUNT;
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
+import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -51,19 +52,25 @@ class ProjectSkillServiceTest {
     @Nested
     class 프로젝트_기술_스택_목록_저장_테스트 {
 
-        static final int SKILL_COUNT = 5;
+        static final int SKILL_COUNT = 20;
         static List<ProjectSkillSaveRequest> techStacks;
+        static List<ProjectSkillSaveRequest> overLengthTechStacks;
         Project project;
         User user;
 
         @BeforeEach
         void setup() {
-            project = createProject();
-
-            techStacks = new ArrayList<>();
-            for (int i = 0; i < IMAGE_COUNT; i++) {
-                techStacks.add("https://sidepeek.image/image" + i);
+            overLengthTechStacks = new ArrayList<>();
+            for (int i = 1; i <= MAX_PROJECT_SKILL_COUNT; i++) {
+                Skill skill = createSkillWithName("skill" + i);
+                overLengthTechStacks.add(
+                    new ProjectSkillSaveRequest(skill.getId(), "category" + i)
+                );
             }
+
+            user = createUser();
+            project = createProject(user);
+            techStacks = overLengthTechStacks.subList(0, SKILL_COUNT);
         }
 
         @Test
@@ -72,17 +79,18 @@ class ProjectSkillServiceTest {
             List<ProjectSkillSummary> savedTechStacks = projectSkillService.saveAll(project, techStacks);
 
             // then
-            assertThat(savedTechStacks).hasSize(IMAGE_COUNT);
+            assertThat(savedTechStacks).hasSize(SKILL_COUNT);
         }
 
         @ParameterizedTest
         @NullAndEmptySource
-        void 빈_프로젝트_기술_스택_목록_저장_무시된다(List<ProjectSkillSaveRequest> emptyTechStacks) {
+        void 빈_기술_스택_목록_저장에_실패한다(List<ProjectSkillSaveRequest> emptyTechStacks) {
             // given, when
-            List<ProjectSkillSummary> savedTechStacks = projectSkillService.saveAll(project, emptyTechStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, emptyTechStacks);
 
             // then
-            assertThat(savedTechStacks).isNull();
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage("기술 스택들을 입력해주세요.");
         }
 
         @Test
@@ -98,6 +106,16 @@ class ProjectSkillServiceTest {
                 .withMessage("프로젝트가 null 입니다.");
         }
 
+        @Test
+        void 목록_개수가_최대를_넘어서_기술_스택_목록_저장에_실패한다() {
+            // given, when
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, overLengthTechStacks);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage("기술 스택은 " + MAX_PROJECT_SKILL_COUNT + "개 미만이어야 합니다.");
+        }
+
 
         private User createUser() {
             String email = faker.internet().emailAddress();
@@ -110,6 +128,16 @@ class ProjectSkillServiceTest {
                 .nickname(nickname)
                 .build();
             return userRepository.save(user);
+        }
+
+        private Skill createSkillWithName(String name) {
+            String iconImageUrl = faker.internet().url();
+
+            Skill skill = Skill.builder()
+                .name(name)
+                .iconImageUrl(iconImageUrl)
+                .build();
+            return skillRepository.save(skill);
         }
 
         private Project createProject(User user) {
