@@ -49,7 +49,7 @@ public class MemberService {
                     .orElseThrow(() -> new EntityNotFoundException("User Id에 해당하는 회원이 없습니다."));
 
                 return memberBuilder.user(user)
-                        .build();
+                    .build();
             }
         ).toList();
         memberRepository.saveAll(members);
@@ -59,4 +59,7 @@ public class MemberService {
             .toList();
     }
 
+    public List<MemberSummary> findAllWithUser(Project project) {
+        return memberRepository.findAllWithUser(project);
+    }
 }

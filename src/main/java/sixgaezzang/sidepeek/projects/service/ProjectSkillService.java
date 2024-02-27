@@ -47,4 +47,8 @@ public class ProjectSkillService {
             .toList();
     }
 
+
+    public List<ProjectSkill> findAll(Project project) {
+        return projectSkillRepository.findAllByProject(project);
+    }
 }

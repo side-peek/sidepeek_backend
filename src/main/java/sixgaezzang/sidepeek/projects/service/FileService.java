@@ -37,11 +37,16 @@ public class FileService {
                     .type(FileType.OVERVIEW_IMAGE)
                     .build()
             ).toList();
+
         fileRepository.saveAll(overviewImages);
 
         return overviewImages.stream()
             .map(OverviewImageSummary::from)
             .toList();
+    }
+
+    public List<File> findAllByType(Project project, FileType fileType) {
+        return fileRepository.findAllByProjectAndType(project, fileType);
     }
 
 }

@@ -20,6 +20,7 @@ public record ProjectResponse(
     List<ProjectSkillSummary> techStacks,
     YearMonth startDate,
     YearMonth endDate,
+    Long ownerId,
     List<MemberSummary> members,
     String description,
     String troubleShooting
@@ -39,6 +40,7 @@ public record ProjectResponse(
             .viewCount(project.getViewCount())
             .likeCount(project.getLikeCount())
             .techStacks(techStacks)
+            .ownerId(project.getOwnerId())
             .startDate(project.getStartDate())
             .endDate(project.getEndDate())
             .members(members)

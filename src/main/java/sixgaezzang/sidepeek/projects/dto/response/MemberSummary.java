@@ -8,22 +8,22 @@ import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 @Builder
 public record MemberSummary(
     Long id,
-    String category,
+    String role,
     UserSummary userSummary
 ) {
 
     public static MemberSummary from(Member member) {
         User user = member.getUser();
-        UserSummary userSummaryResponse = (user == null)
+        UserSummary userSummary = (user == null)
             ? UserSummary.from(member.getNickname())
             : UserSummary.from(user);
-        return MemberSummary.from(member, userSummaryResponse);
+        return MemberSummary.from(member, userSummary);
     }
 
     public static MemberSummary from(Member member, UserSummary userSummary) {
         return MemberSummary.builder()
             .id(member.getId())
-            .category(member.getRole())
+            .role(member.getRole())
             .userSummary(userSummary)
             .build();
     }
