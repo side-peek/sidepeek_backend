@@ -33,6 +33,7 @@ public class ProjectValidator {
     }
 
     public static void validateGithubUrl(String githubUrl) {
+        validateNotBlank(githubUrl, "프로젝트 Github URL을 입력해주세요.");
         validateURI(githubUrl, "프로젝트 Github URL 형식이 유효하지 않습니다.");
         validateTextLength(githubUrl,
             "프로젝트 Github URL은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다.");
@@ -46,7 +47,7 @@ public class ProjectValidator {
 
 
     public static void validateOwnerId(Long ownerId) {
-        Assert.notNull(ownerId, "프로젝트 게시글 작성자 Id를 명시해주세요.");
+        Assert.notNull(ownerId, "프로젝트 게시글 작성자 Id를 입력해주세요.");
     }
 
     // Option
