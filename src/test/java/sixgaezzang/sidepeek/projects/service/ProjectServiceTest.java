@@ -156,10 +156,10 @@ class ProjectServiceTest {
         static String DESCRIPTION = "Project Description";
         User user;
 
-        private static ProjectSaveRequest createProjectSaveRequestOnlyRequired(String name, String overview,
-                                                                               String githubUrl, String description,
-                                                                               Long ownerId,
-                                                                               List<ProjectSkillSaveRequest> techStacks) {
+        private static ProjectSaveRequest createProjectSaveRequestOnlyRequired(
+            String name, String overview, String githubUrl, String description, Long ownerId,
+            List<ProjectSkillSaveRequest> techStacks
+        ) {
             return new ProjectSaveRequest(name, overview, ownerId, githubUrl, description,
                 techStacks, null, null, null, null,
                 null, null, null, null);

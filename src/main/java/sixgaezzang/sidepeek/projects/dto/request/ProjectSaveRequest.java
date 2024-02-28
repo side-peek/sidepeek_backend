@@ -2,9 +2,9 @@ package sixgaezzang.sidepeek.projects.dto.request;
 
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MIN_ID;
 import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.YEAR_MONTH_PATTERN;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.YEAR_MONTH_PATTERN;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Min;
