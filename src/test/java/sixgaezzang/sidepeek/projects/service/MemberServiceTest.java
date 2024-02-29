@@ -3,10 +3,14 @@ package sixgaezzang.sidepeek.projects.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
+import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +19,8 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -117,18 +123,27 @@ class MemberServiceTest {
                 .withMessage("멤버 수는 " + MAX_MEMBER_COUNT + "명 미만이어야 합니다.");
         }
 
-
-        private User createUser() {
-            String email = faker.internet().emailAddress();
-            String password = faker.internet().password(8, 40, true, true, true);
-            String nickname = faker.internet().username();
-
-            User user = User.builder()
-                .email(email)
-                .password(new Password(password, new BCryptPasswordEncoder()))
-                .nickname(nickname)
-                .build();
-            return userRepository.save(user);
+        private static Stream<Arguments> createInvalidMemberInfo() {
+            return Stream.of(
+                Arguments.of("비회원 멤버 닉네임이 최대 길이를 넘는 경우",
+                    false, "N".repeat(MAX_NICKNAME_LENGTH + 1), "role",
+                    "비회원 멤버 닉네임은 " + MAX_NICKNAME_LENGTH + "자 미만이어야 합니다."),
+                Arguments.of("비회원 멤버 역할을 적지 않는 경우",
+                    false, "Nickname", null,
+                    "멤버 역할 이름을 입력해주세요."),
+                Arguments.of("비회원 멤버 역할이 최대 길이를 넘는 경우",
+                    false, "Nickname", "R".repeat(MAX_ROLE_LENGTH + 1),
+                    "멤버의 역할 이름은 " + MAX_ROLE_LENGTH + "자 미만이어야 합니다."),
+                Arguments.of("회원 멤버 역할을 적지 않는 경우",
+                    true, null, null,
+                    "멤버 역할 이름을 입력해주세요."),
+                Arguments.of("회원 멤버 역할이 최대 길이를 넘는 경우",
+                    true, null, "R".repeat(MAX_ROLE_LENGTH + 1),
+                    "멤버의 역할 이름은 " + MAX_ROLE_LENGTH + "자 미만이어야 합니다."),
+                Arguments.of("비회원/회원 정보가 모두 없는 경우",
+                    false, null, "role",
+                    "회원인 멤버는 유저 Id를, 비회원인 멤버는 닉네임을 입력해주세요.")
+            );
         }
 
         private Project createProject(User user) {
@@ -154,6 +169,58 @@ class MemberServiceTest {
                 .build();
 
             return projectRepository.save(project);
+        }
+
+        @Test
+        void 존재하지_않는_회원이_멤버여서_멤버_목록_저장에_실패한다() {
+            // given
+            List<MemberSaveRequest> membersWithNonExistFellowMember = new ArrayList<>(members);
+            membersWithNonExistFellowMember.add(
+                new MemberSaveRequest(user.getId() + 1, null, "role")
+            );
+
+            // when
+            ThrowableAssert.ThrowingCallable saveAll =
+                () -> memberService.saveAll(project, membersWithNonExistFellowMember);
+
+            // then
+            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(saveAll)
+                .withMessage("User Id에 해당하는 회원이 없습니다.");
+        }
+
+        @ParameterizedTest(name = "[{index}] {0}")
+        @MethodSource("createInvalidMemberInfo")
+        void 정보가_유효하지_않은_멤버여서_멤버_목록_저장에_실패한다(
+            String testMessage, boolean isFellow, String nickname, String role, String message
+        ) {
+            // given
+            List<MemberSaveRequest> membersWithInvalidMember = new ArrayList<>(members);
+            membersWithInvalidMember.add(
+                new MemberSaveRequest(isFellow ? user.getId() : null, nickname, role)
+            );
+
+            // when
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, membersWithInvalidMember);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage(message);
+        }
+
+        private User createUser() {
+            String email = faker.internet().emailAddress();
+            String password = faker.internet().password(8, 40, true, true, true);
+            String nickname = faker.internet().username();
+            if (nickname.length() > MAX_NICKNAME_LENGTH) {
+                nickname = nickname.substring(nickname.length() - MAX_NICKNAME_LENGTH);
+            }
+
+            User user = User.builder()
+                .email(email)
+                .password(new Password(password, new BCryptPasswordEncoder()))
+                .nickname(nickname)
+                .build();
+            return userRepository.save(user);
         }
 
     }
