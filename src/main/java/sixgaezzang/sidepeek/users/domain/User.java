@@ -3,6 +3,9 @@ package sixgaezzang.sidepeek.users.domain;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.BLANK_NICKNAME;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -83,12 +86,12 @@ public class User extends BaseTimeEntity {
 
     private void validateConstructorArguments(String nickname, String email) {
         validateNickname(nickname);
-        validateEmail(email, "이메일 형식이 올바르지 않습니다.");
+        validateEmail(email, INVALID_EMAIL_FORMAT.getMessage());
     }
 
     private void validateNickname(String nickname) {
-        validateNotBlank(nickname, "닉네임은 필수값입니다.");
+        validateNotBlank(nickname, BLANK_NICKNAME.getMessage());
         validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
-            "닉네임은 " + MAX_NICKNAME_LENGTH + "자 이하여야 합니다.");
+            EXCESSIVE_NICKNAME_LENGTH.getMessage());
     }
 }

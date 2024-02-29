@@ -2,6 +2,8 @@ package sixgaezzang.sidepeek.users.domain;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validatePassword;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.BLANK_PASSWORD;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_PASSWORD_FORMAT;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -19,8 +21,8 @@ public class Password {
     private String encoded;
 
     public Password(String password, PasswordEncoder passwordEncoder) {
-        validateNotBlank(password, "비밀번호를 입력해주세요.");
-        validatePassword(password, "비밀번호는 8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.");
+        validateNotBlank(password, BLANK_PASSWORD.getMessage());
+        validatePassword(password, INVALID_PASSWORD_FORMAT.getMessage());
         encoded = passwordEncoder.encode(password);
     }
 
