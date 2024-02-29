@@ -6,7 +6,6 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LE
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -23,16 +22,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
+import sixgaezzang.sidepeek.projects.util.DomainProvider;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
-import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -120,16 +118,16 @@ class ProjectSkillServiceTest {
         void setup() {
             overLengthTechStacks = new ArrayList<>();
             for (int i = 1; i <= MAX_PROJECT_SKILL_COUNT; i++) {
-                Skill skill = createSkillWithName("skill" + i);
+                Skill skill = createAndSaveSkill("skill" + i);
                 overLengthTechStacks.add(
                     new ProjectSkillSaveRequest(skill.getId(), "category" + i)
                 );
             }
 
-            user = createUser();
-            project = createProject(user);
+            user = createAndSaveUser();
+            project = createAndSaveProject(user);
             techStacks = overLengthTechStacks.subList(0, PROJECT_SKILL_COUNT);
-            skill = createSkillWithName("skill");
+            skill = createAndSaveSkill("skill");
         }
 
         @ParameterizedTest
@@ -152,52 +150,18 @@ class ProjectSkillServiceTest {
                 .withMessage(message);
         }
 
-
-        private User createUser() {
-            String email = faker.internet().emailAddress();
-            String password = faker.internet().password(8, 40, true, true, true);
-            String nickname = faker.internet().username();
-
-            User user = User.builder()
-                .email(email)
-                .password(new Password(password, new BCryptPasswordEncoder()))
-                .nickname(nickname)
-                .build();
-            return userRepository.save(user);
-        }
-
-        private Skill createSkillWithName(String name) {
-            String iconImageUrl = faker.internet().url();
-
-            Skill skill = Skill.builder()
-                .name(name)
-                .iconImageUrl(iconImageUrl)
-                .build();
+        private Skill createAndSaveSkill(String name) {
+            Skill skill = DomainProvider.createSkill(name);
             return skillRepository.save(skill);
         }
 
-        private Project createProject(User user) {
-            String name = faker.internet().domainName();
-            String subName = faker.internet().domainWord();
-            String overview = faker.lorem().sentence();
-            String thumbnailUrl = faker.internet().url();
-            String githubUrl = faker.internet().url();
-            YearMonth startDate = YearMonth.now();
-            YearMonth endDate = startDate.plusMonths(3);
-            String description = faker.lorem().sentences(10).toString();
+        private User createAndSaveUser() {
+            User user = DomainProvider.createUser();
+            return userRepository.save(user);
+        }
 
-            Project project = Project.builder()
-                .name(name)
-                .subName(subName)
-                .overview(overview)
-                .thumbnailUrl(thumbnailUrl)
-                .githubUrl(githubUrl)
-                .startDate(startDate)
-                .endDate(endDate)
-                .ownerId(user.getId())
-                .description(description)
-                .build();
-
+        private Project createAndSaveProject(User user) {
+            Project project = DomainProvider.createProject(user);
             return projectRepository.save(project);
         }
 

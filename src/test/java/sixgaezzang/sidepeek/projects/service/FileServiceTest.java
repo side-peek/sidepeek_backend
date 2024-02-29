@@ -6,7 +6,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOf
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_IMAGE_COUNT;
 
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -23,13 +22,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.users.domain.Password;
+import sixgaezzang.sidepeek.projects.util.DomainProvider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -67,8 +65,8 @@ class FileServiceTest {
                 overLengthImageUrls.add("https://sidepeek.image/image" + i);
             }
 
-            user = createUser();
-            project = createProject(user);
+            user = createAndSaveUser();
+            project = createAndSaveProject(user);
             imageUrls = overLengthImageUrls.subList(0, IMAGE_COUNT);
         }
 
@@ -139,41 +137,13 @@ class FileServiceTest {
                 .withMessage(message);
         }
 
-        private User createUser() {
-            String email = faker.internet().emailAddress();
-            String password = faker.internet().password(8, 40, true, true, true);
-            String nickname = faker.internet().username();
-
-            User user = User.builder()
-                .email(email)
-                .password(new Password(password, new BCryptPasswordEncoder()))
-                .nickname(nickname)
-                .build();
+        private User createAndSaveUser() {
+            user = DomainProvider.createUser();
             return userRepository.save(user);
         }
 
-        private Project createProject(User user) {
-            String name = faker.internet().domainName();
-            String subName = faker.internet().domainWord();
-            String overview = faker.lorem().sentence();
-            String thumbnailUrl = faker.internet().url();
-            String githubUrl = faker.internet().url();
-            YearMonth startDate = YearMonth.now();
-            YearMonth endDate = startDate.plusMonths(3);
-            String description = faker.lorem().sentences(10).toString();
-
-            Project project = Project.builder()
-                .name(name)
-                .subName(subName)
-                .overview(overview)
-                .thumbnailUrl(thumbnailUrl)
-                .githubUrl(githubUrl)
-                .startDate(startDate)
-                .endDate(endDate)
-                .ownerId(user.getId())
-                .description(description)
-                .build();
-
+        private Project createAndSaveProject(User user) {
+            project = DomainProvider.createProject(user);
             return projectRepository.save(project);
         }
     }

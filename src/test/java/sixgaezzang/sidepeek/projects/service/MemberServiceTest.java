@@ -7,7 +7,6 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH
 import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -24,14 +23,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.users.domain.Password;
+import sixgaezzang.sidepeek.projects.util.DomainProvider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -64,7 +62,7 @@ class MemberServiceTest {
         void setup() {
             overLengthMembers = new ArrayList<>();
             for (int i = 1; i <= MAX_MEMBER_COUNT / 2; i++) {
-                User savedUser = createUser();
+                User savedUser = createAndSaveUser();
                 overLengthMembers.add(
                     new MemberSaveRequest(savedUser.getId(), null, "role" + i)
                 );
@@ -73,11 +71,11 @@ class MemberServiceTest {
                 );
             }
 
-            user = createUser();
+            user = createAndSaveUser();
             overLengthMembers.add(
                 new MemberSaveRequest(user.getId(), null, "role0")
             );
-            project = createProject(user);
+            project = createAndSaveProject(user);
             members = overLengthMembers.subList(0, MEMBER_COUNT);
         }
 
@@ -146,31 +144,6 @@ class MemberServiceTest {
             );
         }
 
-        private Project createProject(User user) {
-            String name = faker.internet().domainName();
-            String subName = faker.internet().domainWord();
-            String overview = faker.lorem().sentence();
-            String thumbnailUrl = faker.internet().url();
-            String githubUrl = faker.internet().url();
-            YearMonth startDate = YearMonth.now();
-            YearMonth endDate = startDate.plusMonths(3);
-            String description = faker.lorem().sentences(10).toString();
-
-            Project project = Project.builder()
-                .name(name)
-                .subName(subName)
-                .overview(overview)
-                .thumbnailUrl(thumbnailUrl)
-                .githubUrl(githubUrl)
-                .startDate(startDate)
-                .endDate(endDate)
-                .ownerId(user.getId())
-                .description(description)
-                .build();
-
-            return projectRepository.save(project);
-        }
-
         @Test
         void 존재하지_않는_회원이_멤버여서_멤버_목록_저장에_실패한다() {
             // given
@@ -207,21 +180,14 @@ class MemberServiceTest {
                 .withMessage(message);
         }
 
-        private User createUser() {
-            String email = faker.internet().emailAddress();
-            String password = faker.internet().password(8, 40, true, true, true);
-            String nickname = faker.internet().username();
-            if (nickname.length() > MAX_NICKNAME_LENGTH) {
-                nickname = nickname.substring(nickname.length() - MAX_NICKNAME_LENGTH);
-            }
-
-            User user = User.builder()
-                .email(email)
-                .password(new Password(password, new BCryptPasswordEncoder()))
-                .nickname(nickname)
-                .build();
+        private User createAndSaveUser() {
+            user = DomainProvider.createUser();
             return userRepository.save(user);
         }
 
+        private Project createAndSaveProject(User user) {
+            project = DomainProvider.createProject(user);
+            return projectRepository.save(project);
+        }
     }
 }
