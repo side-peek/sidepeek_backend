@@ -16,8 +16,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.projects.util.validation.FileValidator;
 import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 
 @Entity
@@ -52,7 +52,7 @@ public class File {
     private void validateConstructorArguments(Project project, FileType type, String url) {
         ProjectValidator.validateProject(project);
         Assert.notNull(type, "type을 입력해주세요.");
-        ValidationUtils.validateURI(url, "프로젝트 레이아웃 이미지 URL 형식이 올바르지 않습니다.");
+        FileValidator.validateFileUrl(url);
     }
 
 }
