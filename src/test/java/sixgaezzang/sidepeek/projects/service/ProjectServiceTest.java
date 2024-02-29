@@ -165,12 +165,10 @@ class ProjectServiceTest {
                 null, null, null, null);
         }
 
-        private static ProjectSaveRequest createProjectSaveRequestWithOwnerIdAndOption(Long ownerId, String subName,
-                                                                                       String thumbnailUrl,
-                                                                                       String deployUrl,
-                                                                                       String troubleShooting,
-                                                                                       YearMonth startDate,
-                                                                                       YearMonth endDate) {
+        private static ProjectSaveRequest createProjectSaveRequestWithOwnerIdAndOption(
+            Long ownerId, String subName, String thumbnailUrl, String deployUrl, String troubleShooting,
+            YearMonth startDate, YearMonth endDate
+        ) {
             return new ProjectSaveRequest(NAME, OVERVIEW, ownerId, GITHUB_URL, DESCRIPTION,
                 techStacks, subName, thumbnailUrl, deployUrl, startDate, endDate, troubleShooting, null, null);
         }
@@ -316,8 +314,9 @@ class ProjectServiceTest {
 
         @ParameterizedTest(name = "[{index}] {0}")
         @MethodSource("createProjectsOnlyInvalidRequiredArgument")
-        void 유효하지_않은_필수_정보로_프로젝트_저장에_실패한다(String testMessage, String name, String overview,
-                                          String githubUrl, String description, String message) {
+        void 유효하지_않은_필수_정보로_프로젝트_저장에_실패한다(
+            String testMessage, String name, String overview, String githubUrl, String description, String message
+        ) {
             // given
             ProjectSaveRequest request =
                 createProjectSaveRequestOnlyRequired(name, overview, githubUrl, description, user.getId(), techStacks);
