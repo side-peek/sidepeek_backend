@@ -29,7 +29,7 @@ public class MemberService {
     public List<MemberSummary> saveAll(Project project, List<MemberSaveRequest> memberSaveRequests) {
         ProjectValidator.validateProject(project);
         if (!ValidationUtils.isNotNullOrEmpty(memberSaveRequests)) {
-            return null; //TODO: Member를 등록 안하면 자동으로 작성자는 멤버로 등록이 되는가? 그럼 역할은?
+            return null;
         }
 
         MemberValidator.validateMembers(memberSaveRequests);
