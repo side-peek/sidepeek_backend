@@ -2,11 +2,14 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +18,8 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,20 +62,15 @@ class ProjectSkillServiceTest {
         static List<ProjectSkillSaveRequest> overLengthTechStacks;
         Project project;
         User user;
+        Skill skill;
 
-        @BeforeEach
-        void setup() {
-            overLengthTechStacks = new ArrayList<>();
-            for (int i = 1; i <= MAX_PROJECT_SKILL_COUNT; i++) {
-                Skill skill = createSkillWithName("skill" + i);
-                overLengthTechStacks.add(
-                    new ProjectSkillSaveRequest(skill.getId(), "category" + i)
-                );
-            }
-
-            user = createUser();
-            project = createProject(user);
-            techStacks = overLengthTechStacks.subList(0, PROJECT_SKILL_COUNT);
+        private static Stream<Arguments> createInvalidProjectSkillInfo() {
+            return Stream.of(
+                Arguments.of("기술 스택 카테고리를 누락하는 경우", null,
+                    "기술 스택 카테고리를 입력해주세요."),
+                Arguments.of("기술 스택 카테고리가 최대 길이를 넘는 경우", "C".repeat(MAX_CATEGORY_LENGTH + 1),
+                    "기술 스택 카테고리는 " + MAX_CATEGORY_LENGTH + "자 이하여야 합니다.")
+            );
         }
 
         @Test
@@ -114,6 +114,42 @@ class ProjectSkillServiceTest {
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
                 .withMessage("기술 스택은 " + MAX_PROJECT_SKILL_COUNT + "개 미만이어야 합니다.");
+        }
+
+        @BeforeEach
+        void setup() {
+            overLengthTechStacks = new ArrayList<>();
+            for (int i = 1; i <= MAX_PROJECT_SKILL_COUNT; i++) {
+                Skill skill = createSkillWithName("skill" + i);
+                overLengthTechStacks.add(
+                    new ProjectSkillSaveRequest(skill.getId(), "category" + i)
+                );
+            }
+
+            user = createUser();
+            project = createProject(user);
+            techStacks = overLengthTechStacks.subList(0, PROJECT_SKILL_COUNT);
+            skill = createSkillWithName("skill");
+        }
+
+        @ParameterizedTest
+        @MethodSource("createInvalidProjectSkillInfo")
+        void 기술_스택_카테고리가_유효하지_않아_기술_스택_목록_저장에_실패한다(
+            String testMessage, String category, String message
+        ) {
+            // given
+            List<ProjectSkillSaveRequest> techStacksWithInvalidSkill = new ArrayList<>(techStacks);
+            techStacksWithInvalidSkill.add(
+                new ProjectSkillSaveRequest(skill.getId(), category)
+            );
+
+            // when
+            ThrowableAssert.ThrowingCallable saveAll =
+                () -> projectSkillService.saveAll(project, techStacksWithInvalidSkill);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage(message);
         }
 
 
@@ -163,6 +199,40 @@ class ProjectSkillServiceTest {
                 .build();
 
             return projectRepository.save(project);
+        }
+
+        @Test
+        void 존재하지_않는_기술_스택_Id로_기술_스택_목록_저장에_실패한다() {
+            // given
+            List<ProjectSkillSaveRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
+            techStacksWithNonExistSkill.add(
+                new ProjectSkillSaveRequest(skill.getId() + 1L, "category")
+            );
+
+            // when
+            ThrowableAssert.ThrowingCallable saveAll =
+                () -> projectSkillService.saveAll(project, techStacksWithNonExistSkill);
+
+            // then
+            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(saveAll)
+                .withMessage("Skill Id에 해당하는 스킬이 없습니다.");
+        }
+
+        @Test
+        void 기술_스택_Id가_누락되어_기술_스택_목록_저장에_실패한다() {
+            // given
+            List<ProjectSkillSaveRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
+            techStacksWithNonExistSkill.add(
+                new ProjectSkillSaveRequest(null, "category")
+            );
+
+            // when
+            ThrowableAssert.ThrowingCallable saveAll =
+                () -> projectSkillService.saveAll(project, techStacksWithNonExistSkill);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage("기술 스택의 스택 Id를 입력해주세요");
         }
 
     }
