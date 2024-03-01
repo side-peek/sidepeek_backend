@@ -16,7 +16,6 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -35,7 +34,8 @@ import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.projects.util.DomainProvider;
+import sixgaezzang.sidepeek.projects.util.FakeDtoProvider;
+import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -43,8 +43,6 @@ import sixgaezzang.sidepeek.users.repository.UserRepository;
 @Transactional
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class MemberServiceTest {
-
-    static final Faker faker = new Faker();
 
     @Autowired
     MemberService memberService;
@@ -70,16 +68,16 @@ class MemberServiceTest {
             for (int i = 1; i <= MAX_MEMBER_COUNT / 2; i++) {
                 User savedUser = createAndSaveUser();
                 overLengthMembers.add(
-                    new MemberSaveRequest(savedUser.getId(), null, "role" + i)
+                    FakeDtoProvider.createFellowMemberSaveRequest(savedUser.getId())
                 );
                 overLengthMembers.add(
-                    new MemberSaveRequest(null, "nonFellowMember" + i, "role" + i)
+                    FakeDtoProvider.createNonFellowMemberSaveRequest()
                 );
             }
 
             user = createAndSaveUser();
             overLengthMembers.add(
-                new MemberSaveRequest(user.getId(), null, "role0")
+                FakeDtoProvider.createFellowMemberSaveRequest(user.getId())
             );
             project = createAndSaveProject(user);
             members = overLengthMembers.subList(0, MEMBER_COUNT);
@@ -102,29 +100,6 @@ class MemberServiceTest {
 
             // then
             assertThat(savedMembers).isNull();
-        }
-
-        private static Stream<Arguments> createInvalidMemberInfo() {
-            return Stream.of(
-                Arguments.of("비회원 멤버 닉네임이 최대 길이를 넘는 경우",
-                    false, "N".repeat(MAX_NICKNAME_LENGTH + 1), "role",
-                    NON_FELLOW_MEMBER_NICKNAME_OVER_MAX_LENGTH),
-                Arguments.of("비회원 멤버 역할을 적지 않는 경우",
-                    false, "Nickname", null,
-                    ROLE_IS_NULL),
-                Arguments.of("비회원 멤버 역할이 최대 길이를 넘는 경우",
-                    false, "Nickname", "R".repeat(MAX_ROLE_LENGTH + 1),
-                    ROLE_OVER_MAX_LENGTH),
-                Arguments.of("회원 멤버 역할을 적지 않는 경우",
-                    true, null, null,
-                    ROLE_IS_NULL),
-                Arguments.of("회원 멤버 역할이 최대 길이를 넘는 경우",
-                    true, null, "R".repeat(MAX_ROLE_LENGTH + 1),
-                    ROLE_OVER_MAX_LENGTH),
-                Arguments.of("비회원/회원 정보가 모두 없는 경우",
-                    false, null, "role",
-                    MEMBER_IS_INVALID)
-            );
         }
 
         @Test
@@ -155,7 +130,7 @@ class MemberServiceTest {
             // given
             List<MemberSaveRequest> membersWithNonExistFellowMember = new ArrayList<>(members);
             membersWithNonExistFellowMember.add(
-                new MemberSaveRequest(user.getId() + 1, null, "role")
+                FakeDtoProvider.createFellowMemberSaveRequest(user.getId() + 1)
             );
 
             // when
@@ -186,13 +161,36 @@ class MemberServiceTest {
                 .withMessage(message);
         }
 
+        private static Stream<Arguments> createInvalidMemberInfo() {
+            return Stream.of(
+                Arguments.of("비회원 멤버 닉네임이 최대 길이를 넘는 경우",
+                    false, "N".repeat(MAX_NICKNAME_LENGTH + 1), "role",
+                    NON_FELLOW_MEMBER_NICKNAME_OVER_MAX_LENGTH),
+                Arguments.of("비회원 멤버 역할을 적지 않는 경우",
+                    false, "Nickname", null,
+                    ROLE_IS_NULL),
+                Arguments.of("비회원 멤버 역할이 최대 길이를 넘는 경우",
+                    false, "Nickname", "R".repeat(MAX_ROLE_LENGTH + 1),
+                    ROLE_OVER_MAX_LENGTH),
+                Arguments.of("회원 멤버 역할을 적지 않는 경우",
+                    true, null, null,
+                    ROLE_IS_NULL),
+                Arguments.of("회원 멤버 역할이 최대 길이를 넘는 경우",
+                    true, null, "R".repeat(MAX_ROLE_LENGTH + 1),
+                    ROLE_OVER_MAX_LENGTH),
+                Arguments.of("비회원/회원 정보가 모두 없는 경우",
+                    false, null, "role",
+                    MEMBER_IS_INVALID)
+            );
+        }
+
         private User createAndSaveUser() {
-            user = DomainProvider.createUser();
+            user = FakeEntityProvider.createUser();
             return userRepository.save(user);
         }
 
         private Project createAndSaveProject(User user) {
-            project = DomainProvider.createProject(user);
+            project = FakeEntityProvider.createProject(user);
             return projectRepository.save(project);
         }
     }

@@ -21,7 +21,6 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.TROUBLESHOOTING_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_IMAGE_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
@@ -51,7 +50,9 @@ import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.projects.util.DomainProvider;
+import sixgaezzang.sidepeek.projects.util.FakeDtoProvider;
+import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
+import sixgaezzang.sidepeek.projects.util.FakeValueProvider;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -76,18 +77,16 @@ class ProjectServiceTest {
     @Autowired
     ProjectRepository projectRepository;
 
-    private Skill createAndSaveSkill(String name) {
-        Skill skill = DomainProvider.createSkill(name);
-        return skillRepository.save(skill);
+    private Skill createAndSaveSkill() {
+        return skillRepository.save(FakeEntityProvider.createSkill());
     }
 
     private User createAndSaveUser() {
-        User user = DomainProvider.createUser();
-        return userRepository.save(user);
+        return userRepository.save(FakeEntityProvider.createUser());
     }
 
     private Project createAndSaveProject(User user) {
-        Project project = DomainProvider.createProject(user);
+        Project project = FakeEntityProvider.createProject(user);
         return projectRepository.save(project);
     }
 
@@ -126,32 +125,13 @@ class ProjectServiceTest {
     class 프로젝트_저장_테스트 {
         static final int MEMBER_COUNT = MAX_PROJECT_SKILL_COUNT / 2;
         static final int PROJECT_SKILL_COUNT = MAX_PROJECT_SKILL_COUNT / 2;
-        static final int IMAGE_COUNT = MAX_OVERVIEW_IMAGE_COUNT / 2;
         static List<MemberSaveRequest> members;
         static List<ProjectSkillSaveRequest> techStacks;
-        static List<String> imageUrls;
-        static String NAME = "Project Name";
-        static String OVERVIEW = "Project Overview";
-        static String GITHUB_URL = "https://github.com/code";
-        static String DESCRIPTION = "Project Description";
+        static String NAME = FakeValueProvider.createProjectName();
+        static String OVERVIEW = FakeValueProvider.createOverview();
+        static String GITHUB_URL = FakeValueProvider.createUrl();
+        static String DESCRIPTION = FakeValueProvider.createLongText();
         User user;
-
-        private static ProjectSaveRequest createProjectSaveRequestOnlyRequired(
-            String name, String overview, String githubUrl, String description, Long ownerId,
-            List<ProjectSkillSaveRequest> techStacks
-        ) {
-            return new ProjectSaveRequest(name, overview, ownerId, githubUrl, description,
-                techStacks, null, null, null, null,
-                null, null, null, null);
-        }
-
-        private static ProjectSaveRequest createProjectSaveRequestWithOwnerIdAndOption(
-            Long ownerId, String subName, String thumbnailUrl, String deployUrl, String troubleShooting,
-            YearMonth startDate, YearMonth endDate
-        ) {
-            return new ProjectSaveRequest(NAME, OVERVIEW, ownerId, GITHUB_URL, DESCRIPTION,
-                techStacks, subName, thumbnailUrl, deployUrl, startDate, endDate, troubleShooting, null, null);
-        }
 
         private static Stream<Arguments> createProjectsWithoutRequired() {
             return Stream.of(
@@ -221,37 +201,33 @@ class ProjectServiceTest {
             for (int i = 1; i <= MEMBER_COUNT; i++) {
                 User savedUser = createAndSaveUser();
                 members.add(
-                    new MemberSaveRequest(savedUser.getId(), null, "role" + i)
+                    FakeDtoProvider.createFellowMemberSaveRequest(savedUser.getId())
                 );
                 members.add(
-                    new MemberSaveRequest(null, "nonFellowMember" + i, "role" + i)
+                    FakeDtoProvider.createNonFellowMemberSaveRequest()
                 );
             }
 
             user = createAndSaveUser();
             members.add(
-                new MemberSaveRequest(user.getId(), null, "role0")
+                FakeDtoProvider.createFellowMemberSaveRequest(user.getId())
             );
 
             techStacks = new ArrayList<>();
             for (int i = 1; i <= PROJECT_SKILL_COUNT; i++) {
-                Skill skill = createAndSaveSkill("skill" + i);
+                Skill skill = createAndSaveSkill();
                 techStacks.add(
-                    new ProjectSkillSaveRequest(skill.getId(), "category" + i)
+                    FakeDtoProvider.createProjectSkillSaveRequest(skill.getId())
                 );
-            }
-
-            imageUrls = new ArrayList<>();
-            for (int i = 1; i <= IMAGE_COUNT; i++) {
-                imageUrls.add("https://sidepeek.image/image" + i);
             }
         }
 
         @Test
         void 필수_정보가_모두_포함되어_프로젝트_저장에_성공한다() {
             // given
-            ProjectSaveRequest request =
-                createProjectSaveRequestOnlyRequired(NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId(), techStacks);
+            ProjectSaveRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId(), techStacks
+            );
 
             // when
             ProjectResponse response = projectService.save(request);
@@ -264,11 +240,13 @@ class ProjectServiceTest {
 
         @ParameterizedTest(name = "[{index}] {0}이(가) 누락된 경우 실패한다.")
         @MethodSource("createProjectsWithoutRequired")
-        void 작성자_Id_외_필수_정보가_누락되어_프로젝트_저장에_실패한다(String testMessage, String name, String overview,
-                                                String githubUrl, String description, String message) {
+        void 작성자_Id_외_필수_정보가_누락되어_프로젝트_저장에_실패한다(
+            String testMessage, String name, String overview, String githubUrl, String description, String message
+        ) {
             // given
-            ProjectSaveRequest request =
-                createProjectSaveRequestOnlyRequired(name, overview, githubUrl, description, user.getId(), techStacks);
+            ProjectSaveRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                name, overview, githubUrl, description, user.getId(), techStacks
+            );
 
             // when
             ThrowingCallable saveProject = () -> projectService.save(request);
@@ -281,8 +259,9 @@ class ProjectServiceTest {
         @Test
         void 작성자_Id가_누락되어_프로젝트_저장에_실패한다() {
             // given
-            ProjectSaveRequest request =
-                createProjectSaveRequestOnlyRequired(NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, null, techStacks);
+            ProjectSaveRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, null, techStacks
+            );
 
             // when
             ThrowingCallable saveProject = () -> projectService.save(request);
@@ -298,8 +277,9 @@ class ProjectServiceTest {
             String testMessage, String name, String overview, String githubUrl, String description, String message
         ) {
             // given
-            ProjectSaveRequest request =
-                createProjectSaveRequestOnlyRequired(name, overview, githubUrl, description, user.getId(), techStacks);
+            ProjectSaveRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                name, overview, githubUrl, description, user.getId(), techStacks
+            );
 
             // when
             ThrowingCallable saveProject = () -> projectService.save(request);
@@ -311,13 +291,14 @@ class ProjectServiceTest {
 
         @ParameterizedTest(name = "[{index}] {0}")
         @MethodSource("createProjectsWithInvalidOption")
-        void 유효하지_않은_옵션_정보로_프로젝트_저장에_실패한다(String testMessage, String subName, String thumbnailUrl,
-                                          String deployUrl, String troubleShooting, YearMonth startDate,
-                                          YearMonth endDate, String message) {
+        void 유효하지_않은_옵션_정보로_프로젝트_저장에_실패한다(
+            String testMessage, String subName, String thumbnailUrl, String deployUrl, String troubleShooting,
+            YearMonth startDate, YearMonth endDate, String message
+        ) {
             // given
-            ProjectSaveRequest request =
-                createProjectSaveRequestWithOwnerIdAndOption(user.getId(), subName, thumbnailUrl, deployUrl,
-                    troubleShooting, startDate, endDate);
+            ProjectSaveRequest request = FakeDtoProvider.createProjectSaveRequestWithOwnerIdAndOption(
+                techStacks, user.getId(), subName, thumbnailUrl, deployUrl, troubleShooting, startDate, endDate
+            );
 
             // when
             ThrowingCallable saveProject = () -> projectService.save(request);

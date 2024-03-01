@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.YearMonth;
 import java.util.List;
+import lombok.Builder;
 import org.hibernate.validator.constraints.URL;
 import sixgaezzang.sidepeek.projects.domain.Project;
 

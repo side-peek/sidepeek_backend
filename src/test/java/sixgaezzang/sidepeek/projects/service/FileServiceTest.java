@@ -13,7 +13,6 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_IM
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -31,7 +30,8 @@ import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.projects.util.DomainProvider;
+import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
+import sixgaezzang.sidepeek.projects.util.FakeValueProvider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -63,13 +63,10 @@ class FileServiceTest {
 
         @BeforeEach
         void setup() {
-            overLengthImageUrls = new ArrayList<>();
-            for (int i = 1; i <= MAX_OVERVIEW_IMAGE_COUNT; i++) {
-                overLengthImageUrls.add("https://sidepeek.image/image" + i);
-            }
-
             user = createAndSaveUser();
             project = createAndSaveProject(user);
+
+            overLengthImageUrls = FakeValueProvider.createUrls(MAX_OVERVIEW_IMAGE_COUNT);
             imageUrls = overLengthImageUrls.subList(0, IMAGE_COUNT);
         }
 
@@ -142,12 +139,12 @@ class FileServiceTest {
         }
 
         private User createAndSaveUser() {
-            user = DomainProvider.createUser();
+            user = FakeEntityProvider.createUser();
             return userRepository.save(user);
         }
 
         private Project createAndSaveProject(User user) {
-            project = DomainProvider.createProject(user);
+            project = FakeEntityProvider.createProject(user);
             return projectRepository.save(project);
         }
     }

@@ -16,7 +16,6 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -35,7 +34,8 @@ import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
-import sixgaezzang.sidepeek.projects.util.DomainProvider;
+import sixgaezzang.sidepeek.projects.util.FakeDtoProvider;
+import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -45,8 +45,6 @@ import sixgaezzang.sidepeek.users.repository.UserRepository;
 @Transactional
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ProjectSkillServiceTest {
-
-    static final Faker faker = new Faker();
 
     @Autowired
     ProjectSkillService projectSkillService;
@@ -125,16 +123,16 @@ class ProjectSkillServiceTest {
         void setup() {
             overLengthTechStacks = new ArrayList<>();
             for (int i = 1; i <= MAX_PROJECT_SKILL_COUNT; i++) {
-                Skill skill = createAndSaveSkill("skill" + i);
+                Skill skill = createAndSaveSkill();
                 overLengthTechStacks.add(
-                    new ProjectSkillSaveRequest(skill.getId(), "category" + i)
+                    FakeDtoProvider.createProjectSkillSaveRequest(skill.getId())
                 );
             }
 
             user = createAndSaveUser();
             project = createAndSaveProject(user);
             techStacks = overLengthTechStacks.subList(0, PROJECT_SKILL_COUNT);
-            skill = createAndSaveSkill("skill");
+            skill = createAndSaveSkill();
         }
 
         @ParameterizedTest
@@ -157,18 +155,18 @@ class ProjectSkillServiceTest {
                 .withMessage(message);
         }
 
-        private Skill createAndSaveSkill(String name) {
-            Skill skill = DomainProvider.createSkill(name);
+        private Skill createAndSaveSkill() {
+            Skill skill = FakeEntityProvider.createSkill();
             return skillRepository.save(skill);
         }
 
         private User createAndSaveUser() {
-            User user = DomainProvider.createUser();
+            User user = FakeEntityProvider.createUser();
             return userRepository.save(user);
         }
 
         private Project createAndSaveProject(User user) {
-            Project project = DomainProvider.createProject(user);
+            Project project = FakeEntityProvider.createProject(user);
             return projectRepository.save(project);
         }
 
@@ -177,7 +175,7 @@ class ProjectSkillServiceTest {
             // given
             List<ProjectSkillSaveRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
             techStacksWithNonExistSkill.add(
-                new ProjectSkillSaveRequest(skill.getId() + 1L, "category")
+                FakeDtoProvider.createProjectSkillSaveRequest(skill.getId() + 1)
             );
 
             // when
@@ -194,7 +192,7 @@ class ProjectSkillServiceTest {
             // given
             List<ProjectSkillSaveRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
             techStacksWithNonExistSkill.add(
-                new ProjectSkillSaveRequest(null, "category")
+                FakeDtoProvider.createProjectSkillSaveRequest(null)
             );
 
             // when
