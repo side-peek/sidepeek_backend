@@ -36,7 +36,7 @@ import java.time.YearMonth;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.provider.Arguments;
 
-public class InfoProvider {
+public class TestParameterProvider {
     //Project
     public static Stream<Arguments> createProjectsWithoutRequired() {
         String name = FakeValueProvider.createProjectName();

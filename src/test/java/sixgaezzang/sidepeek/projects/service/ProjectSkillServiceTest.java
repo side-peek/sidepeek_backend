@@ -122,7 +122,7 @@ class ProjectSkillServiceTest {
         }
 
         @ParameterizedTest
-        @MethodSource("sixgaezzang.sidepeek.projects.util.InfoProvider#createInvalidProjectSkillInfo")
+        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createInvalidProjectSkillInfo")
         void 기술_스택_카테고리가_유효하지_않아_기술_스택_목록_저장에_실패한다(
             String testMessage, String category, String message
         ) {
