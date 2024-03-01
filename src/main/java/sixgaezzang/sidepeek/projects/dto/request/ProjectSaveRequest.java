@@ -43,7 +43,7 @@ public record ProjectSaveRequest(
     @NotBlank(message = OVERVIEW_IS_NULL)
     String overview,
 
-    @Schema(description = "프로젝트 작성자 Id", example = "1")
+    @Schema(description = "프로젝트 작성자 Id(회원 식별자)", example = "1")
     @Min(value = MIN_ID, message = "작성자 id는 " + MIN_ID + "보다 작을 수 없습니다.")
     @NotNull(message = OWNER_ID_IS_NULL)
     Long ownerId,
@@ -85,8 +85,7 @@ public record ProjectSaveRequest(
     @Schema(description = "프로젝트 트러블 슈팅", example = "## 사이드픽 트러블 슈팅 Markdown")
     String troubleShooting,
 
-    @Schema(description = "프로젝트 레이아웃 이미지 URL 목록",
-        example = "[\"https://sidepeek.image/img1.jpg\", \"https://sidepeek.image/img2.jpg\"]")
+    @Schema(description = "프로젝트 레이아웃 이미지 URL 목록", example = "[\"https://sidepeek.image/img1.jpg\"]")
     List<String> overviewImageUrls,
 
     @Schema(description = "프로젝트 레이아웃 멤버 목록")
