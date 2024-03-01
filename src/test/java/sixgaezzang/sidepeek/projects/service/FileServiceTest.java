@@ -39,7 +39,6 @@ import sixgaezzang.sidepeek.users.repository.UserRepository;
 @Transactional
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class FileServiceTest {
-    static final Faker faker = new Faker();
 
     @Autowired
     FileService fileService;

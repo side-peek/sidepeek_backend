@@ -153,7 +153,7 @@ class ProjectServiceTest {
                 techStacks, subName, thumbnailUrl, deployUrl, startDate, endDate, troubleShooting, null, null);
         }
 
-        private static Stream<Arguments> createProjectsWithoutRequiredArgument() {
+        private static Stream<Arguments> createProjectsWithoutRequired() {
             return Stream.of(
                 Arguments.of("프로젝트 이름",
                     null, OVERVIEW, GITHUB_URL, DESCRIPTION, NAME_IS_NULL),
@@ -166,7 +166,7 @@ class ProjectServiceTest {
             );
         }
 
-        private static Stream<Arguments> createProjectsOnlyInvalidRequiredArgument() {
+        private static Stream<Arguments> createProjectsOnlyInvalidRequired() {
             return Stream.of(
                 Arguments.of("프로젝트 이름이 최대 길이를 넘는 경우",
                     "N".repeat(MAX_PROJECT_NAME_LENGTH + 1), OVERVIEW, GITHUB_URL, DESCRIPTION,
@@ -186,7 +186,7 @@ class ProjectServiceTest {
             );
         }
 
-        private static Stream<Arguments> createProjectsWithInvalidOptionArgument() {
+        private static Stream<Arguments> createProjectsWithInvalidOption() {
             return Stream.of(
                 Arguments.of("프로젝트 부제목이 최대 길이를 넘는 경우",
                     "S".repeat(MAX_PROJECT_NAME_LENGTH + 1), null, null, null, null, null,
@@ -263,7 +263,7 @@ class ProjectServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}이(가) 누락된 경우 실패한다.")
-        @MethodSource("createProjectsWithoutRequiredArgument")
+        @MethodSource("createProjectsWithoutRequired")
         void 작성자_Id_외_필수_정보가_누락되어_프로젝트_저장에_실패한다(String testMessage, String name, String overview,
                                                 String githubUrl, String description, String message) {
             // given
@@ -293,7 +293,7 @@ class ProjectServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
-        @MethodSource("createProjectsOnlyInvalidRequiredArgument")
+        @MethodSource("createProjectsOnlyInvalidRequired")
         void 유효하지_않은_필수_정보로_프로젝트_저장에_실패한다(
             String testMessage, String name, String overview, String githubUrl, String description, String message
         ) {
@@ -310,7 +310,7 @@ class ProjectServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
-        @MethodSource("createProjectsWithInvalidOptionArgument")
+        @MethodSource("createProjectsWithInvalidOption")
         void 유효하지_않은_옵션_정보로_프로젝트_저장에_실패한다(String testMessage, String subName, String thumbnailUrl,
                                           String deployUrl, String troubleShooting, YearMonth startDate,
                                           YearMonth endDate, String message) {
