@@ -2,20 +2,26 @@ package sixgaezzang.sidepeek.projects.dto.request;
 
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MIN_ID;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LENGTH;
+import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.CATEGORY_IS_NULL;
+import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.CATEGORY_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.SKILL_ID_IS_NULL;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+@Schema(description = "프로젝트 생성 요청에서 프로젝트 기술 스택 정보")
 public record ProjectSkillSaveRequest(
+    @Schema(description = "기술 스택 Id", example = "1")
     @Min(value = MIN_ID, message = "스킬 id는 " + MIN_ID + "보다 작을 수 없습니다.")
-    @NotNull(message = "스킬 id를 입력해주세요.")
+    @NotNull(message = SKILL_ID_IS_NULL)
     Long skillId,
 
-    @Size(max = MAX_CATEGORY_LENGTH,
-        message = "스킬 카테고리는 " + MAX_CATEGORY_LENGTH + "자를 넘을 수 없습니다.")
-    @NotBlank(message = "스킬 카테고리를 입력해주세요.")
+    @Schema(description = "기술 스택 카테고리", example = "프론트엔드")
+    @Size(max = MAX_CATEGORY_LENGTH, message = CATEGORY_OVER_MAX_LENGTH)
+    @NotBlank(message = CATEGORY_IS_NULL)
     String category
 ) {
 }

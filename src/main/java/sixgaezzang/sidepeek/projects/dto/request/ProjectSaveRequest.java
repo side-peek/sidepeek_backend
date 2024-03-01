@@ -2,11 +2,24 @@ package sixgaezzang.sidepeek.projects.dto.request;
 
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MIN_ID;
 import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DEPLOY_URL_IS_INVALID;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DESCRIPTION_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.GITHUB_URL_IS_INVALID;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.GITHUB_URL_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.NAME_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.NAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OVERVIEW_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OVERVIEW_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.SUB_NAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_IS_INVALID;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectSkillErrorMessage.PROJECT_TECH_STACKS_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.YEAR_MONTH_PATTERN;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -14,57 +27,69 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.YearMonth;
 import java.util.List;
-import lombok.Builder;
 import org.hibernate.validator.constraints.URL;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
+@Schema(description = "프로젝트 생성 요청 정보")
 public record ProjectSaveRequest(
     // Required
-    @Size(max = MAX_PROJECT_NAME_LENGTH,
-        message = "프로젝트 제목은 " + MAX_PROJECT_NAME_LENGTH + "자를 넘을 수 없습니다.")
-    @NotBlank(message = "프로젝트 제목을 입력해주세요.")
+    @Schema(description = "프로젝트 제목", example = "사이드픽👀")
+    @Size(max = MAX_PROJECT_NAME_LENGTH, message = NAME_OVER_MAX_LENGTH)
+    @NotBlank(message = NAME_IS_NULL)
     String name,
 
-    @Size(max = MAX_OVERVIEW_LENGTH,
-        message = "프로젝트 개요는 " + MAX_OVERVIEW_LENGTH + "자를 넘을 수 없습니다.")
-    @NotBlank(message = "프로젝트 개요를 입력해주세요.")
+    @Schema(description = "프로젝트 개요", example = "사이드 프로젝트를 공유하는 사이드픽입니다.")
+    @Size(max = MAX_OVERVIEW_LENGTH, message = OVERVIEW_OVER_MAX_LENGTH)
+    @NotBlank(message = OVERVIEW_IS_NULL)
     String overview,
 
+    @Schema(description = "프로젝트 작성자 Id", example = "1")
     @Min(value = MIN_ID, message = "작성자 id는 " + MIN_ID + "보다 작을 수 없습니다.")
-    @NotNull(message = "프로젝트 작성자 Id를 함께 보내주세요.")
+    @NotNull(message = OWNER_ID_IS_NULL)
     Long ownerId,
 
-    @URL(message = "올바른 url 형식이 아닙니다.", regexp = URL_REGEXP)
-    @NotBlank(message = "프로젝트 깃허브 url을 입력해주세요.")
+    @Schema(description = "프로젝트 Github URL", example = "https://github.com/side-peek")
+    @URL(message = GITHUB_URL_IS_INVALID, regexp = URL_REGEXP)
+    @NotBlank(message = GITHUB_URL_IS_NULL)
     String githubUrl,
 
-    @NotBlank(message = "프로젝트 기능 설명을 작성해주세요.")
+    @Schema(description = "프로젝트 기능 설명", example = "## 사이드픽 기능 설명 Markdown")
+    @NotBlank(message = DESCRIPTION_IS_NULL)
     String description,
 
-    @NotEmpty(message = "프로젝트에서 사용한 기술 스택을 등록해주세요.")
+    @Schema(description = "프로젝트 기술 스택")
+    @NotEmpty(message = PROJECT_TECH_STACKS_IS_NULL)
     List<ProjectSkillSaveRequest> techStacks,
 
     // Option
-    @Size(max = MAX_PROJECT_NAME_LENGTH,
-        message = "프로젝트 부제목은 " + MAX_PROJECT_NAME_LENGTH + "자를 넘을 수 없습니다.")
+    @Schema(description = "프로젝트 부제목", example = "좋은 아이디어? 사이드픽에서 찾아봐!")
+    @Size(max = MAX_PROJECT_NAME_LENGTH, message = SUB_NAME_OVER_MAX_LENGTH)
     String subName,
 
-    @URL(message = "올바른 url 형식이 아닙니다.", regexp = URL_REGEXP)
+    @Schema(description = "프로젝트 썸네일 이미지 URL", example = "https://sidepeek.image/imageeUrl")
+    @URL(message = THUMBNAIL_URL_IS_INVALID, regexp = URL_REGEXP)
     String thumbnailUrl,
 
-    @URL(message = "올바른 url 형식이 아닙니다.", regexp = URL_REGEXP)
+    @Schema(description = "프로젝트 배포 URL", example = "https://www.sidepeek.com")
+    @URL(message = DEPLOY_URL_IS_INVALID, regexp = URL_REGEXP)
     String deployUrl,
 
+    @Schema(description = "프로젝트 시작 연-월", example = "2024-02")
     @JsonFormat(pattern = YEAR_MONTH_PATTERN)
     YearMonth startDate,
 
+    @Schema(description = "프로젝트 종료 연-월", example = "2024-03")
     @JsonFormat(pattern = YEAR_MONTH_PATTERN)
     YearMonth endDate,
 
+    @Schema(description = "프로젝트 트러블 슈팅", example = "## 사이드픽 트러블 슈팅 Markdown")
     String troubleShooting,
 
+    @Schema(description = "프로젝트 레이아웃 이미지 URL 목록",
+        example = "[\"https://sidepeek.image/img1.jpg\", \"https://sidepeek.image/img2.jpg\"]")
     List<String> overviewImageUrls,
 
+    @Schema(description = "프로젝트 레이아웃 멤버 목록")
     List<MemberSaveRequest> members
 ) {
 

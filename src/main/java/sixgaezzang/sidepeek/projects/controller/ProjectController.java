@@ -27,6 +27,8 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping
+    @Operation(summary = "프로젝트 생성")
+    @ApiResponse(responseCode = "201", description = "프로젝트 생성 성공")
     public ResponseEntity<ProjectResponse> save(
         @Valid @RequestBody ProjectSaveRequest request
     ) {
