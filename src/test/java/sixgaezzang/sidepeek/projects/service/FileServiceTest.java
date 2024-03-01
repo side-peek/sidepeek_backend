@@ -3,16 +3,12 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
-import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_OVER_MAX_COUNT;
-import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_IS_INVALID;
-import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_IMAGE_COUNT;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -20,7 +16,6 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,16 +84,6 @@ class FileServiceTest {
             assertThat(savedImageUrls).isNull();
         }
 
-        private static Stream<Arguments> createInvalidFileInfo() {
-            return Stream.of(
-                Arguments.of("프로젝트 레이아웃 이미지 URL 형식이 올바르지 않은 경우",
-                    "not url pattern",
-                    OVERVIEW_IMAGE_URL_IS_INVALID),
-                Arguments.of("프로젝트 레이아웃 이미지 URL이 최대 길이를 넘는 경우",
-                    "https://sidepeek.file/" + "f".repeat(MAX_TEXT_LENGTH),
-                    OVERVIEW_IMAGE_URL_OVER_MAX_LENGTH)
-            );
-        }
 
         @Test
         void 목록_개수가_최대를_넘어서_파일_목록_저장에_실패한다() {
@@ -124,7 +109,7 @@ class FileServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
-        @MethodSource("createInvalidFileInfo")
+        @MethodSource("sixgaezzang.sidepeek.projects.util.InfoProvider#createInvalidFileInfo")
         void 파일_정보가_유효하지_않아_파일_목록_저장에_실패한다(String testMessage, String fileUrl, String message) {
             // given
             List<String> imageUrlsWithInvalidUrl = new ArrayList<>(imageUrls);

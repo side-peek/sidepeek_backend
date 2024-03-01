@@ -3,19 +3,12 @@ package sixgaezzang.sidepeek.projects.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBERS_OVER_MAX_COUNT;
-import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_INVALID;
-import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.NON_FELLOW_MEMBER_NICKNAME_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.ROLE_IS_NULL;
-import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.ROLE_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
-import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -23,7 +16,6 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,7 +135,7 @@ class MemberServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
-        @MethodSource("createInvalidMemberInfo")
+        @MethodSource("sixgaezzang.sidepeek.projects.util.InfoProvider#createInvalidMemberInfo")
         void 정보가_유효하지_않은_멤버여서_멤버_목록_저장에_실패한다(
             String testMessage, boolean isFellow, String nickname, String role, String message
         ) {
@@ -159,29 +151,6 @@ class MemberServiceTest {
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
                 .withMessage(message);
-        }
-
-        private static Stream<Arguments> createInvalidMemberInfo() {
-            return Stream.of(
-                Arguments.of("비회원 멤버 닉네임이 최대 길이를 넘는 경우",
-                    false, "N".repeat(MAX_NICKNAME_LENGTH + 1), "role",
-                    NON_FELLOW_MEMBER_NICKNAME_OVER_MAX_LENGTH),
-                Arguments.of("비회원 멤버 역할을 적지 않는 경우",
-                    false, "Nickname", null,
-                    ROLE_IS_NULL),
-                Arguments.of("비회원 멤버 역할이 최대 길이를 넘는 경우",
-                    false, "Nickname", "R".repeat(MAX_ROLE_LENGTH + 1),
-                    ROLE_OVER_MAX_LENGTH),
-                Arguments.of("회원 멤버 역할을 적지 않는 경우",
-                    true, null, null,
-                    ROLE_IS_NULL),
-                Arguments.of("회원 멤버 역할이 최대 길이를 넘는 경우",
-                    true, null, "R".repeat(MAX_ROLE_LENGTH + 1),
-                    ROLE_OVER_MAX_LENGTH),
-                Arguments.of("비회원/회원 정보가 모두 없는 경우",
-                    false, null, "role",
-                    MEMBER_IS_INVALID)
-            );
         }
 
         private User createAndSaveUser() {

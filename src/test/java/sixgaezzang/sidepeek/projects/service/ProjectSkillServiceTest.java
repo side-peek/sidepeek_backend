@@ -5,17 +5,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOf
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectSkillErrorMessage.PROJECT_TECH_STACKS_IS_NULL;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectSkillErrorMessage.PROJECT_TECH_STACKS_OVER_MAX_COUNT;
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
-import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.CATEGORY_IS_NULL;
-import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.CATEGORY_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.SKILL_ID_IS_NULL;
 import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.SKILL_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -23,7 +19,6 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,15 +61,6 @@ class ProjectSkillServiceTest {
         Project project;
         User user;
         Skill skill;
-
-        private static Stream<Arguments> createInvalidProjectSkillInfo() {
-            return Stream.of(
-                Arguments.of("기술 스택 카테고리를 누락하는 경우", null,
-                    CATEGORY_IS_NULL),
-                Arguments.of("기술 스택 카테고리가 최대 길이를 넘는 경우", "C".repeat(MAX_CATEGORY_LENGTH + 1),
-                    CATEGORY_OVER_MAX_LENGTH)
-            );
-        }
 
         @Test
         void 프로젝트_기술_스택_목록_저장에_성공한다() {
@@ -136,7 +122,7 @@ class ProjectSkillServiceTest {
         }
 
         @ParameterizedTest
-        @MethodSource("createInvalidProjectSkillInfo")
+        @MethodSource("sixgaezzang.sidepeek.projects.util.InfoProvider#createInvalidProjectSkillInfo")
         void 기술_스택_카테고리가_유효하지_않아_기술_스택_목록_저장에_실패한다(
             String testMessage, String category, String message
         ) {

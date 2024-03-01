@@ -2,34 +2,13 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DEPLOY_URL_IS_INVALID;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DEPLOY_URL_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DESCRIPTION_IS_NULL;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DESCRIPTION_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DURATION_IS_INVALID;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DURATION_IS_REVERSED;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.GITHUB_URL_IS_INVALID;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.GITHUB_URL_IS_NULL;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.NAME_IS_NULL;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.NAME_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OVERVIEW_IS_NULL;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OVERVIEW_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.SUB_NAME_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_IS_INVALID;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.TROUBLESHOOTING_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +17,6 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -133,68 +111,6 @@ class ProjectServiceTest {
         static String DESCRIPTION = FakeValueProvider.createLongText();
         User user;
 
-        private static Stream<Arguments> createProjectsWithoutRequired() {
-            return Stream.of(
-                Arguments.of("프로젝트 이름",
-                    null, OVERVIEW, GITHUB_URL, DESCRIPTION, NAME_IS_NULL),
-                Arguments.of("프로젝트 개요",
-                    NAME, null, GITHUB_URL, DESCRIPTION, OVERVIEW_IS_NULL),
-                Arguments.of("프로젝트 깃허브 url",
-                    NAME, OVERVIEW, null, DESCRIPTION, GITHUB_URL_IS_NULL),
-                Arguments.of("프로젝트 기능 설명",
-                    NAME, OVERVIEW, GITHUB_URL, null, DESCRIPTION_IS_NULL)
-            );
-        }
-
-        private static Stream<Arguments> createProjectsOnlyInvalidRequired() {
-            return Stream.of(
-                Arguments.of("프로젝트 이름이 최대 길이를 넘는 경우",
-                    "N".repeat(MAX_PROJECT_NAME_LENGTH + 1), OVERVIEW, GITHUB_URL, DESCRIPTION,
-                    NAME_OVER_MAX_LENGTH),
-                Arguments.of("프로젝트 개요가 최대 길이를 넘는 경우",
-                    NAME, "O".repeat(MAX_OVERVIEW_LENGTH + 1), GITHUB_URL, DESCRIPTION,
-                    OVERVIEW_OVER_MAX_LENGTH),
-                Arguments.of("프로젝트 깃허브 url 형식이 올바르지 않은 경우",
-                    NAME, OVERVIEW, "not url pattern", DESCRIPTION,
-                    GITHUB_URL_IS_INVALID),
-                Arguments.of("프로젝트 깃허브 url이 최대 길이를 넘는 경우",
-                    NAME, OVERVIEW, GITHUB_URL + "u".repeat(MAX_TEXT_LENGTH), DESCRIPTION,
-                    GITHUB_URL_OVER_MAX_LENGTH),
-                Arguments.of("프로젝트 기능 설명이 최대 길이를 넘는 경우",
-                    NAME, OVERVIEW, GITHUB_URL, "D".repeat(MAX_TEXT_LENGTH + 1),
-                    DESCRIPTION_OVER_MAX_LENGTH)
-            );
-        }
-
-        private static Stream<Arguments> createProjectsWithInvalidOption() {
-            return Stream.of(
-                Arguments.of("프로젝트 부제목이 최대 길이를 넘는 경우",
-                    "S".repeat(MAX_PROJECT_NAME_LENGTH + 1), null, null, null, null, null,
-                    SUB_NAME_OVER_MAX_LENGTH),
-                Arguments.of("프로젝트 썸네일 url 형식이 올바르지 않은 경우",
-                    null, "not url pattern", null, null, null, null,
-                    THUMBNAIL_URL_IS_INVALID),
-                Arguments.of("프로젝트 썸네일 url이 최대 길이를 넘는 경우",
-                    null, GITHUB_URL + "u".repeat(MAX_TEXT_LENGTH), null, null, null, null,
-                    THUMBNAIL_URL_OVER_MAX_LENGTH),
-                Arguments.of("프로젝트 배포 url 형식이 올바르지 않은 경우",
-                    null, null, "not url pattern", null, null, null,
-                    DEPLOY_URL_IS_INVALID),
-                Arguments.of("프로젝트 배포 url이 최대 길이를 넘는 경우",
-                    null, null, GITHUB_URL + "u".repeat(MAX_TEXT_LENGTH), null, null, null,
-                    DEPLOY_URL_OVER_MAX_LENGTH),
-                Arguments.of("프로젝트 트러블 슈팅 내용이 최대 길이를 넘는 경우",
-                    null, null, null, "T".repeat(MAX_TEXT_LENGTH + 1), null, null,
-                    TROUBLESHOOTING_OVER_MAX_LENGTH),
-                Arguments.of("프로젝트 시작/끝 기간 중 하나만 누락된 경우",
-                    null, null, null, null, null, YearMonth.of(2024, 2),
-                    DURATION_IS_INVALID),
-                Arguments.of("프로젝트 시작/끝 기간 순서가 안맞는 경우",
-                    null, null, null, null, YearMonth.of(2024, 2), YearMonth.of(2023, 1),
-                    DURATION_IS_REVERSED)
-            );
-        }
-
         @BeforeEach
         void setup() {
             members = new ArrayList<>();
@@ -239,7 +155,7 @@ class ProjectServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}이(가) 누락된 경우 실패한다.")
-        @MethodSource("createProjectsWithoutRequired")
+        @MethodSource("sixgaezzang.sidepeek.projects.util.InfoProvider#createProjectsWithoutRequired")
         void 작성자_Id_외_필수_정보가_누락되어_프로젝트_저장에_실패한다(
             String testMessage, String name, String overview, String githubUrl, String description, String message
         ) {
@@ -272,7 +188,7 @@ class ProjectServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
-        @MethodSource("createProjectsOnlyInvalidRequired")
+        @MethodSource("sixgaezzang.sidepeek.projects.util.InfoProvider#createProjectsOnlyInvalidRequired")
         void 유효하지_않은_필수_정보로_프로젝트_저장에_실패한다(
             String testMessage, String name, String overview, String githubUrl, String description, String message
         ) {
@@ -290,7 +206,7 @@ class ProjectServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
-        @MethodSource("createProjectsWithInvalidOption")
+        @MethodSource("sixgaezzang.sidepeek.projects.util.InfoProvider#createProjectsWithInvalidOption")
         void 유효하지_않은_옵션_정보로_프로젝트_저장에_실패한다(
             String testMessage, String subName, String thumbnailUrl, String deployUrl, String troubleShooting,
             YearMonth startDate, YearMonth endDate, String message
