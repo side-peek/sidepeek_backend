@@ -40,7 +40,6 @@ public class FakeEntityProvider {
     }
 
     public static Skill createSkill() {
-
         return Skill.builder()
             .name(FakeValueProvider.createSkillName())
             .iconImageUrl(FakeValueProvider.createUrl())

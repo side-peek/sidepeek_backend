@@ -38,6 +38,7 @@ public class FakeValueProvider {
         return FAKER.internet().url();
     }
 
+    // Project
     public static String createProjectName() { // 프로젝트 제목/부제목
         return checkAndCutLength(FAKER.name().title(), MAX_PROJECT_NAME_LENGTH);
     }
