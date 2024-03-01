@@ -3,6 +3,24 @@ package sixgaezzang.sidepeek.projects.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DEPLOY_URL_IS_INVALID;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DEPLOY_URL_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DESCRIPTION_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DESCRIPTION_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DURATION_IS_INVALID;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DURATION_IS_REVERSED;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.GITHUB_URL_IS_INVALID;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.GITHUB_URL_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.NAME_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.NAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OVERVIEW_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OVERVIEW_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.SUB_NAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_IS_INVALID;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.TROUBLESHOOTING_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_IMAGE_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
@@ -138,13 +156,13 @@ class ProjectServiceTest {
         private static Stream<Arguments> createProjectsWithoutRequiredArgument() {
             return Stream.of(
                 Arguments.of("프로젝트 이름",
-                    null, OVERVIEW, GITHUB_URL, DESCRIPTION, "프로젝트 제목을 입력해주세요."),
+                    null, OVERVIEW, GITHUB_URL, DESCRIPTION, NAME_IS_NULL),
                 Arguments.of("프로젝트 개요",
-                    NAME, null, GITHUB_URL, DESCRIPTION, "프로젝트 개요를 입력해주세요."),
+                    NAME, null, GITHUB_URL, DESCRIPTION, OVERVIEW_IS_NULL),
                 Arguments.of("프로젝트 깃허브 url",
-                    NAME, OVERVIEW, null, DESCRIPTION, "프로젝트 Github URL을 입력해주세요."),
+                    NAME, OVERVIEW, null, DESCRIPTION, GITHUB_URL_IS_NULL),
                 Arguments.of("프로젝트 기능 설명",
-                    NAME, OVERVIEW, GITHUB_URL, null, "프로젝트 기능 설명을 입력해주세요.")
+                    NAME, OVERVIEW, GITHUB_URL, null, DESCRIPTION_IS_NULL)
             );
         }
 
@@ -152,19 +170,19 @@ class ProjectServiceTest {
             return Stream.of(
                 Arguments.of("프로젝트 이름이 최대 길이를 넘는 경우",
                     "N".repeat(MAX_PROJECT_NAME_LENGTH + 1), OVERVIEW, GITHUB_URL, DESCRIPTION,
-                    "프로젝트 제목은 " + MAX_PROJECT_NAME_LENGTH + "자 이하여야 합니다."),
+                    NAME_OVER_MAX_LENGTH),
                 Arguments.of("프로젝트 개요가 최대 길이를 넘는 경우",
                     NAME, "O".repeat(MAX_OVERVIEW_LENGTH + 1), GITHUB_URL, DESCRIPTION,
-                    "프로젝트 개요는 " + MAX_OVERVIEW_LENGTH + "자 이하여야 합니다."),
+                    OVERVIEW_OVER_MAX_LENGTH),
                 Arguments.of("프로젝트 깃허브 url 형식이 올바르지 않은 경우",
                     NAME, OVERVIEW, "not url pattern", DESCRIPTION,
-                    "프로젝트 Github URL 형식이 유효하지 않습니다."),
+                    GITHUB_URL_IS_INVALID),
                 Arguments.of("프로젝트 깃허브 url이 최대 길이를 넘는 경우",
                     NAME, OVERVIEW, GITHUB_URL + "u".repeat(MAX_TEXT_LENGTH), DESCRIPTION,
-                    "프로젝트 Github URL은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다."),
+                    GITHUB_URL_OVER_MAX_LENGTH),
                 Arguments.of("프로젝트 기능 설명이 최대 길이를 넘는 경우",
                     NAME, OVERVIEW, GITHUB_URL, "D".repeat(MAX_TEXT_LENGTH + 1),
-                    "프로젝트 기능 설명은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다.")
+                    DESCRIPTION_OVER_MAX_LENGTH)
             );
         }
 
@@ -172,28 +190,28 @@ class ProjectServiceTest {
             return Stream.of(
                 Arguments.of("프로젝트 부제목이 최대 길이를 넘는 경우",
                     "S".repeat(MAX_PROJECT_NAME_LENGTH + 1), null, null, null, null, null,
-                    "프로젝트 부제목은 " + MAX_PROJECT_NAME_LENGTH + "자 이하여야 합니다."),
+                    SUB_NAME_OVER_MAX_LENGTH),
                 Arguments.of("프로젝트 썸네일 url 형식이 올바르지 않은 경우",
                     null, "not url pattern", null, null, null, null,
-                    "프로젝트 썸네일 이미지 URL 형식이 유효하지 않습니다."),
+                    THUMBNAIL_URL_IS_INVALID),
                 Arguments.of("프로젝트 썸네일 url이 최대 길이를 넘는 경우",
                     null, GITHUB_URL + "u".repeat(MAX_TEXT_LENGTH), null, null, null, null,
-                    "프로젝트 썸네일 이미지 URL은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다."),
+                    THUMBNAIL_URL_OVER_MAX_LENGTH),
                 Arguments.of("프로젝트 배포 url 형식이 올바르지 않은 경우",
                     null, null, "not url pattern", null, null, null,
-                    "프로젝트 배포 URL 형식이 유효하지 않습니다."),
+                    DEPLOY_URL_IS_INVALID),
                 Arguments.of("프로젝트 배포 url이 최대 길이를 넘는 경우",
                     null, null, GITHUB_URL + "u".repeat(MAX_TEXT_LENGTH), null, null, null,
-                    "프로젝트 배포 URL은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다."),
+                    DEPLOY_URL_OVER_MAX_LENGTH),
                 Arguments.of("프로젝트 트러블 슈팅 내용이 최대 길이를 넘는 경우",
                     null, null, null, "T".repeat(MAX_TEXT_LENGTH + 1), null, null,
-                    "프로젝트 트러블 슈팅 설명은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다."),
+                    TROUBLESHOOTING_OVER_MAX_LENGTH),
                 Arguments.of("프로젝트 시작/끝 기간 중 하나만 누락된 경우",
                     null, null, null, null, null, YearMonth.of(2024, 2),
-                    "프로젝트 기간은 시작 날짜와 종료 날짜가 모두 기입되어야 합니다."),
+                    DURATION_IS_INVALID),
                 Arguments.of("프로젝트 시작/끝 기간 순서가 안맞는 경우",
                     null, null, null, null, YearMonth.of(2024, 2), YearMonth.of(2023, 1),
-                    "시작 날짜가 종료 날짜와 같거나 종료 날짜보다 이전이어야합니다.")
+                    DURATION_IS_REVERSED)
             );
         }
 
@@ -271,7 +289,7 @@ class ProjectServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
-                .withMessage("프로젝트 게시글 작성자 Id를 입력해주세요.");
+                .withMessage(OWNER_ID_IS_NULL);
         }
 
         @ParameterizedTest(name = "[{index}] {0}")

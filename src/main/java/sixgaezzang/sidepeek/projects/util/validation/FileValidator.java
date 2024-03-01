@@ -1,8 +1,8 @@
 package sixgaezzang.sidepeek.projects.util.validation;
 
-import static sixgaezzang.sidepeek.projects.exception.FileErrorMessage.OVERVIEW_IMAGE_OVER_MAX_COUNT;
-import static sixgaezzang.sidepeek.projects.exception.FileErrorMessage.OVERVIEW_IMAGE_URL_IS_INVALID;
-import static sixgaezzang.sidepeek.projects.exception.FileErrorMessage.OVERVIEW_IMAGE_URL_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_IS_INVALID;
+import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_IMAGE_COUNT;
 
 import io.jsonwebtoken.lang.Assert;

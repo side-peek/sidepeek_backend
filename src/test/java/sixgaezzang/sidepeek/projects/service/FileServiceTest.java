@@ -4,6 +4,10 @@ package sixgaezzang.sidepeek.projects.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_IS_INVALID;
+import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_IMAGE_COUNT;
 
 import java.util.ArrayList;
@@ -89,6 +93,17 @@ class FileServiceTest {
             assertThat(savedImageUrls).isNull();
         }
 
+        private static Stream<Arguments> createInvalidFileInfo() {
+            return Stream.of(
+                Arguments.of("프로젝트 레이아웃 이미지 URL 형식이 올바르지 않은 경우",
+                    "not url pattern",
+                    OVERVIEW_IMAGE_URL_IS_INVALID),
+                Arguments.of("프로젝트 레이아웃 이미지 URL이 최대 길이를 넘는 경우",
+                    "https://sidepeek.file/" + "f".repeat(MAX_TEXT_LENGTH),
+                    OVERVIEW_IMAGE_URL_OVER_MAX_LENGTH)
+            );
+        }
+
         @Test
         void 목록_개수가_최대를_넘어서_파일_목록_저장에_실패한다() {
             // given, when
@@ -96,7 +111,7 @@ class FileServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage("프로젝트 레이아웃 이미지 수는 " + MAX_OVERVIEW_IMAGE_COUNT + "개 미만이어야 합니다.");
+                .withMessage(OVERVIEW_IMAGE_OVER_MAX_COUNT);
         }
 
         @Test
@@ -109,17 +124,7 @@ class FileServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage("프로젝트가 null 입니다.");
-        }
-
-        private static Stream<Arguments> createInvalidFileInfo() {
-            return Stream.of(
-                Arguments.of("프로젝트 레이아웃 이미지 URL 형식이 올바르지 않은 경우",
-                    "not url pattern", "프로젝트 레이아웃 이미지 URL 형식이 올바르지 않습니다."),
-                Arguments.of("프로젝트 레이아웃 이미지 URL이 최대 길이를 넘는 경우",
-                    "https://sidepeek.file/" + "f".repeat(MAX_TEXT_LENGTH),
-                    "프로젝트 레이아웃 이미지 URL은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다.")
-            );
+                .withMessage(PROJECT_IS_NULL);
         }
 
         @ParameterizedTest(name = "[{index}] {0}")

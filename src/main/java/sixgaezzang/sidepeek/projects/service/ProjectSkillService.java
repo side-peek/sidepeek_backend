@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.projects.service;
 
+import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.SKILL_NOT_EXISTING;
+
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +33,7 @@ public class ProjectSkillService {
         List<ProjectSkill> skills = techStacks.stream().map(
             projectSkill -> {
                 Skill skill = skillRepository.findById(projectSkill.skillId())
-                    .orElseThrow(() -> new EntityNotFoundException("Skill Id에 해당하는 스킬이 없습니다."));
+                    .orElseThrow(() -> new EntityNotFoundException(SKILL_NOT_EXISTING));
 
                 return ProjectSkill.builder()
                     .project(project)

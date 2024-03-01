@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.projects.domain.member;
 
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
 import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
 
@@ -68,7 +69,7 @@ public class Member {
             return;
         }
 
-        throw new IllegalArgumentException("회원인 멤버는 유저 Id를, 비회원인 멤버는 닉네임을 입력해주세요.");
+        throw new IllegalArgumentException(MEMBER_IS_INVALID);
     }
 
     private void validateConstructorRequiredArguments(Project project, String role) {

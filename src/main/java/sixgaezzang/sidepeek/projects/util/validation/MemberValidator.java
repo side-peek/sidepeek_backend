@@ -2,12 +2,12 @@ package sixgaezzang.sidepeek.projects.util.validation;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
-import static sixgaezzang.sidepeek.projects.exception.MemberErrorMessage.MEMBERS_OVER_MAX_COUNT;
-import static sixgaezzang.sidepeek.projects.exception.MemberErrorMessage.NON_FELLOW_MEMBER_NICKNAME_IS_NULL;
-import static sixgaezzang.sidepeek.projects.exception.MemberErrorMessage.NON_FELLOW_MEMBER_NICKNAME_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.exception.MemberErrorMessage.ROLE_IS_NULL;
-import static sixgaezzang.sidepeek.projects.exception.MemberErrorMessage.ROLE_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.exception.MemberErrorMessage.USER_ID_OF_FELLOW_MEMBER_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBERS_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.NON_FELLOW_MEMBER_NICKNAME_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.NON_FELLOW_MEMBER_NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.ROLE_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.ROLE_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.USER_ID_OF_FELLOW_MEMBER_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
 import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;

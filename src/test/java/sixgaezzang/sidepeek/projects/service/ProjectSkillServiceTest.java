@@ -2,8 +2,15 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectSkillErrorMessage.PROJECT_TECH_STACKS_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectSkillErrorMessage.PROJECT_TECH_STACKS_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
+import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.CATEGORY_IS_NULL;
+import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.CATEGORY_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.SKILL_ID_IS_NULL;
+import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.SKILL_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -65,9 +72,9 @@ class ProjectSkillServiceTest {
         private static Stream<Arguments> createInvalidProjectSkillInfo() {
             return Stream.of(
                 Arguments.of("기술 스택 카테고리를 누락하는 경우", null,
-                    "기술 스택 카테고리를 입력해주세요."),
+                    CATEGORY_IS_NULL),
                 Arguments.of("기술 스택 카테고리가 최대 길이를 넘는 경우", "C".repeat(MAX_CATEGORY_LENGTH + 1),
-                    "기술 스택 카테고리는 " + MAX_CATEGORY_LENGTH + "자 이하여야 합니다.")
+                    CATEGORY_OVER_MAX_LENGTH)
             );
         }
 
@@ -88,7 +95,7 @@ class ProjectSkillServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage("기술 스택들을 입력해주세요.");
+                .withMessage(PROJECT_TECH_STACKS_IS_NULL);
         }
 
         @Test
@@ -101,7 +108,7 @@ class ProjectSkillServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage("프로젝트가 null 입니다.");
+                .withMessage(PROJECT_IS_NULL);
         }
 
         @Test
@@ -111,7 +118,7 @@ class ProjectSkillServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage("기술 스택은 " + MAX_PROJECT_SKILL_COUNT + "개 미만이어야 합니다.");
+                .withMessage(PROJECT_TECH_STACKS_OVER_MAX_COUNT);
         }
 
         @BeforeEach
@@ -179,7 +186,7 @@ class ProjectSkillServiceTest {
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(saveAll)
-                .withMessage("Skill Id에 해당하는 스킬이 없습니다.");
+                .withMessage(SKILL_NOT_EXISTING);
         }
 
         @Test
@@ -196,7 +203,7 @@ class ProjectSkillServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage("기술 스택의 스택 Id를 입력해주세요");
+                .withMessage(SKILL_ID_IS_NULL);
         }
 
     }

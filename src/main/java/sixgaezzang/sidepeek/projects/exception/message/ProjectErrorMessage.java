@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.projects.exception;
+package sixgaezzang.sidepeek.projects.exception.message;
 
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;

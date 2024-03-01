@@ -2,6 +2,12 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBERS_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_INVALID;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.NON_FELLOW_MEMBER_NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.ROLE_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.ROLE_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
 import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
@@ -98,6 +104,39 @@ class MemberServiceTest {
             assertThat(savedMembers).isNull();
         }
 
+        private static Stream<Arguments> createInvalidMemberInfo() {
+            return Stream.of(
+                Arguments.of("비회원 멤버 닉네임이 최대 길이를 넘는 경우",
+                    false, "N".repeat(MAX_NICKNAME_LENGTH + 1), "role",
+                    NON_FELLOW_MEMBER_NICKNAME_OVER_MAX_LENGTH),
+                Arguments.of("비회원 멤버 역할을 적지 않는 경우",
+                    false, "Nickname", null,
+                    ROLE_IS_NULL),
+                Arguments.of("비회원 멤버 역할이 최대 길이를 넘는 경우",
+                    false, "Nickname", "R".repeat(MAX_ROLE_LENGTH + 1),
+                    ROLE_OVER_MAX_LENGTH),
+                Arguments.of("회원 멤버 역할을 적지 않는 경우",
+                    true, null, null,
+                    ROLE_IS_NULL),
+                Arguments.of("회원 멤버 역할이 최대 길이를 넘는 경우",
+                    true, null, "R".repeat(MAX_ROLE_LENGTH + 1),
+                    ROLE_OVER_MAX_LENGTH),
+                Arguments.of("비회원/회원 정보가 모두 없는 경우",
+                    false, null, "role",
+                    MEMBER_IS_INVALID)
+            );
+        }
+
+        @Test
+        void 목록_개수가_최대를_넘어서_멤버_목록_저장에_실패한다() {
+            // given, when
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, overLengthMembers);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage(MEMBERS_OVER_MAX_COUNT);
+        }
+
         @Test
         void 프로젝트가_null이어서_프로젝트_멤버_목록_저장에_실패한다() {
             // given
@@ -108,40 +147,7 @@ class MemberServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage("프로젝트가 null 입니다.");
-        }
-
-        @Test
-        void 목록_개수가_최대를_넘어서_멤버_목록_저장에_실패한다() {
-            // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, overLengthMembers);
-
-            // then
-            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage("멤버 수는 " + MAX_MEMBER_COUNT + "명 미만이어야 합니다.");
-        }
-
-        private static Stream<Arguments> createInvalidMemberInfo() {
-            return Stream.of(
-                Arguments.of("비회원 멤버 닉네임이 최대 길이를 넘는 경우",
-                    false, "N".repeat(MAX_NICKNAME_LENGTH + 1), "role",
-                    "비회원 멤버 닉네임은 " + MAX_NICKNAME_LENGTH + "자 미만이어야 합니다."),
-                Arguments.of("비회원 멤버 역할을 적지 않는 경우",
-                    false, "Nickname", null,
-                    "멤버 역할 이름을 입력해주세요."),
-                Arguments.of("비회원 멤버 역할이 최대 길이를 넘는 경우",
-                    false, "Nickname", "R".repeat(MAX_ROLE_LENGTH + 1),
-                    "멤버의 역할 이름은 " + MAX_ROLE_LENGTH + "자 미만이어야 합니다."),
-                Arguments.of("회원 멤버 역할을 적지 않는 경우",
-                    true, null, null,
-                    "멤버 역할 이름을 입력해주세요."),
-                Arguments.of("회원 멤버 역할이 최대 길이를 넘는 경우",
-                    true, null, "R".repeat(MAX_ROLE_LENGTH + 1),
-                    "멤버의 역할 이름은 " + MAX_ROLE_LENGTH + "자 미만이어야 합니다."),
-                Arguments.of("비회원/회원 정보가 모두 없는 경우",
-                    false, null, "role",
-                    "회원인 멤버는 유저 Id를, 비회원인 멤버는 닉네임을 입력해주세요.")
-            );
+                .withMessage(PROJECT_IS_NULL);
         }
 
         @Test

@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.projects.exception;
+package sixgaezzang.sidepeek.projects.exception.message;
 
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
@@ -12,4 +12,5 @@ public class MemberErrorMessage {
     public static final String NON_FELLOW_MEMBER_NICKNAME_IS_NULL = "비회원 멤버 닉네임을 입력해주세요.";
     public static final String NON_FELLOW_MEMBER_NICKNAME_OVER_MAX_LENGTH =
         "비회원 멤버 닉네임은 " + MAX_NICKNAME_LENGTH + "자 미만이어야 합니다.";
+    public static final String MEMBER_IS_INVALID = "회원인 멤버는 유저 Id를, 비회원인 멤버는 닉네임을 입력해주세요.";
 }
