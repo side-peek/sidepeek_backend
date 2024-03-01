@@ -137,7 +137,6 @@ public class TestParameterProvider {
     }
 
     // File
-
     public static Stream<Arguments> createInvalidFileInfo() {
         return Stream.of(
             Arguments.of("프로젝트 레이아웃 이미지 URL 형식이 올바르지 않은 경우",
@@ -149,6 +148,7 @@ public class TestParameterProvider {
         );
     }
 
+    // Project Skill
     public static Stream<Arguments> createInvalidProjectSkillInfo() {
         return Stream.of(
             Arguments.of("기술 스택 카테고리를 누락하는 경우", null,
