@@ -13,6 +13,9 @@ public record CommentResponse(
     @Schema(description = "댓글 작성자 정보(익명 댓글은 null)")
     UserSummary owner,
 
+    @Schema(description = "댓글 작성자와 로그인 사용자 일치 여부")
+    boolean isOwner,
+
     @Schema(description = "댓글 내용", example = "우와 이 프로젝트 대박인데요?")
     String content,
 
