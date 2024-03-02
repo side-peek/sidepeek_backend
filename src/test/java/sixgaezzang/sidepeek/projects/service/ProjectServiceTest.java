@@ -23,7 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
-import sixgaezzang.sidepeek.projects.dto.request.ProjectSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
@@ -141,7 +141,7 @@ class ProjectServiceTest {
         @Test
         void 필수_정보가_모두_포함되어_프로젝트_저장에_성공한다() {
             // given
-            ProjectSaveRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+            ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
                 NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId(), techStacks
             );
 
@@ -160,7 +160,7 @@ class ProjectServiceTest {
             String testMessage, String name, String overview, String githubUrl, String description, String message
         ) {
             // given
-            ProjectSaveRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+            ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
                 name, overview, githubUrl, description, user.getId(), techStacks
             );
 
@@ -175,7 +175,7 @@ class ProjectServiceTest {
         @Test
         void 작성자_Id가_누락되어_프로젝트_저장에_실패한다() {
             // given
-            ProjectSaveRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+            ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
                 NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, null, techStacks
             );
 
@@ -193,7 +193,7 @@ class ProjectServiceTest {
             String testMessage, String name, String overview, String githubUrl, String description, String message
         ) {
             // given
-            ProjectSaveRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+            ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
                 name, overview, githubUrl, description, user.getId(), techStacks
             );
 
@@ -212,7 +212,7 @@ class ProjectServiceTest {
             YearMonth startDate, YearMonth endDate, String message
         ) {
             // given
-            ProjectSaveRequest request = FakeDtoProvider.createProjectSaveRequestWithOwnerIdAndOption(
+            ProjectRequest request = FakeDtoProvider.createProjectSaveRequestWithOwnerIdAndOption(
                 techStacks, user.getId(), subName, thumbnailUrl, deployUrl, troubleShooting, startDate, endDate
             );
 

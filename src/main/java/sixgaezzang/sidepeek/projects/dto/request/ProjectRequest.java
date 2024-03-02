@@ -31,7 +31,7 @@ import org.hibernate.validator.constraints.URL;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
 @Schema(description = "프로젝트 생성 요청 정보")
-public record ProjectSaveRequest(
+public record ProjectRequest(
     // Required
     @Schema(description = "프로젝트 제목", example = "사이드픽👀")
     @Size(max = MAX_PROJECT_NAME_LENGTH, message = NAME_OVER_MAX_LENGTH)
