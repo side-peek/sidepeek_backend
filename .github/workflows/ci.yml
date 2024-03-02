@@ -22,8 +22,10 @@ jobs:
         services:
             redis:
                 image: redis
+                env:
+                    TEST_REDIS_PORT: ${{ secrets.TEST_REDIS_PORT }}
                 ports:
-                    - "${{ secrets.TEST_REDIS_PORT }}:6379"
+                    - $TEST_REDIS_PORT:6379
                 options: --entrypoint redis-server
 
         steps:
