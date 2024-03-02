@@ -17,15 +17,13 @@ permissions:
 
 jobs:
     build:
-        env:
-            TEST_REDIS_PORT: ${{ secrets.TEST_REDIS_PORT }}
         runs-on: ubuntu-latest
 
         services:
             redis:
                 image: redis
                 ports:
-                    - "$TEST_REDIS_PORT:6379"
+                    - "${{ secrets.TEST_REDIS_PORT }}:6379"
                 options: --entrypoint redis-server
 
         steps:
@@ -71,12 +69,12 @@ jobs:
                     path: '**/build/reports/checkstyle/**.xml'
                     title: 📝 Checkstyle report
 
-#            -   name: Send Slack Notification
-#                uses: 8398a7/action-slack@v3
-#                with:
-#                    status: ${{ job.status }}
-#                    author_name: Github Action Test
-#                    fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-#                env:
-#                    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-#                if: always()
+            -   name: Send Slack Notification
+                uses: 8398a7/action-slack@v3
+                with:
+                    status: ${{ job.status }}
+                    author_name: Github Action Test
+                    fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+                env:
+                    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+                if: always()
