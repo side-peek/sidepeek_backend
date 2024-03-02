@@ -24,7 +24,7 @@ jobs:
             redis:
                 image: redis
                 ports:
-                    - "${ TEST_REDIS_PORT }"
+                    - "${ TEST_REDIS_PORT }:6379"
                 options: --entrypoint redis-server
 
         steps:
