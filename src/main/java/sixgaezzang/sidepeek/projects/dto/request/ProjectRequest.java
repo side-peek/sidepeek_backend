@@ -30,7 +30,7 @@ import java.util.List;
 import org.hibernate.validator.constraints.URL;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
-@Schema(description = "프로젝트 생성 요청 정보")
+@Schema(description = "프로젝트 생성/수정 요청 정보")
 public record ProjectRequest(
     // Required
     @Schema(description = "프로젝트 제목", example = "사이드픽👀")
