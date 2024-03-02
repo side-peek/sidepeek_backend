@@ -14,7 +14,8 @@ permissions:
     contents: read
     checks: write
     pull-requests: write
-
+env:
+    TEST_REDIS_PORT: ${{ secrets.TEST_REDIS_PORT }}
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -23,7 +24,7 @@ jobs:
             redis:
                 image: redis
                 ports:
-                    - "${{ secrets.TEST_REDIS_PORT }}:6379"
+                    - "${ TEST_REDIS_PORT }"
                 options: --entrypoint redis-server
 
         steps:
