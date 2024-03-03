@@ -37,11 +37,6 @@ public class ProjectErrorMessage {
     public static final String DESCRIPTION_IS_NULL = "프로젝트 기능 설명을 입력해주세요.";
     public static final String DESCRIPTION_OVER_MAX_LENGTH = "프로젝트 기능 설명은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다.";
 
-    // Github url
-    public static final String GITHUB_URL_IS_INVALID = "프로젝트 Github URL 형식이 유효하지 않습니다.";
-    public static final String GITHUB_URL_IS_NULL = "프로젝트 Github URL을 입력해주세요.";
-    public static final String GITHUB_URL_OVER_MAX_LENGTH = "프로젝트 Github URL은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다.";
-
     // Duration
     public static final String DURATION_IS_REVERSED = "시작 날짜가 종료 날짜와 같거나 종료 날짜보다 이전이어야합니다.";
     public static final String DURATION_IS_INVALID = "프로젝트 기간은 시작 날짜와 종료 날짜가 모두 기입되어야 합니다.";
