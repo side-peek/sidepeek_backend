@@ -6,6 +6,7 @@ truncate table project_member;
 truncate table files;
 truncate table skill;
 truncate table project_skill;
+truncate table auth_provider;
 SET foreign_key_checks = 1;
 
 -- USER
