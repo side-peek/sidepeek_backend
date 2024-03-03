@@ -9,13 +9,9 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
-
-        services:
-            redis:
-                image: redis
-                ports:
-                    - ${{ secrets.TEST_REDIS_PORT }}
-                options: --entrypoint redis-server
+        strategy:
+            matrix:
+                redis-version: [ latest ]
 
         steps:
             -   name: Repository Checkout
@@ -29,6 +25,12 @@ jobs:
                 with:
                     java-version: '17'
                     distribution: 'corretto'
+
+            -   name: Set up Redis
+                uses: supercharge/redis-github-action@1.7.0
+                with:
+                    redis-version: ${{ matrix.redis-version }}
+                    redis-port: ${{ secrets.TEST_REDIS_PORT }}
 
             -   name: Set up MySQL
                 uses: samin/mysql-action@v1.3
