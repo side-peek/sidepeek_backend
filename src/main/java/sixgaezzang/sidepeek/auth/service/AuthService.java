@@ -57,7 +57,8 @@ public class AuthService {
         return createTokens(user);
     }
 
-    private LoginResponse createTokens(User user) {
+    @Transactional
+    public LoginResponse createTokens(User user) {
         String accessToken = jwtManager.generateAccessToken(user.getId());
         String refreshToken = jwtManager.generateRefreshToken(user.getId());
         refreshTokenService.save(refreshToken);
