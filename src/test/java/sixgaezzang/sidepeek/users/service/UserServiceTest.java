@@ -3,7 +3,8 @@ package sixgaezzang.sidepeek.users.service;
 import static io.micrometer.common.util.StringUtils.isBlank;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
-import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import jakarta.persistence.EntityExistsException;
 import java.util.List;
@@ -187,7 +188,7 @@ class UserServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(search)
-                .withMessage("최대 " + MAX_NICKNAME_LENGTH + "자의 키워드로 검색할 수 있습니다.");
+                .withMessage(NICKNAME_OVER_MAX_LENGTH);
         }
 
     }
@@ -265,7 +266,7 @@ class UserServiceTest {
         void 닉네임이_최대_길이를_초과하는_경우_중복_확인에_실패한다() {
             // given
             String longNickname = faker.lorem()
-                .characters(User.MAX_NICKNAME_LENGTH + 1);
+                .characters(MAX_NICKNAME_LENGTH + 1);
 
             // when
             ThrowingCallable checkNicknameDuplicate = () -> userService.checkNicknameDuplicate(
@@ -274,7 +275,7 @@ class UserServiceTest {
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(
                     checkNicknameDuplicate)
-                .withMessage("닉네임은 " + User.MAX_NICKNAME_LENGTH + "자 이하여야 합니다.");
+                .withMessage(NICKNAME_OVER_MAX_LENGTH);
         }
     }
 

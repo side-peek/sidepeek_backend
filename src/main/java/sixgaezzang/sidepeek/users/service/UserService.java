@@ -2,7 +2,8 @@ package sixgaezzang.sidepeek.users.service;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
-import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import jakarta.persistence.EntityExistsException;
 import java.util.Objects;
@@ -47,8 +48,7 @@ public class UserService {
             return UserSearchResponse.from(userRepository.findAll());
         }
 
-        validateMaxLength(keyword, MAX_NICKNAME_LENGTH,
-            "최대 " + MAX_NICKNAME_LENGTH + "자의 키워드로 검색할 수 있습니다.");
+        validateMaxLength(keyword, MAX_NICKNAME_LENGTH, NICKNAME_OVER_MAX_LENGTH);
 
         return UserSearchResponse.from(userRepository.findAllByNicknameContaining(keyword));
     }
@@ -61,8 +61,7 @@ public class UserService {
     }
 
     public CheckDuplicateResponse checkNicknameDuplicate(String nickname) {
-        validateMaxLength(nickname, User.MAX_NICKNAME_LENGTH,
-            "닉네임은 " + User.MAX_NICKNAME_LENGTH + "자 이하여야 합니다.");
+        validateMaxLength(nickname, MAX_NICKNAME_LENGTH, NICKNAME_OVER_MAX_LENGTH);
 
         boolean isExists = userRepository.existsByNickname(nickname);
         return new CheckDuplicateResponse(isExists);
