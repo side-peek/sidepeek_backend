@@ -3,6 +3,9 @@ package sixgaezzang.sidepeek.users.domain;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_IS_NULL;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -28,8 +31,6 @@ import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
-
-    public static final int MAX_NICKNAME_LENGTH = 20;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,8 +88,7 @@ public class User extends BaseTimeEntity {
     }
 
     private void validateNickname(String nickname) {
-        validateNotBlank(nickname, "닉네임은 필수값입니다.");
-        validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
-            "닉네임은 " + MAX_NICKNAME_LENGTH + "자 이하여야 합니다.");
+        validateNotBlank(nickname, NICKNAME_IS_NULL);
+        validateMaxLength(nickname, MAX_NICKNAME_LENGTH, NICKNAME_OVER_MAX_LENGTH);
     }
 }
