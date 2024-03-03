@@ -77,9 +77,9 @@ create TABLE IF NOT EXISTS likes
 -- SKILL
 create TABLE IF NOT EXISTS skill
 (
-    id             BIGINT       PRIMARY KEY AUTO_INCREMENT,
-    name           VARCHAR(50)  UNIQUE NOT NULL,
-    icon_image_url TEXT         NULL
+    id             BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name           VARCHAR(50) UNIQUE NOT NULL,
+    icon_image_url TEXT               NULL
 );
 
 -- USER_SKILL
