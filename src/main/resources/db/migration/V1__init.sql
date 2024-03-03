@@ -2,8 +2,8 @@
 create TABLE IF NOT EXISTS users
 (
     id                BIGINT PRIMARY KEY AUTO_INCREMENT,
-    nickname          VARCHAR(20) UNIQUE NOT NULL,
-    email             VARCHAR(50) UNIQUE NOT NULL,
+    nickname          VARCHAR(20) UNIQUE NULL,
+    email             VARCHAR(50) UNIQUE NULL,
     password          VARCHAR(100)       NULL,
     introduction      VARCHAR(100)       NULL,
     profile_image_url TEXT               NULL,

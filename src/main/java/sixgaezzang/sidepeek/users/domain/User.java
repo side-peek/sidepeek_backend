@@ -30,16 +30,17 @@ import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 public class User extends BaseTimeEntity {
 
     public static final int MAX_NICKNAME_LENGTH = 20;
+    public static final int MAX_EMAIL_LENGTH = 50;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "nickname", length = MAX_NICKNAME_LENGTH, nullable = false, unique = true)
+    @Column(name = "nickname", length = MAX_NICKNAME_LENGTH, unique = true)
     private String nickname;
 
-    @Column(name = "email", length = 50, nullable = false, unique = true)
+    @Column(name = "email", length = MAX_EMAIL_LENGTH, unique = true)
     private String email;
 
     @Embedded
@@ -78,16 +79,20 @@ public class User extends BaseTimeEntity {
     }
 
     public boolean checkPassword(String rawPassword, PasswordEncoder passwordEncoder) {
-        return password.check(rawPassword, passwordEncoder);
+        return password != null && password.check(rawPassword, passwordEncoder);
     }
 
     private void validateConstructorArguments(String nickname, String email) {
-        validateNickname(nickname);
-        validateEmail(email, "이메일 형식이 올바르지 않습니다.");
+        if (nickname != null) {
+            validateNickname(nickname);
+        }
+
+        if (email != null) {
+            validateEmail(email, "이메일 형식이 올바르지 않습니다.");
+        }
     }
 
     private void validateNickname(String nickname) {
-        validateNotBlank(nickname, "닉네임은 필수값입니다.");
         validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
             "닉네임은 " + MAX_NICKNAME_LENGTH + "자 이하여야 합니다.");
     }
