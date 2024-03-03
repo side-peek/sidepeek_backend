@@ -70,12 +70,19 @@ public class User extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public User(String nickname, String email, Password password) {
+    public User(String nickname, String email, Password password, String introduction,
+        String profileImageUrl, Job job, Career career, String githubUrl, String blogUrl) {
         validateConstructorArguments(nickname, email);
 
         this.nickname = nickname;
         this.email = email;
         this.password = password;
+        this.introduction = introduction;
+        this.profileImageUrl = profileImageUrl;
+        this.job = job;
+        this.career = career;
+        this.githubUrl = githubUrl;
+        this.blogUrl = blogUrl;
     }
 
     public boolean checkPassword(String rawPassword, PasswordEncoder passwordEncoder) {
