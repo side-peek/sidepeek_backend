@@ -29,6 +29,8 @@ public class QAuthProvider extends EntityPathBase<AuthProvider> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final BooleanPath isRegistrationComplete = createBoolean("isRegistrationComplete");
+
     public final StringPath providerId = createString("providerId");
 
     public final EnumPath<ProviderType> providerType = createEnum("providerType", ProviderType.class);
