@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sixgaezzang.sidepeek.comments.dto.request.CommentRequest;
-import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.dto.response.CommentListResponse;
+import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.common.annotation.Login;
 
 @RestController
@@ -91,6 +91,10 @@ public class CommentController {
     @Operation(summary = "댓글 목록 조회")
     @ApiResponse(responseCode = "204", description = "댓글 목록 조회 성공")
     public ResponseEntity<CommentListResponse> findAllByProject(
+        @Schema(description = "로그인한 회원 식별자", example = "1")
+        @Login
+        Long loginId,
+
         @Schema(description = "조화할 댓글들의 프로젝트 식별자", example = "1")
         @PathVariable
         Long projectId
