@@ -22,7 +22,7 @@ import sixgaezzang.sidepeek.auth.service.OAuth2UserServiceImpl;
 public class SecurityConfig {
 
     private final JWTValidationFilter jwtValidationFilter;
-    private final OAuth2UserServiceImpl OAuth2UserServiceImpl;
+    private final OAuth2UserServiceImpl oauth2UserServiceImpl;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Bean
@@ -38,7 +38,7 @@ public class SecurityConfig {
             .addFilterBefore(jwtValidationFilter, BasicAuthenticationFilter.class)
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
-                    .userService(OAuth2UserServiceImpl))
+                    .userService(oauth2UserServiceImpl))
                 .successHandler(authenticationSuccessHandler)
             );
 

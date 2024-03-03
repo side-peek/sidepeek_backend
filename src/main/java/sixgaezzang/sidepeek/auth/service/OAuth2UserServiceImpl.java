@@ -30,8 +30,8 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
     @Override
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User oAuth2User = super.loadUser(userRequest);
-        Map<String, Object> attributes = oAuth2User.getAttributes();
+        OAuth2User oauth2User = super.loadUser(userRequest);
+        Map<String, Object> attributes = oauth2User.getAttributes();
 
         ProviderType providerType = extractProviderType(userRequest);
         UserInfoMapper userInfoMapper = userInfoMapperFactory.getMapper(providerType);
@@ -39,7 +39,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         AuthProvider provider = getOrCreateAuthProvider(providerType, providerId, attributes,
             userInfoMapper);
 
-        return buildOAuth2User(oAuth2User, provider, attributes, userRequest);
+        return buildOAuth2User(oauth2User, provider, attributes, userRequest);
     }
 
     private ProviderType extractProviderType(OAuth2UserRequest userRequest) {
@@ -69,7 +69,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         return authProviderRepository.save(authProvider);
     }
 
-    private OAuth2User buildOAuth2User(OAuth2User oAuth2User, AuthProvider provider,
+    private OAuth2User buildOAuth2User(OAuth2User oauth2User, AuthProvider provider,
         Map<String, Object> attributes, OAuth2UserRequest userRequest) {
         return OAuth2UserImpl.builder()
             .user(provider.getUser())
@@ -77,7 +77,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
             .attributes(attributes)
             .nameAttributeKey(userRequest.getClientRegistration().getProviderDetails()
                 .getUserInfoEndpoint().getUserNameAttributeName())
-            .authorities(oAuth2User.getAuthorities())
+            .authorities(oauth2User.getAuthorities())
             .build();
     }
 
