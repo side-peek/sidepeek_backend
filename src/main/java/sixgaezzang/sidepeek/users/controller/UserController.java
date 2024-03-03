@@ -27,6 +27,7 @@ import sixgaezzang.sidepeek.common.annotation.Login;
 import sixgaezzang.sidepeek.users.dto.request.CheckEmailRequest;
 import sixgaezzang.sidepeek.users.dto.request.CheckNicknameRequest;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
+import sixgaezzang.sidepeek.users.dto.request.UpdatePasswordRequest;
 import sixgaezzang.sidepeek.users.dto.request.UserProfileRequest;
 import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserProfileResponse;
@@ -56,6 +57,27 @@ public class UserController {
             .buildAndExpand(id).toUri();
 
         return ResponseEntity.created(uri)
+            .build();
+    }
+
+    @PutMapping("/{id}/password")
+    @Operation(summary = "비밀번호 수정")
+    @ApiResponse(responseCode = "204", description = "비밀번호 수정 성공")
+    public ResponseEntity<Void> updatePassword(
+        @Schema(description = "로그인한 회원 식별자(토큰에서 추출)")
+        @Login
+        Long loginId,
+
+        @Schema(description = "수정할 회원 식별자")
+        @PathVariable
+        Long id,
+
+        @RequestBody
+        @Valid
+        UpdatePasswordRequest request
+    ) {
+        // TODO: 비밀번호 변경 서비스 기능
+        return ResponseEntity.noContent()
             .build();
     }
 
@@ -121,8 +143,8 @@ public class UserController {
         @PathVariable
         Long id,
 
-        @Valid
         @RequestBody
+        @Valid
         UserProfileRequest request
     ) {
         return null;
