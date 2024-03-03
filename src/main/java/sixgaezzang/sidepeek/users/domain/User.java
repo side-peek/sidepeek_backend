@@ -2,7 +2,6 @@ package sixgaezzang.sidepeek.users.domain;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -31,6 +30,9 @@ public class User extends BaseTimeEntity {
 
     public static final int MAX_NICKNAME_LENGTH = 20;
     public static final int MAX_EMAIL_LENGTH = 50;
+    public static final int MAX_INTRODUCTION_LENGTH = 100;
+    public static final int MAX_JOB_LENGTH = 30;
+    public static final int MAX_CAREER_LENGTH = 30;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,17 +48,17 @@ public class User extends BaseTimeEntity {
     @Embedded
     private Password password;
 
-    @Column(name = "introduction", length = 100)
+    @Column(name = "introduction", length = MAX_INTRODUCTION_LENGTH)
     private String introduction;
 
     @Column(name = "profile_image_url", columnDefinition = "TEXT")
     private String profileImageUrl;
 
-    @Column(name = "job", length = 30, columnDefinition = "VARCHAR")
+    @Column(name = "job", length = MAX_JOB_LENGTH, columnDefinition = "VARCHAR")
     @Enumerated(EnumType.STRING)
     private Job job;
 
-    @Column(name = "career", length = 30, columnDefinition = "VARCHAR")
+    @Column(name = "career", length = MAX_CAREER_LENGTH, columnDefinition = "VARCHAR")
     @Enumerated(EnumType.STRING)
     private Career career;
 
