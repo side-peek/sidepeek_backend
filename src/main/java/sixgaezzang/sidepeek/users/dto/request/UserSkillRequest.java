@@ -17,7 +17,7 @@ public record UserSkillRequest(
     @Schema(description = "기술 스택 Id", example = "1")
     @Min(value = MIN_ID, message = "스킬 id는 " + MIN_ID + "보다 작을 수 없습니다.")
     @NotNull(message = SKILL_ID_IS_NULL)
-    Long id,
+    Long skillId,
 
     @Schema(description = "기술 스택 카테고리", example = "프론트엔드")
     @Size(max = MAX_CATEGORY_LENGTH, message = CATEGORY_OVER_MAX_LENGTH)
