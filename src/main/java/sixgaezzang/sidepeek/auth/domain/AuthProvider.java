@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.auth.domain;
 
+import static java.util.Objects.isNull;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,7 +30,7 @@ public class AuthProvider extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -40,11 +42,17 @@ public class AuthProvider extends BaseTimeEntity {
     @Column(name = "provider_id", length = 100)
     private String providerId;
 
+    @Column(name = "is_registration_complete", nullable = false, columnDefinition = "TINYINT")
+    private boolean isRegistrationComplete;
+
     @Builder
-    private AuthProvider(User user, ProviderType providerType, String providerId) {
+    private AuthProvider(User user, ProviderType providerType, String providerId,
+        Boolean isRegistrationComplete) {
         this.user = user;
         this.providerType = providerType;
         this.providerId = providerId;
+        this.isRegistrationComplete =
+            isNull(isRegistrationComplete) ? false : isRegistrationComplete;
     }
 
 }
