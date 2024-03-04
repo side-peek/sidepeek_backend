@@ -66,7 +66,7 @@ public class ProjectService {
             .map(ProjectSkillSummary::from)
             .toList();
 
-        List<MemberSummary> members = memberService.findAllWithUser(project);
+        List<MemberSummary> members = memberService.findAllByProject(project);
 
         return ProjectResponse.from(project, overviewImages, techStacks, members);
     }

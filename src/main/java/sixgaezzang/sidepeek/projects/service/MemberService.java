@@ -61,7 +61,7 @@ public class MemberService {
             .toList();
     }
 
-    public List<MemberSummary> findAllWithUser(Project project) {
+    public List<MemberSummary> findAllByProject(Project project) {
         return memberRepository.findAllWithUser(project);
     }
 
