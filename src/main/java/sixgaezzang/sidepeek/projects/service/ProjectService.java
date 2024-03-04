@@ -26,17 +26,17 @@ public class ProjectService {
     private final FileService fileService;
 
     @Transactional
-    public ProjectResponse save(ProjectRequest request) {
-        // TODO: loginId, ownerId와 비교!
+    public ProjectResponse save(Long loginId, ProjectRequest request) {
+        validateLoginIdEqualsOwnerId(loginId, request.ownerId());
 
         Project project = request.toEntity();
         projectRepository.save(project);
 
         // Required
         List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project, request.techStacks());
+        List<MemberSummary> members = memberService.saveAll(project, request.members());
 
         // Option
-        List<MemberSummary> members = memberService.saveAll(project, request.members());
         List<OverviewImageSummary> overviewImages =
             fileService.saveAll(project, request.overviewImageUrls());
 
@@ -79,3 +79,8 @@ public class ProjectService {
         // TODO: 작성자만이 삭제할 수 있다.
     }
 }
+    private void validateLoginIdEqualsOwnerId(Long loginId, Long ownerId) {
+        if (!loginId.equals(ownerId)) {
+            throw new InvalidAuthenticationException(OWNER_ID_NOT_EQUALS_LOGIN_ID);
+        }
+    }
