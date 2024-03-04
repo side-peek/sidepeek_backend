@@ -6,6 +6,7 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,16 +33,25 @@ public class ProjectService {
     private final FileService fileService;
 
     @Transactional
-    public ProjectResponse save(Long loginId, ProjectRequest request) {
-        validateLoginIdEqualsOwnerId(loginId, request.ownerId());
+    public ProjectResponse save(Long loginId, Long projectId, ProjectRequest request) {
+        Project project;
+        if (Objects.isNull(projectId)) {
+            validateLoginIdEqualsOwnerId(loginId, request.ownerId());
 
-        Project project = request.toEntity();
-        projectRepository.save(project);
+            project = request.toEntity();
+            projectRepository.save(project);
+        } else {
+            project = projectRepository.findById(projectId)
+                .orElseThrow(
+                    () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
+            validateLoginUserIncludeMembers(loginId, project);
+
+            project = project.update(request);
+        }
 
         List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project, request.techStacks());
         List<MemberSummary> members = memberService.saveAll(project, request.members());
-        List<OverviewImageSummary> overviewImages =
-            fileService.saveAll(project, request.overviewImageUrls());
+        List<OverviewImageSummary> overviewImages = fileService.saveAll(project, request.overviewImageUrls());
 
         return ProjectResponse.from(project, overviewImages, techStacks, members);
     }
@@ -72,25 +82,6 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectResponse update(Long loginId, Long projectId, ProjectRequest request) {
-        Project project = projectRepository.findById(projectId)
-            .orElseThrow(
-                () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
-
-        memberService.findFellowMemberByProject(loginId, project)
-            .orElseThrow(() -> new InvalidAuthenticationException(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE));
-
-        Project updatedProject = project.update(request);
-
-        List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(updatedProject, request.techStacks());
-        List<MemberSummary> members = memberService.saveAll(updatedProject, request.members());
-        List<OverviewImageSummary> overviewImages =
-            fileService.saveAll(updatedProject, request.overviewImageUrls());
-
-        return ProjectResponse.from(updatedProject, overviewImages, techStacks, members);
-    }
-
-    @Transactional
     public void delete(Long loginId, Long projectId) {
         // TODO: 생성, 수정할 땐 ownerId와 loginId를 비교하는 로직이 있다. 여기에도 적용하는 것이 좋을까?
         Project project = projectRepository.findById(projectId)
@@ -106,6 +97,11 @@ public class ProjectService {
         if (!loginId.equals(ownerId)) {
             throw new InvalidAuthenticationException(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
+    }
+
+    private void validateLoginUserIncludeMembers(Long loginId, Project project) {
+        memberService.findFellowMemberByProject(loginId, project)
+            .orElseThrow(() -> new InvalidAuthenticationException(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE));
     }
 
 }
