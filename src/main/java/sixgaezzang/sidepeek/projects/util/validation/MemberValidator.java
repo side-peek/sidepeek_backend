@@ -2,6 +2,7 @@ package sixgaezzang.sidepeek.projects.util.validation;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_EMPTY;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_NOT_INCLUDE_OWNER;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.NON_FELLOW_MEMBER_NICKNAME_IS_NULL;
@@ -22,16 +23,12 @@ import sixgaezzang.sidepeek.users.domain.User;
 public class MemberValidator {
 
     public static void validateMembers(Long ownerId, List<MemberSaveRequest> members) {
+        Assert.notEmpty(members, MEMBER_IS_EMPTY);
         Assert.isTrue(members.size() < MAX_MEMBER_COUNT, MEMBER_OVER_MAX_COUNT);
-        validateIncludeOwner(ownerId, members);
-    }
-
-    public static void validateIncludeOwner(Long ownerId, List<MemberSaveRequest> members) {
         members.stream().filter(member -> Objects.equals(member.userId(), ownerId))
             .findAny()
             .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_INCLUDE_OWNER));
     }
-
 
     // Required
     public static void validateRole(String role) {
