@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
@@ -53,7 +54,7 @@ class ProjectSkillServiceTest {
     UserRepository userRepository;
 
     @Nested
-    class 프로젝트_기술_스택_목록_저장_테스트 {
+    class 프로젝트_기술_스택_목록_저장_및_수정_테스트 {
 
         static final int PROJECT_SKILL_COUNT = MAX_PROJECT_SKILL_COUNT / 2;
         static List<ProjectSkillSaveRequest> techStacks;
@@ -141,21 +142,6 @@ class ProjectSkillServiceTest {
                 .withMessage(message);
         }
 
-        private Skill createAndSaveSkill() {
-            Skill skill = FakeEntityProvider.createSkill();
-            return skillRepository.save(skill);
-        }
-
-        private User createAndSaveUser() {
-            User newUser = FakeEntityProvider.createUser();
-            return userRepository.save(newUser);
-        }
-
-        private Project createAndSaveProject(User user) {
-            Project newProject = FakeEntityProvider.createProject(user);
-            return projectRepository.save(newProject);
-        }
-
         @Test
         void 존재하지_않는_기술_스택_Id로_기술_스택_목록_저장에_실패한다() {
             // given
@@ -188,6 +174,40 @@ class ProjectSkillServiceTest {
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
                 .withMessage(SKILL_ID_IS_NULL);
+        }
+
+        @Test
+        void 기존_프로젝트_기술_스택_목록을_지우고_새로운_기술_스택_목록_수정에_성공한다() {
+            // given
+            projectSkillService.saveAll(project, techStacks);
+            List<ProjectSkill> originalTechStacks = projectSkillService.findAll(project);
+
+            // when
+            List<ProjectSkillSaveRequest> techStacksOnlyOne = new ArrayList<>();
+            Skill newSkill = createAndSaveSkill();
+            techStacksOnlyOne.add(FakeDtoProvider.createProjectSkillSaveRequest(newSkill.getId()));
+
+            projectSkillService.saveAll(project, techStacksOnlyOne);
+            List<ProjectSkill> savedTechStacks = projectSkillService.findAll(project);
+
+            // then
+            assertThat(originalTechStacks).isNotEqualTo(savedTechStacks);
+            assertThat(savedTechStacks).hasSameSizeAs(techStacksOnlyOne);
+        }
+
+        private Skill createAndSaveSkill() {
+            Skill skill = FakeEntityProvider.createSkill();
+            return skillRepository.save(skill);
+        }
+
+        private User createAndSaveUser() {
+            User newUser = FakeEntityProvider.createUser();
+            return userRepository.save(newUser);
+        }
+
+        private Project createAndSaveProject(User user) {
+            Project newProject = FakeEntityProvider.createProject(user);
+            return projectRepository.save(newProject);
         }
 
     }
