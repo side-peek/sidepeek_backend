@@ -5,11 +5,13 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
@@ -24,6 +26,7 @@ public class ProjectService {
     private final ProjectSkillService projectSkillService;
     private final MemberService memberService;
     private final FileService fileService;
+    private final LikeRepository likeRepository;
 
     @Transactional
     public Long save(ProjectSaveRequest projectSaveRequest) {
@@ -68,6 +71,12 @@ public class ProjectService {
         List<MemberSummary> members = memberService.findAllWithUser(project);
 
         return ProjectResponse.from(project, overviewImages, techStacks, members);
+    }
+
+    public List<ProjectListResponse> findAll(Long userId, String sort, String status) {
+        List<Long> likedProjectIds = likeRepository.findAllProjectIdsByUser(userId);
+
+        return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, status);
     }
 
 }
