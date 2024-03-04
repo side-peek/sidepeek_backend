@@ -146,7 +146,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ProjectResponse response = projectService.save(request);
+            ProjectResponse response = projectService.save(user.getId(), request);
 
             // then
             assertThat(response).extracting("name", "overview", "githubUrl", "description", "ownerId")
@@ -165,7 +165,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable saveProject = () -> projectService.save(request);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
@@ -180,7 +180,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable saveProject = () -> projectService.save(request);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
@@ -198,7 +198,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable saveProject = () -> projectService.save(request);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
@@ -217,7 +217,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable saveProject = () -> projectService.save(request);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
