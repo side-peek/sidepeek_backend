@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.projects.service;
 
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
+
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
@@ -33,7 +35,9 @@ public class MemberService {
         }
         MemberValidator.validateMembers(project.getOwnerId(), memberSaveRequests);
 
-        MemberValidator.validateMembers(memberSaveRequests);
+        if (memberRepository.existsByProject(project)) {
+            memberRepository.deleteAllByProject(project);
+        }
 
         List<Member> members = memberSaveRequests.stream().map(
             member -> {
@@ -47,7 +51,7 @@ public class MemberService {
                 }
 
                 User user = userRepository.findById(member.userId())
-                    .orElseThrow(() -> new EntityNotFoundException("User Id에 해당하는 회원이 없습니다."));
+                    .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
 
                 return memberBuilder.user(user)
                     .build();
