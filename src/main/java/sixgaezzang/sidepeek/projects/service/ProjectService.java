@@ -19,6 +19,7 @@ import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 
 @Service
 @RequiredArgsConstructor
@@ -101,6 +102,7 @@ public class ProjectService {
     }
 
     private void validateLoginIdEqualsOwnerId(Long loginId, Long ownerId) {
+        ProjectValidator.validateOwnerId(ownerId);
         if (!loginId.equals(ownerId)) {
             throw new InvalidAuthenticationException(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }

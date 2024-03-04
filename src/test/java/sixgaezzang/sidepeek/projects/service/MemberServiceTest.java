@@ -2,6 +2,8 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_EMPTY;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_NOT_INCLUDE_OWNER;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
@@ -50,6 +52,7 @@ class MemberServiceTest {
 
         static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
         static List<MemberSaveRequest> members;
+        static int USER_INDEX = 0;
         static List<MemberSaveRequest> overLengthMembers;
         Project project;
         User user;
@@ -58,9 +61,8 @@ class MemberServiceTest {
         void setup() {
             overLengthMembers = new ArrayList<>();
             for (int i = 1; i <= MAX_MEMBER_COUNT / 2; i++) {
-                User savedUser = createAndSaveUser();
                 overLengthMembers.add(
-                    FakeDtoProvider.createFellowMemberSaveRequest(savedUser.getId())
+                    FakeDtoProvider.createFellowMemberSaveRequest(createAndSaveUser().getId())
                 );
                 overLengthMembers.add(
                     FakeDtoProvider.createNonFellowMemberSaveRequest()
@@ -68,9 +70,8 @@ class MemberServiceTest {
             }
 
             user = createAndSaveUser();
-            overLengthMembers.add(
-                FakeDtoProvider.createFellowMemberSaveRequest(user.getId())
-            );
+            overLengthMembers.add(USER_INDEX, FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
+
             project = createAndSaveProject(user);
             members = overLengthMembers.subList(0, MEMBER_COUNT);
         }
@@ -86,12 +87,13 @@ class MemberServiceTest {
 
         @ParameterizedTest
         @NullAndEmptySource
-        void 빈_멤버_목록_저장은_무시되어_성공한다(List<MemberSaveRequest> emptyMembers) {
+        void 빈_멤버_목록_저장은_실패한다(List<MemberSaveRequest> emptyMembers) {
             // given, when
-            List<MemberSummary> savedMembers = memberService.saveAll(project, emptyMembers);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, emptyMembers);
 
             // then
-            assertThat(savedMembers).isNull();
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage(MEMBER_IS_EMPTY);
         }
 
         @Test
@@ -151,6 +153,20 @@ class MemberServiceTest {
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
                 .withMessage(message);
+        }
+
+        @Test
+        void 작성자가_포함_되어있지_않아_멤버_목록_저장에_실패한다() {
+            // given
+            List<MemberSaveRequest> membersWithoutOwner = new ArrayList<>(members);
+            membersWithoutOwner.remove(USER_INDEX);
+
+            // when
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, membersWithoutOwner);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage(MEMBER_NOT_INCLUDE_OWNER);
         }
 
         private User createAndSaveUser() {
