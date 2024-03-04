@@ -2,6 +2,7 @@ package sixgaezzang.sidepeek.users.domain;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -103,6 +104,6 @@ public class User extends BaseTimeEntity {
 
     private void validateNickname(String nickname) {
         validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
-            "닉네임은 " + MAX_NICKNAME_LENGTH + "자 이하여야 합니다.");
+            EXCESSIVE_NICKNAME_LENGTH.getMessage());
     }
 }
