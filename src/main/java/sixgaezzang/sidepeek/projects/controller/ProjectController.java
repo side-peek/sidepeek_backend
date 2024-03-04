@@ -42,7 +42,7 @@ public class ProjectController {
         @RequestBody
         ProjectRequest request
     ) {
-        ProjectResponse response = projectService.save(request);
+        ProjectResponse response = projectService.save(loginId, request);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/projects/{id}")
             .buildAndExpand(response.id()).toUri();
