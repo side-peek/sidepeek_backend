@@ -1,8 +1,10 @@
 package sixgaezzang.sidepeek.projects.service;
 
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,11 +37,8 @@ public class ProjectService {
         Project project = request.toEntity();
         projectRepository.save(project);
 
-        // Required
         List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project, request.techStacks());
         List<MemberSummary> members = memberService.saveAll(project, request.members());
-
-        // Option
         List<OverviewImageSummary> overviewImages =
             fileService.saveAll(project, request.overviewImageUrls());
 
@@ -73,13 +72,32 @@ public class ProjectService {
 
     @Transactional
     public ProjectResponse update(Long loginId, Long projectId, ProjectRequest request) {
-        // TODO: 작성자와 멤버만이 수정할 수 있다.
-        return null;
+        Project project = projectRepository.findById(projectId)
+            .orElseThrow(
+                () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
+
+        memberService.findFellowMemberByProject(loginId, project)
+            .orElseThrow(() -> new InvalidAuthenticationException(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE));
+
+        Project updatedProject = project.update(request);
+
+        List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(updatedProject, request.techStacks());
+        List<MemberSummary> members = memberService.saveAll(updatedProject, request.members());
+        List<OverviewImageSummary> overviewImages =
+            fileService.saveAll(updatedProject, request.overviewImageUrls());
+
+        return ProjectResponse.from(updatedProject, overviewImages, techStacks, members);
     }
 
     @Transactional
     public void delete(Long loginId, Long projectId) {
-        // TODO: 작성자만이 삭제할 수 있다.
+        // TODO: 생성, 수정할 땐 ownerId와 loginId를 비교하는 로직이 있다. 여기에도 적용하는 것이 좋을까?
+        Project project = projectRepository.findById(projectId)
+            .orElseThrow(
+                () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
+        validateLoginIdEqualsOwnerId(loginId, project.getOwnerId());
+
+        project.setDeletedAt(LocalDateTime.now()); // TODO: 타임존 설정이 필요할까
     }
 
     private void validateLoginIdEqualsOwnerId(Long loginId, Long ownerId) {
