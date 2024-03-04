@@ -48,7 +48,7 @@ class MemberServiceTest {
     UserRepository userRepository;
 
     @Nested
-    class 멤버_저장_테스트 {
+    class 멤버_저장_및_수정_테스트 {
 
         static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
         static List<MemberSaveRequest> members;
@@ -77,7 +77,7 @@ class MemberServiceTest {
         }
 
         @Test
-        void 프로젝트_멤버_목록_저장에_성공한다() {
+        void 작성자를_포함한_프로젝트_멤버_목록_저장에_성공한다() {
             // given, when
             List<MemberSummary> savedMembers = memberService.saveAll(project, members);
 
@@ -167,6 +167,24 @@ class MemberServiceTest {
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
                 .withMessage(MEMBER_NOT_INCLUDE_OWNER);
+        }
+
+        @Test
+        void 기존_프로젝트_멤버_목록을_지우고_새로운_멤버_목록_수정에_성공한다() {
+            // given
+            memberService.saveAll(project, members);
+            List<MemberSummary> originalMembers = memberService.findAllByProject(project);
+
+            // when
+            List<MemberSaveRequest> membersOnlyOwner = new ArrayList<>();
+            membersOnlyOwner.add(FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
+
+            memberService.saveAll(project, membersOnlyOwner);
+            List<MemberSummary> savedMembers = memberService.findAllByProject(project);
+
+            // then
+            assertThat(originalMembers).isNotEqualTo(savedMembers);
+            assertThat(savedMembers).hasSameSizeAs(membersOnlyOwner);
         }
 
         private User createAndSaveUser() {
