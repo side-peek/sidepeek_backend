@@ -1,10 +1,9 @@
 name: SidePeek CD with Gradle
 
 on:
-    pull_request:
+    push:
         branches:
             - dev
-            - 'chore/**'
 
 jobs:
     build:
