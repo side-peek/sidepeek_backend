@@ -21,8 +21,9 @@ public class GlobalExceptionHandler {
         MethodArgumentNotValidException e
     ) {
         List<ErrorResponse> responses = convertToErrorResponses(e);
+        log.debug(e.getMessage(), e.fillInStackTrace());
 
-        return ResponseEntity.badRequest()
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(responses);
     }
 
@@ -32,23 +33,25 @@ public class GlobalExceptionHandler {
     ) {
         String message = formatMessageFrom(e);
         ErrorResponse response = ErrorResponse.of(HttpStatus.BAD_REQUEST, message);
+        log.debug(e.getMessage(), e.fillInStackTrace());
 
-        return ResponseEntity.badRequest()
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(response);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleEntityNotFoundException(EntityNotFoundException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.NOT_FOUND, e.getMessage());
+        log.debug(e.getMessage(), e.fillInStackTrace());
 
-        return ResponseEntity
-            .status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(errorResponse);
     }
 
     @ExceptionHandler(EntityExistsException.class)
     public ResponseEntity<ErrorResponse> handleEntityExistsException(EntityExistsException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.CONFLICT, e.getMessage());
+        log.debug(e.getMessage(), e.fillInStackTrace());
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(errorResponse);
@@ -58,8 +61,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
         IllegalArgumentException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
+        log.debug(e.getMessage(), e.fillInStackTrace());
 
-        return ResponseEntity.badRequest()
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(errorResponse);
     }
 
@@ -67,6 +71,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidAuthenticationException(
         InvalidAuthenticationException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage());
+        log.warn(e.getMessage(), e.fillInStackTrace());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(errorResponse);
@@ -76,6 +81,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
         HttpMessageNotReadableException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST, "API 요청 형식이 올바르지 않습니다.");
+        log.debug(e.getMessage(), e.fillInStackTrace());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(errorResponse);
@@ -85,6 +91,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleTokenValidationFailException(
         TokenValidationFailException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage());
+        log.warn(e.getMessage(), e.fillInStackTrace());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(errorResponse);
