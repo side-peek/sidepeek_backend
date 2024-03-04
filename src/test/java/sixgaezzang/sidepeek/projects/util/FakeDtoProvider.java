@@ -19,11 +19,11 @@ public class FakeDtoProvider {
     // Project
     public static ProjectRequest createProjectSaveRequestOnlyRequired(
         String name, String overview, String githubUrl, String description, Long ownerId,
-        List<ProjectSkillSaveRequest> techStacks
+        List<ProjectSkillSaveRequest> techStacks, List<MemberSaveRequest> members
     ) {
         return new ProjectRequest(name, overview, ownerId, githubUrl, description,
             techStacks, null, null, null, null,
-            null, null, null, null);
+            null, null, null, members);
     }
 
     public static ProjectRequest createProjectSaveRequestWithOwnerIdAndOption(
