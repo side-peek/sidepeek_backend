@@ -1,7 +1,6 @@
 package sixgaezzang.sidepeek.projects.service;
 
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -82,7 +81,7 @@ public class ProjectService {
     public void delete(Long loginId, Long projectId) {
         // TODO: 작성자만이 삭제할 수 있다.
     }
-}
+
     private void validateLoginIdEqualsOwnerId(Long loginId, Long ownerId) {
         if (!loginId.equals(ownerId)) {
             throw new InvalidAuthenticationException(OWNER_ID_NOT_EQUALS_LOGIN_ID);
