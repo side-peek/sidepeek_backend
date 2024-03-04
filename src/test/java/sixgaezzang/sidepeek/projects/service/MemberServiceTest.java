@@ -2,7 +2,7 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
-import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBERS_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
 
@@ -101,7 +101,7 @@ class MemberServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage(MEMBERS_OVER_MAX_COUNT);
+                .withMessage(MEMBER_OVER_MAX_COUNT);
         }
 
         @Test

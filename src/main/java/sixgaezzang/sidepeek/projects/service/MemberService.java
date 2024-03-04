@@ -31,6 +31,7 @@ public class MemberService {
         if (!ValidationUtils.isNotNullOrEmpty(memberSaveRequests)) {
             return null;
         }
+        MemberValidator.validateMembers(project.getOwnerId(), memberSaveRequests);
 
         MemberValidator.validateMembers(memberSaveRequests);
 
