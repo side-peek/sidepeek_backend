@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.projects.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -74,7 +75,9 @@ public class ProjectService {
     }
 
     public List<ProjectListResponse> findAll(Long userId, String sort, boolean isReleased) {
-        List<Long> likedProjectIds = likeRepository.findAllProjectIdsByUser(userId);
+        List<Long> likedProjectIds =
+            (userId != null) ? likeRepository.findAllProjectIdsByUser(userId)
+                : Collections.emptyList();
 
         return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, isReleased);
     }
