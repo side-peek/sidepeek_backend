@@ -154,13 +154,13 @@ class MemberServiceTest {
         }
 
         private User createAndSaveUser() {
-            user = FakeEntityProvider.createUser();
-            return userRepository.save(user);
+            User newUser = FakeEntityProvider.createUser();
+            return userRepository.save(newUser);
         }
 
         private Project createAndSaveProject(User user) {
-            project = FakeEntityProvider.createProject(user);
-            return projectRepository.save(project);
+            Project newProject = FakeEntityProvider.createProject(user);
+            return projectRepository.save(newProject);
         }
     }
 }
