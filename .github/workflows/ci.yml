@@ -53,7 +53,7 @@ jobs:
                 run: chmod +x gradlew
 
             -   name: Build with Gradle
-                run: ./gradlew build
+                run: ./gradlew build -Dspring.profiles.active=local
 
             -   name: Test Jacoco Coverage Report
                 id: jacoco

@@ -1,4 +1,4 @@
 [submodule "sidepeek_backend_secret"]
 	path = sidepeek_backend_secret
-	url = https://github.com/side-peek/sidepeek_backend_secret.git
-	branch = dev
+	url = git@github.com:side-peek/sidepeek_backend_secret.git
+
