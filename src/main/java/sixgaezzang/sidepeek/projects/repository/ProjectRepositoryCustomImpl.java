@@ -22,8 +22,8 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
     @Override
     public List<ProjectListResponse> findAllBySortAndStatus(List<Long> likedProjectIds,
         String sort,
-        String status) {
-        BooleanExpression deployCondition = status != null ? project.deployUrl.isNotNull() : null;
+        boolean isReleased) {
+        BooleanExpression deployCondition = isReleased ? project.deployUrl.isNotNull() : null;
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(sort);
 
         return queryFactory

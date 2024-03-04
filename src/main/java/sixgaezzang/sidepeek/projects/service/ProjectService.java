@@ -73,10 +73,10 @@ public class ProjectService {
         return ProjectResponse.from(project, overviewImages, techStacks, members);
     }
 
-    public List<ProjectListResponse> findAll(Long userId, String sort, String status) {
+    public List<ProjectListResponse> findAll(Long userId, String sort, boolean isReleased) {
         List<Long> likedProjectIds = likeRepository.findAllProjectIdsByUser(userId);
 
-        return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, status);
+        return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, isReleased);
     }
 
 }
