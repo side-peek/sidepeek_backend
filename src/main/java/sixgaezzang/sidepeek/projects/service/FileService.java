@@ -23,12 +23,15 @@ public class FileService {
     @Transactional
     public List<OverviewImageSummary> saveAll(Project project, List<String> overviewImageUrls) {
         ProjectValidator.validateProject(project);
+        if (fileRepository.existsByProject(project)) {
+            fileRepository.deleteAllByProjectAndType(project, FileType.OVERVIEW_IMAGE);
+        }
+
         if (!ValidationUtils.isNotNullOrEmpty(overviewImageUrls)) {
             return null;
         }
 
         FileValidator.validateFiles(overviewImageUrls);
-
         List<File> overviewImages = overviewImageUrls.stream()
             .map(
                 overviewImage -> File.builder()

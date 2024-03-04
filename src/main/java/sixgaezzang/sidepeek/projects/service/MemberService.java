@@ -5,10 +5,10 @@ import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
@@ -30,9 +30,6 @@ public class MemberService {
     @Transactional
     public List<MemberSummary> saveAll(Project project, List<MemberSaveRequest> memberSaveRequests) {
         ProjectValidator.validateProject(project);
-        if (!ValidationUtils.isNotNullOrEmpty(memberSaveRequests)) {
-            return null;
-        }
         MemberValidator.validateMembers(project.getOwnerId(), memberSaveRequests);
 
         if (memberRepository.existsByProject(project)) {
@@ -66,5 +63,13 @@ public class MemberService {
 
     public List<MemberSummary> findAllWithUser(Project project) {
         return memberRepository.findAllWithUser(project);
+    }
+
+    public Optional<User> findFellowMemberByProject(Long userId, Project project) {
+        return memberRepository.findAllByProject(project)
+            .stream()
+            .filter(member -> Objects.equals(member.getUser().getId(), userId))
+            .findAny()
+            .map(Member::getUser);
     }
 }
