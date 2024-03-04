@@ -29,7 +29,7 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
         return queryFactory
             .selectFrom(project)
             .where(deployCondition)
-            .orderBy(orderSpecifier)
+            .orderBy(orderSpecifier, project.id.asc())
             .fetch()
             .stream()
             .map(project -> {
