@@ -2,6 +2,7 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_EMPTY;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
@@ -58,9 +59,8 @@ class MemberServiceTest {
         void setup() {
             overLengthMembers = new ArrayList<>();
             for (int i = 1; i <= MAX_MEMBER_COUNT / 2; i++) {
-                User savedUser = createAndSaveUser();
                 overLengthMembers.add(
-                    FakeDtoProvider.createFellowMemberSaveRequest(savedUser.getId())
+                    FakeDtoProvider.createFellowMemberSaveRequest(createAndSaveUser().getId())
                 );
                 overLengthMembers.add(
                     FakeDtoProvider.createNonFellowMemberSaveRequest()
@@ -68,9 +68,8 @@ class MemberServiceTest {
             }
 
             user = createAndSaveUser();
-            overLengthMembers.add(
-                FakeDtoProvider.createFellowMemberSaveRequest(user.getId())
-            );
+            overLengthMembers.add(0, FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
+
             project = createAndSaveProject(user);
             members = overLengthMembers.subList(0, MEMBER_COUNT);
         }
@@ -86,12 +85,13 @@ class MemberServiceTest {
 
         @ParameterizedTest
         @NullAndEmptySource
-        void 빈_멤버_목록_저장은_무시되어_성공한다(List<MemberSaveRequest> emptyMembers) {
+        void 빈_멤버_목록_저장은_실패한다(List<MemberSaveRequest> emptyMembers) {
             // given, when
-            List<MemberSummary> savedMembers = memberService.saveAll(project, emptyMembers);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, emptyMembers);
 
             // then
-            assertThat(savedMembers).isNull();
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage(MEMBER_IS_EMPTY);
         }
 
         @Test

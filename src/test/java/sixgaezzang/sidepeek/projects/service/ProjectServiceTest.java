@@ -3,6 +3,7 @@ package sixgaezzang.sidepeek.projects.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -102,7 +103,7 @@ class ProjectServiceTest {
 
     @Nested
     class 프로젝트_저장_테스트 {
-        static final int MEMBER_COUNT = MAX_PROJECT_SKILL_COUNT / 2;
+        static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
         static final int PROJECT_SKILL_COUNT = MAX_PROJECT_SKILL_COUNT / 2;
         static List<MemberSaveRequest> members;
         static List<ProjectSkillSaveRequest> techStacks;
@@ -115,20 +116,14 @@ class ProjectServiceTest {
         @BeforeEach
         void setup() {
             members = new ArrayList<>();
-            for (int i = 1; i <= MEMBER_COUNT; i++) {
-                User savedUser = createAndSaveUser();
-                members.add(
-                    FakeDtoProvider.createFellowMemberSaveRequest(savedUser.getId())
-                );
+            for (int i = 1; i <= MEMBER_COUNT - 1; i++) {
                 members.add(
                     FakeDtoProvider.createNonFellowMemberSaveRequest()
                 );
             }
 
             user = createAndSaveUser();
-            members.add(
-                FakeDtoProvider.createFellowMemberSaveRequest(user.getId())
-            );
+            members.add(0, FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
 
             techStacks = new ArrayList<>();
             for (int i = 1; i <= PROJECT_SKILL_COUNT; i++) {
@@ -143,7 +138,7 @@ class ProjectServiceTest {
         void 필수_정보가_모두_포함되어_프로젝트_저장에_성공한다() {
             // given
             ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
-                NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId(), techStacks
+                NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId(), techStacks, members
             );
 
             // when
@@ -162,7 +157,7 @@ class ProjectServiceTest {
         ) {
             // given
             ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
-                name, overview, githubUrl, description, user.getId(), techStacks
+                name, overview, githubUrl, description, user.getId(), techStacks, members
             );
 
             // when
@@ -177,7 +172,7 @@ class ProjectServiceTest {
         void 작성자_Id가_누락되어_프로젝트_저장에_실패한다() {
             // given
             ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
-                NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, null, techStacks
+                NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, null, techStacks, members
             );
 
             // when
@@ -195,7 +190,7 @@ class ProjectServiceTest {
         ) {
             // given
             ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
-                name, overview, githubUrl, description, user.getId(), techStacks
+                name, overview, githubUrl, description, user.getId(), techStacks, members
             );
 
             // when
