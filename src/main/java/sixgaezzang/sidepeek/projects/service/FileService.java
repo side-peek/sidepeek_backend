@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.projects.service;
 
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class FileService {
         }
 
         if (!ValidationUtils.isNotNullOrEmpty(overviewImageUrls)) {
-            return null;
+            return Collections.emptyList();
         }
 
         FileValidator.validateFiles(overviewImageUrls);
