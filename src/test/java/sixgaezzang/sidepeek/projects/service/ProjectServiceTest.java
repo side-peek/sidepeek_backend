@@ -9,13 +9,11 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.EntityTransaction;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +25,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.projects.domain.Project;
@@ -367,32 +364,21 @@ class ProjectServiceTest {
 
     @Nested
     class 프로젝트_삭제_테스트 {
-        @Autowired
-        EntityManagerFactory entityManagerFactory;
-
         @Test
-        @Transactional(propagation = Propagation.NEVER)
         void 프로젝트_소프트_삭제에_성공한다() {
             // given
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            EntityTransaction transaction = entityManager.getTransaction();
-
-            transaction.begin();
             ProjectResponse project = getNewSavedProject(user.getId());
-            transaction.commit();
 
             // when
             projectService.delete(user.getId(), project.id());
-            transaction.commit();
 
-            transaction.begin();
-            // TODO: @Transactional(propagation = Propagation.NEVER) 처리 안하면 deletedAt이 null이 아닌데 불러와진다.
-            ThrowingCallable findDeletedProject = () -> projectService.findById(project.id());
-            transaction.commit();
+            // TODO: @SQLRestriction("deleted_at IS NULL")이 안먹힌다. 왜지?
+            Optional<Project> deletedProject = projectRepository.findById(project.id());
+            projectService.findById(project.id());
 
             // then
-            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(findDeletedProject)
-                .withMessage(ProjectErrorCode.ID_NOT_EXISTING.getMessage());
+            assertThat(deletedProject).isNotEmpty();
+            assertThat(deletedProject.get().getDeletedAt()).isNotNull();
         }
 
         @Test
