@@ -2,7 +2,7 @@ package sixgaezzang.sidepeek.projects.exception.message;
 
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
-import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 public class MemberErrorMessage {
     public static final String MEMBERS_OVER_MAX_COUNT = "멤버 수는 " + MAX_MEMBER_COUNT + "명 미만이어야 합니다.";

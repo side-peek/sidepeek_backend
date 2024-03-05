@@ -10,7 +10,7 @@ import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.USER_ID_OF_FELLOW_MEMBER_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
-import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import io.jsonwebtoken.lang.Assert;
 import java.util.List;
