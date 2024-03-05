@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.YearMonth;
 import java.util.List;
 import lombok.Builder;
+import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
 @Schema(description = "프로젝트 상세조회 응답")
@@ -42,11 +43,14 @@ public record ProjectResponse(
     @Schema(description = "프로젝트 기능 설명", example = "## 사이드픽 기능 설명 Markdown")
     String description,
     @Schema(description = "프로젝트 트러블 슈팅", example = "## 사이드픽 트러블 슈팅 Markdown")
-    String troubleShooting
+    String troubleShooting,
+    @Schema(description = "댓글 응답 정보")
+    List<CommentResponse> comments
 ) {
 
     public static ProjectResponse from(Project project, List<OverviewImageSummary> overviewImageUrl,
-                                       List<ProjectSkillSummary> techStacks, List<MemberSummary> members) {
+        List<ProjectSkillSummary> techStacks, List<MemberSummary> members
+    ) {
         return ProjectResponse.builder()
             .id(project.getId())
             .name(project.getName())
@@ -65,6 +69,32 @@ public record ProjectResponse(
             .members(members)
             .description(project.getDescription())
             .troubleShooting(project.getTroubleshooting())
+            .build();
+    }
+
+    public static ProjectResponse from(Project project, List<OverviewImageSummary> overviewImageUrl,
+        List<ProjectSkillSummary> techStacks, List<MemberSummary> members,
+        List<CommentResponse> comments
+    ) {
+        return ProjectResponse.builder()
+            .id(project.getId())
+            .name(project.getName())
+            .subName(project.getSubName())
+            .overview(project.getOverview())
+            .thumbnailUrl(project.getThumbnailUrl())
+            .overviewImageUrl(overviewImageUrl)
+            .githubUrl(project.getGithubUrl())
+            .deployUrl(project.getDeployUrl())
+            .viewCount(project.getViewCount())
+            .likeCount(project.getLikeCount())
+            .techStacks(techStacks)
+            .ownerId(project.getOwnerId())
+            .startDate(project.getStartDate())
+            .endDate(project.getEndDate())
+            .members(members)
+            .description(project.getDescription())
+            .troubleShooting(project.getTroubleshooting())
+            .comments(comments)
             .build();
     }
 
