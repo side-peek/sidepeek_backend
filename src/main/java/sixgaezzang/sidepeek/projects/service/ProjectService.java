@@ -5,6 +5,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
+import sixgaezzang.sidepeek.comments.service.CommentService;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
@@ -24,6 +26,7 @@ public class ProjectService {
     private final ProjectSkillService projectSkillService;
     private final MemberService memberService;
     private final FileService fileService;
+    private final CommentService commentService;
 
     @Transactional
     public ProjectResponse save(ProjectRequest request) {
@@ -33,7 +36,8 @@ public class ProjectService {
         projectRepository.save(project);
 
         // Required
-        List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project, request.techStacks());
+        List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project,
+            request.techStacks());
 
         // Option
         List<MemberSummary> members = memberService.saveAll(project, request.members());
@@ -65,7 +69,9 @@ public class ProjectService {
 
         List<MemberSummary> members = memberService.findAllWithUser(project);
 
-        return ProjectResponse.from(project, overviewImages, techStacks, members);
+        List<CommentResponse> comments = commentService.findAll(project);
+
+        return ProjectResponse.from(project, overviewImages, techStacks, members, comments);
     }
 
     @Transactional
