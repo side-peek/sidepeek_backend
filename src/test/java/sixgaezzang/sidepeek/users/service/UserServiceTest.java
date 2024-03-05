@@ -121,7 +121,7 @@ class UserServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
-                .withMessage("이메일 형식이 올바르지 않습니다.");
+                .withMessage("유효하지 않은 이메일 형식입니다.");
         }
 
         @Test
@@ -230,7 +230,7 @@ class UserServiceTest {
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(
                     checkEmailDuplicate)
-                .withMessage("이메일 형식이 올바르지 않습니다.");
+                .withMessage("유효하지 않은 이메일 형식입니다.");
         }
     }
 
