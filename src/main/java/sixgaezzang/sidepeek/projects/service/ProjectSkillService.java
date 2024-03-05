@@ -48,8 +48,7 @@ public class ProjectSkillService {
             .map(ProjectSkillSummary::from)
             .toList();
     }
-
-
+    
     public List<ProjectSkill> findAll(Project project) {
         return projectSkillRepository.findAllByProject(project);
     }
