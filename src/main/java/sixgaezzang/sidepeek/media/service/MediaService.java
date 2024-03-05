@@ -1,15 +1,18 @@
 package sixgaezzang.sidepeek.media.service;
 
+import static sixgaezzang.sidepeek.media.exception.message.MediaErrorMessage.CANNOT_READ_FILE;
+import static sixgaezzang.sidepeek.media.util.MediaConstant.FILE_EXTENSION_SEPARATOR;
+
 import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
+import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.media.dto.response.MediaUploadResponse;
 import sixgaezzang.sidepeek.media.util.S3Properties;
+import sixgaezzang.sidepeek.media.util.validation.MediaValidator;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -18,16 +21,13 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @RequiredArgsConstructor
 public class MediaService {
 
-    private static final String FILE_EXTENSION_SEPARATOR = ".";
-    private static final String IMAGE_PREFIX = "image";
-    private static final String VIDEO_PREFIX = "video";
-
     private final S3Client s3Client;
     private final S3Properties s3Properties;
     private final MultipartProperties multipartProperties;
 
-    public MediaUploadResponse uploadFile(MultipartFile file) {
-        validateFile(file);
+    public MediaUploadResponse uploadFile(Long loginId, MultipartFile file) {
+        ValidationUtils.validateLoginId(loginId);
+        MediaValidator.validateFile(file, multipartProperties.getMaxFileSize());
         String fileName = createUniqueFileName(file);
 
         try {
@@ -38,7 +38,7 @@ public class MediaService {
 
             s3Client.putObject(putOb, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
         } catch (IOException e) {
-            throw new IllegalStateException("파일을 읽는 도중 예외가 발생했습니다.");
+            throw new IllegalStateException(CANNOT_READ_FILE);
         }
 
         return MediaUploadResponse.from(s3Properties.basePath() + fileName);
@@ -51,17 +51,6 @@ public class MediaService {
         String fileExtension = originalFileName.substring(fileExtensionIndex);
 
         return UUID.randomUUID() + fileExtension;
-    }
-
-    private void validateFile(MultipartFile file) {
-        Assert.notNull(file, "파일이 null이어서는 안됩니다.");
-        Assert.isTrue(!file.isEmpty(), "파일이 비어있습니다.");
-
-        DataSize fileMaxSize = multipartProperties.getMaxFileSize();
-        Assert.isTrue(file.getSize() <= fileMaxSize.toBytes(), "파일 용량은 " + fileMaxSize.toMegabytes() + "MB 이하여야합니다.");
-
-        String contentType = file.getContentType();
-        Assert.isTrue(contentType.contains(IMAGE_PREFIX) || contentType.contains(VIDEO_PREFIX), "이미지 혹은 영상 파일만 가능합니다.");
     }
 
 }
