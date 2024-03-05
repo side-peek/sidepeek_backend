@@ -173,14 +173,14 @@ class MemberServiceTest {
         void 기존_프로젝트_멤버_목록을_지우고_새로운_멤버_목록_수정에_성공한다() {
             // given
             memberService.saveAll(project, members);
-            List<MemberSummary> originalMembers = memberService.findAllByProject(project);
+            List<MemberSummary> originalMembers = memberService.findAllWithUser(project);
 
             // when
             List<MemberSaveRequest> membersOnlyOwner = new ArrayList<>();
             membersOnlyOwner.add(FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
 
             memberService.saveAll(project, membersOnlyOwner);
-            List<MemberSummary> savedMembers = memberService.findAllByProject(project);
+            List<MemberSummary> savedMembers = memberService.findAllWithUser(project);
 
             // then
             assertThat(originalMembers).isNotEqualTo(savedMembers);
