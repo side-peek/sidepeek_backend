@@ -115,7 +115,7 @@ create TABLE IF NOT EXISTS files
 );
 
 -- COMMENT
-create TABLE IF NOT EXISTS comment
+create TABLE IF NOT EXISTS comments
 (
     id                  BIGINT PRIMARY KEY AUTO_INCREMENT,
     project_id          BIGINT      NOT NULL,
@@ -127,5 +127,5 @@ create TABLE IF NOT EXISTS comment
     updated_at          TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON update CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (project_id) REFERENCES project (id),
-    FOREIGN KEY (parent_id) REFERENCES comment (id)
+    FOREIGN KEY (parent_id) REFERENCES comments (id)
 );
