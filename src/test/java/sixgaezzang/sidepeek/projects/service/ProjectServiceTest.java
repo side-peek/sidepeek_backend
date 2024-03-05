@@ -386,7 +386,7 @@ class ProjectServiceTest {
             transaction.commit();
 
             transaction.begin();
-            // TODO: 왜 @Transactional(propagation = Propagation.NEVER) 예외가 안날까?
+            // TODO: @Transactional(propagation = Propagation.NEVER) 처리 안하면 deletedAt이 null이 아닌데 불러와진다.
             ThrowingCallable findDeletedProject = () -> projectService.findById(project.id());
             transaction.commit();
 
