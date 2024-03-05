@@ -18,7 +18,7 @@ import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.users.domain.User;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "comments")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Comment extends BaseTimeEntity {
