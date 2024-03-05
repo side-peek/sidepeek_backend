@@ -6,6 +6,7 @@ truncate table project_member;
 truncate table files;
 truncate table skill;
 truncate table project_skill;
+truncate table comments;
 SET foreign_key_checks = 1;
 
 -- USER
@@ -17,6 +18,14 @@ insert into users(id, nickname, email, password, profile_image_url)
 values (2, '동건', 'donggun@naver.com',
         '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
         'https://user-images.githubusercontent.com/donggun.png');
+insert into users(id, nickname, email, password, profile_image_url)
+values (3, '세희', 'hailey@naver.com',
+        '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
+        'https://user-images.githubusercontent.com/hailey.png');
+insert into users(id, nickname, email, password, profile_image_url)
+values (4, '훈오', 'whoknow@naver.com',
+        '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
+        'https://user-images.githubusercontent.com/whoknow.png');
 
 -- PROJECT
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
@@ -59,4 +68,10 @@ values (23, 1, 3, '협업툴');
 insert into project_skill(id, project_id, skill_id, category)
 values (24, 1, 4, '프론트');
 
-
+-- COMMENT
+insert into comments(id, project_id, user_id, parent_id, is_anonymous, content)
+values (1, 1, 3, null, 0, '우와 이 프로젝트 대박인데요?');
+insert into comments(id, project_id, user_id, parent_id, is_anonymous, content)
+values (2, 1, 4, null, 1, 'LGTM ✨💖');
+insert into comments(id, project_id, user_id, parent_id, is_anonymous, content)
+values (3, 1, 1, 1, 0, '좋게 봐주셔서 감사합니다!');
