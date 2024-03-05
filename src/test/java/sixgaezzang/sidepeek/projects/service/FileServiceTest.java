@@ -83,7 +83,7 @@ class FileServiceTest {
             List<OverviewImageSummary> savedImageUrls = fileService.saveAll(project, emptyImageUrls);
 
             // then
-            assertThat(savedImageUrls).isNull();
+            assertThat(savedImageUrls).isEmpty();
         }
 
         @Test
