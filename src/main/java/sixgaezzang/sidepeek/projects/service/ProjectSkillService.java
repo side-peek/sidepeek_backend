@@ -8,7 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
+import sixgaezzang.sidepeek.projects.util.validation.ProjectSkillValidator;
+import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 
@@ -21,8 +24,11 @@ public class ProjectSkillService {
     private final ProjectSkillRepository projectSkillRepository;
 
     @Transactional
-    public void saveAll(Project project, List<ProjectSkillSaveRequest> projectSkillSaveRequests) {
-        List<ProjectSkill> skills = projectSkillSaveRequests.stream().map(
+    public List<ProjectSkillSummary> saveAll(Project project, List<ProjectSkillSaveRequest> techStacks) {
+        ProjectValidator.validateProject(project);
+        ProjectSkillValidator.validateTechStacks(techStacks);
+
+        List<ProjectSkill> skills = techStacks.stream().map(
             projectSkill -> {
                 Skill skill = skillRepository.findById(projectSkill.skillId())
                     .orElseThrow(() -> new EntityNotFoundException("Skill Id에 해당하는 스킬이 없습니다."));
@@ -34,9 +40,13 @@ public class ProjectSkillService {
                     .build();
             }
         ).toList();
-
         projectSkillRepository.saveAll(skills);
+
+        return skills.stream()
+            .map(ProjectSkillSummary::from)
+            .toList();
     }
+
 
     public List<ProjectSkill> findAll(Project project) {
         return projectSkillRepository.findAllByProject(project);

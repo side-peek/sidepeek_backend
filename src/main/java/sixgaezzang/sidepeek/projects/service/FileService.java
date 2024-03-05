@@ -4,10 +4,14 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.File;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
+import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
+import sixgaezzang.sidepeek.projects.util.validation.FileValidator;
+import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 
 @Service
 @Transactional(readOnly = true)
@@ -17,7 +21,14 @@ public class FileService {
     private final FileRepository fileRepository;
 
     @Transactional
-    public void saveAll(Project project, List<String> overviewImageUrls) {
+    public List<OverviewImageSummary> saveAll(Project project, List<String> overviewImageUrls) {
+        ProjectValidator.validateProject(project);
+        if (!ValidationUtils.isNotNullOrEmpty(overviewImageUrls)) {
+            return null;
+        }
+
+        FileValidator.validateFiles(overviewImageUrls);
+
         List<File> overviewImages = overviewImageUrls.stream()
             .map(
                 overviewImage -> File.builder()
@@ -28,9 +39,14 @@ public class FileService {
             ).toList();
 
         fileRepository.saveAll(overviewImages);
+
+        return overviewImages.stream()
+            .map(OverviewImageSummary::from)
+            .toList();
     }
 
     public List<File> findAllByType(Project project, FileType fileType) {
         return fileRepository.findAllByProjectAndType(project, fileType);
     }
+
 }

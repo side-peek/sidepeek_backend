@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
+import java.time.YearMonth;
 import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -74,8 +74,8 @@ class ProjectServiceTest {
         String overview = faker.lorem().sentence();
         String thumbnailUrl = faker.internet().url();
         String githubUrl = faker.internet().url();
-        LocalDateTime startDate = LocalDateTime.now();
-        LocalDateTime endDate = startDate.plusMonths(3);
+        YearMonth startDate = YearMonth.now();
+        YearMonth endDate = startDate.plusMonths(3);
         String description = faker.lorem().sentences(10).toString();
 
         Project project = Project.builder()

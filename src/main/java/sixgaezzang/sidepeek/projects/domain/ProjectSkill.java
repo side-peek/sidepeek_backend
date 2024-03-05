@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.projects.domain;
 
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LENGTH;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,7 +15,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 import sixgaezzang.sidepeek.skill.domain.Skill;
+import sixgaezzang.sidepeek.skill.util.validation.SkillValidator;
 
 @Entity
 @Table(name = "project_skill")
@@ -33,14 +37,21 @@ public class ProjectSkill {
     @JoinColumn(name = "skill_id")
     private Skill skill;
 
-    @Column(name = "category", nullable = false, length = 50)
+    @Column(name = "category", nullable = false, length = MAX_CATEGORY_LENGTH)
     private String category;
 
     @Builder
     public ProjectSkill(Project project, Skill skill, String category) {
+        validateConstructorArguments(project, skill, category);
         this.project = project;
         this.skill = skill;
         this.category = category;
+    }
+
+    private void validateConstructorArguments(Project project, Skill skill, String category) {
+        ProjectValidator.validateProject(project);
+        SkillValidator.validateSkill(skill);
+        SkillValidator.validateCategory(category);
     }
 
 }

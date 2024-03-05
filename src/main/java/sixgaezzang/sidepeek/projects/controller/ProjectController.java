@@ -3,6 +3,7 @@ package sixgaezzang.sidepeek.projects.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,14 +27,16 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody ProjectSaveRequest request) {
-        Long id = projectService.save(request);
+    public ResponseEntity<ProjectResponse> save(
+        @Valid @RequestBody ProjectSaveRequest request
+    ) {
+        ProjectResponse response = projectService.save(request);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/projects/{id}")
-            .buildAndExpand(id).toUri();
+            .buildAndExpand(response.id()).toUri();
 
         return ResponseEntity.created(uri)
-            .build();
+            .body(response);
     }
 
     @GetMapping("/{id}")

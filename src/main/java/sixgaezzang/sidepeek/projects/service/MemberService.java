@@ -6,11 +6,14 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
+import sixgaezzang.sidepeek.projects.util.validation.MemberValidator;
+import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -23,7 +26,14 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void saveAll(Project project, List<MemberSaveRequest> memberSaveRequests) {
+    public List<MemberSummary> saveAll(Project project, List<MemberSaveRequest> memberSaveRequests) {
+        ProjectValidator.validateProject(project);
+        if (!ValidationUtils.isNotNullOrEmpty(memberSaveRequests)) {
+            return null; //TODO: Member를 등록 안하면 자동으로 작성자는 멤버로 등록이 되는가? 그럼 역할은?
+        }
+
+        MemberValidator.validateMembers(memberSaveRequests);
+
         List<Member> members = memberSaveRequests.stream().map(
             member -> {
                 Member.MemberBuilder memberBuilder = Member.builder()
@@ -42,8 +52,11 @@ public class MemberService {
                     .build();
             }
         ).toList();
-
         memberRepository.saveAll(members);
+
+        return members.stream()
+            .map(MemberSummary::from)
+            .toList();
     }
 
     public List<MemberSummary> findAllWithUser(Project project) {
