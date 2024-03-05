@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.projects.service;
 
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
+import static sixgaezzang.sidepeek.common.util.CommonConstant.LOGIN_IS_REQUIRED;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -34,6 +35,7 @@ public class ProjectService {
 
     @Transactional
     public ProjectResponse save(Long loginId, Long projectId, ProjectRequest request) {
+        validateLoginId(loginId);
         Project project;
         if (Objects.isNull(projectId)) {
             validateLoginIdEqualsOwnerId(loginId, request.ownerId());
@@ -83,6 +85,7 @@ public class ProjectService {
 
     @Transactional
     public void delete(Long loginId, Long projectId) {
+        validateLoginId(loginId);
         // TODO: 생성, 수정할 땐 ownerId와 loginId를 비교하는 로직이 있다. 여기에도 적용하는 것이 좋을까?
         Project project = projectRepository.findById(projectId)
             .orElseThrow(
@@ -90,6 +93,12 @@ public class ProjectService {
         validateLoginIdEqualsOwnerId(loginId, project.getOwnerId());
 
         project.setDeletedAt(LocalDateTime.now()); // TODO: 타임존 설정이 필요할까
+    }
+
+    private void validateLoginId(Long loginId) {
+        if (Objects.isNull(loginId)) {
+            throw new InvalidAuthenticationException(LOGIN_IS_REQUIRED);
+        }
     }
 
     private void validateLoginIdEqualsOwnerId(Long loginId, Long ownerId) {
