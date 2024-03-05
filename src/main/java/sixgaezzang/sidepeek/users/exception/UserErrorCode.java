@@ -1,6 +1,5 @@
 package sixgaezzang.sidepeek.users.exception;
 
-
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import sixgaezzang.sidepeek.common.exception.ErrorCode;
