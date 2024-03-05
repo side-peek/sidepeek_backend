@@ -6,6 +6,10 @@ import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_INTRODUCTION_LENG
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_JOB_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserErrorMessage {
     public static final String USER_NOT_EXISTING = "User Id에 해당하는 회원이 없습니다.";
     public static final String NICKNAME_IS_NULL = "닉네임을 입력해주세요.";
