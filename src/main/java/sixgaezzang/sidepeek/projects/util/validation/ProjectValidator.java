@@ -60,7 +60,6 @@ public class ProjectValidator {
         validateTextLength(description, DESCRIPTION_OVER_MAX_LENGTH);
     }
 
-
     public static void validateOwnerId(Long ownerId) {
         Assert.notNull(ownerId, OWNER_ID_IS_NULL);
     }
