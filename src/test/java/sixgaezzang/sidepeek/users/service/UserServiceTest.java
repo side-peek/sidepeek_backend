@@ -62,7 +62,6 @@ class UserServiceTest {
         nickname = FakeValueProvider.createNickname();
 
         userRepository.deleteAll(); // TODO: 아래 TODO 참고!
-        System.out.println("왜 안대냐구");
         userNicknames = new ArrayList<>();
         for (int i = 0; i < USER_COUNT; i++) {
             userNicknames.add(createAndSaveUser().getNickname());
