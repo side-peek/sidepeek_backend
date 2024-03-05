@@ -3,7 +3,7 @@ package sixgaezzang.sidepeek.users.service;
 import static io.micrometer.common.util.StringUtils.isBlank;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
-import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_KEYWORD_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
@@ -189,7 +189,7 @@ class UserServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(search)
-                .withMessage(EXCESSIVE_KEYWORD_LENGTH.getMessage());
+                .withMessage(EXCESSIVE_NICKNAME_LENGTH.getMessage());
         }
 
     }
