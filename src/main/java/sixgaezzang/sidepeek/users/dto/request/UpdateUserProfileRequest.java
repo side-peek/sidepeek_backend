@@ -50,6 +50,6 @@ public record UpdateUserProfileRequest(
     String blogUrl,
 
     @Schema(description = "회원 기술 스택 목록")
-    List<UserSkillRequest> techStacks
+    List<UpdateUserSkillRequest> techStacks
 ) {
 }
