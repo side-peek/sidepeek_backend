@@ -28,7 +28,7 @@ import sixgaezzang.sidepeek.users.dto.request.CheckEmailRequest;
 import sixgaezzang.sidepeek.users.dto.request.CheckNicknameRequest;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
 import sixgaezzang.sidepeek.users.dto.request.UpdatePasswordRequest;
-import sixgaezzang.sidepeek.users.dto.request.UserProfileRequest;
+import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserProfileResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserSearchResponse;
@@ -76,7 +76,7 @@ public class UserController {
         @Valid
         UpdatePasswordRequest request
     ) {
-        // TODO: 비밀번호 변경 서비스 기능
+        // TODO: 비밀번호 변경 서비스 기능 구현
         return ResponseEntity.noContent()
             .build();
     }
@@ -128,6 +128,7 @@ public class UserController {
         @PathVariable
         Long id
     ) {
+        // TODO: 프로필 정보 조회 서비스 로직 구현
         return null;
     }
 
@@ -145,8 +146,9 @@ public class UserController {
 
         @RequestBody
         @Valid
-        UserProfileRequest request
+        UpdateUserProfileRequest request
     ) {
+        // TODO: 프로필 정보 수정 서비스 로직 구현
         return null;
     }
 

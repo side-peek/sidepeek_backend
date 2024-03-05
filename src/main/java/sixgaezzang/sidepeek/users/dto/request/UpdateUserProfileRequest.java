@@ -19,7 +19,7 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 @Schema(description = "회원 프로필 수정 요청 정보")
-public record UserProfileRequest(
+public record UpdateUserProfileRequest(
     @Schema(description = "회원 닉네임", example = "의진")
     @NotNull(message = NICKNAME_IS_NULL)
     @Size(max = MAX_NICKNAME_LENGTH, message = NICKNAME_OVER_MAX_LENGTH)
