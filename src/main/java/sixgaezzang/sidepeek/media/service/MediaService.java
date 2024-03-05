@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.media.dto.response.MediaUploadResponse;
-import sixgaezzang.sidepeek.media.util.S3Properties;
+import sixgaezzang.sidepeek.config.properties.S3Properties;
 import sixgaezzang.sidepeek.media.util.validation.MediaValidator;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;

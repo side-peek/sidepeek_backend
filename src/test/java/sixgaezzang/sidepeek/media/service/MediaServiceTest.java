@@ -23,7 +23,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.media.dto.response.MediaUploadResponse;
-import sixgaezzang.sidepeek.media.util.S3Properties;
+import sixgaezzang.sidepeek.config.properties.S3Properties;
 import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
