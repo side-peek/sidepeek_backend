@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.dto.response.SkillResponse;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
@@ -35,13 +36,11 @@ class SkillServiceTest {
     class 기술_스택_검색_테스트 {
 
         static final int SKILL_COUNT = 5;
-        static final String[] skills = {"spring", "spring boot", "spring web", "react", "react query"};
 
         @BeforeEach
         void setUp() {
-            String tempImageUrl = "https://google.com/image.png";
             for (int i = 0; i < SKILL_COUNT; i++) {
-                createSkill(skills[i], tempImageUrl);
+                FakeEntityProvider.createSkill();
             }
         }
 
@@ -81,14 +80,6 @@ class SkillServiceTest {
                 .withMessage("최대 " + MAX_SKILL_NAME_LENGTH + "자의 키워드로 검색할 수 있습니다.");
         }
 
-    }
-
-    private Skill createSkill(String name, String iconImageUrl) {
-        Skill skill = Skill.builder()
-            .name(name)
-            .iconImageUrl(iconImageUrl)
-            .build();
-        return skillRepository.save(skill);
     }
 
 }
