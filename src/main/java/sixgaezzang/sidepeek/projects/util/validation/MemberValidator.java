@@ -17,9 +17,12 @@ import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 import io.jsonwebtoken.lang.Assert;
 import java.util.List;
 import java.util.Objects;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
 import sixgaezzang.sidepeek.users.domain.User;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberValidator {
 
     public static void validateMembers(Long ownerId, List<MemberSaveRequest> members) {

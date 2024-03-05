@@ -8,9 +8,12 @@ import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKI
 
 import io.jsonwebtoken.lang.Assert;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProjectSkillValidator {
 
     public static void validateTechStacks(List<ProjectSkillSaveRequest> techStacks) {

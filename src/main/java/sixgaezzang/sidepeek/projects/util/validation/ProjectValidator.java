@@ -29,8 +29,11 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAM
 import io.jsonwebtoken.lang.Assert;
 import java.time.YearMonth;
 import java.util.Objects;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProjectValidator {
 
     // Common

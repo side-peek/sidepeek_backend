@@ -9,10 +9,11 @@ import static sixgaezzang.sidepeek.users.domain.Password.PASSWORD_REGXP;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ValidationUtils {
 
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGXP);
