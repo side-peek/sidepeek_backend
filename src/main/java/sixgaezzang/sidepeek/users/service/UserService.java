@@ -2,7 +2,11 @@ package sixgaezzang.sidepeek.users.service;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
-import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.DUPLICATE_EMAIL;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.DUPLICATE_NICKNAME;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_KEYWORD_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import jakarta.persistence.EntityExistsException;
@@ -37,7 +41,7 @@ public class UserService {
             .nickname(request.nickname())
             .password(encodedPassword)
             .build();
-        
+
         userRepository.save(user);
 
         return user.getId();
@@ -48,20 +52,21 @@ public class UserService {
             return UserSearchResponse.from(userRepository.findAll());
         }
 
-        validateMaxLength(keyword, MAX_NICKNAME_LENGTH, NICKNAME_OVER_MAX_LENGTH);
+        validateMaxLength(keyword, MAX_NICKNAME_LENGTH, EXCESSIVE_KEYWORD_LENGTH.getMessage());
 
         return UserSearchResponse.from(userRepository.findAllByNicknameContaining(keyword));
     }
 
     public CheckDuplicateResponse checkEmailDuplicate(String email) {
-        validateEmail(email, "이메일 형식이 올바르지 않습니다.");
+        validateEmail(email, INVALID_EMAIL_FORMAT.getMessage());
 
         boolean isExists = userRepository.existsByEmail(email);
         return new CheckDuplicateResponse(isExists);
     }
 
     public CheckDuplicateResponse checkNicknameDuplicate(String nickname) {
-        validateMaxLength(nickname, MAX_NICKNAME_LENGTH, NICKNAME_OVER_MAX_LENGTH);
+        validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
+            EXCESSIVE_NICKNAME_LENGTH.getMessage());
 
         boolean isExists = userRepository.existsByNickname(nickname);
         return new CheckDuplicateResponse(isExists);
@@ -69,13 +74,13 @@ public class UserService {
 
     private void verifyUniqueNickname(String nickname) {
         if (userRepository.existsByNickname(nickname)) {
-            throw new EntityExistsException("이미 사용 중인 닉네임입니다.");
+            throw new EntityExistsException(DUPLICATE_NICKNAME.getMessage());
         }
     }
 
     private void verifyUniqueEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new EntityExistsException("이미 사용 중인 이메일입니다.");
+            throw new EntityExistsException(DUPLICATE_EMAIL.getMessage());
         }
     }
 }
