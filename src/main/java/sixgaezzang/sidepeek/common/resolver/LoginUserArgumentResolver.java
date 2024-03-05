@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.common.resolver;
 
+import static sixgaezzang.sidepeek.common.util.CommonConstant.LOGIN_IS_REQUIRED;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,7 +13,6 @@ import sixgaezzang.sidepeek.common.annotation.Login;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
-
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean hasLoginAnnotation = parameter.getParameterAnnotation(Login.class) != null;
@@ -36,7 +37,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
             }
         }
 
-        throw new InvalidAuthenticationException("로그인이 필요합니다.");
+        throw new InvalidAuthenticationException(LOGIN_IS_REQUIRED);
     }
 
 }
