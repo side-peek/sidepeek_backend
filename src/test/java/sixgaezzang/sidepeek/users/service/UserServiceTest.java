@@ -54,9 +54,9 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        email = faker.internet().emailAddress();
-        password = faker.internet().password(8, 100, true, true, true);
-        nickname = faker.internet().username();
+        email = FakeValueProvider.createEmail();
+        password = FakeValueProvider.createPassword();
+        nickname = FakeValueProvider.createNickname();
     }
 
     @Nested
@@ -103,7 +103,7 @@ class UserServiceTest {
             User user = createUser(email, password, duplicatedNickname);
             userRepository.save(user);
 
-            String newEmail = faker.internet().emailAddress();
+            String newEmail = FakeValueProvider.createEmail();
             SignUpRequest request = new SignUpRequest(newEmail, password, duplicatedNickname);
 
             // when
