@@ -3,9 +3,9 @@ package sixgaezzang.sidepeek.users.domain;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
-import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_IS_NULL;
-import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.BLANK_NICKNAME;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -31,6 +31,8 @@ import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
+
+    public static final int MAX_NICKNAME_LENGTH = 20;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,11 +86,12 @@ public class User extends BaseTimeEntity {
 
     private void validateConstructorArguments(String nickname, String email) {
         validateNickname(nickname);
-        validateEmail(email, "이메일 형식이 올바르지 않습니다.");
+        validateEmail(email, INVALID_EMAIL_FORMAT.getMessage());
     }
 
     private void validateNickname(String nickname) {
-        validateNotBlank(nickname, NICKNAME_IS_NULL);
-        validateMaxLength(nickname, MAX_NICKNAME_LENGTH, NICKNAME_OVER_MAX_LENGTH);
+        validateNotBlank(nickname, BLANK_NICKNAME.getMessage());
+        validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
+            EXCESSIVE_NICKNAME_LENGTH.getMessage());
     }
 }

@@ -1,0 +1,66 @@
+name: SidePeek CD with Gradle
+
+on:
+    push:
+        branches:
+            - dev
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                redis-version: [ latest ]
+
+        steps:
+            -   name: Repository Checkout
+                uses: actions/checkout@v4
+                with:
+                    token: ${{ secrets.ACTION_TOKEN }}
+                    submodules: true
+
+            -   name: Set up JDK 17
+                uses: actions/setup-java@v4
+                with:
+                    java-version: '17'
+                    distribution: 'corretto'
+
+            -   name: Set up Redis
+                uses: supercharge/redis-github-action@1.7.0
+                with:
+                    redis-version: ${{ matrix.redis-version }}
+                    redis-port: ${{ secrets.TEST_REDIS_PORT }}
+
+            -   name: Set up MySQL
+                uses: samin/mysql-action@v1.3
+                with:
+                    mysql user: ${{ secrets.TEST_DB_USER }}
+                    mysql password: ${{ secrets.TEST_DB_PASSWORD }}
+                    mysql database: ${{ secrets.TEST_DB }}
+                    host port: ${{ secrets.TEST_DB_PORT }}
+
+            -   name: Grant execute permission for gradlew
+                run: chmod +x gradlew
+
+            -   name: Build with Gradle
+                run: ./gradlew build -Dspring.profiles.active=dev
+
+            -   name: Make Zip File
+                run: zip -qq -r ./$GITHUB_SHA.zip .
+
+            -   name: Configure AWS credentials
+                uses: aws-actions/configure-aws-credentials@v2
+                with:
+                    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                    aws-region: ap-northeast-2
+
+            -   name: Upload to S3
+                run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy/$GITHUB_SHA.zip
+
+            -   name: Deploy with AWS codeDeploy
+                run: aws deploy create-deployment
+                    --application-name ${{ secrets.CODE_DEPLOY_APP_NAME }}
+                    --deployment-config-name CodeDeployDefault.AllAtOnce
+                    --deployment-group-name ${{ secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }}
+                    --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=deploy/$GITHUB_SHA.zip
