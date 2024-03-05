@@ -3,12 +3,12 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_IMAGE_COUNT;
 
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
-import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -16,16 +16,17 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.users.domain.Password;
+import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
+import sixgaezzang.sidepeek.projects.util.FakeValueProvider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -33,7 +34,6 @@ import sixgaezzang.sidepeek.users.repository.UserRepository;
 @Transactional
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class FileServiceTest {
-    static final Faker faker = new Faker();
 
     @Autowired
     FileService fileService;
@@ -58,13 +58,10 @@ class FileServiceTest {
 
         @BeforeEach
         void setup() {
-            overLengthImageUrls = new ArrayList<>();
-            for (int i = 1; i <= MAX_OVERVIEW_IMAGE_COUNT; i++) {
-                overLengthImageUrls.add("https://sidepeek.image/image" + i);
-            }
+            user = createAndSaveUser();
+            project = createAndSaveProject(user);
 
-            user = createUser();
-            project = createProject(user);
+            overLengthImageUrls = FakeValueProvider.createUrls(MAX_OVERVIEW_IMAGE_COUNT);
             imageUrls = overLengthImageUrls.subList(0, IMAGE_COUNT);
         }
 
@@ -87,6 +84,7 @@ class FileServiceTest {
             assertThat(savedImageUrls).isNull();
         }
 
+
         @Test
         void 목록_개수가_최대를_넘어서_파일_목록_저장에_실패한다() {
             // given, when
@@ -94,7 +92,7 @@ class FileServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage("프로젝트 레이아웃 이미지 수는 " + MAX_OVERVIEW_IMAGE_COUNT + "개 미만이어야 합니다.");
+                .withMessage(OVERVIEW_IMAGE_OVER_MAX_COUNT);
         }
 
         @Test
@@ -107,44 +105,31 @@ class FileServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage("프로젝트가 null 입니다.");
+                .withMessage(PROJECT_IS_NULL);
         }
 
-        private User createUser() {
-            String email = faker.internet().emailAddress();
-            String password = faker.internet().password(8, 40, true, true, true);
-            String nickname = faker.internet().username();
+        @ParameterizedTest(name = "[{index}] {0}")
+        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createInvalidFileInfo")
+        void 파일_정보가_유효하지_않아_파일_목록_저장에_실패한다(String testMessage, String fileUrl, String message) {
+            // given
+            List<String> imageUrlsWithInvalidUrl = new ArrayList<>(imageUrls);
+            imageUrlsWithInvalidUrl.add(fileUrl);
 
-            User user = User.builder()
-                .email(email)
-                .password(new Password(password, new BCryptPasswordEncoder()))
-                .nickname(nickname)
-                .build();
+            // when
+            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(project, imageUrlsWithInvalidUrl);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage(message);
+        }
+
+        private User createAndSaveUser() {
+            user = FakeEntityProvider.createUser();
             return userRepository.save(user);
         }
 
-        private Project createProject(User user) {
-            String name = faker.internet().domainName();
-            String subName = faker.internet().domainWord();
-            String overview = faker.lorem().sentence();
-            String thumbnailUrl = faker.internet().url();
-            String githubUrl = faker.internet().url();
-            YearMonth startDate = YearMonth.now();
-            YearMonth endDate = startDate.plusMonths(3);
-            String description = faker.lorem().sentences(10).toString();
-
-            Project project = Project.builder()
-                .name(name)
-                .subName(subName)
-                .overview(overview)
-                .thumbnailUrl(thumbnailUrl)
-                .githubUrl(githubUrl)
-                .startDate(startDate)
-                .endDate(endDate)
-                .ownerId(user.getId())
-                .description(description)
-                .build();
-
+        private Project createAndSaveProject(User user) {
+            project = FakeEntityProvider.createProject(user);
             return projectRepository.save(project);
         }
     }

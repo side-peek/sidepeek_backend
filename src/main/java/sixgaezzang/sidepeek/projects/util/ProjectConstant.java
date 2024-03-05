@@ -7,7 +7,7 @@ public class ProjectConstant {
     public static final String YEAR_MONTH_PATTERN = "yyyy-MM";
 
     // Member
-    public static final int MAX_MEMBER_COUNT = 20;
+    public static final int MAX_MEMBER_COUNT = 10;
     public static final int MAX_ROLE_LENGTH = 15;
 
     // ProjectSkill

@@ -2,12 +2,16 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectSkillErrorMessage.PROJECT_TECH_STACKS_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectSkillErrorMessage.PROJECT_TECH_STACKS_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
+import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.SKILL_ID_IS_NULL;
+import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.SKILL_NOT_EXISTING;
 
-import java.time.YearMonth;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -15,19 +19,20 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
+import sixgaezzang.sidepeek.projects.util.FakeDtoProvider;
+import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
-import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -35,8 +40,6 @@ import sixgaezzang.sidepeek.users.repository.UserRepository;
 @Transactional
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ProjectSkillServiceTest {
-
-    static final Faker faker = new Faker();
 
     @Autowired
     ProjectSkillService projectSkillService;
@@ -57,21 +60,7 @@ class ProjectSkillServiceTest {
         static List<ProjectSkillSaveRequest> overLengthTechStacks;
         Project project;
         User user;
-
-        @BeforeEach
-        void setup() {
-            overLengthTechStacks = new ArrayList<>();
-            for (int i = 1; i <= MAX_PROJECT_SKILL_COUNT; i++) {
-                Skill skill = createSkillWithName("skill" + i);
-                overLengthTechStacks.add(
-                    new ProjectSkillSaveRequest(skill.getId(), "category" + i)
-                );
-            }
-
-            user = createUser();
-            project = createProject(user);
-            techStacks = overLengthTechStacks.subList(0, PROJECT_SKILL_COUNT);
-        }
+        Skill skill;
 
         @Test
         void 프로젝트_기술_스택_목록_저장에_성공한다() {
@@ -90,7 +79,7 @@ class ProjectSkillServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage("기술 스택들을 입력해주세요.");
+                .withMessage(PROJECT_TECH_STACKS_IS_NULL);
         }
 
         @Test
@@ -103,7 +92,7 @@ class ProjectSkillServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage("프로젝트가 null 입니다.");
+                .withMessage(PROJECT_IS_NULL);
         }
 
         @Test
@@ -113,56 +102,92 @@ class ProjectSkillServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage("기술 스택은 " + MAX_PROJECT_SKILL_COUNT + "개 미만이어야 합니다.");
+                .withMessage(PROJECT_TECH_STACKS_OVER_MAX_COUNT);
         }
 
+        @BeforeEach
+        void setup() {
+            overLengthTechStacks = new ArrayList<>();
+            for (int i = 1; i <= MAX_PROJECT_SKILL_COUNT; i++) {
+                Skill skill = createAndSaveSkill();
+                overLengthTechStacks.add(
+                    FakeDtoProvider.createProjectSkillSaveRequest(skill.getId())
+                );
+            }
 
-        private User createUser() {
-            String email = faker.internet().emailAddress();
-            String password = faker.internet().password(8, 40, true, true, true);
-            String nickname = faker.internet().username();
-
-            User user = User.builder()
-                .email(email)
-                .password(new Password(password, new BCryptPasswordEncoder()))
-                .nickname(nickname)
-                .build();
-            return userRepository.save(user);
+            user = createAndSaveUser();
+            project = createAndSaveProject(user);
+            techStacks = overLengthTechStacks.subList(0, PROJECT_SKILL_COUNT);
+            skill = createAndSaveSkill();
         }
 
-        private Skill createSkillWithName(String name) {
-            String iconImageUrl = faker.internet().url();
+        @ParameterizedTest
+        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createInvalidProjectSkillInfo")
+        void 기술_스택_카테고리가_유효하지_않아_기술_스택_목록_저장에_실패한다(
+            String testMessage, String category, String message
+        ) {
+            // given
+            List<ProjectSkillSaveRequest> techStacksWithInvalidSkill = new ArrayList<>(techStacks);
+            techStacksWithInvalidSkill.add(
+                new ProjectSkillSaveRequest(skill.getId(), category)
+            );
 
-            Skill skill = Skill.builder()
-                .name(name)
-                .iconImageUrl(iconImageUrl)
-                .build();
+            // when
+            ThrowableAssert.ThrowingCallable saveAll =
+                () -> projectSkillService.saveAll(project, techStacksWithInvalidSkill);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage(message);
+        }
+
+        private Skill createAndSaveSkill() {
+            Skill skill = FakeEntityProvider.createSkill();
             return skillRepository.save(skill);
         }
 
-        private Project createProject(User user) {
-            String name = faker.internet().domainName();
-            String subName = faker.internet().domainWord();
-            String overview = faker.lorem().sentence();
-            String thumbnailUrl = faker.internet().url();
-            String githubUrl = faker.internet().url();
-            YearMonth startDate = YearMonth.now();
-            YearMonth endDate = startDate.plusMonths(3);
-            String description = faker.lorem().sentences(10).toString();
+        private User createAndSaveUser() {
+            User user = FakeEntityProvider.createUser();
+            return userRepository.save(user);
+        }
 
-            Project project = Project.builder()
-                .name(name)
-                .subName(subName)
-                .overview(overview)
-                .thumbnailUrl(thumbnailUrl)
-                .githubUrl(githubUrl)
-                .startDate(startDate)
-                .endDate(endDate)
-                .ownerId(user.getId())
-                .description(description)
-                .build();
-
+        private Project createAndSaveProject(User user) {
+            Project project = FakeEntityProvider.createProject(user);
             return projectRepository.save(project);
+        }
+
+        @Test
+        void 존재하지_않는_기술_스택_Id로_기술_스택_목록_저장에_실패한다() {
+            // given
+            List<ProjectSkillSaveRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
+            techStacksWithNonExistSkill.add(
+                FakeDtoProvider.createProjectSkillSaveRequest(skill.getId() + 1)
+            );
+
+            // when
+            ThrowableAssert.ThrowingCallable saveAll =
+                () -> projectSkillService.saveAll(project, techStacksWithNonExistSkill);
+
+            // then
+            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(saveAll)
+                .withMessage(SKILL_NOT_EXISTING);
+        }
+
+        @Test
+        void 기술_스택_Id가_누락되어_기술_스택_목록_저장에_실패한다() {
+            // given
+            List<ProjectSkillSaveRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
+            techStacksWithNonExistSkill.add(
+                FakeDtoProvider.createProjectSkillSaveRequest(null)
+            );
+
+            // when
+            ThrowableAssert.ThrowingCallable saveAll =
+                () -> projectSkillService.saveAll(project, techStacksWithNonExistSkill);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage(SKILL_ID_IS_NULL);
         }
 
     }
