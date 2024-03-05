@@ -37,7 +37,7 @@ import sixgaezzang.sidepeek.projects.domain.Project;
 public class ProjectValidator {
 
     // Common
-    public static void validateProject(Project project) { // TODO: validator 분리
+    public static void validateProject(Project project) {
         Assert.notNull(project, PROJECT_IS_NULL);
     }
 
