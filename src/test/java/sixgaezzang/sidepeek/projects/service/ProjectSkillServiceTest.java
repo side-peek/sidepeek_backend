@@ -44,12 +44,16 @@ class ProjectSkillServiceTest {
 
     @Autowired
     ProjectSkillService projectSkillService;
+
     @Autowired
     ProjectSkillRepository projectSkillRepository;
+
     @Autowired
     SkillRepository skillRepository;
+
     @Autowired
     ProjectRepository projectRepository;
+    
     @Autowired
     UserRepository userRepository;
 

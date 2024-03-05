@@ -1,6 +1,5 @@
 package sixgaezzang.sidepeek.projects.service;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_OVER_MAX_COUNT;
@@ -86,7 +85,6 @@ class FileServiceTest {
             // then
             assertThat(savedImageUrls).isNull();
         }
-
 
         @Test
         void 목록_개수가_최대를_넘어서_파일_목록_저장에_실패한다() {
