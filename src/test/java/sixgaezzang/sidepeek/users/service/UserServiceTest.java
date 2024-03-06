@@ -4,6 +4,12 @@ import static io.micrometer.common.util.StringUtils.isBlank;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.DUPLICATE_EMAIL;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.DUPLICATE_NICKNAME;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_KEYWORD_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_PASSWORD_FORMAT;
 
 import jakarta.persistence.EntityExistsException;
 import java.util.List;
@@ -89,7 +95,7 @@ class UserServiceTest {
 
             // then
             assertThatExceptionOfType(EntityExistsException.class).isThrownBy(signup)
-                .withMessage("이미 사용 중인 이메일입니다.");
+                .withMessage(DUPLICATE_EMAIL.getMessage());
         }
 
         @Test
@@ -107,7 +113,7 @@ class UserServiceTest {
 
             // then
             assertThatExceptionOfType(EntityExistsException.class).isThrownBy(signup)
-                .withMessage("이미 사용 중인 닉네임입니다.");
+                .withMessage(DUPLICATE_NICKNAME.getMessage());
         }
 
         @Test
@@ -121,7 +127,7 @@ class UserServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
-                .withMessage("이메일 형식이 올바르지 않습니다.");
+                .withMessage(INVALID_EMAIL_FORMAT.getMessage());
         }
 
         @Test
@@ -135,7 +141,7 @@ class UserServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
-                .withMessage("비밀번호는 8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.");
+                .withMessage(INVALID_PASSWORD_FORMAT.getMessage());
         }
 
     }
@@ -187,7 +193,7 @@ class UserServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(search)
-                .withMessage("최대 " + MAX_NICKNAME_LENGTH + "자의 키워드로 검색할 수 있습니다.");
+                .withMessage(EXCESSIVE_KEYWORD_LENGTH.getMessage());
         }
 
     }
@@ -230,7 +236,7 @@ class UserServiceTest {
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(
                     checkEmailDuplicate)
-                .withMessage("유효하지 않은 이메일 형식입니다.");
+                .withMessage(INVALID_EMAIL_FORMAT.getMessage());
         }
     }
 
@@ -274,7 +280,7 @@ class UserServiceTest {
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(
                     checkNicknameDuplicate)
-                .withMessage("닉네임은 " + User.MAX_NICKNAME_LENGTH + "자 이하여야 합니다.");
+                .withMessage(EXCESSIVE_NICKNAME_LENGTH.getMessage());
         }
     }
 
