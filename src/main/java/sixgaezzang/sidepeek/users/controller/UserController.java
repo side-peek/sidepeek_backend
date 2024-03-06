@@ -128,8 +128,7 @@ public class UserController {
         @PathVariable
         Long id
     ) {
-        // TODO: 프로필 정보 조회 서비스 로직 구현
-        return null;
+        return ResponseEntity.ok(userService.getProfileById(id));
     }
 
     @PutMapping("/{id}")
