@@ -95,6 +95,8 @@ public class UserService {
         ValidationUtils.validateLoginId(loginId);
         UserValidator.validateUserId(id);
 
+        // TODO: 로그인 아이디와 id 비교
+
         User user = userRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
 
