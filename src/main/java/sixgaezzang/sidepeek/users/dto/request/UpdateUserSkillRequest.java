@@ -11,6 +11,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import sixgaezzang.sidepeek.skill.domain.Skill;
+import sixgaezzang.sidepeek.users.domain.User;
+import sixgaezzang.sidepeek.users.domain.UserSkill;
 
 @Schema(description = "회원 수정 요청 내 회원 기술 스택 정보")
 public record UpdateUserSkillRequest(
@@ -24,4 +27,13 @@ public record UpdateUserSkillRequest(
     @NotBlank(message = CATEGORY_IS_NULL)
     String category
 ) {
+
+    public UserSkill toEntity(User user, Skill skill) {
+        return UserSkill.builder()
+            .user(user)
+            .skill(skill)
+            .category(this.category)
+            .build();
+    }
+
 }
