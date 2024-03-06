@@ -7,6 +7,7 @@ import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
 import static sixgaezzang.sidepeek.users.domain.Password.PASSWORD_REGXP;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -61,6 +62,10 @@ public final class ValidationUtils {
 
     public static <T> void validateNotNullAndEmpty(Collection<T> input, String message) {
         Assert.isTrue(isNotNullOrEmpty(input), message);
+    }
+
+    public static void validateDeletedAt(LocalDateTime deletedAt) {
+        // TODO: 프로젝트 삭제와 공통 로직
     }
 
     public static <T> boolean isNotNullOrEmpty(Collection<T> input) {
