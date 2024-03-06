@@ -10,7 +10,6 @@ import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
 import static sixgaezzang.sidepeek.users.domain.Password.PASSWORD_REGXP;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -71,10 +70,6 @@ public final class ValidationUtils {
         validateTextLength(githubUrl, GITHUB_URL_OVER_MAX_LENGTH);
         validateNotBlank(githubUrl, GITHUB_URL_IS_NULL);
         validateURI(githubUrl, GITHUB_URL_IS_INVALID);
-    }
-
-    public static void validateDeletedAt(LocalDateTime deletedAt) {
-        // TODO: 프로젝트 삭제와 공통 로직
     }
 
     public static <T> boolean isNotNullOrEmpty(Collection<T> input) {
