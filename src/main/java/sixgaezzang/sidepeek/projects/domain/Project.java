@@ -2,16 +2,6 @@ package sixgaezzang.sidepeek.projects.domain;
 
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
-import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateDeployUrl;
-import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateDescription;
-import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateDuration;
-import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateGithubUrl;
-import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateName;
-import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOverview;
-import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
-import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateSubName;
-import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateThumbnailUrl;
-import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateTroubleshooting;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -29,8 +19,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
+import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.util.converter.YearMonthDateAttributeConverter;
+import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 
 @Entity
 @Table(name = "project")
@@ -121,20 +113,20 @@ public class Project extends BaseTimeEntity {
 
     private void validateConstructorRequiredArguments(String name, String overview, String githubUrl,
                                                       String description, Long ownerId) {
-        validateName(name);
-        validateOverview(overview);
-        validateGithubUrl(githubUrl);
-        validateDescription(description);
-        validateOwnerId(ownerId);
+        ProjectValidator.validateName(name);
+        ProjectValidator.validateOverview(overview);
+        ValidationUtils.validateGithubUrl(githubUrl);
+        ProjectValidator.validateDescription(description);
+        ProjectValidator.validateOwnerId(ownerId);
     }
 
     private void validateConstructorOptionArguments(String subName, String thumbnailUrl, String deployUrl,
                                                     String troubleshooting, YearMonth startDate, YearMonth endDate) {
-        validateSubName(subName);
-        validateThumbnailUrl(thumbnailUrl);
-        validateDeployUrl(deployUrl);
-        validateTroubleshooting(troubleshooting);
-        validateDuration(startDate, endDate);
+        ProjectValidator.validateSubName(subName);
+        ProjectValidator.validateThumbnailUrl(thumbnailUrl);
+        ProjectValidator.validateDeployUrl(deployUrl);
+        ProjectValidator.validateTroubleshooting(troubleshooting);
+        ProjectValidator.validateDuration(startDate, endDate);
     }
 
     public Project update(SaveProjectRequest request) {
