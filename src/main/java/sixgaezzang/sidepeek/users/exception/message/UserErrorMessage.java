@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserErrorMessage {
+    public static final String USER_ID_IS_NULL = "회원 Id를 입력해주세요.";
     public static final String USER_NOT_EXISTING = "User Id에 해당하는 회원이 없습니다.";
     public static final String NICKNAME_IS_NULL = "닉네임을 입력해주세요.";
     public static final String NICKNAME_OVER_MAX_LENGTH = "닉네임은 " + MAX_NICKNAME_LENGTH + "자 이하여야 합니다.";
