@@ -1,7 +1,8 @@
 package sixgaezzang.sidepeek.projects.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -34,7 +35,7 @@ public class ProjectController {
     @Operation(summary = "프로젝트 생성")
     @ApiResponse(responseCode = "201", description = "프로젝트 생성 성공")
     public ResponseEntity<ProjectResponse> save(
-        @Schema(description = "로그인한 회원 식별자")
+        @Parameter(description = "로그인한 회원 식별자", in = ParameterIn.HEADER)
         @Login
         Long loginId,
 
@@ -42,7 +43,7 @@ public class ProjectController {
         @RequestBody
         ProjectRequest request
     ) {
-        ProjectResponse response = projectService.save(request);
+        ProjectResponse response = projectService.save(loginId, null, request);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/projects/{id}")
             .buildAndExpand(response.id()).toUri();
@@ -55,11 +56,11 @@ public class ProjectController {
     @Operation(summary = "프로젝트 수정")
     @ApiResponse(responseCode = "200", description = "프로젝트 수정 성공(프로젝트 작성자/회원 멤버만 가능)")
     public ResponseEntity<ProjectResponse> update(
-        @Schema(description = "로그인한 회원 식별자")
+        @Parameter(description = "로그인한 회원 식별자", in = ParameterIn.HEADER)
         @Login
         Long loginId,
 
-        @Schema(description = "수정할 프로젝트 식별자")
+        @Parameter(description = "수정할 프로젝트 식별자", in = ParameterIn.PATH)
         @PathVariable(value = "id")
         Long projectId,
 
@@ -67,7 +68,7 @@ public class ProjectController {
         @RequestBody
         ProjectRequest request
     ) {
-        ProjectResponse response = projectService.update(loginId, projectId, request);
+        ProjectResponse response = projectService.save(loginId, projectId, request);
 
         return ResponseEntity.ok(response);
     }
@@ -76,11 +77,11 @@ public class ProjectController {
     @Operation(summary = "프로젝트 삭제")
     @ApiResponse(responseCode = "204", description = "프로젝트 삭제 성공(프로젝트 작성자만 가능)")
     public ResponseEntity<Void> delete(
-        @Schema(description = "로그인한 회원 식별자")
+        @Parameter(description = "로그인한 회원 식별자", in = ParameterIn.HEADER)
         @Login
         Long loginId,
 
-        @Schema(description = "삭제할 프로젝트 식별자")
+        @Parameter(description = "삭제할 프로젝트 식별자", in = ParameterIn.PATH)
         @PathVariable(value = "id")
         Long projectId
     ) {
@@ -94,7 +95,9 @@ public class ProjectController {
     @Operation(summary = "프로젝트 상세 조회")
     @ApiResponse(responseCode = "200", description = "프로젝트 상세 조회 성공")
     public ResponseEntity<ProjectResponse> getById(
-        @PathVariable Long id
+        @Parameter(description = "조회할 프로젝트 식별자", in = ParameterIn.PATH)
+        @PathVariable
+        Long id
     ) {
         ProjectResponse response = projectService.findById(id);
 

@@ -9,4 +9,7 @@ public interface ProjectSkillRepository extends JpaRepository<ProjectSkill, Long
 
     List<ProjectSkill> findAllByProject(Project project);
 
+    void deleteAllByProject(Project project);
+
+    boolean existsByProject(Project project);
 }

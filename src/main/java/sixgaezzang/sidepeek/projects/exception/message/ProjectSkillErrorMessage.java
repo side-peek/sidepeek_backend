@@ -2,6 +2,10 @@ package sixgaezzang.sidepeek.projects.exception.message;
 
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProjectSkillErrorMessage {
 
     public static final String PROJECT_TECH_STACKS_IS_NULL = "기술 스택들을 입력해주세요.";

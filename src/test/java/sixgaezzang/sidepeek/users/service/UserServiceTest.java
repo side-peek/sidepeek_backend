@@ -8,6 +8,7 @@ import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICK
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import jakarta.persistence.EntityExistsException;
+import java.util.ArrayList;
 import java.util.List;
 import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -17,12 +18,13 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
+import sixgaezzang.sidepeek.projects.util.FakeValueProvider;
 import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
@@ -50,11 +52,25 @@ class UserServiceTest {
     String password;
     String nickname;
 
+    static final int USER_COUNT = 5;
+    List<String> userNicknames;
+
     @BeforeEach
     void setUp() {
-        email = faker.internet().emailAddress();
-        password = faker.internet().password(8, 100, true, true, true);
-        nickname = faker.internet().username();
+        email = FakeValueProvider.createEmail();
+        password = FakeValueProvider.createPassword();
+        nickname = FakeValueProvider.createNickname();
+
+        userRepository.deleteAll(); // TODO: 아래 TODO 참고!
+        userNicknames = new ArrayList<>();
+        for (int i = 0; i < USER_COUNT; i++) {
+            userNicknames.add(createAndSaveUser().getNickname());
+        }
+    }
+
+    private User createAndSaveUser() {
+        User newUser = FakeEntityProvider.createUser();
+        return userRepository.save(newUser);
     }
 
     @Nested
@@ -101,7 +117,7 @@ class UserServiceTest {
             User user = createUser(email, password, duplicatedNickname);
             userRepository.save(user);
 
-            String newEmail = faker.internet().emailAddress();
+            String newEmail = FakeValueProvider.createEmail();
             SignUpRequest request = new SignUpRequest(newEmail, password, duplicatedNickname);
 
             // when
@@ -145,17 +161,6 @@ class UserServiceTest {
     @Nested
     class 회원_닉네임_검색_테스트 {
 
-        static final int USER_COUNT = 5;
-        static final String[] users = {"zzang1", "zzang2", "zzang3", "coco1", "coco2"};
-
-        @BeforeEach
-        void setUp() {
-            for (int i = 0; i < USER_COUNT; i++) {
-                User user = createUser(users[i] + "@google.com", password, users[i]);
-                userRepository.save(user);
-            }
-        }
-
         @ParameterizedTest(name = "[{index}] {0}으로 검색할 때 " + USER_COUNT + "명의 모든 회원이 나온다.")
         @NullAndEmptySource
         void 검색어_없이_전체_회원_닉네임_검색에_성공한다(String keyword) {
@@ -164,13 +169,22 @@ class UserServiceTest {
                 .users();
 
             // then
-            assertThat(users.size()).isEqualTo(USER_COUNT);
+            // TODO: 분명 5개를 BeforeEach로 저장했는데 그 이상이 나온다.
+            assertThat(users).hasSize(USER_COUNT);
         }
 
-        @ParameterizedTest(name = "[{index}] {0}으로 검색할 때 {1}명의 회원이 나온다.")
-        @CsvSource(value = {"zzang:3", "coco:2"}, delimiter = ':')
-        void 검색어로_회원_닉네임_검색에_성공한다(String keyword, int count) {
-            // given, when
+        @Test
+        void 검색어로_회원_닉네임_검색에_성공한다() {
+            // given,
+            String keyword = FakeValueProvider.createEnglishKeyword();
+            int count = 0;
+            for (String nickname : userNicknames) {
+                if (nickname.contains(keyword)) {
+                    count++;
+                }
+            }
+
+            // when
             List<UserSummary> users = userService.searchByNickname(keyword)
                 .users();
 

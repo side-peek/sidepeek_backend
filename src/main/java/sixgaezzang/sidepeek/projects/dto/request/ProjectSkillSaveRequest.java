@@ -2,15 +2,18 @@ package sixgaezzang.sidepeek.projects.dto.request;
 
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MIN_ID;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LENGTH;
-import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.CATEGORY_IS_NULL;
-import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.CATEGORY_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.SKILL_ID_IS_NULL;
+import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.CATEGORY_IS_NULL;
+import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.CATEGORY_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_ID_IS_NULL;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
+import sixgaezzang.sidepeek.skill.domain.Skill;
 
 @Schema(description = "프로젝트 생성 요청에서 프로젝트 기술 스택 정보")
 public record ProjectSkillSaveRequest(
@@ -24,4 +27,12 @@ public record ProjectSkillSaveRequest(
     @NotBlank(message = CATEGORY_IS_NULL)
     String category
 ) {
+
+    public ProjectSkill toEntity(Project project, Skill skill) {
+        return ProjectSkill.builder()
+            .project(project)
+            .skill(skill)
+            .category(this.category())
+            .build();
+    }
 }

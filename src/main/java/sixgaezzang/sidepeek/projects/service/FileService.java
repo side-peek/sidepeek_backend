@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.projects.service;
 
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,15 @@ public class FileService {
     @Transactional
     public List<OverviewImageSummary> saveAll(Project project, List<String> overviewImageUrls) {
         ProjectValidator.validateProject(project);
+        if (fileRepository.existsByProject(project)) {
+            fileRepository.deleteAllByProjectAndType(project, FileType.OVERVIEW_IMAGE);
+        }
+
         if (!ValidationUtils.isNotNullOrEmpty(overviewImageUrls)) {
-            return null;
+            return Collections.emptyList();
         }
 
         FileValidator.validateFiles(overviewImageUrls);
-
         List<File> overviewImages = overviewImageUrls.stream()
             .map(
                 overviewImage -> File.builder()

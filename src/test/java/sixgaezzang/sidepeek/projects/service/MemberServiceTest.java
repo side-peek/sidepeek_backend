@@ -2,7 +2,9 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
-import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBERS_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_EMPTY;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_NOT_INCLUDE_OWNER;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
 
@@ -46,10 +48,11 @@ class MemberServiceTest {
     UserRepository userRepository;
 
     @Nested
-    class 멤버_저장_테스트 {
+    class 멤버_저장_및_수정_테스트 {
 
         static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
         static List<MemberSaveRequest> members;
+        static int USER_INDEX = 0;
         static List<MemberSaveRequest> overLengthMembers;
         Project project;
         User user;
@@ -58,9 +61,8 @@ class MemberServiceTest {
         void setup() {
             overLengthMembers = new ArrayList<>();
             for (int i = 1; i <= MAX_MEMBER_COUNT / 2; i++) {
-                User savedUser = createAndSaveUser();
                 overLengthMembers.add(
-                    FakeDtoProvider.createFellowMemberSaveRequest(savedUser.getId())
+                    FakeDtoProvider.createFellowMemberSaveRequest(createAndSaveUser().getId())
                 );
                 overLengthMembers.add(
                     FakeDtoProvider.createNonFellowMemberSaveRequest()
@@ -68,15 +70,14 @@ class MemberServiceTest {
             }
 
             user = createAndSaveUser();
-            overLengthMembers.add(
-                FakeDtoProvider.createFellowMemberSaveRequest(user.getId())
-            );
+            overLengthMembers.add(USER_INDEX, FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
+
             project = createAndSaveProject(user);
             members = overLengthMembers.subList(0, MEMBER_COUNT);
         }
 
         @Test
-        void 프로젝트_멤버_목록_저장에_성공한다() {
+        void 작성자를_포함한_프로젝트_멤버_목록_저장에_성공한다() {
             // given, when
             List<MemberSummary> savedMembers = memberService.saveAll(project, members);
 
@@ -86,12 +87,13 @@ class MemberServiceTest {
 
         @ParameterizedTest
         @NullAndEmptySource
-        void 빈_멤버_목록_저장은_무시되어_성공한다(List<MemberSaveRequest> emptyMembers) {
+        void 빈_멤버_목록_저장은_실패한다(List<MemberSaveRequest> emptyMembers) {
             // given, when
-            List<MemberSummary> savedMembers = memberService.saveAll(project, emptyMembers);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, emptyMembers);
 
             // then
-            assertThat(savedMembers).isNull();
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage(MEMBER_IS_EMPTY);
         }
 
         @Test
@@ -101,7 +103,7 @@ class MemberServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage(MEMBERS_OVER_MAX_COUNT);
+                .withMessage(MEMBER_OVER_MAX_COUNT);
         }
 
         @Test
@@ -153,14 +155,46 @@ class MemberServiceTest {
                 .withMessage(message);
         }
 
+        @Test
+        void 작성자가_포함_되어있지_않아_멤버_목록_저장에_실패한다() {
+            // given
+            List<MemberSaveRequest> membersWithoutOwner = new ArrayList<>(members);
+            membersWithoutOwner.remove(USER_INDEX);
+
+            // when
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, membersWithoutOwner);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage(MEMBER_NOT_INCLUDE_OWNER);
+        }
+
+        @Test
+        void 기존_프로젝트_멤버_목록을_지우고_새로운_멤버_목록_수정에_성공한다() {
+            // given
+            memberService.saveAll(project, members);
+            List<MemberSummary> originalMembers = memberService.findAllWithUser(project);
+
+            // when
+            List<MemberSaveRequest> membersOnlyOwner = new ArrayList<>();
+            membersOnlyOwner.add(FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
+
+            memberService.saveAll(project, membersOnlyOwner);
+            List<MemberSummary> savedMembers = memberService.findAllWithUser(project);
+
+            // then
+            assertThat(originalMembers).isNotEqualTo(savedMembers);
+            assertThat(savedMembers).hasSameSizeAs(membersOnlyOwner);
+        }
+
         private User createAndSaveUser() {
-            user = FakeEntityProvider.createUser();
-            return userRepository.save(user);
+            User newUser = FakeEntityProvider.createUser();
+            return userRepository.save(newUser);
         }
 
         private Project createAndSaveProject(User user) {
-            project = FakeEntityProvider.createProject(user);
-            return projectRepository.save(project);
+            Project newProject = FakeEntityProvider.createProject(user);
+            return projectRepository.save(newProject);
         }
     }
 }

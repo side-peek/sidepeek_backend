@@ -38,6 +38,10 @@ public class FakeValueProvider {
         return FAKER.internet().url();
     }
 
+    public static String createEnglishKeyword() { // 검색 키워드(영어)
+        return FAKER.text().text(1, 2);
+    }
+
     // Project
     public static String createProjectName() { // 프로젝트 제목/부제목
         return checkAndCutLength(FAKER.name().title(), MAX_PROJECT_NAME_LENGTH);
@@ -64,4 +68,13 @@ public class FakeValueProvider {
     public static String createNickname() {
         return checkAndCutLength(FAKER.internet().username(), MAX_NICKNAME_LENGTH);
     }
+
+    public static String createEmail() {
+        return FAKER.internet().emailAddress();
+    }
+
+    public static String createPassword() {
+        return FAKER.internet().password(8, 100, true, true, true);
+    }
+
 }

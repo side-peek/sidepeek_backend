@@ -26,8 +26,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
+import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
 import sixgaezzang.sidepeek.projects.util.converter.YearMonthDateAttributeConverter;
 
 @Entity
@@ -82,6 +84,7 @@ public class Project extends BaseTimeEntity {
     @Column(name = "view_count", nullable = false)
     private Long viewCount;
 
+    @Setter
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
@@ -134,4 +137,27 @@ public class Project extends BaseTimeEntity {
         validateDuration(startDate, endDate);
     }
 
+    public Project update(ProjectRequest request) {
+        validateConstructorRequiredArguments(request.name(), request.overview(), request.githubUrl(),
+            request.description(), request.ownerId());
+        validateConstructorOptionArguments(request.subName(), request.thumbnailUrl(), request.deployUrl(),
+            request.troubleShooting(), request.startDate(), request.endDate());
+
+        // Required
+        this.name = request.name();
+        this.overview = request.overview();
+        this.githubUrl = request.githubUrl();
+        this.description = request.description();
+        this.ownerId = request.ownerId();
+
+        // Option
+        this.subName = request.subName();
+        this.startDate = request.startDate();
+        this.endDate = request.endDate();
+        this.thumbnailUrl = request.thumbnailUrl();
+        this.deployUrl = request.deployUrl();
+        this.troubleshooting = request.troubleShooting();
+
+        return this;
+    }
 }
