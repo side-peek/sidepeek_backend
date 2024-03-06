@@ -18,7 +18,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     public List<CommentResponse> findAll(Project project) {
-        List<Comment> comments = commentRepository.findAllByProject(project);
+        List<Comment> comments = commentRepository.findAll(project);
         return comments.stream()
             .map(comment -> {
                 boolean isOwner = isSameOwner(comment, project);
@@ -33,7 +33,7 @@ public class CommentService {
     }
 
     private List<ReplyResponse> mapReplies(Comment comment) {
-        List<Comment> replies = commentRepository.findAllByParent(comment);
+        List<Comment> replies = commentRepository.findAllReplies(comment);
         return replies.stream()
             .map(reply -> {
                 boolean isOwner = isSameOwner(reply, reply.getProject());
