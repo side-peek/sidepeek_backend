@@ -19,8 +19,11 @@ public record UserSkillSummary(
 ) {
 
     public static UserSkillSummary from(UserSkill userSkill) {
-        return new UserSkillSummary(
-            userSkill.getId(), userSkill.getCategory(), SkillResponse.from(userSkill.getSkill()));
+        return UserSkillSummary.builder()
+            .id(userSkill.getId())
+            .category(userSkill.getCategory())
+            .skill(SkillResponse.from(userSkill.getSkill()))
+            .build();
     }
 
 }
