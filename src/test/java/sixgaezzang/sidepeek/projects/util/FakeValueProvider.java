@@ -13,6 +13,7 @@ import java.util.List;
 import net.datafaker.Faker;
 
 public class FakeValueProvider {
+
     private static final Faker FAKER = new Faker();
 
     // Common
@@ -75,6 +76,11 @@ public class FakeValueProvider {
 
     public static String createPassword() {
         return FAKER.internet().password(8, 100, true, true, true);
+    }
+
+    // Comment
+    public static String createContent() {
+        return FAKER.lorem().sentence();
     }
 
 }
