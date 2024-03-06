@@ -155,9 +155,9 @@ public class User extends BaseTimeEntity {
         }
     }
 
-    public void setDeletedAt(LocalDateTime deletedAt) {
+    public void delete() {
         if (Objects.isNull(this.deletedAt)) {
-            this.deletedAt = deletedAt;
+            this.deletedAt = LocalDateTime.now();
             return;
         }
         throw new IllegalStateException(USER_ALREADY_DELETED);
