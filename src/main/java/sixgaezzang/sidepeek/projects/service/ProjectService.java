@@ -11,6 +11,8 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
+import sixgaezzang.sidepeek.comments.service.CommentService;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
@@ -36,6 +38,7 @@ public class ProjectService {
     private final MemberService memberService;
     private final FileService fileService;
     private final LikeRepository likeRepository;
+    private final CommentService commentService;
 
     @Transactional
     public ProjectResponse save(Long loginId, Long projectId, ProjectRequest request) {
@@ -93,7 +96,9 @@ public class ProjectService {
 
         List<MemberSummary> members = memberService.findAllWithUser(project);
 
-        return ProjectResponse.from(project, overviewImages, techStacks, members);
+        List<CommentResponse> comments = commentService.findAll(project);
+
+        return ProjectResponse.from(project, overviewImages, techStacks, members, comments);
     }
 
     @Transactional
