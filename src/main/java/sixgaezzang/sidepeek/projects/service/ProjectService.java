@@ -5,6 +5,7 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.common.util.ValidationUtils;
+import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
@@ -32,6 +35,7 @@ public class ProjectService {
     private final ProjectSkillService projectSkillService;
     private final MemberService memberService;
     private final FileService fileService;
+    private final LikeRepository likeRepository;
 
     @Transactional
     public ProjectResponse save(Long loginId, Long projectId, ProjectRequest request) {
@@ -57,6 +61,14 @@ public class ProjectService {
         List<OverviewImageSummary> overviewImages = fileService.saveAll(project, request.overviewImageUrls());
 
         return ProjectResponse.from(project, overviewImages, techStacks, members);
+    }
+
+    public List<ProjectListResponse> findAll(Long userId, String sort, boolean isReleased) {
+        List<Long> likedProjectIds =
+            (userId != null) ? likeRepository.findAllProjectIdsByUser(userId)
+                : Collections.emptyList();
+
+        return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, isReleased);
     }
 
     @Transactional
