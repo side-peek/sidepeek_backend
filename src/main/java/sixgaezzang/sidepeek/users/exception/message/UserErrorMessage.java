@@ -11,13 +11,32 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserErrorMessage {
+    // Common
     public static final String USER_ID_IS_NULL = "회원 Id를 입력해주세요.";
     public static final String USER_NOT_EXISTING = "User Id에 해당하는 회원이 없습니다.";
+
+    // Nickname
     public static final String NICKNAME_IS_NULL = "닉네임을 입력해주세요.";
     public static final String NICKNAME_OVER_MAX_LENGTH = "닉네임은 " + MAX_NICKNAME_LENGTH + "자 이하여야 합니다.";
+
+    // Profile Image URL
+    public static final String PROFILE_IMAGE_URL_OVER_MAX_LENGTH =
+        "프로필 이미지 url은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다.";
+    public static final String PROFILE_IMAGE_URL_IS_INVALID = "프로필 이미지 URL 형식이 유효하지 않습니다.";
+
+    // Introduction
     public static final String INTRODUCTION_OVER_MAX_LENGTH = "소개글은 " + MAX_INTRODUCTION_LENGTH + "자 이하여야 합니다.";
+
+    // Job
+    public static final String JOB_IS_INVALID = "직업 정보가 유효하지 않습니다.";
     public static final String JOB_OVER_MAX_LENGTH = "직업은 " + MAX_JOB_LENGTH + "자 이하여야 합니다.";
+
+    // Career
+    public static final String CAREER_IS_INVALID = "경력 정보가 유효하지 않습니다.";
     public static final String CAREER_OVER_MAX_LENGTH = "경력은 " + MAX_CAREER_LENGTH + "자 이하여야 합니다.";
+
+    // Blog URL
     public static final String BLOG_URL_OVER_MAX_LENGTH = "블로그 URL은" + MAX_TEXT_LENGTH + "자 이하여야 합니다.";
+    public static final String BLOG_URL_IS_INVALID = "블로그 URL 형식이 유효하지 않습니다.";
 
 }
