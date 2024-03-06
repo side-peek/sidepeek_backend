@@ -6,7 +6,7 @@ import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -64,11 +64,11 @@ public class UserController {
     @Operation(summary = "비밀번호 수정")
     @ApiResponse(responseCode = "204", description = "비밀번호 수정 성공")
     public ResponseEntity<Void> updatePassword(
-        @Schema(description = "로그인한 회원 식별자(토큰에서 추출)")
+        @Parameter(description = "로그인한 회원 식별자(토큰에서 추출)", in = ParameterIn.HEADER)
         @Login
         Long loginId,
 
-        @Schema(description = "수정할 회원 식별자")
+        @Parameter(description = "수정할 회원 식별자", in = ParameterIn.PATH)
         @PathVariable
         Long id,
 
@@ -124,7 +124,7 @@ public class UserController {
     @Operation(summary = "회원 프로필 정보 조회")
     @ApiResponse(responseCode = "200", description = "회원 프로필 정보 조회 성공")
     public ResponseEntity<UserProfileResponse> getById(
-        @Schema(description = "회원 식별자")
+        @Parameter(description = "회원 식별자", in = ParameterIn.PATH)
         @PathVariable
         Long id
     ) {
@@ -135,11 +135,11 @@ public class UserController {
     @Operation(summary = "회원 프로필 정보 수정")
     @ApiResponse(responseCode = "200", description = "회원 프로필 정보 조회 성공")
     public ResponseEntity<UserProfileResponse> update(
-        @Schema(description = "로그인한 회원 식별자(토큰에서 추출)")
+        @Parameter(description = "로그인한 회원 식별자(토큰에서 추출)", in = ParameterIn.HEADER)
         @Login
         Long loginId,
 
-        @Schema(description = "수정할 회원 식별자")
+        @Parameter(description = "수정할 회원 식별자", in = ParameterIn.PATH)
         @PathVariable
         Long id,
 
