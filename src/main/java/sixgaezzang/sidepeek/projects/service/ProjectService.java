@@ -87,7 +87,6 @@ public class ProjectService {
     public void delete(Long loginId, Long projectId) {
         ValidationUtils.validateLoginId(loginId);
 
-        // TODO: 생성, 수정할 땐 ownerId와 loginId를 비교하는 로직이 있다. 여기에도 적용하는 것이 좋을까?
         Project project = projectRepository.findById(projectId)
             .orElseThrow(
                 () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
