@@ -49,7 +49,7 @@ public class ProjectService {
                     () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
             validateLoginUserIncludeMembers(loginId, project);
 
-            project = project.update(request);
+            project.update(request);
         }
 
         List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project, request.techStacks());
