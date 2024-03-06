@@ -88,81 +88,6 @@ public class User extends BaseTimeEntity {
         return password.check(rawPassword, passwordEncoder);
     }
 
-    private void validateConstructorArguments(String nickname, String email) {
-        validateNickname(nickname);
-        validateEmail(email, INVALID_EMAIL_FORMAT.getMessage());
-    }
-
-    private void validateNickname(String nickname) {
-        validateNotBlank(nickname, BLANK_NICKNAME.getMessage());
-        validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
-            EXCESSIVE_NICKNAME_LENGTH.getMessage());
-    }
-
-    public void setNickname(String nickname) {
-        if (!Objects.equals(this.nickname, nickname)) {
-            UserValidator.validateNickname(nickname);
-            this.nickname = nickname;
-        }
-    }
-
-    public void setPassword(Password password) {
-        if (!Objects.equals(this.password, password)) {
-            UserValidator.validatePassword(password);
-            this.password = password;
-        }
-    }
-
-    public void setIntroduction(String introduction) {
-        if (Objects.nonNull(introduction) && !Objects.equals(this.introduction, introduction)) {
-            UserValidator.validateIntroduction(introduction);
-            this.introduction = introduction;
-        }
-    }
-
-    public void setProfileImageUrl(String profileImageUrl) {
-        if (Objects.nonNull(profileImageUrl) && !Objects.equals(this.profileImageUrl, profileImageUrl)) {
-            UserValidator.validateProfileImageUrl(profileImageUrl);
-            this.profileImageUrl = profileImageUrl;
-        }
-    }
-
-    public void setJob(String jobName) {
-        if (Objects.nonNull(jobName) && !jobName.isBlank() && !Objects.equals(this.job.getName(), jobName)) {
-            UserValidator.validateJob(jobName);
-            this.job = Job.valueOf(jobName);
-        }
-    }
-
-    public void setCareer(String careerDescription) {
-        if (Objects.nonNull(careerDescription) && !Objects.equals(this.career.getDescription(), careerDescription)) {
-            UserValidator.validateCareer(careerDescription);
-            this.career = Career.valueOf(careerDescription);
-        }
-    }
-
-    public void setGithubUrl(String githubUrl) {
-        if (Objects.nonNull(githubUrl) && !Objects.equals(this.githubUrl, githubUrl)) {
-            ValidationUtils.validateGithubUrl(githubUrl);
-            this.githubUrl = githubUrl;
-        }
-    }
-
-    public void setBlogUrl(String blogUrl) {
-        if (Objects.nonNull(blogUrl) && !Objects.equals(this.blogUrl, blogUrl)) {
-            UserValidator.validateBlogUrl(blogUrl);
-            this.blogUrl = blogUrl;
-        }
-    }
-
-    public void softDelete() {
-        if (Objects.isNull(this.deletedAt)) {
-            this.deletedAt = LocalDateTime.now();
-            return;
-        }
-        throw new IllegalStateException(USER_ALREADY_DELETED);
-    }
-
     public void update(UpdateUserProfileRequest request) {
         // Required
         setNickname(request.nickname());
@@ -175,4 +100,80 @@ public class User extends BaseTimeEntity {
         setGithubUrl(request.githubUrl());
         setBlogUrl(request.blogUrl());
     }
+
+    public void softDelete() {
+        if (Objects.isNull(this.deletedAt)) {
+            this.deletedAt = LocalDateTime.now();
+            return;
+        }
+        throw new IllegalStateException(USER_ALREADY_DELETED);
+    }
+
+    private void validateConstructorArguments(String nickname, String email) {
+        validateNickname(nickname);
+        validateEmail(email, INVALID_EMAIL_FORMAT.getMessage());
+    }
+
+    private void validateNickname(String nickname) {
+        validateNotBlank(nickname, BLANK_NICKNAME.getMessage());
+        validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
+            EXCESSIVE_NICKNAME_LENGTH.getMessage());
+    }
+
+    private void setNickname(String nickname) {
+        if (!Objects.equals(this.nickname, nickname)) {
+            UserValidator.validateNickname(nickname);
+            this.nickname = nickname;
+        }
+    }
+
+    private void setPassword(Password password) {
+        if (!Objects.equals(this.password, password)) {
+            UserValidator.validatePassword(password);
+            this.password = password;
+        }
+    }
+
+    private void setIntroduction(String introduction) {
+        if (Objects.nonNull(introduction) && !Objects.equals(this.introduction, introduction)) {
+            UserValidator.validateIntroduction(introduction);
+            this.introduction = introduction;
+        }
+    }
+
+    private void setProfileImageUrl(String profileImageUrl) {
+        if (Objects.nonNull(profileImageUrl) && !Objects.equals(this.profileImageUrl, profileImageUrl)) {
+            UserValidator.validateProfileImageUrl(profileImageUrl);
+            this.profileImageUrl = profileImageUrl;
+        }
+    }
+
+    private void setJob(String jobName) {
+        if (Objects.nonNull(jobName) && !jobName.isBlank() && !Objects.equals(this.job.getName(), jobName)) {
+            UserValidator.validateJob(jobName);
+            this.job = Job.valueOf(jobName);
+        }
+    }
+
+    private void setCareer(String careerDescription) {
+        if (Objects.nonNull(careerDescription) && !Objects.equals(this.career.getDescription(), careerDescription)) {
+            UserValidator.validateCareer(careerDescription);
+            this.career = Career.valueOf(careerDescription);
+        }
+    }
+
+    private void setGithubUrl(String githubUrl) {
+        if (Objects.nonNull(githubUrl) && !Objects.equals(this.githubUrl, githubUrl)) {
+            ValidationUtils.validateGithubUrl(githubUrl);
+            this.githubUrl = githubUrl;
+        }
+    }
+
+    private void setBlogUrl(String blogUrl) {
+        if (Objects.nonNull(blogUrl) && !Objects.equals(this.blogUrl, blogUrl)) {
+            UserValidator.validateBlogUrl(blogUrl);
+            this.blogUrl = blogUrl;
+        }
+    }
+
 }
