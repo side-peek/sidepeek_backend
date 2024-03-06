@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
-import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
@@ -51,9 +51,9 @@ class MemberServiceTest {
     class 멤버_저장_및_수정_테스트 {
 
         static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
-        static List<MemberSaveRequest> members;
+        static List<SaveMemberRequest> members;
         static int USER_INDEX = 0;
-        static List<MemberSaveRequest> overLengthMembers;
+        static List<SaveMemberRequest> overLengthMembers;
         Project project;
         User user;
 
@@ -87,7 +87,7 @@ class MemberServiceTest {
 
         @ParameterizedTest
         @NullAndEmptySource
-        void 빈_멤버_목록_저장은_실패한다(List<MemberSaveRequest> emptyMembers) {
+        void 빈_멤버_목록_저장은_실패한다(List<SaveMemberRequest> emptyMembers) {
             // given, when
             ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, emptyMembers);
 
@@ -122,7 +122,7 @@ class MemberServiceTest {
         @Test
         void 존재하지_않는_회원이_멤버여서_멤버_목록_저장에_실패한다() {
             // given
-            List<MemberSaveRequest> membersWithNonExistFellowMember = new ArrayList<>(members);
+            List<SaveMemberRequest> membersWithNonExistFellowMember = new ArrayList<>(members);
             membersWithNonExistFellowMember.add(
                 FakeDtoProvider.createFellowMemberSaveRequest(user.getId() + 1)
             );
@@ -142,9 +142,9 @@ class MemberServiceTest {
             String testMessage, boolean isFellow, String nickname, String role, String message
         ) {
             // given
-            List<MemberSaveRequest> membersWithInvalidMember = new ArrayList<>(members);
+            List<SaveMemberRequest> membersWithInvalidMember = new ArrayList<>(members);
             membersWithInvalidMember.add(
-                new MemberSaveRequest(isFellow ? user.getId() : null, nickname, role)
+                new SaveMemberRequest(isFellow ? user.getId() : null, nickname, role)
             );
 
             // when
@@ -158,7 +158,7 @@ class MemberServiceTest {
         @Test
         void 작성자가_포함_되어있지_않아_멤버_목록_저장에_실패한다() {
             // given
-            List<MemberSaveRequest> membersWithoutOwner = new ArrayList<>(members);
+            List<SaveMemberRequest> membersWithoutOwner = new ArrayList<>(members);
             membersWithoutOwner.remove(USER_INDEX);
 
             // when
@@ -176,7 +176,7 @@ class MemberServiceTest {
             List<MemberSummary> originalMembers = memberService.findAllWithUser(project);
 
             // when
-            List<MemberSaveRequest> membersOnlyOwner = new ArrayList<>();
+            List<SaveMemberRequest> membersOnlyOwner = new ArrayList<>();
             membersOnlyOwner.add(FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
 
             memberService.saveAll(project, membersOnlyOwner);

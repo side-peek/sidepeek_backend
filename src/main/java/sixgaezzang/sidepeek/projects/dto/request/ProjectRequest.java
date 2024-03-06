@@ -111,7 +111,7 @@ public record ProjectRequest(
     @Schema(description = "프로젝트 레이아웃 멤버 목록")
     @Size(max = MAX_MEMBER_COUNT, message = MEMBER_OVER_MAX_COUNT)
     @NotEmpty(message = MEMBER_IS_EMPTY)
-    List<MemberSaveRequest> members
+    List<SaveMemberRequest> members
 ) {
 
     public Project toEntity() {

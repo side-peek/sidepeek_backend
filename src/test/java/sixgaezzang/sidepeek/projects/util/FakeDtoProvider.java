@@ -5,7 +5,7 @@ import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createRole;
 
 import java.time.YearMonth;
 import java.util.List;
-import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 
@@ -19,7 +19,7 @@ public class FakeDtoProvider {
     // Project
     public static ProjectRequest createProjectSaveRequestOnlyRequired(
         String name, String overview, String githubUrl, String description, Long ownerId,
-        List<ProjectSkillSaveRequest> techStacks, List<MemberSaveRequest> members
+        List<ProjectSkillSaveRequest> techStacks, List<SaveMemberRequest> members
     ) {
         return new ProjectRequest(name, overview, ownerId, githubUrl, description,
             techStacks, null, null, null, null,
@@ -38,11 +38,11 @@ public class FakeDtoProvider {
     }
 
     // Member
-    public static MemberSaveRequest createFellowMemberSaveRequest(Long userId) {
-        return new MemberSaveRequest(userId, null, createRole());
+    public static SaveMemberRequest createFellowMemberSaveRequest(Long userId) {
+        return new SaveMemberRequest(userId, null, createRole());
     }
 
-    public static MemberSaveRequest createNonFellowMemberSaveRequest() {
-        return new MemberSaveRequest(null, createNickname(), createRole());
+    public static SaveMemberRequest createNonFellowMemberSaveRequest() {
+        return new SaveMemberRequest(null, createNickname(), createRole());
     }
 }

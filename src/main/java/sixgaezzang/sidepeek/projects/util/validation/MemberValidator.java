@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.users.domain.User;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberValidator {
 
-    public static void validateMembers(Long ownerId, List<MemberSaveRequest> members) {
+    public static void validateMembers(Long ownerId, List<SaveMemberRequest> members) {
         Assert.notEmpty(members, MEMBER_IS_EMPTY);
         Assert.isTrue(members.size() < MAX_MEMBER_COUNT, MEMBER_OVER_MAX_COUNT);
         members.stream().filter(member -> Objects.equals(member.userId(), ownerId))

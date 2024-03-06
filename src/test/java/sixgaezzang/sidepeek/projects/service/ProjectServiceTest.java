@@ -28,7 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.projects.domain.Project;
-import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
@@ -50,7 +50,7 @@ class ProjectServiceTest {
     static final Faker faker = new Faker();
     static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
     static final int PROJECT_SKILL_COUNT = MAX_PROJECT_SKILL_COUNT / 2;
-    static List<MemberSaveRequest> members;
+    static List<SaveMemberRequest> members;
     static List<Long> fellowMemberIds;
     static List<ProjectSkillSaveRequest> techStacks;
     static String NAME = FakeValueProvider.createProjectName();
