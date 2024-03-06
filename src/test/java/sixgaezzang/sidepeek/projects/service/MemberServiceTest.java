@@ -11,6 +11,8 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUN
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -93,6 +95,23 @@ class MemberServiceTest {
 
             // then
             assertThat(savedMembers).hasSize(MEMBER_COUNT);
+        }
+
+        @Test
+        void 닉네임을_기존과_다르게_설정한_회원_멤버를_포함하여_멤버_목록_저장에_성공한다() {
+            // given
+            Long userId = user.getId();
+            String originalNickname = user.getNickname();
+
+            // when
+            List<MemberSummary> savedMembers = memberService.saveAll(project, members);
+            Optional<MemberSummary> fellowMember = savedMembers.stream()
+                .filter(member -> Objects.equals(member.userSummary().id(), userId))
+                .findFirst();
+
+            // then
+            assertThat(fellowMember).isNotEmpty();
+            assertThat(originalNickname).isNotEqualTo(fellowMember.get().userSummary().nickname());
         }
 
         @ParameterizedTest
