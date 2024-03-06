@@ -47,34 +47,44 @@ class MemberServiceTest {
     @Autowired
     UserRepository userRepository;
 
+    static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
+    static List<SaveMemberRequest> members;
+    static int USER_INDEX = 0;
+    static List<SaveMemberRequest> overLengthMembers;
+    Project project;
+    User user;
+
+    @BeforeEach
+    void setup() {
+        overLengthMembers = new ArrayList<>();
+        for (int i = 1; i <= MAX_MEMBER_COUNT / 2; i++) {
+            overLengthMembers.add(
+                FakeDtoProvider.createFellowMemberSaveRequest(createAndSaveUser().getId())
+            );
+            overLengthMembers.add(
+                FakeDtoProvider.createNonFellowMemberSaveRequest()
+            );
+        }
+
+        user = createAndSaveUser();
+        overLengthMembers.add(USER_INDEX, FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
+
+        project = createAndSaveProject(user);
+        members = overLengthMembers.subList(0, MEMBER_COUNT);
+    }
+
+    private User createAndSaveUser() {
+        User newUser = FakeEntityProvider.createUser();
+        return userRepository.save(newUser);
+    }
+
+    private Project createAndSaveProject(User user) {
+        Project newProject = FakeEntityProvider.createProject(user);
+        return projectRepository.save(newProject);
+    }
+
     @Nested
     class 멤버_저장_테스트 {
-
-        static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
-        static List<SaveMemberRequest> members;
-        static int USER_INDEX = 0;
-        static List<SaveMemberRequest> overLengthMembers;
-        Project project;
-        User user;
-
-        @BeforeEach
-        void setup() {
-            overLengthMembers = new ArrayList<>();
-            for (int i = 1; i <= MAX_MEMBER_COUNT / 2; i++) {
-                overLengthMembers.add(
-                    FakeDtoProvider.createFellowMemberSaveRequest(createAndSaveUser().getId())
-                );
-                overLengthMembers.add(
-                    FakeDtoProvider.createNonFellowMemberSaveRequest()
-                );
-            }
-
-            user = createAndSaveUser();
-            overLengthMembers.add(USER_INDEX, FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
-
-            project = createAndSaveProject(user);
-            members = overLengthMembers.subList(0, MEMBER_COUNT);
-        }
 
         @Test
         void 작성자를_포함한_프로젝트_멤버_목록_저장에_성공한다() {
@@ -169,6 +179,11 @@ class MemberServiceTest {
                 .withMessage(MEMBER_NOT_INCLUDE_OWNER);
         }
 
+    }
+
+    @Nested
+    class 멤버_수정_테스트 {
+
         @Test
         void 기존_프로젝트_멤버_목록을_지우고_새로운_멤버_목록_수정에_성공한다() {
             // given
@@ -187,14 +202,5 @@ class MemberServiceTest {
             assertThat(savedMembers).hasSameSizeAs(membersOnlyOwner);
         }
 
-        private User createAndSaveUser() {
-            User newUser = FakeEntityProvider.createUser();
-            return userRepository.save(newUser);
-        }
-
-        private Project createAndSaveProject(User user) {
-            Project newProject = FakeEntityProvider.createProject(user);
-            return projectRepository.save(newProject);
-        }
     }
 }
