@@ -67,8 +67,8 @@ public final class ValidationUtils {
     }
 
     public static void validateGithubUrl(String githubUrl) {
-        validateTextLength(githubUrl, GITHUB_URL_OVER_MAX_LENGTH);
         validateNotBlank(githubUrl, GITHUB_URL_IS_NULL);
+        validateTextLength(githubUrl, GITHUB_URL_OVER_MAX_LENGTH);
         validateURI(githubUrl, GITHUB_URL_IS_INVALID);
     }
 
