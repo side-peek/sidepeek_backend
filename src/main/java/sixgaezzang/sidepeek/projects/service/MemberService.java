@@ -38,20 +38,13 @@ public class MemberService {
 
         List<Member> members = memberSaveRequests.stream().map(
             member -> {
-                Member.MemberBuilder memberBuilder = Member.builder()
-                    .project(project)
-                    .nickname(member.nickname())
-                    .role(member.role());
-
-                if (Objects.isNull(member.userId())) {
-                    return memberBuilder.build();
+                User user = null;
+                if (Objects.nonNull(member.userId())) {
+                    user = userRepository.findById(member.userId())
+                        .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
                 }
 
-                User user = userRepository.findById(member.userId())
-                    .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
-
-                return memberBuilder.user(user)
-                    .build();
+                return member.toEntity(project, user);
             }
         ).toList();
         memberRepository.saveAll(members);
