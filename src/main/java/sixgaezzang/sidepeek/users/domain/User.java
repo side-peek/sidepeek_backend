@@ -3,6 +3,7 @@ package sixgaezzang.sidepeek.users.domain;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -98,7 +99,7 @@ public class User extends BaseTimeEntity {
         }
 
         if (email != null) {
-            validateEmail(email, "이메일 형식이 올바르지 않습니다.");
+            validateEmail(email, INVALID_EMAIL_FORMAT.getMessage());
         }
     }
 
