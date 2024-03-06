@@ -18,7 +18,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 import sixgaezzang.sidepeek.common.util.ValidationUtils;
@@ -78,7 +77,6 @@ public class Project extends BaseTimeEntity {
     @Column(name = "view_count", nullable = false)
     private Long viewCount;
 
-    @Setter
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
@@ -113,7 +111,7 @@ public class Project extends BaseTimeEntity {
         this.viewCount++;
     }
 
-    public void delete() {
+    public void delete() { // TODO: 타임존 설정이 필요할까
         if (Objects.isNull(this.deletedAt)) {
             this.deletedAt = LocalDateTime.now();
             return;

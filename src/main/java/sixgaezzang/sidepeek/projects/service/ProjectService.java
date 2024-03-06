@@ -4,7 +4,6 @@ import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.O
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -94,7 +93,7 @@ public class ProjectService {
                 () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
         validateLoginIdEqualsOwnerId(loginId, project.getOwnerId());
 
-        project.setDeletedAt(LocalDateTime.now()); // TODO: 타임존 설정이 필요할까
+        project.delete();
     }
 
     private void validateLoginIdEqualsOwnerId(Long loginId, Long ownerId) {
