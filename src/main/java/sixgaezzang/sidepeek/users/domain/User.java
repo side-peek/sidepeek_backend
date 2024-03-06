@@ -18,6 +18,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +26,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
+import sixgaezzang.sidepeek.common.util.ValidationUtils;
+import sixgaezzang.sidepeek.users.util.validation.UserValidator;
 
 @Entity
 @Table(name = "users")
@@ -92,5 +95,62 @@ public class User extends BaseTimeEntity {
         validateNotBlank(nickname, BLANK_NICKNAME.getMessage());
         validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
             EXCESSIVE_NICKNAME_LENGTH.getMessage());
+    }
+
+    public void setNickname(String nickname) {
+        UserValidator.validateNickname(nickname);
+        this.nickname = nickname;
+    }
+
+    public void setPassword(Password password) {
+        UserValidator.validatePassword(password);
+        this.password = password;
+    }
+
+    public void setIntroduction(String introduction) {
+        if (Objects.nonNull(introduction)) {
+            UserValidator.validateIntroduction(introduction);
+            this.introduction = introduction;
+        }
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        if (Objects.nonNull(profileImageUrl)) {
+            UserValidator.validateProfileImageUrl(profileImageUrl);
+            this.profileImageUrl = profileImageUrl;
+        }
+    }
+
+    public void setJob(String jobName) {
+        if (Objects.nonNull(jobName) && !jobName.isBlank()) {
+            UserValidator.validateJob(jobName);
+            this.job = Job.valueOf(jobName);
+        }
+    }
+
+    public void setCareer(String careerDescription) {
+        if (Objects.nonNull(careerDescription)) {
+            UserValidator.validateCareer(careerDescription);
+            this.career = Career.valueOf(careerDescription);
+        }
+    }
+
+    public void setGithubUrl(String githubUrl) {
+        if (Objects.nonNull(githubUrl)) {
+            ValidationUtils.validateGithubUrl(githubUrl);
+            this.githubUrl = githubUrl;
+        }
+    }
+
+    public void setBlogUrl(String blogUrl) {
+        if (Objects.nonNull(blogUrl)) {
+            UserValidator.validateBlogUrl(blogUrl);
+            this.blogUrl = blogUrl;
+        }
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        ValidationUtils.validateDeletedAt(deletedAt);
+        this.deletedAt = deletedAt;
     }
 }
