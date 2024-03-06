@@ -33,10 +33,15 @@ public record UserProfileResponse(
     List<UserSkillSummary> techStacks
 ) {
     public static UserProfileResponse from(User user, List<UserSkillSummary> techStacks) {
-        return new UserProfileResponse(
-            user.getNickname(), user.getProfileImageUrl(), user.getIntroduction(),
-            user.getJob().getName(), user.getCareer().getDescription(),
-            user.getGithubUrl(), user.getBlogUrl(), techStacks
-        );
+        return UserProfileResponse.builder()
+            .nickname(user.getNickname())
+            .profileImageUrl(user.getProfileImageUrl())
+            .introduction(user.getIntroduction())
+            .job(user.getJob().getName())
+            .career(user.getCareer().getDescription())
+            .githubUrl(user.getGithubUrl())
+            .blogUrl(user.getBlogUrl())
+            .techStacks(techStacks)
+            .build();
     }
 }
