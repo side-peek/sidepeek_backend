@@ -1,7 +1,5 @@
 package sixgaezzang.sidepeek.users.util.validation;
 
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_INVALID;
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
@@ -26,17 +24,29 @@ import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.users.domain.Career;
 import sixgaezzang.sidepeek.users.domain.Job;
 import sixgaezzang.sidepeek.users.domain.Password;
+import sixgaezzang.sidepeek.users.domain.User;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserValidator {
 
+    // Common
     public static void validateUserId(Long id) {
         Assert.notNull(id, USER_ID_IS_NULL);
     }
 
+    public static void validateUser(User user) {
+        // TODO: 유저 유효성 검사
+    }
+
+    // Required
     public static void validateNickname(String nickname) {
         validateNotBlank(nickname, NICKNAME_IS_NULL);
         validateMaxLength(nickname, MAX_NICKNAME_LENGTH, NICKNAME_OVER_MAX_LENGTH);
+    }
+
+    // Option
+    public static void validatePassword(Password password) {
+        // TODO: 비밀번호 유효성 검사
     }
 
     public static void validateIntroduction(String introduction) {
@@ -65,10 +75,6 @@ public class UserValidator {
     public static void validateBlogUrl(String blogUrl) {
         validateMaxLength(blogUrl, MAX_TEXT_LENGTH, BLOG_URL_OVER_MAX_LENGTH);
         ValidationUtils.validateURI(blogUrl, BLOG_URL_IS_INVALID);
-    }
-
-    public static void validatePassword(Password password) {
-        // TODO: 비밀번호 유효성 검사
     }
 
 }
