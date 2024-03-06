@@ -2,12 +2,11 @@ package sixgaezzang.sidepeek.users.service;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
-import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.DUPLICATE_EMAIL;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.DUPLICATE_NICKNAME;
-import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_KEYWORD_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import jakarta.persistence.EntityExistsException;
 import java.util.Objects;
@@ -52,7 +51,7 @@ public class UserService {
             return UserSearchResponse.from(userRepository.findAll());
         }
 
-        validateMaxLength(keyword, MAX_NICKNAME_LENGTH, EXCESSIVE_KEYWORD_LENGTH.getMessage());
+        validateMaxLength(keyword, MAX_NICKNAME_LENGTH, EXCESSIVE_NICKNAME_LENGTH.getMessage());
 
         return UserSearchResponse.from(userRepository.findAllByNicknameContaining(keyword));
     }
@@ -65,7 +64,7 @@ public class UserService {
     }
 
     public CheckDuplicateResponse checkNicknameDuplicate(String nickname) {
-        validateMaxLength(nickname, User.MAX_NICKNAME_LENGTH,
+        validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
             EXCESSIVE_NICKNAME_LENGTH.getMessage());
 
         boolean isExists = userRepository.existsByNickname(nickname);

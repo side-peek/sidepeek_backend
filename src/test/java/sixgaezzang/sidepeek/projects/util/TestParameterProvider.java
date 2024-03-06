@@ -1,5 +1,8 @@
 package sixgaezzang.sidepeek.projects.util;
 
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_INVALID;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_NULL;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_OVER_MAX_LENGTH;
@@ -13,9 +16,6 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DESCRIPTION_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DURATION_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DURATION_IS_REVERSED;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.GITHUB_URL_IS_INVALID;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.GITHUB_URL_IS_NULL;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.NAME_IS_NULL;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.NAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OVERVIEW_IS_NULL;
@@ -28,9 +28,9 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LE
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
-import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.CATEGORY_IS_NULL;
-import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.CATEGORY_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.CATEGORY_IS_NULL;
+import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.CATEGORY_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import java.time.YearMonth;
 import java.util.stream.Stream;

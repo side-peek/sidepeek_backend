@@ -30,13 +30,14 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
             .getAuthentication();
 
         if (authentication != null) {
-            Long principal = (Long) authentication.getPrincipal();
-            if (principal != null) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof Long) {
                 return principal;
             }
         }
 
-        throw new InvalidAuthenticationException("로그인이 필요합니다.");
+        // 로그인하지 않은 경우 null 반환
+        return null;
     }
 
 }

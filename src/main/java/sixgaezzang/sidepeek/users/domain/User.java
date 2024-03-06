@@ -6,6 +6,7 @@ import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.BLANK_NICKNAME;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -31,8 +32,6 @@ import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
-
-    public static final int MAX_NICKNAME_LENGTH = 20;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

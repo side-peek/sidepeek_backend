@@ -7,8 +7,11 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_IM
 
 import io.jsonwebtoken.lang.Assert;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.common.util.ValidationUtils;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileValidator {
 
     public static void validateFiles(List<String> overviewImageUrls) {

@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.projects.service;
 
-import static sixgaezzang.sidepeek.skill.util.validation.SkillErrorMessage.SKILL_NOT_EXISTING;
+import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -25,31 +25,35 @@ public class ProjectSkillService {
     private final SkillRepository skillRepository;
     private final ProjectSkillRepository projectSkillRepository;
 
+    public List<ProjectSkill> findAll(Project project) {
+        return projectSkillRepository.findAllByProject(project);
+    }
+
     @Transactional
     public List<ProjectSkillSummary> saveAll(Project project, List<ProjectSkillSaveRequest> techStacks) {
         ProjectValidator.validateProject(project);
         ProjectSkillValidator.validateTechStacks(techStacks);
 
-        List<ProjectSkill> skills = techStacks.stream().map(
-            projectSkill -> {
-                Skill skill = skillRepository.findById(projectSkill.skillId())
-                    .orElseThrow(() -> new EntityNotFoundException(SKILL_NOT_EXISTING));
+        if (projectSkillRepository.existsByProject(project)) {
+            projectSkillRepository.deleteAllByProject(project);
+        }
 
-                return ProjectSkill.builder()
-                    .project(project)
-                    .skill(skill)
-                    .category(projectSkill.category())
-                    .build();
-            }
-        ).toList();
+        List<ProjectSkill> skills = convertAllToEntity(project, techStacks);
         projectSkillRepository.saveAll(skills);
 
         return skills.stream()
             .map(ProjectSkillSummary::from)
             .toList();
     }
-    
-    public List<ProjectSkill> findAll(Project project) {
-        return projectSkillRepository.findAllByProject(project);
+
+    private List<ProjectSkill> convertAllToEntity(Project project, List<ProjectSkillSaveRequest> techStacks) {
+        return techStacks.stream().map(
+            techStack -> {
+                Skill skill = skillRepository.findById(techStack.skillId())
+                    .orElseThrow(() -> new EntityNotFoundException(SKILL_NOT_EXISTING));
+
+                return techStack.toEntity(project, skill);
+            }
+        ).toList();
     }
 }

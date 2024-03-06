@@ -4,7 +4,7 @@ import static sixgaezzang.sidepeek.common.util.CommonConstant.MIN_ID;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.NON_FELLOW_MEMBER_NICKNAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.ROLE_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
-import static sixgaezzang.sidepeek.users.domain.User.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;

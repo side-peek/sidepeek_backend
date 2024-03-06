@@ -2,6 +2,10 @@ package sixgaezzang.sidepeek.comments.exception.message;
 
 import static sixgaezzang.sidepeek.comments.util.CommentConstant.MAX_COMMENT_LENGTH;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommentErrorMessage {
     // isAnonymous
     public static final String IS_ANONYMOUS_IS_NULL = "익명 댓글 여부를 입력해주세요.";

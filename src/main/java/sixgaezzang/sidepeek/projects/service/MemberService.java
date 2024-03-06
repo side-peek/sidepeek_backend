@@ -1,12 +1,14 @@
 package sixgaezzang.sidepeek.projects.service;
 
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
+
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
@@ -28,11 +30,11 @@ public class MemberService {
     @Transactional
     public List<MemberSummary> saveAll(Project project, List<MemberSaveRequest> memberSaveRequests) {
         ProjectValidator.validateProject(project);
-        if (!ValidationUtils.isNotNullOrEmpty(memberSaveRequests)) {
-            return null;
-        }
+        MemberValidator.validateMembers(project.getOwnerId(), memberSaveRequests);
 
-        MemberValidator.validateMembers(memberSaveRequests);
+        if (memberRepository.existsByProject(project)) {
+            memberRepository.deleteAllByProject(project);
+        }
 
         List<Member> members = memberSaveRequests.stream().map(
             member -> {
@@ -46,7 +48,7 @@ public class MemberService {
                 }
 
                 User user = userRepository.findById(member.userId())
-                    .orElseThrow(() -> new EntityNotFoundException("User Id에 해당하는 회원이 없습니다."));
+                    .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
 
                 return memberBuilder.user(user)
                     .build();
@@ -61,5 +63,13 @@ public class MemberService {
 
     public List<MemberSummary> findAllWithUser(Project project) {
         return memberRepository.findAllWithUser(project);
+    }
+
+    public Optional<User> findFellowMemberByProject(Long userId, Project project) {
+        return memberRepository.findAllByProject(project)
+            .stream()
+            .filter(member -> Objects.equals(member.getUser().getId(), userId))
+            .findAny()
+            .map(Member::getUser);
     }
 }

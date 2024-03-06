@@ -7,6 +7,7 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_IMAGE_COUNT;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.projects.domain.file.File;
+import sixgaezzang.sidepeek.projects.domain.file.FileType;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
@@ -47,7 +50,7 @@ class FileServiceTest {
     ProjectRepository projectRepository;
 
     @Nested
-    class 파일_저장_테스트 {
+    class 파일_저장_및_수정_테스트 {
 
         static final int IMAGE_COUNT = MAX_OVERVIEW_IMAGE_COUNT / 2;
         static List<String> overLengthImageUrls;
@@ -80,7 +83,7 @@ class FileServiceTest {
             List<OverviewImageSummary> savedImageUrls = fileService.saveAll(project, emptyImageUrls);
 
             // then
-            assertThat(savedImageUrls).isNull();
+            assertThat(savedImageUrls).isEmpty();
         }
 
         @Test
@@ -121,14 +124,30 @@ class FileServiceTest {
                 .withMessage(message);
         }
 
+        @Test
+        void 기존_프로젝트_파일_목록을_지우고_파일_목록_수정에_성공한다() {
+            // given
+            fileService.saveAll(project, imageUrls);
+            List<File> originalFiles = fileService.findAllByType(project, FileType.OVERVIEW_IMAGE);
+
+            // when
+            List<String> emptyFile = Collections.emptyList();
+            fileService.saveAll(project, emptyFile);
+            List<File> savedFiles = fileService.findAllByType(project, FileType.OVERVIEW_IMAGE);
+
+            // then
+            assertThat(originalFiles).isNotEqualTo(savedFiles);
+            assertThat(savedFiles).hasSameSizeAs(emptyFile);
+        }
+
         private User createAndSaveUser() {
-            user = FakeEntityProvider.createUser();
-            return userRepository.save(user);
+            User newUser = FakeEntityProvider.createUser();
+            return userRepository.save(newUser);
         }
 
         private Project createAndSaveProject(User user) {
-            project = FakeEntityProvider.createProject(user);
-            return projectRepository.save(project);
+            Project newProject = FakeEntityProvider.createProject(user);
+            return projectRepository.save(newProject);
         }
     }
 }
