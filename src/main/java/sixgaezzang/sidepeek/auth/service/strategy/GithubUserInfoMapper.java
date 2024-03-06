@@ -1,10 +1,8 @@
 package sixgaezzang.sidepeek.auth.service.strategy;
 
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
 import sixgaezzang.sidepeek.users.domain.User;
 
-@Slf4j
 public class GithubUserInfoMapper implements UserInfoMapper {
 
     private static final String ATTRIBUTE_ID = "id";
