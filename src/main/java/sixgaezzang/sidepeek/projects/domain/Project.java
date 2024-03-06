@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.projects.domain;
 
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 
@@ -12,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -111,6 +113,14 @@ public class Project extends BaseTimeEntity {
         this.viewCount++;
     }
 
+    public void delete() {
+        if (Objects.isNull(this.deletedAt)) {
+            this.deletedAt = LocalDateTime.now();
+            return;
+        }
+        throw new IllegalStateException(PROJECT_ALREADY_DELETED);
+    }
+
     private void validateConstructorRequiredArguments(String name, String overview, String githubUrl,
                                                       String description, Long ownerId) {
         ProjectValidator.validateName(name);
@@ -129,6 +139,7 @@ public class Project extends BaseTimeEntity {
         ProjectValidator.validateDuration(startDate, endDate);
     }
 
+    // TODO: User 처럼 Setter 구현하는 것이 나을까 아래와 같은 방식으로 하는 게 나을까?
     public Project update(SaveProjectRequest request) {
         validateConstructorRequiredArguments(request.name(), request.overview(), request.githubUrl(),
             request.description(), request.ownerId());
