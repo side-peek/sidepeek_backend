@@ -2,6 +2,9 @@ package sixgaezzang.sidepeek.common.util;
 
 import static io.micrometer.common.util.StringUtils.isBlank;
 import static io.micrometer.common.util.StringUtils.isNotBlank;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_INVALID;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_NULL;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.LOGIN_IS_REQUIRED;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
@@ -62,6 +65,12 @@ public final class ValidationUtils {
 
     public static <T> void validateNotNullAndEmpty(Collection<T> input, String message) {
         Assert.isTrue(isNotNullOrEmpty(input), message);
+    }
+
+    public static void validateGithubUrl(String githubUrl) {
+        validateTextLength(githubUrl, GITHUB_URL_OVER_MAX_LENGTH);
+        validateNotBlank(githubUrl, GITHUB_URL_IS_NULL);
+        validateURI(githubUrl, GITHUB_URL_IS_INVALID);
     }
 
     public static void validateDeletedAt(LocalDateTime deletedAt) {

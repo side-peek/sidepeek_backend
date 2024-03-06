@@ -52,12 +52,6 @@ public class ProjectValidator {
         validateMaxLength(overview, MAX_OVERVIEW_LENGTH, OVERVIEW_OVER_MAX_LENGTH);
     }
 
-    public static void validateGithubUrl(String githubUrl) {
-        validateNotBlank(githubUrl, GITHUB_URL_IS_NULL);
-        validateURI(githubUrl, GITHUB_URL_IS_INVALID);
-        validateTextLength(githubUrl, GITHUB_URL_OVER_MAX_LENGTH);
-    }
-
     public static void validateDescription(String description) {
         validateNotBlank(description, DESCRIPTION_IS_NULL);
         validateTextLength(description, DESCRIPTION_OVER_MAX_LENGTH);
@@ -76,8 +70,8 @@ public class ProjectValidator {
 
     public static void validateThumbnailUrl(String thumbnailUrl) {
         if (Objects.nonNull(thumbnailUrl)) {
-            validateURI(thumbnailUrl, THUMBNAIL_URL_IS_INVALID);
             validateTextLength(thumbnailUrl, THUMBNAIL_URL_OVER_MAX_LENGTH);
+            validateURI(thumbnailUrl, THUMBNAIL_URL_IS_INVALID);
         }
     }
 

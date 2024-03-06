@@ -62,11 +62,6 @@ public class UserValidator {
         ValidationUtils.validateURI(profileImageUrl, PROFILE_IMAGE_URL_IS_INVALID);
     }
 
-    public static void validateGithubUrl(String githubUrl) {
-        validateMaxLength(githubUrl, MAX_TEXT_LENGTH, GITHUB_URL_OVER_MAX_LENGTH);
-        ValidationUtils.validateURI(githubUrl, GITHUB_URL_IS_INVALID);
-    }
-
     public static void validateBlogUrl(String blogUrl) {
         validateMaxLength(blogUrl, MAX_TEXT_LENGTH, BLOG_URL_OVER_MAX_LENGTH);
         ValidationUtils.validateURI(blogUrl, BLOG_URL_IS_INVALID);
