@@ -20,7 +20,6 @@ public class CommonErrorMessage {
     public static final String GITHUB_URL_IS_NULL = "Github URL을 입력해주세요.";
     public static final String GITHUB_URL_OVER_MAX_LENGTH = "Github URL은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다.";
 
-
     //
     public static final String TECH_STACKS_IS_NULL = "기술 스택들을 입력해주세요.";
     public static final String TECH_STACKS_OVER_MAX_COUNT =
