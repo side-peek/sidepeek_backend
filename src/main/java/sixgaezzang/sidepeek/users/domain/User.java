@@ -6,6 +6,7 @@ import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.BLANK_NICKNAME;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import jakarta.persistence.Column;
@@ -27,6 +28,7 @@ import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 import sixgaezzang.sidepeek.common.util.ValidationUtils;
+import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 import sixgaezzang.sidepeek.users.util.validation.UserValidator;
 
 @Entity
@@ -98,59 +100,79 @@ public class User extends BaseTimeEntity {
     }
 
     public void setNickname(String nickname) {
-        UserValidator.validateNickname(nickname);
-        this.nickname = nickname;
+        if (!Objects.equals(this.nickname, nickname)) {
+            UserValidator.validateNickname(nickname);
+            this.nickname = nickname;
+        }
     }
 
     public void setPassword(Password password) {
-        UserValidator.validatePassword(password);
-        this.password = password;
+        if (!Objects.equals(this.password, password)) {
+            UserValidator.validatePassword(password);
+            this.password = password;
+        }
     }
 
     public void setIntroduction(String introduction) {
-        if (Objects.nonNull(introduction)) {
+        if (Objects.nonNull(introduction) && !Objects.equals(this.introduction, introduction)) {
             UserValidator.validateIntroduction(introduction);
             this.introduction = introduction;
         }
     }
 
     public void setProfileImageUrl(String profileImageUrl) {
-        if (Objects.nonNull(profileImageUrl)) {
+        if (Objects.nonNull(profileImageUrl) && !Objects.equals(this.profileImageUrl, profileImageUrl)) {
             UserValidator.validateProfileImageUrl(profileImageUrl);
             this.profileImageUrl = profileImageUrl;
         }
     }
 
     public void setJob(String jobName) {
-        if (Objects.nonNull(jobName) && !jobName.isBlank()) {
+        if (Objects.nonNull(jobName) && !jobName.isBlank() && !Objects.equals(this.job.getName(), jobName)) {
             UserValidator.validateJob(jobName);
             this.job = Job.valueOf(jobName);
         }
     }
 
     public void setCareer(String careerDescription) {
-        if (Objects.nonNull(careerDescription)) {
+        if (Objects.nonNull(careerDescription) && !Objects.equals(this.career.getDescription(), careerDescription)) {
             UserValidator.validateCareer(careerDescription);
             this.career = Career.valueOf(careerDescription);
         }
     }
 
     public void setGithubUrl(String githubUrl) {
-        if (Objects.nonNull(githubUrl)) {
+        if (Objects.nonNull(githubUrl) && !Objects.equals(this.githubUrl, githubUrl)) {
             ValidationUtils.validateGithubUrl(githubUrl);
             this.githubUrl = githubUrl;
         }
     }
 
     public void setBlogUrl(String blogUrl) {
-        if (Objects.nonNull(blogUrl)) {
+        if (Objects.nonNull(blogUrl) && !Objects.equals(this.blogUrl, blogUrl)) {
             UserValidator.validateBlogUrl(blogUrl);
             this.blogUrl = blogUrl;
         }
     }
 
     public void setDeletedAt(LocalDateTime deletedAt) {
-        ValidationUtils.validateDeletedAt(deletedAt);
-        this.deletedAt = deletedAt;
+        if (Objects.isNull(this.deletedAt)) {
+            this.deletedAt = deletedAt;
+            return;
+        }
+        throw new IllegalStateException(USER_ALREADY_DELETED);
+    }
+
+    public void update(UpdateUserProfileRequest request) {
+        // Required
+        setNickname(request.nickname());
+
+        // Option
+        setIntroduction(request.introduction());
+        setProfileImageUrl(request.profileImageUrl());
+        setJob(request.job());
+        setCareer(request.career());
+        setGithubUrl(request.githubUrl());
+        setBlogUrl(request.blogUrl());
     }
 }
