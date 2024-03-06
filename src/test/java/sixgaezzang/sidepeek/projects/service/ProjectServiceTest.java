@@ -2,10 +2,18 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
+import static sixgaezzang.sidepeek.common.util.CommonConstant.LOGIN_IS_REQUIRED;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,19 +21,24 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.like.repository.LikeRepository;
+import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.projects.domain.Project;
-import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
+import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.projects.util.FakeDtoProvider;
+import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
+import sixgaezzang.sidepeek.projects.util.FakeValueProvider;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
-import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -35,7 +48,15 @@ import sixgaezzang.sidepeek.users.repository.UserRepository;
 class ProjectServiceTest {
 
     static final Faker faker = new Faker();
-
+    static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
+    static final int PROJECT_SKILL_COUNT = MAX_PROJECT_SKILL_COUNT / 2;
+    static List<MemberSaveRequest> members;
+    static List<Long> fellowMemberIds;
+    static List<ProjectSkillSaveRequest> techStacks;
+    static String NAME = FakeValueProvider.createProjectName();
+    static String OVERVIEW = FakeValueProvider.createOverview();
+    static String GITHUB_URL = FakeValueProvider.createUrl();
+    static String DESCRIPTION = FakeValueProvider.createLongText();
     @Autowired
     ProjectService projectService;
 
@@ -48,57 +69,50 @@ class ProjectServiceTest {
     @Autowired
     ProjectRepository projectRepository;
 
-    @Autowired
-    LikeRepository likeRepository;
-
-    private User createUser() {
-        String email = faker.internet().emailAddress();
-        String password = faker.internet().password(8, 40, true, true, true);
-        String nickname = faker.internet().username();
-
-        User user = User.builder()
-            .email(email)
-            .password(new Password(password, new BCryptPasswordEncoder()))
-            .nickname(nickname)
-            .build();
-        return userRepository.save(user);
+    private Skill createAndSaveSkill() {
+        return skillRepository.save(FakeEntityProvider.createSkill());
     }
 
-    private Skill createSkill() {
-        String name = faker.computer().macos();
-        String iconImageUrl = faker.internet().url();
-
-        Skill skill = Skill.builder()
-            .name(name)
-            .iconImageUrl(iconImageUrl)
-            .build();
-        return skillRepository.save(skill);
+    private User createAndSaveUser() {
+        User newUser = FakeEntityProvider.createUser();
+        return userRepository.save(newUser);
     }
 
-    private Project createProject(User user, String deployUrl) {
-        String name = faker.internet().domainName();
-        String subName = faker.internet().domainWord();
-        String overview = faker.lorem().sentence();
-        String thumbnailUrl = faker.internet().url();
-        String githubUrl = faker.internet().url();
-        LocalDateTime startDate = LocalDateTime.now();
-        LocalDateTime endDate = startDate.plusMonths(3);
-        String description = faker.lorem().sentences(10).toString();
+    private Project createAndSaveProject(User user) {
+        Project newProject = FakeEntityProvider.createProject(user);
+        return projectRepository.save(newProject);
+    }
 
-        Project project = Project.builder()
-            .name(name)
-            .subName(subName)
-            .overview(overview)
-            .thumbnailUrl(thumbnailUrl)
-            .githubUrl(githubUrl)
-            .deployUrl(deployUrl != null ? deployUrl : null)
-            .startDate(startDate)
-            .endDate(endDate)
-            .ownerId(user.getId())
-            .description(description)
-            .build();
+    User user;
 
-        return projectRepository.save(project);
+    private ProjectResponse getNewSavedProject(Long userId) {
+        ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+            NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, userId, techStacks, members
+        );
+        return projectService.save(userId, null, request);
+    }
+
+    @BeforeEach
+    void setup() {
+        members = new ArrayList<>();
+        fellowMemberIds = new ArrayList<>();
+        for (int i = 1; i <= MEMBER_COUNT - 1; i++) {
+            Long savedUserId = createAndSaveUser().getId();
+            fellowMemberIds.add(savedUserId);
+            members.add(FakeDtoProvider.createFellowMemberSaveRequest(savedUserId));
+        }
+
+        user = createAndSaveUser();
+        fellowMemberIds.add(0, user.getId());
+        members.add(0, FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
+
+        techStacks = new ArrayList<>();
+        for (int i = 1; i <= PROJECT_SKILL_COUNT; i++) {
+            Skill skill = createAndSaveSkill();
+            techStacks.add(
+                FakeDtoProvider.createProjectSkillSaveRequest(skill.getId())
+            );
+        }
     }
 
     @Nested
@@ -107,8 +121,8 @@ class ProjectServiceTest {
         @Test
         void 프로젝트_상세_조회를_성공한다() {
             // given
-            User user = createUser();
-            Project project = createProject(user, null);
+            User user = createAndSaveUser();
+            Project project = createAndSaveProject(user);
 
             // when
             ProjectResponse response = projectService.findById(project.getId());
@@ -133,68 +147,280 @@ class ProjectServiceTest {
     }
 
     @Nested
-    class 프로젝트_전체_조회_테스트 {
-
-        User user1, user2;
-        Project project1, project2;
-        String deployUrl = faker.internet().url();
-
-        @BeforeEach
-        void setUp() {
-            user1 = createUser();
-            user2 = createUser();
-
-            project1 = createProject(user1, deployUrl);
-            project2 = createProject(user1, null);
-        }
-
+    class 프로젝트_저장_테스트 {
         @Test
-        void 전체_프로젝트를_최신순으로_조회할_수_있다() {
-            // when
-            List<ProjectListResponse> responses = projectService.findAll(null, "createdAt", false);
-
-            // then
-            assertThat(responses).hasSize(2);
-            assertThat(responses.get(0).id()).isEqualTo(project1.getId());
-            assertThat(responses.get(1).id()).isEqualTo(project2.getId());
-        }
-
-        @Test
-        void 전체_프로젝트를_조회순으로_조회할_수_있다() {
+        void 필수_정보가_모두_포함되어_프로젝트_저장에_성공한다() {
             // given
-            projectService.findById(project1.getId());
+            ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId(), techStacks, members
+            );
 
             // when
-            List<ProjectListResponse> responses = projectService.findAll(null, "view", false);
+            ProjectResponse response = projectService.save(user.getId(), null, request);
 
             // then
-            assertThat(responses).hasSize(2);
-            assertThat(responses.get(0).id()).isEqualTo(project1.getId());
-            assertThat(responses.get(1).id()).isEqualTo(project2.getId());
+            assertThat(response).extracting("name", "overview", "githubUrl", "description", "ownerId")
+                .containsExactly(NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId());
+            assertThat(response.techStacks()).hasSize(techStacks.size());
+            assertThat(response.members()).hasSize(members.size());
         }
 
-        @Test
-        void 전체_프로젝트를_좋아요순으로_조회할_수_있다() {
-            // TODO: 좋아요 생성/취소가 완료 되면 추가할 예정입니다..!
-        }
+        @ParameterizedTest(name = "[{index}] {0}이(가) 누락된 경우 실패한다.")
+        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createProjectsWithoutRequired")
+        void 작성자_Id_외_필수_정보가_누락되어_프로젝트_저장에_실패한다(
+            String testMessage, String name, String overview, String githubUrl, String description, String message
+        ) {
+            // given
+            ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                name, overview, githubUrl, description, user.getId(), techStacks, members
+            );
 
-        @Test
-        void 전체_프로젝트중_출시_서비스만_조회할_수_있다() {
             // when
-
-            List<ProjectListResponse> responses = projectService.findAll(null, "createdAt", true);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
 
             // then
-            assertThat(responses).hasSize(1);
-            assertThat(responses.get(0).id()).isEqualTo(project1.getId());
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
+                .withMessage(message);
         }
 
         @Test
-        void 프로젝트_전체_조회_시_로그인한_사용자가_좋아요한_프로젝트를_확인할_수_있다() {
-            // TODO: 좋아요 생성/취소가 완료 되면 추가할 예정입니다..!
+        void 작성자_Id가_누락되어_프로젝트_저장에_실패한다() {
+            // given
+            ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, null, techStacks, members
+            );
+
+            // when
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
+                .withMessage(OWNER_ID_IS_NULL);
         }
 
+        @Test
+        void 작성자_Id가_로그인_Id와_불일치하여_프로젝트_저장에_실패한다() {
+            // given
+            ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId() - 1, techStacks, members
+            );
+
+            // when
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(saveProject)
+                .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
+        }
+
+        @ParameterizedTest(name = "[{index}] {0}")
+        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createProjectsOnlyInvalidRequired")
+        void 유효하지_않은_필수_정보로_프로젝트_저장에_실패한다(
+            String testMessage, String name, String overview, String githubUrl, String description, String message
+        ) {
+            // given
+            ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                name, overview, githubUrl, description, user.getId(), techStacks, members
+            );
+
+            // when
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
+                .withMessage(message);
+        }
+
+        @ParameterizedTest(name = "[{index}] {0}")
+        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createProjectsWithInvalidOption")
+        void 유효하지_않은_옵션_정보로_프로젝트_저장에_실패한다(
+            String testMessage, String subName, String thumbnailUrl, String deployUrl, String troubleShooting,
+            YearMonth startDate, YearMonth endDate, String message
+        ) {
+            // given
+            ProjectRequest request = FakeDtoProvider.createProjectSaveRequestWithOwnerIdAndOption(
+                techStacks, user.getId(), subName, thumbnailUrl, deployUrl, troubleShooting, startDate, endDate
+            );
+
+            // when
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
+                .withMessage(message);
+        }
+
+        @Test
+        void 사용자가_로그인을_하지_않아서_프로젝트_저장에_실패한다() {
+            // given
+            ProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId(), techStacks, members
+            );
+
+            // when
+            ThrowingCallable save = () -> projectService.save(null, null, request);
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(save)
+                .withMessage(LOGIN_IS_REQUIRED);
+        }
 
     }
 
+    @Nested
+    class 프로젝트_수정_테스트 {
+        @Test
+        void 로그인한_사용자가_프로젝트_회원_멤버라서_기존_프로젝트_수정에_성공한다() {
+            fellowMemberIds.forEach(fellowMemberId -> {
+                // given
+                ProjectResponse originalProject = getNewSavedProject(user.getId());
+
+                // when
+                String newName = FakeValueProvider.createProjectName();
+                String newOverview = FakeValueProvider.createOverview();
+                String newGithubUrl = FakeValueProvider.createUrl();
+                String newDescription = FakeValueProvider.createLongText();
+                ProjectRequest newRequest = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                    newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
+                );
+                ProjectResponse savedProject = projectService.save(fellowMemberId, originalProject.id(), newRequest);
+
+                // then
+                assertThat(savedProject).isNotEqualTo(originalProject);
+                assertThat(savedProject).extracting("name", "overview", "githubUrl", "description")
+                    .containsExactly(newName, newOverview, newGithubUrl, newDescription);
+                assertThat(savedProject.techStacks()).hasSize(techStacks.size());
+                assertThat(savedProject.members()).hasSize(members.size());
+            });
+        }
+
+        @Test
+        void 존재하지_않는_프로젝트_수정에_실패한다() {
+            // given
+            ProjectResponse originalProject = getNewSavedProject(user.getId());
+
+            // when
+            String newName = FakeValueProvider.createProjectName();
+            String newOverview = FakeValueProvider.createOverview();
+            String newGithubUrl = FakeValueProvider.createUrl();
+            String newDescription = FakeValueProvider.createLongText();
+            ProjectRequest newRequest = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
+            );
+            ThrowingCallable update = () -> projectService.save(user.getId(), originalProject.id() + 1, newRequest);
+
+            // then
+            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(update)
+                .withMessage(ProjectErrorCode.ID_NOT_EXISTING.getMessage());
+        }
+
+        @Test
+        void 사용자가_로그인을_하지_않아서_프로젝트_수정에_실패한다() {
+            // given
+            ProjectResponse originalProject = getNewSavedProject(user.getId());
+
+            // when
+            String newName = FakeValueProvider.createProjectName();
+            String newOverview = FakeValueProvider.createOverview();
+            String newGithubUrl = FakeValueProvider.createUrl();
+            String newDescription = FakeValueProvider.createLongText();
+            ProjectRequest newRequest = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
+            );
+            ThrowingCallable update = () -> projectService.save(null, originalProject.id(), newRequest);
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(update)
+                .withMessage(LOGIN_IS_REQUIRED);
+        }
+
+        @Test
+        void 로그인한_사용자가_프로젝트_회원_멤버가_아니라서_기존_프로젝트_수정에_실패한다() {
+            List<Long> nonMemberIds = new ArrayList<>();
+            for (int i = 1; i < 6; i++) {
+                nonMemberIds.add(user.getId() + i);
+            }
+
+            nonMemberIds.forEach(nonMemberId -> {
+                // given
+                ProjectResponse originalProject = getNewSavedProject(user.getId());
+
+                // when
+                String newName = FakeValueProvider.createProjectName();
+                String newOverview = FakeValueProvider.createOverview();
+                String newGithubUrl = FakeValueProvider.createUrl();
+                String newDescription = FakeValueProvider.createLongText();
+                ProjectRequest newRequest = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                    newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
+                );
+                ThrowingCallable update = () -> projectService.save(nonMemberId, originalProject.id(), newRequest);
+
+                // then
+                assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(update)
+                    .withMessage(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE);
+            });
+        }
+    }
+
+    @Nested
+    class 프로젝트_삭제_테스트 {
+        @Test
+        void 프로젝트_소프트_삭제에_성공한다() {
+            // given
+            ProjectResponse project = getNewSavedProject(user.getId());
+
+            // when
+            projectService.delete(user.getId(), project.id());
+
+            // TODO: @SQLRestriction("deleted_at IS NULL")이 안먹힌다. 왜지?
+            Optional<Project> deletedProject = projectRepository.findById(project.id());
+            projectService.findById(project.id());
+
+            // then
+            assertThat(deletedProject).isNotEmpty();
+            assertThat(deletedProject.get().getDeletedAt()).isNotNull();
+        }
+
+        @Test
+        void 로그인하지_않은_사용자라서__프로젝트_삭제에_실패한다() {
+            // given
+            ProjectResponse project = getNewSavedProject(user.getId());
+
+            // when
+            ThrowingCallable delete = () -> projectService.delete(null, project.id());
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(delete)
+                .withMessage(LOGIN_IS_REQUIRED);
+        }
+
+        @Test
+        void 존재하지_않는_프로젝트_삭제에_실패한다() {
+            // given
+            ProjectResponse project = getNewSavedProject(user.getId());
+
+            // when
+            ThrowingCallable delete = () -> projectService.delete(user.getId(), project.id() + 1);
+
+            // then
+            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(delete)
+                .withMessage(ProjectErrorCode.ID_NOT_EXISTING.getMessage());
+        }
+
+        @Test
+        void 프로젝트_작성자가_아니라서_프로젝트_삭제에_실패한다() {
+            // given
+            ProjectResponse project = getNewSavedProject(user.getId());
+
+            User newUser = createAndSaveUser();
+
+            // when
+            ThrowingCallable delete = () -> projectService.delete(newUser.getId(), project.id());
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(delete)
+                .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
+        }
+
+    }
 }

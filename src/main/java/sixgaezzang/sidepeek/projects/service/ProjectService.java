@@ -1,15 +1,22 @@
 package sixgaezzang.sidepeek.projects.service;
 
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
+
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
+import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
-import sixgaezzang.sidepeek.projects.dto.request.ProjectSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
@@ -17,6 +24,7 @@ import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 
 @Service
 @RequiredArgsConstructor
@@ -30,23 +38,37 @@ public class ProjectService {
     private final LikeRepository likeRepository;
 
     @Transactional
-    public Long save(ProjectSaveRequest projectSaveRequest) {
-        // TODO: accessToken에서 userId 꺼내서 ownerId와 비교!!
+    public ProjectResponse save(Long loginId, Long projectId, ProjectRequest request) {
+        ValidationUtils.validateLoginId(loginId);
 
-        // 프로젝트 정보 저장
-        Project project = projectSaveRequest.toEntity();
-        projectRepository.save(project);
+        Project project;
+        if (Objects.isNull(projectId)) {
+            validateLoginIdEqualsOwnerId(loginId, request.ownerId());
 
-        // 프로젝트 Skill 저장
-        projectSkillService.saveAll(project, projectSaveRequest.techStacks());
+            project = request.toEntity();
+            projectRepository.save(project);
+        } else {
+            project = projectRepository.findById(projectId)
+                .orElseThrow(
+                    () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
+            validateLoginUserIncludeMembers(loginId, project);
 
-        // 프로젝트 Member
-        memberService.saveAll(project, projectSaveRequest.members());
+            project = project.update(request);
+        }
 
-        // 프로젝트 File(프로젝트 개요 Image) 저장
-        fileService.saveAll(project, projectSaveRequest.overviewImageUrls());
+        List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project, request.techStacks());
+        List<MemberSummary> members = memberService.saveAll(project, request.members());
+        List<OverviewImageSummary> overviewImages = fileService.saveAll(project, request.overviewImageUrls());
 
-        return project.getId();
+        return ProjectResponse.from(project, overviewImages, techStacks, members);
+    }
+
+    public List<ProjectListResponse> findAll(Long userId, String sort, boolean isReleased) {
+        List<Long> likedProjectIds =
+            (userId != null) ? likeRepository.findAllProjectIdsByUser(userId)
+                : Collections.emptyList();
+
+        return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, isReleased);
     }
 
     @Transactional
@@ -74,12 +96,29 @@ public class ProjectService {
         return ProjectResponse.from(project, overviewImages, techStacks, members);
     }
 
-    public List<ProjectListResponse> findAll(Long userId, String sort, boolean isReleased) {
-        List<Long> likedProjectIds =
-            (userId != null) ? likeRepository.findAllProjectIdsByUser(userId)
-                : Collections.emptyList();
+    @Transactional
+    public void delete(Long loginId, Long projectId) {
+        ValidationUtils.validateLoginId(loginId);
 
-        return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, isReleased);
+        // TODO: 생성, 수정할 땐 ownerId와 loginId를 비교하는 로직이 있다. 여기에도 적용하는 것이 좋을까?
+        Project project = projectRepository.findById(projectId)
+            .orElseThrow(
+                () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
+        validateLoginIdEqualsOwnerId(loginId, project.getOwnerId());
+
+        project.setDeletedAt(LocalDateTime.now()); // TODO: 타임존 설정이 필요할까
+    }
+
+    private void validateLoginIdEqualsOwnerId(Long loginId, Long ownerId) {
+        ProjectValidator.validateOwnerId(ownerId);
+        if (!loginId.equals(ownerId)) {
+            throw new InvalidAuthenticationException(OWNER_ID_NOT_EQUALS_LOGIN_ID);
+        }
+    }
+
+    private void validateLoginUserIncludeMembers(Long loginId, Project project) {
+        memberService.findFellowMemberByProject(loginId, project)
+            .orElseThrow(() -> new InvalidAuthenticationException(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE));
     }
 
 }

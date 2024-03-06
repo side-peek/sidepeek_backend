@@ -30,7 +30,7 @@ public class QProject extends EntityPathBase<Project> {
 
     public final StringPath description = createString("description");
 
-    public final DateTimePath<java.time.LocalDateTime> endDate = createDateTime("endDate", java.time.LocalDateTime.class);
+    public final ComparablePath<java.time.YearMonth> endDate = createComparable("endDate", java.time.YearMonth.class);
 
     public final StringPath githubUrl = createString("githubUrl");
 
@@ -44,7 +44,7 @@ public class QProject extends EntityPathBase<Project> {
 
     public final NumberPath<Long> ownerId = createNumber("ownerId", Long.class);
 
-    public final DateTimePath<java.time.LocalDateTime> startDate = createDateTime("startDate", java.time.LocalDateTime.class);
+    public final ComparablePath<java.time.YearMonth> startDate = createComparable("startDate", java.time.YearMonth.class);
 
     public final StringPath subName = createString("subName");
 
