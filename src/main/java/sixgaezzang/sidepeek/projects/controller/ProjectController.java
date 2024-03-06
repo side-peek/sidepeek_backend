@@ -40,12 +40,9 @@ public class ProjectController {
     @ApiResponse(responseCode = "201", description = "프로젝트 생성 성공")
     public ResponseEntity<ProjectResponse> save(
         @Parameter(description = "로그인한 회원 식별자", in = ParameterIn.HEADER)
-        @Login
-        Long loginId,
+        @Login Long loginId,
 
-        @Valid
-        @RequestBody
-        ProjectRequest request
+        @Valid @RequestBody ProjectRequest request
     ) {
         ProjectResponse response = projectService.save(loginId, null, request);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -61,16 +58,12 @@ public class ProjectController {
     @ApiResponse(responseCode = "200", description = "프로젝트 수정 성공(프로젝트 작성자/회원 멤버만 가능)")
     public ResponseEntity<ProjectResponse> update(
         @Parameter(description = "로그인한 회원 식별자", in = ParameterIn.HEADER)
-        @Login
-        Long loginId,
+        @Login Long loginId,
 
         @Parameter(description = "수정할 프로젝트 식별자", in = ParameterIn.PATH)
-        @PathVariable(value = "id")
-        Long projectId,
+        @PathVariable(value = "id") Long projectId,
 
-        @Valid
-        @RequestBody
-        ProjectRequest request
+        @Valid @RequestBody ProjectRequest request
     ) {
         ProjectResponse response = projectService.save(loginId, projectId, request);
 
@@ -82,12 +75,10 @@ public class ProjectController {
     @ApiResponse(responseCode = "204", description = "프로젝트 삭제 성공(프로젝트 작성자만 가능)")
     public ResponseEntity<Void> delete(
         @Parameter(description = "로그인한 회원 식별자", in = ParameterIn.HEADER)
-        @Login
-        Long loginId,
+        @Login Long loginId,
 
         @Parameter(description = "삭제할 프로젝트 식별자", in = ParameterIn.PATH)
-        @PathVariable(value = "id")
-        Long projectId
+        @PathVariable(value = "id") Long projectId
     ) {
         projectService.delete(loginId, projectId);
 
@@ -99,6 +90,7 @@ public class ProjectController {
     @Operation(summary = "프로젝트 상세 조회")
     @ApiResponse(responseCode = "200", description = "프로젝트 상세 조회 성공")
     public ResponseEntity<ProjectResponse> getById(
+        @Parameter(description = "조회할 프로젝트 식별자", in = ParameterIn.PATH)
         @PathVariable Long id
     ) {
         ProjectResponse response = projectService.findById(id);
@@ -110,18 +102,17 @@ public class ProjectController {
     @Operation(summary = "프로젝트 전체 조회")
     @ApiResponse(responseCode = "200", description = "프로젝트 전체 조회 성공")
     @Parameters({
-        @Parameter(name = "userId", description = "로그인한 사용자의 ID"),
-        @Parameter(name = "sort", description = "정렬 조건 [ createdAt(default), view, like ]"),
-        @Parameter(name = "isReleased", description = "출시서비스만 보기")
+        @Parameter(name = "loginId", description = "로그인한 회원 식별자", in = ParameterIn.HEADER),
+        @Parameter(name = "sort", description = "정렬 조건 [ createdAt(default), view, like ]", in = ParameterIn.QUERY),
+        @Parameter(name = "isReleased", description = "출시서비스만 보기", in = ParameterIn.QUERY)
     })
     public ResponseEntity<List<ProjectListResponse>> getAll(
-        @RequestParam(required = false) Long userId,
+        @Login Long loginId,
         @RequestParam(required = false) String sort,
         @RequestParam(required = false, defaultValue = "false") boolean isReleased
     ) {
         sort = (sort == null) ? "createdAt" : sort;
-        List<ProjectListResponse> responses = projectService.findAll(userId, sort, isReleased);
-        //TODO: @Login 어노테이션에서 requried=false를 활용할 순 없을까? (로그인한 사용자가 좋아요한 프로젝트를 확인하기 위해)
+        List<ProjectListResponse> responses = projectService.findAll(loginId, sort, isReleased);
 
         return ResponseEntity.ok(responses);
     }
