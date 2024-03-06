@@ -9,4 +9,7 @@ public interface UserSkillRepository extends JpaRepository<UserSkill, Long>, Use
 
     List<UserSkill> findAllByUser(User user);
 
+    boolean existsByUser(User user);
+
+    void deleteAllByProject(User user);
 }
