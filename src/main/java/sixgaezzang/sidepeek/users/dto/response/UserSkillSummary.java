@@ -3,6 +3,7 @@ package sixgaezzang.sidepeek.users.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import sixgaezzang.sidepeek.skill.dto.response.SkillResponse;
+import sixgaezzang.sidepeek.users.domain.UserSkill;
 
 @Schema(description = "회원 기술 스택 정보")
 @Builder
@@ -16,4 +17,10 @@ public record UserSkillSummary(
     @Schema(description = "기술 스택 상세정보")
     SkillResponse skill
 ) {
+
+    public static UserSkillSummary from(UserSkill userSkill) {
+        return new UserSkillSummary(
+            userSkill.getId(), userSkill.getCategory(), SkillResponse.from(userSkill.getSkill()));
+    }
+
 }
