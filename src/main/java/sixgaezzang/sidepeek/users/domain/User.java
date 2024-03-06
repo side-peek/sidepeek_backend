@@ -22,6 +22,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
@@ -45,29 +46,37 @@ public class User extends BaseTimeEntity {
     private String email;
 
     @Embedded
+    @Setter
     private Password password;
 
     @Column(name = "introduction", length = 100)
+    @Setter
     private String introduction;
 
     @Column(name = "profile_image_url", columnDefinition = "TEXT")
+    @Setter
     private String profileImageUrl;
 
     @Column(name = "job", length = 30, columnDefinition = "VARCHAR")
     @Enumerated(EnumType.STRING)
+    @Setter
     private Job job;
 
     @Column(name = "career", length = 30, columnDefinition = "VARCHAR")
     @Enumerated(EnumType.STRING)
+    @Setter
     private Career career;
 
     @Column(name = "github_url", columnDefinition = "TEXT")
+    @Setter
     private String githubUrl;
 
     @Column(name = "blog_url", columnDefinition = "TEXT")
+    @Setter
     private String blogUrl;
 
     @Column(name = "deleted_at", columnDefinition = "TIMESTAMP")
+    @Setter
     private LocalDateTime deletedAt;
 
     @Builder
