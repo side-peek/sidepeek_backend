@@ -2,10 +2,10 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACKS_IS_NULL;
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACKS_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectSkillErrorMessage.PROJECT_TECH_STACKS_IS_NULL;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectSkillErrorMessage.PROJECT_TECH_STACKS_OVER_MAX_COUNT;
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_ID_IS_NULL;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_NOT_EXISTING;
 
@@ -60,7 +60,7 @@ class ProjectSkillServiceTest {
     @Nested
     class 프로젝트_기술_스택_목록_저장_및_수정_테스트 {
 
-        static final int PROJECT_SKILL_COUNT = MAX_PROJECT_SKILL_COUNT / 2;
+        static final int PROJECT_SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
         static List<SaveProjectSkillRequest> techStacks;
         static List<SaveProjectSkillRequest> overLengthTechStacks;
         Project project;
@@ -84,7 +84,7 @@ class ProjectSkillServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage(PROJECT_TECH_STACKS_IS_NULL);
+                .withMessage(TECH_STACKS_IS_NULL);
         }
 
         @Test
@@ -107,13 +107,13 @@ class ProjectSkillServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
-                .withMessage(PROJECT_TECH_STACKS_OVER_MAX_COUNT);
+                .withMessage(TECH_STACKS_OVER_MAX_COUNT);
         }
 
         @BeforeEach
         void setup() {
             overLengthTechStacks = new ArrayList<>();
-            for (int i = 1; i <= MAX_PROJECT_SKILL_COUNT; i++) {
+            for (int i = 1; i <= MAX_TECH_STACK_COUNT; i++) {
                 Skill skill = createAndSaveSkill();
                 overLengthTechStacks.add(
                     FakeDtoProvider.createProjectSkillSaveRequest(skill.getId())

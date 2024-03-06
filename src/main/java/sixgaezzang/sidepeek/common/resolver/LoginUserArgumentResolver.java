@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.common.resolver;
 
-import static sixgaezzang.sidepeek.common.util.CommonConstant.LOGIN_IS_REQUIRED;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.LOGIN_IS_REQUIRED;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;

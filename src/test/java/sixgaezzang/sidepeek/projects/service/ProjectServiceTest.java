@@ -2,12 +2,12 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.LOGIN_IS_REQUIRED;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
-import static sixgaezzang.sidepeek.common.util.CommonConstant.LOGIN_IS_REQUIRED;
+import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.YearMonth;
@@ -49,7 +49,7 @@ class ProjectServiceTest {
 
     static final Faker faker = new Faker();
     static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
-    static final int PROJECT_SKILL_COUNT = MAX_PROJECT_SKILL_COUNT / 2;
+    static final int PROJECT_SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
     static List<SaveMemberRequest> members;
     static List<Long> fellowMemberIds;
     static List<SaveProjectSkillRequest> techStacks;

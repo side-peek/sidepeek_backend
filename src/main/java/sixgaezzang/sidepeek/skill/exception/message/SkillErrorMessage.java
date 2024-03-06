@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.skill.exception.message;
 
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LENGTH;
+import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

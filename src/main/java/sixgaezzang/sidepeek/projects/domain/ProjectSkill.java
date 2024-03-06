@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.projects.domain;
 
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LENGTH;
+import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

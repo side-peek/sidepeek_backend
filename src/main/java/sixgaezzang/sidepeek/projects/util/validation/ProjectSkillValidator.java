@@ -1,8 +1,8 @@
 package sixgaezzang.sidepeek.projects.util.validation;
 
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectSkillErrorMessage.PROJECT_TECH_STACKS_IS_NULL;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectSkillErrorMessage.PROJECT_TECH_STACKS_OVER_MAX_COUNT;
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACKS_IS_NULL;
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACKS_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COUNT;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.CATEGORY_IS_NULL;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_ID_IS_NULL;
 
@@ -17,9 +17,9 @@ import sixgaezzang.sidepeek.projects.dto.request.SaveProjectSkillRequest;
 public class ProjectSkillValidator {
 
     public static void validateTechStacks(List<SaveProjectSkillRequest> techStacks) {
-        ValidationUtils.validateNotNullAndEmpty(techStacks, PROJECT_TECH_STACKS_IS_NULL);
+        ValidationUtils.validateNotNullAndEmpty(techStacks, TECH_STACKS_IS_NULL);
 
-        Assert.isTrue(techStacks.size() < MAX_PROJECT_SKILL_COUNT, PROJECT_TECH_STACKS_OVER_MAX_COUNT);
+        Assert.isTrue(techStacks.size() < MAX_TECH_STACK_COUNT, TECH_STACKS_OVER_MAX_COUNT);
 
         techStacks.forEach(ProjectSkillValidator::validateTechStack);
     }

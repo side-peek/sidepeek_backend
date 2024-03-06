@@ -14,10 +14,6 @@ public class ProjectConstant {
     public static final int MAX_MEMBER_COUNT = 10;
     public static final int MAX_ROLE_LENGTH = 15;
 
-    // ProjectSkill
-    public static final int MAX_PROJECT_SKILL_COUNT = 30;
-    public static final int MAX_CATEGORY_LENGTH = 50;
-
     // OverviewImage(File)
     public static final int MAX_OVERVIEW_IMAGE_COUNT = 6;
 
