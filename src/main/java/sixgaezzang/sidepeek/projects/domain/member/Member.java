@@ -44,7 +44,7 @@ public class Member {
     @Column(name = "role", nullable = false, length = MAX_ROLE_LENGTH)
     private String role;
 
-    @Column(name = "nickname", length = MAX_NICKNAME_LENGTH)
+    @Column(name = "nickname", nullable = false, length = MAX_NICKNAME_LENGTH)
     private String nickname;
 
     @Builder
