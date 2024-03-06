@@ -14,6 +14,7 @@ public class UserErrorMessage {
     // Common
     public static final String USER_ID_IS_NULL = "회원 Id를 입력해주세요.";
     public static final String USER_NOT_EXISTING = "User Id에 해당하는 회원이 없습니다.";
+    public static final String USER_ALREADY_DELETED = "이미 삭제된 사용자입니다.";
 
     // Nickname
     public static final String NICKNAME_IS_NULL = "닉네임을 입력해주세요.";
