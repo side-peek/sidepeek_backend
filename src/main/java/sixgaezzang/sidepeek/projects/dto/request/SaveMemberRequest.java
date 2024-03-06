@@ -22,7 +22,7 @@ public record SaveMemberRequest(
     @Min(value = MIN_ID, message = "멤버 회원 id는 " + MIN_ID + "보다 작을 수 없습니다.")
     Long userId,
 
-    @Schema(description = "멤버 닉네임(회원도 설정 가능)", example = "Jinny")
+    @Schema(description = "멤버 닉네임(회원도 설정 가능)", example = "의진")
     @Size(max = MAX_NICKNAME_LENGTH, message = NICKNAME_OVER_MAX_LENGTH)
     @NotBlank(message = NICKNAME_IS_NULL)
     String nickname,
