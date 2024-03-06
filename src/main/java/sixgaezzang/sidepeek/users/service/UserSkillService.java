@@ -37,7 +37,7 @@ public class UserSkillService {
         UserSkillValidator.validateTechStacks(techStacks);
 
         if (userSkillRepository.existsByUser(user)) {
-            userSkillRepository.deleteAllByProject(user);
+            userSkillRepository.deleteAllByUser(user);
         }
 
         List<UserSkill> skills = convertAllToEntity(user, techStacks);
