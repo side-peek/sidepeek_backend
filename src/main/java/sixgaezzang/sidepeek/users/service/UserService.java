@@ -6,7 +6,6 @@ import static sixgaezzang.sidepeek.users.exception.UserErrorCode.DUPLICATE_EMAIL
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.DUPLICATE_NICKNAME;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
-import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_IS_NULL;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
@@ -18,15 +17,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
+import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
+import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserProfileResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserSearchResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserSkillSummary;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
+import sixgaezzang.sidepeek.users.util.validation.UserValidator;
 
 @Service
 @Transactional(readOnly = true)
@@ -80,12 +81,26 @@ public class UserService {
     }
 
     public UserProfileResponse getProfileById(Long id) {
-        Assert.notNull(id, USER_ID_IS_NULL);
+        UserValidator.validateUserId(id);
 
         User user = userRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
 
         List<UserSkillSummary> techStacks = userSkillService.findAllByUser(user);
+
+        return UserProfileResponse.from(user, techStacks);
+    }
+
+    public UserProfileResponse updateProfile(Long loginId, Long id, UpdateUserProfileRequest request) {
+        ValidationUtils.validateLoginId(loginId);
+        UserValidator.validateUserId(id);
+
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
+
+        user.update(request);
+
+        List<UserSkillSummary> techStacks = userSkillService.saveAll(user, request.techStacks());
 
         return UserProfileResponse.from(user, techStacks);
     }
