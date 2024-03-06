@@ -137,7 +137,7 @@ public class Project extends BaseTimeEntity {
         ProjectValidator.validateDuration(startDate, endDate);
     }
 
-    // TODO: User 처럼 Setter 구현하는 것이 나을까 아래와 같은 방식으로 하는 게 나을까?
+    // TODO: User 처럼 Private Setter(Lombok X) 구현하는 것이 나을까 아래와 같은 방식으로 하는 게 나을까?
     public Project update(SaveProjectRequest request) {
         validateConstructorRequiredArguments(request.name(), request.overview(), request.githubUrl(),
             request.description(), request.ownerId());
