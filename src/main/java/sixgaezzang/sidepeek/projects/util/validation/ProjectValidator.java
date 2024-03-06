@@ -1,8 +1,5 @@
 package sixgaezzang.sidepeek.projects.util.validation;
 
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_INVALID;
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_NULL;
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateTextLength;
