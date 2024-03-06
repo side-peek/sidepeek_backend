@@ -93,7 +93,7 @@ public class ProjectService {
                 () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
         validateLoginIdEqualsOwnerId(loginId, project.getOwnerId());
 
-        project.delete();
+        project.softDelete();
     }
 
     private void validateLoginIdEqualsOwnerId(Long loginId, Long ownerId) {

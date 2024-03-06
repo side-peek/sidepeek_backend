@@ -111,7 +111,7 @@ public class Project extends BaseTimeEntity {
         this.viewCount++;
     }
 
-    public void delete() { // TODO: 타임존 설정이 필요할까
+    public void softDelete() { // TODO: 타임존 설정이 필요할까
         if (Objects.isNull(this.deletedAt)) {
             this.deletedAt = LocalDateTime.now();
             return;

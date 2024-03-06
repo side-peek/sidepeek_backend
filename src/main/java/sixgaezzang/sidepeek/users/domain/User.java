@@ -155,7 +155,7 @@ public class User extends BaseTimeEntity {
         }
     }
 
-    public void delete() {
+    public void softDelete() {
         if (Objects.isNull(this.deletedAt)) {
             this.deletedAt = LocalDateTime.now();
             return;
