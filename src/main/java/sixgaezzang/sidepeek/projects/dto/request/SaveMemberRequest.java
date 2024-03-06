@@ -12,6 +12,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.projects.domain.member.Member;
+import sixgaezzang.sidepeek.users.domain.User;
 
 @Schema(description = "프로젝트 생성 요청에서 프로젝트 멤버 정보")
 public record SaveMemberRequest(
@@ -29,4 +32,12 @@ public record SaveMemberRequest(
     @NotBlank(message = ROLE_IS_NULL)
     String role
 ) {
+    public Member toEntity(Project project, User user) {
+        return Member.builder()
+            .project(project)
+            .user(user)
+            .nickname(this.nickname())
+            .role(this.role())
+            .build();
+    }
 }
