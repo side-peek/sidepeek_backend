@@ -38,10 +38,12 @@ public record CommentResponse(
     public static CommentResponse from(Comment comment, boolean isOwner,
         List<ReplyResponse> replies) {
         User user = comment.getUser();
+        UserSummary userSummary =
+            comment.isAnonymous() ? null : UserSummary.from(comment.getUser());
 
         return CommentResponse.builder()
             .id(comment.getId())
-            .user(UserSummary.from(user))
+            .user(userSummary)
             .isOwner(isOwner)
             .isAnonymous(comment.isAnonymous())
             .content(comment.getContent())
