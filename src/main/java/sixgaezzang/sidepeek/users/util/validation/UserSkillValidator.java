@@ -1,8 +1,8 @@
 package sixgaezzang.sidepeek.users.util.validation;
 
-import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.CATEGORY_IS_NULL;
-import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACKS_IS_NULL;
-import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACKS_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.CATEGORY_IS_NULL;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.TECH_STACKS_IS_NULL;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.TECH_STACKS_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COUNT;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_ID_IS_NULL;
 

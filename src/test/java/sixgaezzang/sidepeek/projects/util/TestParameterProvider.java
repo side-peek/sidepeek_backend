@@ -1,10 +1,10 @@
 package sixgaezzang.sidepeek.projects.util;
 
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.CATEGORY_IS_NULL;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.CATEGORY_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_NULL;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.CATEGORY_IS_NULL;
-import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.CATEGORY_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_IS_INVALID;
