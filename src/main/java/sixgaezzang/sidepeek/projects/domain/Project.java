@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
-import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.util.converter.YearMonthDateAttributeConverter;
 
 @Entity
@@ -137,7 +137,7 @@ public class Project extends BaseTimeEntity {
         validateDuration(startDate, endDate);
     }
 
-    public Project update(ProjectRequest request) {
+    public Project update(SaveProjectRequest request) {
         validateConstructorRequiredArguments(request.name(), request.overview(), request.githubUrl(),
             request.description(), request.ownerId());
         validateConstructorOptionArguments(request.subName(), request.thumbnailUrl(), request.deployUrl(),

@@ -6,7 +6,7 @@ import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createRole;
 import java.time.YearMonth;
 import java.util.List;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
-import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectSkillRequest;
 
 public class FakeDtoProvider {
@@ -17,20 +17,20 @@ public class FakeDtoProvider {
     }
 
     // Project
-    public static ProjectRequest createProjectSaveRequestOnlyRequired(
+    public static SaveProjectRequest createProjectSaveRequestOnlyRequired(
         String name, String overview, String githubUrl, String description, Long ownerId,
         List<SaveProjectSkillRequest> techStacks, List<SaveMemberRequest> members
     ) {
-        return new ProjectRequest(name, overview, ownerId, githubUrl, description,
+        return new SaveProjectRequest(name, overview, ownerId, githubUrl, description,
             techStacks, null, null, null, null,
             null, null, null, members);
     }
 
-    public static ProjectRequest createProjectSaveRequestWithOwnerIdAndOption(
+    public static SaveProjectRequest createProjectSaveRequestWithOwnerIdAndOption(
         List<SaveProjectSkillRequest> techStacks, Long ownerId, String subName, String thumbnailUrl, String deployUrl,
         String troubleShooting, YearMonth startDate, YearMonth endDate
     ) {
-        return new ProjectRequest(
+        return new SaveProjectRequest(
             FakeValueProvider.createProjectName(), FakeValueProvider.createOverview(), ownerId,
             FakeValueProvider.createUrl(), FakeValueProvider.createLongText(), techStacks, subName,
             thumbnailUrl, deployUrl, startDate, endDate, troubleShooting, null, null
