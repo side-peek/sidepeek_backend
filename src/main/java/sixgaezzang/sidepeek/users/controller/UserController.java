@@ -128,7 +128,8 @@ public class UserController {
         @PathVariable
         Long id
     ) {
-        return ResponseEntity.ok(userService.getProfileById(id));
+        return ResponseEntity.ok()
+            .body(userService.getProfileById(id));
     }
 
     @PutMapping("/{id}")
