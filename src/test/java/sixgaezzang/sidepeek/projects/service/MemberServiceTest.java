@@ -48,7 +48,7 @@ class MemberServiceTest {
     UserRepository userRepository;
 
     @Nested
-    class 멤버_저장_및_수정_테스트 {
+    class 멤버_저장_테스트 {
 
         static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
         static List<SaveMemberRequest> members;

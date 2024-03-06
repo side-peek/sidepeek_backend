@@ -1,5 +1,12 @@
 package sixgaezzang.sidepeek.projects.util;
 
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createLongText;
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createNickname;
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createOverview;
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createProjectName;
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createSkillName;
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createUrl;
+
 import java.time.YearMonth;
 import net.datafaker.Faker;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,15 +23,15 @@ public class FakeEntityProvider {
         YearMonth endDate = startDate.plusMonths(3);
 
         return Project.builder()
-            .name(FakeValueProvider.createProjectName())
-            .subName(FakeValueProvider.createProjectName())
-            .overview(FakeValueProvider.createOverview())
-            .thumbnailUrl(FakeValueProvider.createUrl())
-            .githubUrl(FakeValueProvider.createUrl())
+            .name(createProjectName())
+            .subName(createProjectName())
+            .overview(createOverview())
+            .thumbnailUrl(createUrl())
+            .githubUrl(createUrl())
             .startDate(startDate)
             .endDate(endDate)
             .ownerId(user.getId())
-            .description(FakeValueProvider.createLongText())
+            .description(createLongText())
             .build();
     }
 
@@ -35,14 +42,14 @@ public class FakeEntityProvider {
         return User.builder()
             .email(email)
             .password(new Password(password, new BCryptPasswordEncoder()))
-            .nickname(FakeValueProvider.createNickname())
+            .nickname(createNickname())
             .build();
     }
 
     public static Skill createSkill() {
         return Skill.builder()
-            .name(FakeValueProvider.createSkillName())
-            .iconImageUrl(FakeValueProvider.createUrl())
+            .name(createSkillName())
+            .iconImageUrl(createUrl())
             .build();
     }
 }

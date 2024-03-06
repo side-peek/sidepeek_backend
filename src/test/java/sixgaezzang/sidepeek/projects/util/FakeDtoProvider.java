@@ -1,7 +1,12 @@
 package sixgaezzang.sidepeek.projects.util;
 
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createLongText;
 import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createNickname;
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createOverview;
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createProjectName;
 import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createRole;
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createSkillCategory;
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createUrl;
 
 import java.time.YearMonth;
 import java.util.List;
@@ -13,7 +18,7 @@ public class FakeDtoProvider {
 
     // Project Skill
     public static SaveProjectSkillRequest createProjectSkillSaveRequest(Long skillId) {
-        return new SaveProjectSkillRequest(skillId, FakeValueProvider.createSkillCategory());
+        return new SaveProjectSkillRequest(skillId, createSkillCategory());
     }
 
     // Project
@@ -31,15 +36,15 @@ public class FakeDtoProvider {
         String troubleShooting, YearMonth startDate, YearMonth endDate
     ) {
         return new SaveProjectRequest(
-            FakeValueProvider.createProjectName(), FakeValueProvider.createOverview(), ownerId,
-            FakeValueProvider.createUrl(), FakeValueProvider.createLongText(), techStacks, subName,
+            createProjectName(), createOverview(), ownerId,
+            createUrl(), createLongText(), techStacks, subName,
             thumbnailUrl, deployUrl, startDate, endDate, troubleShooting, null, null
         );
     }
 
     // Member
     public static SaveMemberRequest createFellowMemberSaveRequest(Long userId) {
-        return new SaveMemberRequest(userId, null, createRole());
+        return new SaveMemberRequest(userId, createNickname(), createRole());
     }
 
     public static SaveMemberRequest createNonFellowMemberSaveRequest() {
