@@ -30,7 +30,7 @@ import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
-import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveProjectSkillRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
@@ -52,7 +52,7 @@ class ProjectServiceTest {
     static final int PROJECT_SKILL_COUNT = MAX_PROJECT_SKILL_COUNT / 2;
     static List<SaveMemberRequest> members;
     static List<Long> fellowMemberIds;
-    static List<ProjectSkillSaveRequest> techStacks;
+    static List<SaveProjectSkillRequest> techStacks;
     static String NAME = FakeValueProvider.createProjectName();
     static String OVERVIEW = FakeValueProvider.createOverview();
     static String GITHUB_URL = FakeValueProvider.createUrl();

@@ -11,12 +11,12 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.common.util.ValidationUtils;
-import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveProjectSkillRequest;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProjectSkillValidator {
 
-    public static void validateTechStacks(List<ProjectSkillSaveRequest> techStacks) {
+    public static void validateTechStacks(List<SaveProjectSkillRequest> techStacks) {
         ValidationUtils.validateNotNullAndEmpty(techStacks, PROJECT_TECH_STACKS_IS_NULL);
 
         Assert.isTrue(techStacks.size() < MAX_PROJECT_SKILL_COUNT, PROJECT_TECH_STACKS_OVER_MAX_COUNT);
@@ -24,7 +24,7 @@ public class ProjectSkillValidator {
         techStacks.forEach(ProjectSkillValidator::validateTechStack);
     }
 
-    public static void validateTechStack(ProjectSkillSaveRequest techStack) {
+    public static void validateTechStack(SaveProjectSkillRequest techStack) {
         Assert.notNull(techStack.skillId(), SKILL_ID_IS_NULL);
         Assert.notNull(techStack.category(), CATEGORY_IS_NULL);
     }

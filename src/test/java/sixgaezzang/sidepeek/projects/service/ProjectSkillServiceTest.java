@@ -26,7 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
-import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveProjectSkillRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
@@ -61,8 +61,8 @@ class ProjectSkillServiceTest {
     class 프로젝트_기술_스택_목록_저장_및_수정_테스트 {
 
         static final int PROJECT_SKILL_COUNT = MAX_PROJECT_SKILL_COUNT / 2;
-        static List<ProjectSkillSaveRequest> techStacks;
-        static List<ProjectSkillSaveRequest> overLengthTechStacks;
+        static List<SaveProjectSkillRequest> techStacks;
+        static List<SaveProjectSkillRequest> overLengthTechStacks;
         Project project;
         User user;
         Skill skill;
@@ -78,7 +78,7 @@ class ProjectSkillServiceTest {
 
         @ParameterizedTest
         @NullAndEmptySource
-        void 빈_기술_스택_목록_저장에_실패한다(List<ProjectSkillSaveRequest> emptyTechStacks) {
+        void 빈_기술_스택_목록_저장에_실패한다(List<SaveProjectSkillRequest> emptyTechStacks) {
             // given, when
             ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, emptyTechStacks);
 
@@ -132,9 +132,9 @@ class ProjectSkillServiceTest {
             String testMessage, String category, String message
         ) {
             // given
-            List<ProjectSkillSaveRequest> techStacksWithInvalidSkill = new ArrayList<>(techStacks);
+            List<SaveProjectSkillRequest> techStacksWithInvalidSkill = new ArrayList<>(techStacks);
             techStacksWithInvalidSkill.add(
-                new ProjectSkillSaveRequest(skill.getId(), category)
+                new SaveProjectSkillRequest(skill.getId(), category)
             );
 
             // when
@@ -149,7 +149,7 @@ class ProjectSkillServiceTest {
         @Test
         void 존재하지_않는_기술_스택_Id로_기술_스택_목록_저장에_실패한다() {
             // given
-            List<ProjectSkillSaveRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
+            List<SaveProjectSkillRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
             techStacksWithNonExistSkill.add(
                 FakeDtoProvider.createProjectSkillSaveRequest(skill.getId() + 1)
             );
@@ -166,7 +166,7 @@ class ProjectSkillServiceTest {
         @Test
         void 기술_스택_Id가_누락되어_기술_스택_목록_저장에_실패한다() {
             // given
-            List<ProjectSkillSaveRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
+            List<SaveProjectSkillRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
             techStacksWithNonExistSkill.add(
                 FakeDtoProvider.createProjectSkillSaveRequest(null)
             );
@@ -187,7 +187,7 @@ class ProjectSkillServiceTest {
             List<ProjectSkill> originalTechStacks = projectSkillService.findAll(project);
 
             // when
-            List<ProjectSkillSaveRequest> techStacksOnlyOne = new ArrayList<>();
+            List<SaveProjectSkillRequest> techStacksOnlyOne = new ArrayList<>();
             Skill newSkill = createAndSaveSkill();
             techStacksOnlyOne.add(FakeDtoProvider.createProjectSkillSaveRequest(newSkill.getId()));
 

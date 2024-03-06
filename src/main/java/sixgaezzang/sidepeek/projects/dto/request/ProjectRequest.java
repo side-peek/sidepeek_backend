@@ -75,7 +75,7 @@ public record ProjectRequest(
     @Schema(description = "프로젝트 기술 스택")
     @Size(max = MAX_PROJECT_SKILL_COUNT, message = PROJECT_TECH_STACKS_OVER_MAX_COUNT)
     @NotEmpty(message = PROJECT_TECH_STACKS_IS_NULL)
-    List<ProjectSkillSaveRequest> techStacks,
+    List<SaveProjectSkillRequest> techStacks,
 
     // Option
     @Schema(description = "프로젝트 부제목", example = "좋은 아이디어? 사이드픽에서 찾아봐!")
