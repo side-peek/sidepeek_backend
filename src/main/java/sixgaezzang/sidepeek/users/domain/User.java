@@ -2,8 +2,13 @@ package sixgaezzang.sidepeek.users.domain;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
-import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
-import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAIL_FORMAT_INVALID;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_CAREER_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_EMAIL_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_INTRODUCTION_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_JOB_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -29,12 +34,6 @@ import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
-
-    public static final int MAX_NICKNAME_LENGTH = 20;
-    public static final int MAX_EMAIL_LENGTH = 50;
-    public static final int MAX_INTRODUCTION_LENGTH = 100;
-    public static final int MAX_JOB_LENGTH = 30;
-    public static final int MAX_CAREER_LENGTH = 30;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -99,12 +98,12 @@ public class User extends BaseTimeEntity {
         }
 
         if (email != null) {
-            validateEmail(email, INVALID_EMAIL_FORMAT.getMessage());
+            validateEmail(email, EMAIL_FORMAT_INVALID);
         }
     }
 
     private void validateNickname(String nickname) {
         validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
-            EXCESSIVE_NICKNAME_LENGTH.getMessage());
+            NICKNAME_OVER_MAX_LENGTH);
     }
 }

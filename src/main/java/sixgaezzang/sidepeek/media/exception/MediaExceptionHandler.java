@@ -1,5 +1,9 @@
 package sixgaezzang.sidepeek.media.exception;
 
+import static sixgaezzang.sidepeek.media.exception.message.MediaErrorMessage.CANNOT_READ_FILE;
+import static sixgaezzang.sidepeek.media.exception.message.MediaErrorMessage.CONTENT_TYPE_IS_UNSUPPORTED;
+import static sixgaezzang.sidepeek.media.exception.message.MediaErrorMessage.FILE_IS_EMPTY;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -17,11 +21,12 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class MediaExceptionHandler {
+
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleHttpMediaTypeNotSupportedException(
         HttpMediaTypeNotSupportedException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST,
-            "지원하는 Content-Type이 아닙니다.");
+            CONTENT_TYPE_IS_UNSUPPORTED);
 
         return ResponseEntity.badRequest()
             .body(errorResponse);
@@ -30,7 +35,7 @@ public class MediaExceptionHandler {
     @ExceptionHandler({MultipartException.class, MissingServletRequestPartException.class})
     public ResponseEntity<ErrorResponse> handleMultipartRequestExceptions(Exception e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST,
-            "요청에 파일이 누락되어 있는지 확인해주세요.");
+            FILE_IS_EMPTY);
 
         return ResponseEntity.badRequest()
             .body(errorResponse);
@@ -40,7 +45,7 @@ public class MediaExceptionHandler {
     public ResponseEntity<ErrorResponse> handleS3Exception(S3Exception e) {
         log.error(e.getMessage(), e.fillInStackTrace());
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_GATEWAY,
-            "파일을 저장하는 동안 문제가 발생했습니다.");
+            CANNOT_READ_FILE);
 
         return ResponseEntity
             .status(HttpStatus.BAD_GATEWAY)

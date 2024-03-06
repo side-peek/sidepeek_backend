@@ -10,4 +10,8 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     List<File> findAllByProjectAndType(Project project, FileType type);
 
+    boolean existsByProject(Project project);
+
+    void deleteAllByProjectAndType(Project project, FileType type);
+
 }
