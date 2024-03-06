@@ -4,6 +4,7 @@ import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import sixgaezzang.sidepeek.common.exception.ErrorCode;
 
+// TODO: 메시지로 통일이 필요합니다!
 public enum UserErrorCode implements ErrorCode {
     DUPLICATE_NICKNAME(1001, "이미 사용 중인 닉네임입니다."),
     DUPLICATE_EMAIL(1002, "이미 사용 중인 이메일입니다."),
