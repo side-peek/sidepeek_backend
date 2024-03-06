@@ -111,7 +111,7 @@ public class UserController {
     @Operation(summary = "회원 닉네임 검색")
     @ApiResponse(responseCode = "200", description = "회원 검색 성공")
     @Parameter(name = "keyword", description = "검색어", example = "sixgaezzang6")
-    public ResponseEntity<UserSearchResponse> searchByNickname(
+    public ResponseEntity<UserSearchResponse> searchSummaryByNickname(
         @RequestParam(required = false)
         @Size(max = MAX_NICKNAME_LENGTH, message = NICKNAME_OVER_MAX_LENGTH)
         String keyword
@@ -123,7 +123,7 @@ public class UserController {
     @GetMapping("/{id}")
     @Operation(summary = "회원 프로필 정보 조회")
     @ApiResponse(responseCode = "200", description = "회원 프로필 정보 조회 성공")
-    public ResponseEntity<UserProfileResponse> getById(
+    public ResponseEntity<UserProfileResponse> getProfileById(
         @Parameter(description = "회원 식별자", in = ParameterIn.PATH)
         @PathVariable
         Long id
@@ -135,7 +135,7 @@ public class UserController {
     @PutMapping("/{id}")
     @Operation(summary = "회원 프로필 정보 수정")
     @ApiResponse(responseCode = "200", description = "회원 프로필 정보 조회 성공")
-    public ResponseEntity<UserProfileResponse> update(
+    public ResponseEntity<UserProfileResponse> updateProfile(
         @Parameter(description = "로그인한 회원 식별자(토큰에서 추출)", in = ParameterIn.HEADER)
         @Login
         Long loginId,
@@ -148,8 +148,8 @@ public class UserController {
         @Valid
         UpdateUserProfileRequest request
     ) {
-        // TODO: 프로필 정보 수정 서비스 로직 구현
-        return null;
+        return ResponseEntity.ok()
+            .body(userService.updateProfile(loginId, id, request));
     }
 
 }
