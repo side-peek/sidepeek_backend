@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommonErrorMessage {
+    // Common
+    public static final String LOGIN_IS_REQUIRED = "로그인이 필요합니다.";
+
     // Project, Comment Owner
     public static final String OWNER_ID_NOT_EQUALS_LOGIN_ID = "작성자 Id가 로그인한 회원 Id와 일치하지 않습니다.";
 

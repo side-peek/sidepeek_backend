@@ -7,5 +7,8 @@ import lombok.NoArgsConstructor;
 public class CommonConstant {
     public static final long MIN_ID = 1;
     public static final int MAX_TEXT_LENGTH = 21_844;
-    public static final String LOGIN_IS_REQUIRED = "로그인이 필요합니다.";
+
+    // TechStack
+    public static final int MAX_TECH_STACK_COUNT = 30;
+    public static final int MAX_CATEGORY_LENGTH = 50;
 }
