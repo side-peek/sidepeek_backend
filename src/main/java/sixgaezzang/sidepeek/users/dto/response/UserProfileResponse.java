@@ -3,6 +3,7 @@ package sixgaezzang.sidepeek.users.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Builder;
+import sixgaezzang.sidepeek.users.domain.User;
 
 @Schema(description = "회원 프로필 정보")
 @Builder
@@ -31,4 +32,11 @@ public record UserProfileResponse(
     @Schema(description = "회원 기술 스택 목록")
     List<UserSkillSummary> techStacks
 ) {
+    public static UserProfileResponse from(User user, List<UserSkillSummary> techStacks) {
+        return new UserProfileResponse(
+            user.getNickname(), user.getProfileImageUrl(), user.getIntroduction(),
+            user.getJob().getName(), user.getCareer().getDescription(),
+            user.getGithubUrl(), user.getBlogUrl(), techStacks
+        );
+    }
 }
