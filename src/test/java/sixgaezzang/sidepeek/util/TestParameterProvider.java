@@ -38,8 +38,12 @@ import static sixgaezzang.sidepeek.util.FakeValueProvider.createProjectName;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
 
 import java.time.YearMonth;
+import java.util.Collections;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.provider.Arguments;
+import sixgaezzang.sidepeek.users.domain.Career;
+import sixgaezzang.sidepeek.users.domain.Job;
+import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 
 public class TestParameterProvider {
     //Project
@@ -154,6 +158,52 @@ public class TestParameterProvider {
                 CATEGORY_IS_NULL),
             Arguments.of("기술 스택 카테고리가 최대 길이를 넘는 경우", "C".repeat(MAX_CATEGORY_LENGTH + 1),
                 CATEGORY_OVER_MAX_LENGTH)
+        );
+    }
+
+
+    // User Profile
+    public static Stream<Arguments> createProfileRequestWithInvalidNickname() {
+        return Stream.of(
+            Arguments.of("닉네임이 최대 길이를 넘는 경우",
+                new UpdateUserProfileRequest(
+                    "N".repeat(MAX_NICKNAME_LENGTH + 1),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createIntroduction(),
+                    Job.BACKEND_DEVELOPER.getName(),
+                    Career.JUNIOR.getDescription(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createUrl(),
+                    Collections.emptyList()
+                ), NICKNAME_OVER_MAX_LENGTH),
+            Arguments.of("닉네임이 빈 문자열인 경우",
+                new UpdateUserProfileRequest(
+                    "",
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createIntroduction(),
+                    Job.BACKEND_DEVELOPER.getName(),
+                    Career.JUNIOR.getDescription(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createUrl(),
+                    Collections.emptyList()
+                ), NICKNAME_IS_NULL),
+            Arguments.of("닉네임이 null인 경우",
+                new UpdateUserProfileRequest(
+                    null,
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createIntroduction(),
+                    Job.BACKEND_DEVELOPER.getName(),
+                    Career.JUNIOR.getDescription(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createUrl(),
+                    Collections.emptyList()
+                ), NICKNAME_IS_NULL)
+        );
+    }
+
+    public static Stream<Arguments> createInvalidProfileInfo() {
+        return Stream.of(
+            // TODO: 유효하지 않은 request 구현
         );
     }
 
