@@ -16,6 +16,7 @@ import sixgaezzang.sidepeek.users.dto.request.UpdateUserSkillRequest;
 // TODO: ProjectSkillValidator와 로직이 상당히 유사해서 추후 리팩터링 예정
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserSkillValidator {
+
     public static void validateUserTechStacks(List<UpdateUserSkillRequest> techStacks) {
         ValidationUtils.validateNotNullAndEmpty(techStacks, TECH_STACKS_IS_NULL);
 
@@ -28,4 +29,5 @@ public class UserSkillValidator {
         Assert.notNull(techStack.skillId(), SKILL_ID_IS_NULL);
         Assert.notNull(techStack.category(), CATEGORY_IS_NULL);
     }
+
 }
