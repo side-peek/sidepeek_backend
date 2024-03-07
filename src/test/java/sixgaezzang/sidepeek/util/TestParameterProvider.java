@@ -30,7 +30,9 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAM
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.BLOG_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.BLOG_URL_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.CAREER_IS_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.INTRODUCTION_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.JOB_IS_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_IS_NULL;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PROFILE_IMAGE_URL_IS_INVALID;
@@ -262,7 +264,7 @@ public class TestParameterProvider {
                     FakeValueProvider.createUrl(),
                     FakeValueProvider.createUrl(),
                     Collections.emptyList()
-                ), NICKNAME_IS_NULL)
+                ), JOB_IS_INVALID)
         );
     }
 
@@ -278,7 +280,7 @@ public class TestParameterProvider {
                     FakeValueProvider.createUrl(),
                     FakeValueProvider.createUrl(),
                     Collections.emptyList()
-                ), NICKNAME_IS_NULL)
+                ), CAREER_IS_INVALID)
         );
     }
 
