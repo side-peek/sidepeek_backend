@@ -1,12 +1,6 @@
-package sixgaezzang.sidepeek.projects.util;
+package sixgaezzang.sidepeek.util;
 
 import static io.micrometer.common.util.StringUtils.isBlank;
-import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createLongText;
-import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createNickname;
-import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createOverview;
-import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createProjectName;
-import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createSkillName;
-import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createUrl;
 
 import java.time.YearMonth;
 import net.datafaker.Faker;
@@ -27,15 +21,15 @@ public class FakeEntityProvider {
         YearMonth endDate = startDate.plusMonths(3);
 
         return Project.builder()
-            .name(createProjectName())
-            .subName(createProjectName())
-            .overview(createOverview())
-            .thumbnailUrl(createUrl())
-            .githubUrl(createUrl())
+            .name(FakeValueProvider.createProjectName())
+            .subName(FakeValueProvider.createProjectName())
+            .overview(FakeValueProvider.createOverview())
+            .thumbnailUrl(FakeValueProvider.createUrl())
+            .githubUrl(FakeValueProvider.createUrl())
             .startDate(startDate)
             .endDate(endDate)
             .ownerId(user.getId())
-            .description(createLongText())
+            .description(FakeValueProvider.createLongText())
             .build();
     }
 
@@ -46,7 +40,7 @@ public class FakeEntityProvider {
         return User.builder()
             .email(email)
             .password(new Password(password, new BCryptPasswordEncoder()))
-            .nickname(createNickname())
+            .nickname(FakeValueProvider.createNickname())
             .build();
     }
 
@@ -63,8 +57,8 @@ public class FakeEntityProvider {
 
     public static Skill createSkill() {
         return Skill.builder()
-            .name(createSkillName())
-            .iconImageUrl(createUrl())
+            .name(FakeValueProvider.createSkillName())
+            .iconImageUrl(FakeValueProvider.createUrl())
             .build();
     }
 

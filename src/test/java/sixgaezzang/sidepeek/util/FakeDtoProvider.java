@@ -1,12 +1,12 @@
-package sixgaezzang.sidepeek.projects.util;
+package sixgaezzang.sidepeek.util;
 
-import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createLongText;
-import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createNickname;
-import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createOverview;
-import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createProjectName;
-import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createRole;
-import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createSkillCategory;
-import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createUrl;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createLongText;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createNickname;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createOverview;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createProjectName;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createRole;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createSkillCategory;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
 
 import java.time.YearMonth;
 import java.util.List;

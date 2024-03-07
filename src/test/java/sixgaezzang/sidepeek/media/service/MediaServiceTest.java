@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.config.properties.S3Properties;
 import sixgaezzang.sidepeek.media.dto.response.MediaUploadResponse;
-import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
+import sixgaezzang.sidepeek.util.FakeEntityProvider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 import software.amazon.awssdk.services.s3.S3Client;

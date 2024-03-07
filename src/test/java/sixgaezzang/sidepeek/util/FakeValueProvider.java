@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.projects.util;
+package sixgaezzang.sidepeek.util;
 
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
