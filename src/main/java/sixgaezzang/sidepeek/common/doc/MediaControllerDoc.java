@@ -1,8 +1,6 @@
 package sixgaezzang.sidepeek.common.doc;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,9 +21,6 @@ public interface MediaControllerDoc {
         @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    ResponseEntity<MediaUploadResponse> uploadFile(
-        @Parameter(name = "loginId", description = "로그인한 회원 식별자", in = ParameterIn.HEADER) Long loginId,
-        @Parameter(name = "file", description = "업로드할 이미지 파일") MultipartFile file
-    );
+    ResponseEntity<MediaUploadResponse> uploadFile(Long loginId, MultipartFile file);
 
 }

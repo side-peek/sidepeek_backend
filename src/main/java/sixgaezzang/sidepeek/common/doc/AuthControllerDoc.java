@@ -1,8 +1,6 @@
 package sixgaezzang.sidepeek.common.doc;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,10 +21,6 @@ public interface AuthControllerDoc {
         @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @Parameters({
-        @Parameter(name = "email", description = "이메일", example = "sidepeek6@gmail.com"),
-        @Parameter(name = "password", description = "비밀번호", example = "sidepeek6!")
     })
     ResponseEntity<LoginResponse> login(LoginRequest request);
 

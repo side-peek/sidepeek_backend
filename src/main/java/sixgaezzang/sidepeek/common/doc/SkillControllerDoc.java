@@ -2,6 +2,7 @@ package sixgaezzang.sidepeek.common.doc;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,9 +20,7 @@ public interface SkillControllerDoc {
         @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @Parameter(name = "keyword", description = "검색어", example = "spring")
-    ResponseEntity<SkillSearchResponse> searchByName(
-        String keyword
-    );
+    @Parameter(name = "keyword", description = "검색어", example = "spring", in = ParameterIn.QUERY)
+    ResponseEntity<SkillSearchResponse> searchByName(String keyword);
 
 }
