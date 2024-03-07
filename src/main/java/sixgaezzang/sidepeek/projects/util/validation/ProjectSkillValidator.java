@@ -19,7 +19,7 @@ public class ProjectSkillValidator {
     public static void validateTechStacks(List<SaveProjectSkillRequest> techStacks) {
         ValidationUtils.validateNotNullAndEmpty(techStacks, TECH_STACKS_IS_NULL);
 
-        Assert.isTrue(techStacks.size() < MAX_TECH_STACK_COUNT, TECH_STACKS_OVER_MAX_COUNT);
+        Assert.isTrue(techStacks.size() <= MAX_TECH_STACK_COUNT, TECH_STACKS_OVER_MAX_COUNT);
 
         techStacks.forEach(ProjectSkillValidator::validateTechStack);
     }
