@@ -46,7 +46,7 @@ public interface UserControllerDoc {
     @Parameter(name = "nickname", description = "닉네임", example = "육개짱")
     ResponseEntity<CheckDuplicateResponse> checkNicknameDuplicate(CheckNicknameRequest request);
 
-    @Operation(summary = "회원 닉네임 검색")
+    @Operation(summary = "회원 검색", description = "닉네임으로 회원을 검색합니다.")
     @ApiResponse(responseCode = "200", description = "회원 검색 성공")
     @Parameter(name = "keyword", description = "검색어", example = "sixgaezzang6")
     ResponseEntity<UserSearchResponse> searchByNickname(String keyword);
