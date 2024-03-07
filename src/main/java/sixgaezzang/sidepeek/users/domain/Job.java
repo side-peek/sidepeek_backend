@@ -1,6 +1,10 @@
 package sixgaezzang.sidepeek.users.domain;
 
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.JOB_IS_INVALID;
+
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Arrays;
+import java.util.Objects;
 
 public enum Job {
     BACKEND_DEVELOPER("백엔드 개발자"),
@@ -21,4 +25,12 @@ public enum Job {
     public String getName() {
         return name;
     }
+
+    public static Job get(String jobName) {
+        return Arrays.stream(Job.values())
+            .filter(job -> Objects.equals(job.getName(), jobName))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException(JOB_IS_INVALID));
+    }
+
 }

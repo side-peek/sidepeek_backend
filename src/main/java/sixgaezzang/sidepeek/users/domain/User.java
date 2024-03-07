@@ -5,9 +5,7 @@ import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_F
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateBlogUrl;
-import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateCareer;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateIntroduction;
-import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateJob;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateNickname;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateProfileImageUrl;
 
@@ -138,8 +136,8 @@ public class User extends BaseTimeEntity {
 
     private void setJob(String jobName) {
         if (Objects.nonNull(jobName) && !jobName.isBlank()) {
-            validateJob(jobName);
-            if (!Objects.equals(this.job, Job.valueOf(jobName))) {
+            Job newJob = Job.get(jobName);
+            if (!Objects.equals(this.job, newJob)) {
                 this.job = Job.valueOf(jobName);
             }
         }
@@ -147,8 +145,8 @@ public class User extends BaseTimeEntity {
 
     private void setCareer(String careerDescription) {
         if (Objects.nonNull(careerDescription)) {
-            validateCareer(careerDescription);
-            if (!Objects.equals(this.career, Career.valueOf(careerDescription))) {
+            Career newCareer = Career.get(careerDescription);
+            if (!Objects.equals(this.career, newCareer)) {
                 this.career = Career.valueOf(careerDescription);
             }
         }
