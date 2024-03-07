@@ -169,7 +169,6 @@ public class TestParameterProvider {
         );
     }
 
-
     // User Profile
     public static Stream<Arguments> createProfileRequestWithInvalidNickname() {
         return Stream.of(

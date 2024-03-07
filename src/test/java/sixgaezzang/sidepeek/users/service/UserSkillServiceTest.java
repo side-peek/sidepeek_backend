@@ -35,7 +35,6 @@ import sixgaezzang.sidepeek.users.repository.userskill.UserSkillRepository;
 import sixgaezzang.sidepeek.util.FakeDtoProvider;
 import sixgaezzang.sidepeek.util.FakeEntityProvider;
 
-
 @SpringBootTest
 @Transactional
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
