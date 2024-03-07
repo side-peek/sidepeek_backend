@@ -26,9 +26,9 @@ public enum Job {
         return name;
     }
 
-    public static Job get(String jobName) {
+    public static Job get(String name) {
         return Arrays.stream(Job.values())
-            .filter(job -> Objects.equals(job.getName(), jobName))
+            .filter(job -> Objects.equals(job.getName(), name))
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException(JOB_IS_INVALID));
     }
