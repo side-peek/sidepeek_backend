@@ -1,13 +1,17 @@
 package sixgaezzang.sidepeek.users.domain;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
-import static sixgaezzang.sidepeek.users.exception.UserErrorCode.BLANK_NICKNAME;
-import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validatePassword;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
+import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_PASSWORD_FORMAT;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateBlogUrl;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateCareer;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateIntroduction;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateJob;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateNickname;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateProfileImageUrl;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -29,7 +33,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
-import sixgaezzang.sidepeek.users.util.validation.UserValidator;
 
 @Entity
 @Table(name = "users")
@@ -101,7 +104,7 @@ public class User extends BaseTimeEntity {
         setBlogUrl(request.blogUrl());
     }
 
-    public void softDelete() {
+    public void softDelete() { // TODO: 회원탈퇴할 때 언젠가는 쓰일 것 같아서 구현
         if (Objects.isNull(this.deletedAt)) {
             this.deletedAt = LocalDateTime.now();
             return;
@@ -114,50 +117,45 @@ public class User extends BaseTimeEntity {
         validateEmail(email, INVALID_EMAIL_FORMAT.getMessage());
     }
 
-    private void validateNickname(String nickname) {
-        validateNotBlank(nickname, BLANK_NICKNAME.getMessage());
-        validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
-            EXCESSIVE_NICKNAME_LENGTH.getMessage());
-    }
-
     private void setNickname(String nickname) {
         if (!Objects.equals(this.nickname, nickname)) {
-            UserValidator.validateNickname(nickname);
+            validateNickname(nickname);
             this.nickname = nickname;
         }
     }
 
-    private void setPassword(Password password) {
+    private void setPassword(String password, PasswordEncoder passwordEncoder) { // TODO: 로직 검토 필요
         if (!Objects.equals(this.password, password)) {
-            UserValidator.validatePassword(password);
-            this.password = password;
+            validatePassword(password, INVALID_PASSWORD_FORMAT.getMessage());
+            String encoded = passwordEncoder.encode(password);
+            this.password = new Password(encoded, passwordEncoder);
         }
     }
 
     private void setIntroduction(String introduction) {
         if (Objects.nonNull(introduction) && !Objects.equals(this.introduction, introduction)) {
-            UserValidator.validateIntroduction(introduction);
+            validateIntroduction(introduction);
             this.introduction = introduction;
         }
     }
 
     private void setProfileImageUrl(String profileImageUrl) {
         if (Objects.nonNull(profileImageUrl) && !Objects.equals(this.profileImageUrl, profileImageUrl)) {
-            UserValidator.validateProfileImageUrl(profileImageUrl);
+            validateProfileImageUrl(profileImageUrl);
             this.profileImageUrl = profileImageUrl;
         }
     }
 
     private void setJob(String jobName) {
         if (Objects.nonNull(jobName) && !jobName.isBlank() && !Objects.equals(this.job.getName(), jobName)) {
-            UserValidator.validateJob(jobName);
+            validateJob(jobName);
             this.job = Job.valueOf(jobName);
         }
     }
 
     private void setCareer(String careerDescription) {
         if (Objects.nonNull(careerDescription) && !Objects.equals(this.career.getDescription(), careerDescription)) {
-            UserValidator.validateCareer(careerDescription);
+            validateCareer(careerDescription);
             this.career = Career.valueOf(careerDescription);
         }
     }
@@ -171,7 +169,7 @@ public class User extends BaseTimeEntity {
 
     private void setBlogUrl(String blogUrl) {
         if (Objects.nonNull(blogUrl) && !Objects.equals(this.blogUrl, blogUrl)) {
-            UserValidator.validateBlogUrl(blogUrl);
+            validateBlogUrl(blogUrl);
             this.blogUrl = blogUrl;
         }
     }
