@@ -15,7 +15,7 @@ import sixgaezzang.sidepeek.common.util.ValidationUtils;
 public class FileValidator {
 
     public static void validateFiles(List<String> overviewImageUrls) {
-        Assert.isTrue(overviewImageUrls.size() < MAX_OVERVIEW_IMAGE_COUNT, OVERVIEW_IMAGE_OVER_MAX_COUNT);
+        Assert.isTrue(overviewImageUrls.size() <= MAX_OVERVIEW_IMAGE_COUNT, OVERVIEW_IMAGE_OVER_MAX_COUNT);
     }
 
     public static void validateFileUrl(String url) {
