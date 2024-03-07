@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
@@ -21,6 +22,7 @@ import sixgaezzang.sidepeek.skill.util.validation.SkillValidator;
 
 @Entity
 @Table(name = "project_skill")
+@EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class ProjectSkill {
