@@ -1,6 +1,5 @@
 package sixgaezzang.sidepeek.users.service;
 
-import static io.micrometer.common.util.StringUtils.isBlank;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
@@ -75,91 +74,6 @@ class UserServiceTest {
     }
 
     @Nested
-    class 회원가입_테스트 {
-
-        @Test
-        void 회원가입에_성공한다() {
-            // given
-            SignUpRequest request = new SignUpRequest(email, password, nickname);
-
-            // when
-            Long saved = userService.signUp(request);
-
-            // then
-            User actual = userRepository.findById(saved).get();
-            Password encodedPassword = actual.getPassword();
-            assertThat(actual).extracting("email", "nickname")
-                .containsExactly(email, nickname);
-            assertThat(encodedPassword.check(password, passwordEncoder)).isTrue();
-        }
-
-        @Test
-        void 이메일이_중복된_경우_회원가입에_실패한다() {
-            // given
-            String duplicatedEmail = email;
-            User user = createUser(duplicatedEmail, password, nickname);
-            userRepository.save(user);
-
-            String newNickname = faker.internet().username();
-            SignUpRequest request = new SignUpRequest(duplicatedEmail, password, newNickname);
-
-            // when
-            ThrowingCallable signup = () -> userService.signUp(request);
-
-            // then
-            assertThatExceptionOfType(EntityExistsException.class).isThrownBy(signup)
-                .withMessage("이미 사용 중인 이메일입니다.");
-        }
-
-        @Test
-        void 닉네임이_중복된_경우_회원가입에_실패한다() {
-            // given
-            String duplicatedNickname = nickname;
-            User user = createUser(email, password, duplicatedNickname);
-            userRepository.save(user);
-
-            String newEmail = FakeValueProvider.createEmail();
-            SignUpRequest request = new SignUpRequest(newEmail, password, duplicatedNickname);
-
-            // when
-            ThrowingCallable signup = () -> userService.signUp(request);
-
-            // then
-            assertThatExceptionOfType(EntityExistsException.class).isThrownBy(signup)
-                .withMessage("이미 사용 중인 닉네임입니다.");
-        }
-
-        @Test
-        void 이메일_형식이_올바르지_않은_경우_회원가입에_실패한다() {
-            // given
-            String invalidEmail = "invalid-email";
-            SignUpRequest request = new SignUpRequest(invalidEmail, password, nickname);
-
-            // when
-            ThrowingCallable signup = () -> userService.signUp(request);
-
-            // then
-            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
-                .withMessage("유효하지 않은 이메일 형식입니다.");
-        }
-
-        @Test
-        void 비밀번호_형식이_올바르지_않은_경우_회원가입에_실패한다() {
-            // given
-            String invalidPassword = "invalid-password";
-            SignUpRequest request = new SignUpRequest(email, invalidPassword, nickname);
-
-            // when
-            ThrowingCallable signup = () -> userService.signUp(request);
-
-            // then
-            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
-                .withMessage("비밀번호는 8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.");
-        }
-
-    }
-
-    @Nested
     class 회원_닉네임_검색_테스트 {
 
         @ParameterizedTest(name = "[{index}] {0}으로 검색할 때 " + USER_COUNT + "명의 모든 회원이 나온다.")
@@ -210,6 +124,91 @@ class UserServiceTest {
     }
 
     @Nested
+    class 회원가입_테스트 {
+
+        @Test
+        void 회원가입에_성공한다() {
+            // given
+            SignUpRequest request = new SignUpRequest(email, password, nickname);
+
+            // when
+            Long saved = userService.signUp(request);
+
+            // then
+            User actual = userRepository.findById(saved).get();
+            Password encodedPassword = actual.getPassword();
+            assertThat(actual).extracting("email", "nickname")
+                .containsExactly(email, nickname);
+            assertThat(encodedPassword.check(password, passwordEncoder)).isTrue();
+        }
+
+        @Test
+        void 이메일이_중복된_경우_회원가입에_실패한다() {
+            // given
+            String duplicatedEmail = email;
+            User user = FakeEntityProvider.createUser(duplicatedEmail, password, nickname, passwordEncoder);
+            userRepository.save(user);
+
+            String newNickname = faker.internet().username();
+            SignUpRequest request = new SignUpRequest(duplicatedEmail, password, newNickname);
+
+            // when
+            ThrowingCallable signup = () -> userService.signUp(request);
+
+            // then
+            assertThatExceptionOfType(EntityExistsException.class).isThrownBy(signup)
+                .withMessage("이미 사용 중인 이메일입니다.");
+        }
+
+        @Test
+        void 닉네임이_중복된_경우_회원가입에_실패한다() {
+            // given
+            String duplicatedNickname = nickname;
+            User user = FakeEntityProvider.createUser(email, password, duplicatedNickname, passwordEncoder);
+            userRepository.save(user);
+
+            String newEmail = FakeValueProvider.createEmail();
+            SignUpRequest request = new SignUpRequest(newEmail, password, duplicatedNickname);
+
+            // when
+            ThrowingCallable signup = () -> userService.signUp(request);
+
+            // then
+            assertThatExceptionOfType(EntityExistsException.class).isThrownBy(signup)
+                .withMessage("이미 사용 중인 닉네임입니다.");
+        }
+
+        @Test
+        void 이메일_형식이_올바르지_않은_경우_회원가입에_실패한다() {
+            // given
+            String invalidEmail = "invalid-email";
+            SignUpRequest request = new SignUpRequest(invalidEmail, password, nickname);
+
+            // when
+            ThrowingCallable signup = () -> userService.signUp(request);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
+                .withMessage("유효하지 않은 이메일 형식입니다.");
+        }
+
+        @Test
+        void 비밀번호_형식이_올바르지_않은_경우_회원가입에_실패한다() {
+            // given
+            String invalidPassword = "invalid-password";
+            SignUpRequest request = new SignUpRequest(email, invalidPassword, nickname);
+
+            // when
+            ThrowingCallable signup = () -> userService.signUp(request);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
+                .withMessage("비밀번호는 8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.");
+        }
+
+    }
+
+    @Nested
     class 이메일_중복_확인_테스트 {
 
         @Test
@@ -225,7 +224,7 @@ class UserServiceTest {
         void 이메일이_중복된_경우_중복_확인에_성공한다() {
             // given
             String duplicatedEmail = email;
-            User user = createUser(duplicatedEmail, password, nickname);
+            User user = FakeEntityProvider.createUser(duplicatedEmail, password, nickname, passwordEncoder);
             userRepository.save(user);
 
             // when
@@ -248,50 +247,6 @@ class UserServiceTest {
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(
                     checkEmailDuplicate)
                 .withMessage("유효하지 않은 이메일 형식입니다.");
-        }
-    }
-
-    @Nested
-    class 닉네임_중복_확인_테스트 {
-
-        @Test
-        void 닉네임이_중복되지_않은_경우_중복_확인에_성공한다() {
-            // when
-            CheckDuplicateResponse response = userService.checkNicknameDuplicate(nickname);
-
-            // then
-            assertThat(response.isDuplicated()).isFalse();
-        }
-
-        @Test
-        void 닉네임이_중복된_경우_중복_확인에_성공한다() {
-            // given
-            String duplicatedNickname = nickname;
-            User user = createUser(email, password, duplicatedNickname);
-            userRepository.save(user);
-
-            // when
-            CheckDuplicateResponse response = userService.checkNicknameDuplicate(
-                duplicatedNickname);
-
-            // then
-            assertThat(response.isDuplicated()).isTrue();
-        }
-
-        @Test
-        void 닉네임이_최대_길이를_초과하는_경우_중복_확인에_실패한다() {
-            // given
-            String longNickname = faker.lorem()
-                .characters(MAX_NICKNAME_LENGTH + 1);
-
-            // when
-            ThrowingCallable checkNicknameDuplicate = () -> userService.checkNicknameDuplicate(
-                longNickname);
-
-            // then
-            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(
-                    checkNicknameDuplicate)
-                .withMessage(NICKNAME_OVER_MAX_LENGTH);
         }
     }
 
@@ -410,12 +365,47 @@ class UserServiceTest {
 
     }
 
-    private User createUser(String email, String password, String nickname) {
-        return User.builder()
-            .email(isBlank(email) ? this.email : email)
-            .password(isBlank(password) ? new Password(this.password, passwordEncoder)
-                : new Password(password, passwordEncoder))
-            .nickname(isBlank(nickname) ? this.nickname : nickname)
-            .build();
+    @Nested
+    class 닉네임_중복_확인_테스트 {
+
+        @Test
+        void 닉네임이_중복되지_않은_경우_중복_확인에_성공한다() {
+            // when
+            CheckDuplicateResponse response = userService.checkNicknameDuplicate(nickname);
+
+            // then
+            assertThat(response.isDuplicated()).isFalse();
+        }
+
+        @Test
+        void 닉네임이_중복된_경우_중복_확인에_성공한다() {
+            // given
+            String duplicatedNickname = nickname;
+            User user = FakeEntityProvider.createUser(email, password, duplicatedNickname, passwordEncoder);
+            userRepository.save(user);
+
+            // when
+            CheckDuplicateResponse response = userService.checkNicknameDuplicate(
+                duplicatedNickname);
+
+            // then
+            assertThat(response.isDuplicated()).isTrue();
+        }
+
+        @Test
+        void 닉네임이_최대_길이를_초과하는_경우_중복_확인에_실패한다() {
+            // given
+            String longNickname = faker.lorem()
+                .characters(MAX_NICKNAME_LENGTH + 1);
+
+            // when
+            ThrowingCallable checkNicknameDuplicate = () -> userService.checkNicknameDuplicate(
+                longNickname);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(
+                    checkNicknameDuplicate)
+                .withMessage(NICKNAME_OVER_MAX_LENGTH);
+        }
     }
 }

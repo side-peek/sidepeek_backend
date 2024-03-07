@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.projects.util;
 
+import static io.micrometer.common.util.StringUtils.isBlank;
 import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createLongText;
 import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createNickname;
 import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createOverview;
@@ -10,6 +11,7 @@ import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createUrl;
 import java.time.YearMonth;
 import net.datafaker.Faker;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.skill.domain.Skill;
@@ -38,13 +40,24 @@ public class FakeEntityProvider {
     }
 
     public static User createUser() {
-        String email = FAKER.internet().emailAddress();
-        String password = FAKER.internet().password(8, 40, true, true, true);
+        String email = FakeValueProvider.createEmail();
+        String password = FakeValueProvider.createPassword();
 
         return User.builder()
             .email(email)
             .password(new Password(password, new BCryptPasswordEncoder()))
             .nickname(createNickname())
+            .build();
+    }
+
+    public static User createUser(
+        String email, String password, String nickname, PasswordEncoder passwordEncoder
+    ) {
+        return User.builder()
+            .email(isBlank(email) ? FakeValueProvider.createEmail() : email)
+            .password(isBlank(password) ? new Password(FakeValueProvider.createPassword(), passwordEncoder)
+                : new Password(password, passwordEncoder))
+            .nickname(isBlank(nickname) ? FakeValueProvider.createNickname() : nickname)
             .build();
     }
 
