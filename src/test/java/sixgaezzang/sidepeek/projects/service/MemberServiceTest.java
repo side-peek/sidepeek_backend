@@ -2,6 +2,7 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_DUPLICATED;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_EMPTY;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_NOT_INCLUDE_OWNER;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_OVER_MAX_COUNT;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -198,6 +201,27 @@ class MemberServiceTest {
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
                 .withMessage(MEMBER_NOT_INCLUDE_OWNER);
+        }
+
+        @ParameterizedTest
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createMemberFilter")
+        void 같은_역할에_비회원_멤버가_중복이어서_멤버_목록_저장에_실패한다(Predicate<SaveMemberRequest> memberFilter) {
+            // given
+            SaveMemberRequest retrievedMember = members.stream()
+                .filter(memberFilter)
+                .findFirst()
+                .get();
+
+            SaveMemberRequest duplicatedMember = new SaveMemberRequest(
+                retrievedMember.userId(), retrievedMember.nickname(), retrievedMember.role());
+            members.add(duplicatedMember);
+
+            // when
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, members);
+
+            // then
+            AssertionsForClassTypes.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage(MEMBER_IS_DUPLICATED);
         }
 
     }
