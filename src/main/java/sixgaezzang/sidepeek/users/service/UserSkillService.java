@@ -26,6 +26,8 @@ public class UserSkillService {
     private final SkillRepository skillRepository;
 
     public List<UserSkillSummary> findAllByUser(User user) {
+        UserValidator.validateUser(user);
+
         return userSkillRepository.findAllByUser(user)
             .stream()
             .map(UserSkillSummary::from)
