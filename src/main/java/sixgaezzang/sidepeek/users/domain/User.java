@@ -1,9 +1,7 @@
 package sixgaezzang.sidepeek.users.domain;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validatePassword;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
-import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_PASSWORD_FORMAT;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateBlogUrl;
@@ -121,14 +119,6 @@ public class User extends BaseTimeEntity {
         if (!Objects.equals(this.nickname, nickname)) {
             validateNickname(nickname);
             this.nickname = nickname;
-        }
-    }
-
-    private void setPassword(String password, PasswordEncoder passwordEncoder) { // TODO: 로직 검토 필요
-        if (!Objects.equals(this.password, password)) {
-            validatePassword(password, INVALID_PASSWORD_FORMAT.getMessage());
-            String encoded = passwordEncoder.encode(password);
-            this.password = new Password(encoded, passwordEncoder);
         }
     }
 
