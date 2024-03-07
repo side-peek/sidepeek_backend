@@ -16,7 +16,7 @@ import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserProfileResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserSearchResponse;
 
-@Tag(name = "User", description = "User API")
+@Tag(name = "User", description = "사용자 API")
 public interface UserControllerDoc {
 
     @Operation(summary = "회원가입")

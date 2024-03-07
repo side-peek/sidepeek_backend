@@ -12,7 +12,7 @@ import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 
-@Tag(name = "Project", description = "Project API")
+@Tag(name = "Project", description = "프로젝트 API")
 public interface ProjectControllerDoc {
 
     @Operation(summary = "프로젝트 생성")

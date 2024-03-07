@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import sixgaezzang.sidepeek.media.dto.response.MediaUploadResponse;
 
-@Tag(name = "Media", description = "Media(Image Upload) API")
+@Tag(name = "Media", description = "미디어(파일 업로드) API")
 public interface MediaControllerDoc {
 
     @Operation(summary = "파일 업로드")
