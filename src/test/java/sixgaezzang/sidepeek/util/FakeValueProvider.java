@@ -6,6 +6,7 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LE
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
 import static sixgaezzang.sidepeek.skill.domain.Skill.MAX_SKILL_NAME_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_INTRODUCTION_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import java.util.ArrayList;
@@ -81,6 +82,11 @@ public class FakeValueProvider {
     // Comment
     public static String createContent() {
         return FAKER.lorem().sentence();
+    }
+
+    // User
+    public static String createIntroduction() {
+        return FAKER.text().text(1, MAX_INTRODUCTION_LENGTH);
     }
 
 }
