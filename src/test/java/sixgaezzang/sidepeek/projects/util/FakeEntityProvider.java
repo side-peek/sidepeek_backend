@@ -10,12 +10,14 @@ import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createUrl;
 import java.time.YearMonth;
 import net.datafaker.Faker;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 
 public class FakeEntityProvider {
+
     private static final Faker FAKER = new Faker();
 
     public static Project createProject(User user) {
@@ -50,6 +52,14 @@ public class FakeEntityProvider {
         return Skill.builder()
             .name(createSkillName())
             .iconImageUrl(createUrl())
+            .build();
+    }
+
+    public static Comment createComment(User user, Project project) {
+        return Comment.builder()
+            .user(user)
+            .project(project)
+            .content(FakeValueProvider.createContent())
             .build();
     }
 }

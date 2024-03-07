@@ -26,6 +26,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.comments.domain.Comment;
+import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
+import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
@@ -57,6 +60,7 @@ class ProjectServiceTest {
     static String OVERVIEW = FakeValueProvider.createOverview();
     static String GITHUB_URL = FakeValueProvider.createUrl();
     static String DESCRIPTION = FakeValueProvider.createLongText();
+
     @Autowired
     ProjectService projectService;
 
@@ -68,6 +72,11 @@ class ProjectServiceTest {
 
     @Autowired
     ProjectRepository projectRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
+
+    User user;
 
     private Skill createAndSaveSkill() {
         return skillRepository.save(FakeEntityProvider.createSkill());
@@ -83,13 +92,16 @@ class ProjectServiceTest {
         return projectRepository.save(newProject);
     }
 
-    User user;
-
     private ProjectResponse getNewSavedProject(Long userId) {
         SaveProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
             NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, userId, techStacks, members
         );
         return projectService.save(userId, null, request);
+    }
+
+    private Comment createAndSaveComment(User user, Project project) {
+        Comment newComment = FakeEntityProvider.createComment(user, project);
+        return commentRepository.save(newComment);
     }
 
     @BeforeEach
@@ -119,17 +131,19 @@ class ProjectServiceTest {
     class 프로젝트_상세_조회_테스트 {
 
         @Test
-        void 프로젝트_상세_조회를_성공한다() {
+        void 프로젝트_상세_및_댓글_목록_조회를_성공한다() {
             // given
             User user = createAndSaveUser();
             Project project = createAndSaveProject(user);
+            Comment comment = createAndSaveComment(user, project);
+            CommentResponse commentResponse = CommentResponse.from(comment, true, List.of());
 
             // when
             ProjectResponse response = projectService.findById(project.getId());
 
             // then
-            assertThat(response).extracting("id", "ownerId", "viewCount")
-                .containsExactly(project.getId(), user.getId(), 1L);
+            assertThat(response).extracting("id", "ownerId", "viewCount", "comments")
+                .containsExactly(project.getId(), user.getId(), 1L, List.of(commentResponse));
         }
 
         @Test
@@ -148,6 +162,7 @@ class ProjectServiceTest {
 
     @Nested
     class 프로젝트_저장_테스트 {
+
         @Test
         void 필수_정보가_모두_포함되어_프로젝트_저장에_성공한다() {
             // given
@@ -159,7 +174,8 @@ class ProjectServiceTest {
             ProjectResponse response = projectService.save(user.getId(), null, request);
 
             // then
-            assertThat(response).extracting("name", "overview", "githubUrl", "description", "ownerId")
+            assertThat(response).extracting("name", "overview", "githubUrl", "description",
+                    "ownerId")
                 .containsExactly(NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId());
             assertThat(response.techStacks()).hasSize(techStacks.size());
             assertThat(response.members()).hasSize(members.size());
@@ -168,7 +184,8 @@ class ProjectServiceTest {
         @ParameterizedTest(name = "[{index}] {0}이(가) 누락된 경우 실패한다.")
         @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createProjectsWithoutRequired")
         void 작성자_Id_외_필수_정보가_누락되어_프로젝트_저장에_실패한다(
-            String testMessage, String name, String overview, String githubUrl, String description, String message
+            String testMessage, String name, String overview, String githubUrl, String description,
+            String message
         ) {
             // given
             SaveProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
@@ -216,7 +233,8 @@ class ProjectServiceTest {
         @ParameterizedTest(name = "[{index}] {0}")
         @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createProjectsOnlyInvalidRequired")
         void 유효하지_않은_필수_정보로_프로젝트_저장에_실패한다(
-            String testMessage, String name, String overview, String githubUrl, String description, String message
+            String testMessage, String name, String overview, String githubUrl, String description,
+            String message
         ) {
             // given
             SaveProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
@@ -234,12 +252,14 @@ class ProjectServiceTest {
         @ParameterizedTest(name = "[{index}] {0}")
         @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createProjectsWithInvalidOption")
         void 유효하지_않은_옵션_정보로_프로젝트_저장에_실패한다(
-            String testMessage, String subName, String thumbnailUrl, String deployUrl, String troubleShooting,
+            String testMessage, String subName, String thumbnailUrl, String deployUrl,
+            String troubleShooting,
             YearMonth startDate, YearMonth endDate, String message
         ) {
             // given
             SaveProjectRequest request = FakeDtoProvider.createProjectSaveRequestWithOwnerIdAndOption(
-                techStacks, user.getId(), subName, thumbnailUrl, deployUrl, troubleShooting, startDate, endDate
+                techStacks, user.getId(), subName, thumbnailUrl, deployUrl, troubleShooting,
+                startDate, endDate
             );
 
             // when
@@ -269,6 +289,7 @@ class ProjectServiceTest {
 
     @Nested
     class 프로젝트_수정_테스트 {
+
         @Test
         void 로그인한_사용자가_프로젝트_회원_멤버라서_기존_프로젝트_수정에_성공한다() {
             fellowMemberIds.forEach(fellowMemberId -> {
@@ -281,9 +302,11 @@ class ProjectServiceTest {
                 String newGithubUrl = FakeValueProvider.createUrl();
                 String newDescription = FakeValueProvider.createLongText();
                 SaveProjectRequest newRequest = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
-                    newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
+                    newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
+                    members
                 );
-                ProjectResponse savedProject = projectService.save(fellowMemberId, originalProject.id(), newRequest);
+                ProjectResponse savedProject = projectService.save(fellowMemberId,
+                    originalProject.id(), newRequest);
 
                 // then
                 assertThat(savedProject).isNotEqualTo(originalProject);
@@ -305,9 +328,11 @@ class ProjectServiceTest {
             String newGithubUrl = FakeValueProvider.createUrl();
             String newDescription = FakeValueProvider.createLongText();
             SaveProjectRequest newRequest = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
-                newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
+                newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
+                members
             );
-            ThrowingCallable update = () -> projectService.save(user.getId(), originalProject.id() + 1, newRequest);
+            ThrowingCallable update = () -> projectService.save(user.getId(),
+                originalProject.id() + 1, newRequest);
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(update)
@@ -327,7 +352,8 @@ class ProjectServiceTest {
             SaveProjectRequest newRequest = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
                 newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
             );
-            ThrowingCallable update = () -> projectService.save(null, originalProject.id(), newRequest);
+            ThrowingCallable update = () -> projectService.save(null, originalProject.id(),
+                newRequest);
 
             // then
             assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(update)
@@ -351,9 +377,11 @@ class ProjectServiceTest {
                 String newGithubUrl = FakeValueProvider.createUrl();
                 String newDescription = FakeValueProvider.createLongText();
                 SaveProjectRequest newRequest = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
-                    newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
+                    newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
+                    members
                 );
-                ThrowingCallable update = () -> projectService.save(nonMemberId, originalProject.id(), newRequest);
+                ThrowingCallable update = () -> projectService.save(nonMemberId,
+                    originalProject.id(), newRequest);
 
                 // then
                 assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(update)
@@ -364,6 +392,7 @@ class ProjectServiceTest {
 
     @Nested
     class 프로젝트_삭제_테스트 {
+
         @Test
         void 프로젝트_소프트_삭제에_성공한다() {
             // given
