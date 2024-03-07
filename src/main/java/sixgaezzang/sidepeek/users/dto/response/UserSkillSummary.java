@@ -13,7 +13,8 @@ public record UserSkillSummary(
     @Schema(description = "회원 기술 스택 카테고리", example = "프론트엔드")
     String category,
 
-    @Schema(description = "기술 스택 상세정보")
+    @Schema(description = "기술 스택 상세 정보")
     SkillResponse skill
 ) {
+
 }

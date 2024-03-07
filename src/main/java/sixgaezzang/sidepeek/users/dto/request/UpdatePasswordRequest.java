@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import sixgaezzang.sidepeek.users.domain.Password;
 
-@Schema(description = "비밀번호 수정 요청 정보")
+@Schema(description = "비밀번호 수정 요청")
 public record UpdatePasswordRequest(
     @Schema(description = "기존 비밀번호", example = "sidepeek6!")
     @NotBlank(message = "기존 비밀번호를 입력해주세요.")
@@ -17,4 +17,5 @@ public record UpdatePasswordRequest(
     @Pattern(regexp = Password.PASSWORD_REGXP, message = "비밀번호는 8자 이상이며 영문, 숫자, 특수문자를 포함해야 합니다.")
     String password
 ) {
+
 }

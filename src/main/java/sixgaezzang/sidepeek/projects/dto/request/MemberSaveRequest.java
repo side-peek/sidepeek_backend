@@ -13,7 +13,7 @@ import jakarta.validation.constraints.Size;
 
 @Schema(description = "프로젝트 생성 요청에서 프로젝트 멤버 정보")
 public record MemberSaveRequest(
-    @Schema(description = "회원 멤버 유저 Id(비회원 멤버이면 null)", example = "1")
+    @Schema(description = "회원 멤버 유저 식별자(비회원 멤버이면 null)", example = "1")
     @Min(value = MIN_ID, message = "멤버 회원 id는 " + MIN_ID + "보다 작을 수 없습니다.")
     Long userId,
 
@@ -26,4 +26,5 @@ public record MemberSaveRequest(
     @NotBlank(message = "멤버 역할을 입력해주세요.")
     String role
 ) {
+
 }
