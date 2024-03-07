@@ -57,7 +57,7 @@ public class FakeValueProvider {
     }
 
     public static String createSkillName() {
-        return FAKER.text().text(1, MAX_SKILL_NAME_LENGTH);
+        return FAKER.text().text(10, MAX_SKILL_NAME_LENGTH);
     }
 
     // Member
