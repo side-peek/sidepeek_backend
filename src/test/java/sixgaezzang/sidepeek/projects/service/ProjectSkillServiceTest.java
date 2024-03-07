@@ -57,31 +57,46 @@ class ProjectSkillServiceTest {
     @Autowired
     UserRepository userRepository;
 
-    @Nested
-    class 프로젝트_기술_스택_목록_저장_및_수정_테스트 {
+    static final int PROJECT_SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
+    static List<SaveProjectSkillRequest> techStacks;
+    static List<SaveProjectSkillRequest> overLengthTechStacks;
+    Project project;
+    User user;
+    Skill skill;
 
-        static final int PROJECT_SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
-        static List<SaveProjectSkillRequest> techStacks;
-        static List<SaveProjectSkillRequest> overLengthTechStacks;
-        Project project;
-        User user;
-        Skill skill;
-
-        @BeforeEach
-        void setup() {
-            overLengthTechStacks = new ArrayList<>();
-            for (int i = 1; i <= MAX_TECH_STACK_COUNT + 1; i++) {
-                Skill skill = createAndSaveSkill();
-                overLengthTechStacks.add(
-                    FakeDtoProvider.createProjectSkillSaveRequest(skill.getId())
-                );
-            }
-
-            user = createAndSaveUser();
-            project = createAndSaveProject(user);
-            techStacks = overLengthTechStacks.subList(0, PROJECT_SKILL_COUNT);
-            skill = createAndSaveSkill();
+    @BeforeEach
+    void setup() {
+        overLengthTechStacks = new ArrayList<>();
+        for (int i = 1; i <= MAX_TECH_STACK_COUNT + 1; i++) {
+            Skill skill = createAndSaveSkill();
+            overLengthTechStacks.add(
+                FakeDtoProvider.createProjectSkillSaveRequest(skill.getId())
+            );
         }
+
+        user = createAndSaveUser();
+        project = createAndSaveProject(user);
+        techStacks = overLengthTechStacks.subList(0, PROJECT_SKILL_COUNT);
+        skill = createAndSaveSkill();
+    }
+
+    private Skill createAndSaveSkill() {
+        Skill skill = FakeEntityProvider.createSkill();
+        return skillRepository.save(skill);
+    }
+
+    private User createAndSaveUser() {
+        User newUser = FakeEntityProvider.createUser();
+        return userRepository.save(newUser);
+    }
+
+    private Project createAndSaveProject(User user) {
+        Project newProject = FakeEntityProvider.createProject(user);
+        return projectRepository.save(newProject);
+    }
+
+    @Nested
+    class 프로젝트_기술_스택_목록_저장_테스트 {
 
         @Test
         void 프로젝트_기술_스택_목록_저장에_성공한다() {
@@ -181,6 +196,22 @@ class ProjectSkillServiceTest {
         }
 
         @Test
+        void 같은_카테고리_내에_중복된_기술_스택으로_사용자_기술_스택_목록_저장에_실패한다() {
+            // TODO: 유효성 검사로직 추가 필요
+            // given
+
+            // when
+
+            // then
+
+        }
+
+    }
+
+    @Nested
+    class 프로젝트_기술_스택_목록_수정_테스트 {
+
+        @Test
         void 기존_프로젝트_기술_스택_목록을_지우고_새로운_기술_스택_목록_수정에_성공한다() {
             // given
             projectSkillService.saveAll(project, techStacks);
@@ -197,21 +228,6 @@ class ProjectSkillServiceTest {
             // then
             assertThat(originalTechStacks).isNotEqualTo(savedTechStacks);
             assertThat(savedTechStacks).hasSameSizeAs(techStacksOnlyOne);
-        }
-
-        private Skill createAndSaveSkill() {
-            Skill skill = FakeEntityProvider.createSkill();
-            return skillRepository.save(skill);
-        }
-
-        private User createAndSaveUser() {
-            User newUser = FakeEntityProvider.createUser();
-            return userRepository.save(newUser);
-        }
-
-        private Project createAndSaveProject(User user) {
-            Project newProject = FakeEntityProvider.createProject(user);
-            return projectRepository.save(newProject);
         }
 
     }
