@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.users.service;
 
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.isNotNullOrEmpty;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.validation.UserSkillValidator.validateUserTechStacks;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateUser;
@@ -10,7 +11,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -42,7 +42,7 @@ public class UserSkillService {
             userSkillRepository.deleteAllByUser(user);
         }
 
-        if (ValidationUtils.isNotNullOrEmpty(techStacks)) {
+        if (isNotNullOrEmpty(techStacks)) {
             return Collections.emptyList();
         }
 
