@@ -13,7 +13,7 @@ import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
-import sixgaezzang.sidepeek.projects.repository.MemberRepository;
+import sixgaezzang.sidepeek.projects.repository.member.MemberRepository;
 import sixgaezzang.sidepeek.projects.util.validation.MemberValidator;
 import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -28,7 +28,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public List<MemberSummary> saveAll(Project project, List<MemberSaveRequest> memberSaveRequests) {
+    public List<MemberSummary> saveAll(Project project,
+        List<MemberSaveRequest> memberSaveRequests) {
         ProjectValidator.validateProject(project);
         MemberValidator.validateMembers(project.getOwnerId(), memberSaveRequests);
 

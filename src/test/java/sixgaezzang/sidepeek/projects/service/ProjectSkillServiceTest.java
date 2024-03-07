@@ -28,8 +28,8 @@ import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
-import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
+import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.projects.util.FakeDtoProvider;
 import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
 import sixgaezzang.sidepeek.skill.domain.Skill;
@@ -53,7 +53,7 @@ class ProjectSkillServiceTest {
 
     @Autowired
     ProjectRepository projectRepository;
-    
+
     @Autowired
     UserRepository userRepository;
 
@@ -70,7 +70,8 @@ class ProjectSkillServiceTest {
         @Test
         void 프로젝트_기술_스택_목록_저장에_성공한다() {
             // given, when
-            List<ProjectSkillSummary> savedTechStacks = projectSkillService.saveAll(project, techStacks);
+            List<ProjectSkillSummary> savedTechStacks = projectSkillService.saveAll(project,
+                techStacks);
 
             // then
             assertThat(savedTechStacks).hasSize(PROJECT_SKILL_COUNT);
@@ -80,7 +81,8 @@ class ProjectSkillServiceTest {
         @NullAndEmptySource
         void 빈_기술_스택_목록_저장에_실패한다(List<ProjectSkillSaveRequest> emptyTechStacks) {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, emptyTechStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project,
+                emptyTechStacks);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -93,7 +95,8 @@ class ProjectSkillServiceTest {
             Project nullProject = null;
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(nullProject, techStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(
+                nullProject, techStacks);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -103,7 +106,8 @@ class ProjectSkillServiceTest {
         @Test
         void 목록_개수가_최대를_넘어서_기술_스택_목록_저장에_실패한다() {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, overLengthTechStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project,
+                overLengthTechStacks);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)

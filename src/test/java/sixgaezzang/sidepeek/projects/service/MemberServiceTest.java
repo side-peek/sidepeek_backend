@@ -26,8 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
-import sixgaezzang.sidepeek.projects.repository.MemberRepository;
-import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.projects.repository.member.MemberRepository;
+import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.projects.util.FakeDtoProvider;
 import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -70,7 +70,8 @@ class MemberServiceTest {
             }
 
             user = createAndSaveUser();
-            overLengthMembers.add(USER_INDEX, FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
+            overLengthMembers.add(USER_INDEX,
+                FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
 
             project = createAndSaveProject(user);
             members = overLengthMembers.subList(0, MEMBER_COUNT);
@@ -89,7 +90,8 @@ class MemberServiceTest {
         @NullAndEmptySource
         void 빈_멤버_목록_저장은_실패한다(List<MemberSaveRequest> emptyMembers) {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, emptyMembers);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project,
+                emptyMembers);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -99,7 +101,8 @@ class MemberServiceTest {
         @Test
         void 목록_개수가_최대를_넘어서_멤버_목록_저장에_실패한다() {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, overLengthMembers);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project,
+                overLengthMembers);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -112,7 +115,8 @@ class MemberServiceTest {
             Project nullProject = null;
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(nullProject, members);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(nullProject,
+                members);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -148,7 +152,8 @@ class MemberServiceTest {
             );
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, membersWithInvalidMember);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project,
+                membersWithInvalidMember);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -162,7 +167,8 @@ class MemberServiceTest {
             membersWithoutOwner.remove(USER_INDEX);
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, membersWithoutOwner);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project,
+                membersWithoutOwner);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)

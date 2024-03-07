@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.projects.repository;
+package sixgaezzang.sidepeek.projects.repository.project;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;

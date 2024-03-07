@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.projects.repository;
+package sixgaezzang.sidepeek.projects.repository.project;
 
 import static sixgaezzang.sidepeek.projects.domain.QProject.project;
 

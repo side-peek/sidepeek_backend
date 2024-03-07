@@ -36,7 +36,7 @@ import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
-import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.projects.util.FakeDtoProvider;
 import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
 import sixgaezzang.sidepeek.projects.util.FakeValueProvider;
