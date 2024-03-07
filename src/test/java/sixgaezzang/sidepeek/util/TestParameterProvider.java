@@ -230,7 +230,7 @@ public class TestParameterProvider {
             Arguments.of("profileImageUrl이 최대 길이를 넘는 경우",
                 new UpdateUserProfileRequest(
                     FakeValueProvider.createNickname(),
-                    FakeValueProvider.createUrl() + MAX_TEXT_LENGTH,
+                    FakeValueProvider.createUrl() + "P".repeat(MAX_TEXT_LENGTH),
                     FakeValueProvider.createIntroduction(),
                     Job.BACKEND_DEVELOPER.getName(),
                     Career.JUNIOR.getDescription(),
@@ -293,7 +293,7 @@ public class TestParameterProvider {
                     FakeValueProvider.createIntroduction(),
                     Job.BACKEND_DEVELOPER.getName(),
                     Career.JUNIOR.getDescription(),
-                    FakeValueProvider.createUrl() + MAX_TEXT_LENGTH,
+                    FakeValueProvider.createUrl() + "G".repeat(MAX_TEXT_LENGTH),
                     FakeValueProvider.createUrl(),
                     Collections.emptyList()
                 ), GITHUB_URL_OVER_MAX_LENGTH),
@@ -321,7 +321,7 @@ public class TestParameterProvider {
                     Job.BACKEND_DEVELOPER.getName(),
                     Career.JUNIOR.getDescription(),
                     FakeValueProvider.createUrl(),
-                    FakeValueProvider.createUrl() + MAX_TEXT_LENGTH,
+                    FakeValueProvider.createUrl() + "B".repeat(MAX_TEXT_LENGTH),
                     Collections.emptyList()
                 ), BLOG_URL_OVER_MAX_LENGTH),
             Arguments.of("blogUrl이 URL 형식이 아닌 경우",
