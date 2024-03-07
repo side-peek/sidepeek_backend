@@ -24,11 +24,13 @@ import sixgaezzang.sidepeek.users.domain.User;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AuthProvider extends BaseTimeEntity {
 
+    public static final Boolean DEFAULT_IS_REGISTRATION_COMPLETE = false;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -40,11 +42,16 @@ public class AuthProvider extends BaseTimeEntity {
     @Column(name = "provider_id", length = 100)
     private String providerId;
 
+    @Column(name = "is_registration_complete", nullable = false, columnDefinition = "TINYINT")
+    private boolean isRegistrationComplete = DEFAULT_IS_REGISTRATION_COMPLETE;
+
     @Builder
-    private AuthProvider(User user, ProviderType providerType, String providerId) {
+    private AuthProvider(User user, ProviderType providerType, String providerId,
+        Boolean isRegistrationComplete) {
         this.user = user;
         this.providerType = providerType;
         this.providerId = providerId;
+        this.isRegistrationComplete = isRegistrationComplete;
     }
 
 }
