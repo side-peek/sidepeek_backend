@@ -15,6 +15,7 @@ import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 
+// TODO: SaveUserSkillRequest와 구조가 상당히 일치한다 리팩터링 필요
 @Schema(description = "프로젝트 생성 요청에서 프로젝트 기술 스택 정보")
 public record SaveProjectSkillRequest(
     @Schema(description = "기술 스택 Id", example = "1")
