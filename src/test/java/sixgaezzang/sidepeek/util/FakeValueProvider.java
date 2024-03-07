@@ -68,7 +68,7 @@ public class FakeValueProvider {
     }
 
     public static String createNickname() {
-        return checkAndCutLength(FAKER.internet().username(), MAX_NICKNAME_LENGTH);
+        return FAKER.text().text(10, MAX_NICKNAME_LENGTH);
     }
 
     public static String createEmail() {
