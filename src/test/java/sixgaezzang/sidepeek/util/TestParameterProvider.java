@@ -47,8 +47,11 @@ import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
 
 import java.time.YearMonth;
 import java.util.Collections;
+import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.provider.Arguments;
+import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.users.domain.Career;
 import sixgaezzang.sidepeek.users.domain.Job;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
@@ -144,6 +147,17 @@ public class TestParameterProvider {
             Arguments.of("비회원/회원 정보가 모두 없는 경우",
                 false, null, "role",
                 NICKNAME_IS_NULL)
+        );
+    }
+
+    public static Stream<Arguments> createMemberFilter() {
+        Predicate<SaveMemberRequest> isFellowMember = (memberRequest ->
+            Objects.nonNull(memberRequest.userId()));
+        Predicate<SaveMemberRequest> isNonFellowMember = (memberRequest ->
+            Objects.isNull(memberRequest.userId()));
+        return Stream.of(
+            Arguments.of(isFellowMember),
+            Arguments.of(isNonFellowMember)
         );
     }
 
