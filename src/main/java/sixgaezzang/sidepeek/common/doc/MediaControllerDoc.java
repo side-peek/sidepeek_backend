@@ -21,6 +21,7 @@ public interface MediaControllerDoc {
         @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    ResponseEntity<MediaUploadResponse> uploadFile(Long loginId, MultipartFile file);
+    ResponseEntity<MediaUploadResponse> uploadFile(@Parameter(hidden = true) Long loginId,
+        MultipartFile file);
 
 }

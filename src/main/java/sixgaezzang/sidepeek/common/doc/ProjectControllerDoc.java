@@ -25,7 +25,8 @@ public interface ProjectControllerDoc {
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    ResponseEntity<ProjectResponse> save(Long loginId, ProjectRequest request);
+    ResponseEntity<ProjectResponse> save(@Parameter(hidden = true) Long loginId,
+        ProjectRequest request);
 
     @Operation(summary = "프로젝트 수정", description = "프로젝트 작성자와 멤버만 수정이 가능합니다.")
     @ApiResponses({
@@ -36,7 +37,8 @@ public interface ProjectControllerDoc {
         @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameter(name = "projectId", description = "수정할 프로젝트 ID", in = ParameterIn.PATH)
-    ResponseEntity<ProjectResponse> update(Long loginId, Long projectId, ProjectRequest request);
+    ResponseEntity<ProjectResponse> update(@Parameter(hidden = true) Long loginId, Long projectId,
+        ProjectRequest request);
 
     @Operation(summary = "프로젝트 삭제", description = "프로젝트 작성자만 삭제가 가능합니다.")
     @ApiResponses({
@@ -45,8 +47,8 @@ public interface ProjectControllerDoc {
         @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @Parameter(name = "projectId", description = "삭제할 프로젝트 ID", in = ParameterIn.PATH)
-    ResponseEntity<Void> delete(Long loginId, Long projectId);
+    @Parameter(name = "id", description = "삭제할 프로젝트 식별자", in = ParameterIn.PATH)
+    ResponseEntity<Void> delete(@Parameter(hidden = true) Long loginId, Long projectId);
 
     @Operation(summary = "프로젝트 상세 조회")
     @ApiResponses({
@@ -64,5 +66,6 @@ public interface ProjectControllerDoc {
         @Parameter(name = "sort", description = "정렬 조건 [ createdAt(default), view, like ]", in = ParameterIn.QUERY),
         @Parameter(name = "isReleased", description = "출시 서비스만 보기", in = ParameterIn.QUERY)
     })
-    ResponseEntity<List<ProjectListResponse>> getAll(Long loginId, String sort, boolean isReleased);
+    ResponseEntity<List<ProjectListResponse>> getAll(@Parameter(hidden = true) Long loginId,
+        String sort, boolean isReleased);
 }

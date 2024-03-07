@@ -38,7 +38,8 @@ public interface UserControllerDoc {
         @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameter(name = "id", description = "수정할 회원 ID", example = "1")
-    ResponseEntity<Void> updatePassword(Long loginId, Long id, UpdatePasswordRequest request);
+    ResponseEntity<Void> updatePassword(@Parameter(hidden = true) Long loginId, Long id,
+        UpdatePasswordRequest request);
 
     @Operation(summary = "이메일 중복 확인")
     @ApiResponses({
@@ -78,7 +79,7 @@ public interface UserControllerDoc {
         @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @Parameter(name = "id", description = "수정할 회원 ID", example = "1", in = ParameterIn.PATH)
-    ResponseEntity<UserProfileResponse> update(Long loginId, Long id,
+    @Parameter(name = "id", description = "수정할 회원 식별자", example = "1", in = ParameterIn.PATH)
+    ResponseEntity<UserProfileResponse> update(@Parameter(hidden = true) Long loginId, Long id,
         UpdateUserProfileRequest request);
 }

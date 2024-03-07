@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.common.doc;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,7 +31,7 @@ public interface AuthControllerDoc {
         @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    ResponseEntity<UserSummary> validateToken(Long loginId);
+    ResponseEntity<UserSummary> validateToken(@Parameter(hidden = true) Long loginId);
 
     @Operation(summary = "Access / Refresh Token 재발급")
     @ApiResponses({
