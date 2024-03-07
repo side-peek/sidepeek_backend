@@ -2,11 +2,15 @@ package sixgaezzang.sidepeek.users.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.LOGIN_IS_REQUIRED;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_NOT_EQUALS_LOGIN_ID;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import net.datafaker.Faker;
@@ -17,20 +21,26 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.util.FakeEntityProvider;
-import sixgaezzang.sidepeek.util.FakeValueProvider;
+import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
+import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
+import sixgaezzang.sidepeek.users.dto.response.UserProfileResponse;
+import sixgaezzang.sidepeek.users.dto.response.UserSkillSummary;
 import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
+import sixgaezzang.sidepeek.util.FakeDtoProvider;
+import sixgaezzang.sidepeek.util.FakeEntityProvider;
+import sixgaezzang.sidepeek.util.FakeValueProvider;
 
 @SpringBootTest
 @Transactional
@@ -44,6 +54,9 @@ class UserServiceTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    UserSkillService userSkillService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -253,52 +266,44 @@ class UserServiceTest {
     @Nested
     class 회원_프로필_조회_테스트 {
 
-        @Test
-        void 수정_이력이_없는_회원_프로필_조회에_성공한다() {
-            // given
+        User user;
 
-            // when
-
-            // then
-
+        @BeforeEach
+        void setup() {
+            user = createAndSaveUser();
         }
 
         @Test
-        void 수정_이력이_있는_회원_프로필_조회에_성공한다() {
-            // given
-
-            // when
-
-            // then
-
-        }
-
-        @Test
-        void 존재하는_회원_프로필_조회에_성공한다() {
-            // given
-
-            // when
+        void 회원_프로필_조회에_성공한다() {
+            // given, when
+            UserProfileResponse response = userService.getProfileById(user.getId());
 
             // then
+            assertThat(user.getNickname()).isEqualTo(response.nickname());
         }
 
         @Test
         void 존재하지_않는_회원_프로필_조회에_실패한다() {
             // given
+            long nonExistingUser = user.getId() + 1;
 
             // when
+            ThrowingCallable getProfileById = () -> userService.getProfileById(nonExistingUser);
 
             // then
+            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(getProfileById)
+                .withMessage(USER_NOT_EXISTING);
         }
 
         @ParameterizedTest
         @NullSource
-        void 프로필_회원_Id가_유효하지_않아_회원_프로필_조회에_실패한다(Long id) {
-            // given
-
-            // when
+        void 프로필_회원_Id가_null이라서_회원_프로필_조회에_실패한다(Long nullUserId) {
+            // given, when
+            ThrowingCallable getProfileById = () -> userService.getProfileById(nullUserId);
 
             // then
+            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(getProfileById)
+                .withMessage(USER_NOT_EXISTING);
         }
 
     }
@@ -306,54 +311,97 @@ class UserServiceTest {
     @Nested
     class 회원_프로필_수정_테스트 {
 
-        @Test
-        void 로그인_Id가_회원_Id와_일치하여_회원_프로필_수정에_성공한다() {
-            // given
+        User user;
+        UpdateUserProfileRequest request;
 
-            // when
-
-            // then
+        @BeforeEach
+        void setup() {
+            user = createAndSaveUser();
+            request = FakeDtoProvider.createUpdateUserProfileRequestWithEmptyTechStacks();
 
         }
 
         @Test
-        void 로그인을_하지_않아_회원_프로필_수정에_실패한다() {
-            // given
-
-            // when
+        void 로그인_Id가_회원_Id와_일치하여_회원_프로필_수정에_성공한다() {
+            // given, when
+            userService.updateProfile(user.getId(), user.getId(), request);
+            UserProfileResponse savedProfile = userService.getProfileById(user.getId());
+            List<UserSkillSummary> savedTechStacks = userSkillService.findAllByUser(user);
 
             // then
+            assertThat(savedProfile.nickname()).isEqualTo(request.nickname());
+            assertThat(savedProfile.profileImageUrl()).isEqualTo(request.profileImageUrl());
+            assertThat(savedProfile.introduction()).isEqualTo(request.introduction());
+            assertThat(savedProfile.job()).isEqualTo(request.job());
+            assertThat(savedProfile.career()).isEqualTo(request.career());
+            assertThat(savedProfile.githubUrl()).isEqualTo(request.githubUrl());
+            assertThat(savedProfile.blogUrl()).isEqualTo(request.blogUrl());
 
+            assertThat(savedTechStacks).hasSameSizeAs(request.techStacks());
+        }
+
+        @Test
+        void 로그인을_하지_않아_회원_프로필_수정에_실패한다() {
+            // given, when
+            ThrowingCallable updateProfile = () -> userService.updateProfile(null, user.getId(), request);
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(updateProfile)
+                .withMessage(LOGIN_IS_REQUIRED);
         }
 
         @Test
         void 로그인_Id와_회원_Id가_일치하지_않아_회원_프로필_수정에_실패한다() {
             // given
+            User newUser = createAndSaveUser();
 
             // when
+            ThrowingCallable updateProfile = () -> userService.updateProfile(newUser.getId(), user.getId(), request);
 
             // then
-
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(updateProfile)
+                .withMessage(USER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
         @Test
         void 존재하지_않는_회원_프로필_수정에_실패한다() {
-            // given
-
+            // given,
+            Long nonExistingUserId = user.getId() + 1;
             // when
+            ThrowingCallable updateProfile = () -> userService.updateProfile(
+                nonExistingUserId, nonExistingUserId, request);
 
             // then
-
+            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(updateProfile)
+                .withMessage(USER_NOT_EXISTING);
         }
 
-        @Test
-        void 유효하지_않은_프로필_정보로_프로필_수정에_실패한다() {
-            // given
-
-            // when
+        @ParameterizedTest(name = "[{index}] {0}")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createProfileRequestWithInvalidNickname")
+        void 유효하지_않은_닉네임_정보로_프로필_수정에_실패한다(
+            String testMessage, UpdateUserProfileRequest invalidRequest, String message
+        ) {
+            // given, when
+            ThrowingCallable updateProfile = () -> userService.updateProfile(
+                user.getId(), user.getId(), invalidRequest);
 
             // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(updateProfile)
+                .withMessage(message);
+        }
 
+        @ParameterizedTest(name = "[{index}] {0}")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createInvalidProfileInfo")
+        void 유효하지_않은_옵션_프로필_정보로_프로필_수정에_실패한다(
+            String testMessage, UpdateUserProfileRequest invalidRequest, String message
+        ) {
+            // given, when
+            ThrowingCallable updateProfile = () -> userService.updateProfile(
+                user.getId(), user.getId(), invalidRequest);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(updateProfile)
+                .withMessage(message);
         }
 
     }
