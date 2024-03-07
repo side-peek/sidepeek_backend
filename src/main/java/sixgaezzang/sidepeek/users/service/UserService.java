@@ -8,6 +8,8 @@ import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKN
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateLoginIdEqualsUserId;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateUserId;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,7 +28,6 @@ import sixgaezzang.sidepeek.users.dto.response.UserProfileResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserSearchResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserSkillSummary;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
-import sixgaezzang.sidepeek.users.util.validation.UserValidator;
 
 @Service
 @Transactional(readOnly = true)
@@ -80,7 +81,7 @@ public class UserService {
     }
 
     public UserProfileResponse getProfileById(Long id) {
-        UserValidator.validateUserId(id);
+        validateUserId(id);
 
         User user = userRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
@@ -91,7 +92,7 @@ public class UserService {
     }
 
     public UserProfileResponse updateProfile(Long loginId, Long id, UpdateUserProfileRequest request) {
-        UserValidator.validateLoginIdEqualsUserId(loginId, id);
+        validateLoginIdEqualsUserId(loginId, id);
 
         User user = userRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));

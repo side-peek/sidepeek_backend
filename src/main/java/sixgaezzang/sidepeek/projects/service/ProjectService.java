@@ -3,6 +3,7 @@ package sixgaezzang.sidepeek.projects.service;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Collections;
@@ -25,7 +26,6 @@ import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 
 @Service
 @RequiredArgsConstructor
@@ -113,7 +113,7 @@ public class ProjectService {
     }
 
     private void validateLoginIdEqualsOwnerId(Long loginId, Long ownerId) {
-        ProjectValidator.validateOwnerId(ownerId);
+        validateOwnerId(ownerId);
         if (!loginId.equals(ownerId)) {
             throw new InvalidAuthenticationException(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }

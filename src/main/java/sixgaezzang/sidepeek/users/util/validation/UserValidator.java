@@ -1,8 +1,10 @@
 package sixgaezzang.sidepeek.users.util.validation;
 
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateURI;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.BLOG_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.BLOG_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.INTRODUCTION_OVER_MAX_LENGTH;
@@ -21,7 +23,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
-import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.users.domain.User;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -37,8 +38,8 @@ public class UserValidator {
     }
 
     public static void validateLoginIdEqualsUserId(Long loginId, Long id) {
-        ValidationUtils.validateLoginId(loginId);
-        UserValidator.validateUserId(id);
+        validateLoginId(loginId);
+        validateUserId(id);
 
         if (!Objects.equals(loginId, id)) {
             throw new InvalidAuthenticationException(USER_ID_NOT_EQUALS_LOGIN_ID);
@@ -58,12 +59,12 @@ public class UserValidator {
 
     public static void validateProfileImageUrl(String profileImageUrl) {
         validateMaxLength(profileImageUrl, MAX_TEXT_LENGTH, PROFILE_IMAGE_URL_OVER_MAX_LENGTH);
-        ValidationUtils.validateURI(profileImageUrl, PROFILE_IMAGE_URL_IS_INVALID);
+        validateURI(profileImageUrl, PROFILE_IMAGE_URL_IS_INVALID);
     }
 
     public static void validateBlogUrl(String blogUrl) {
         validateMaxLength(blogUrl, MAX_TEXT_LENGTH, BLOG_URL_OVER_MAX_LENGTH);
-        ValidationUtils.validateURI(blogUrl, BLOG_URL_IS_INVALID);
+        validateURI(blogUrl, BLOG_URL_IS_INVALID);
     }
 
 }

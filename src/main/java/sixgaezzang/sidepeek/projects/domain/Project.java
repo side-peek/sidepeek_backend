@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.projects.domain;
 
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateGithubUrl;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
@@ -29,7 +30,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
-import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.util.converter.YearMonthDateAttributeConverter;
 
@@ -131,7 +131,7 @@ public class Project extends BaseTimeEntity {
                                                       String description, Long ownerId) {
         validateName(name);
         validateOverview(overview);
-        ValidationUtils.validateGithubUrl(githubUrl);
+        validateGithubUrl(githubUrl);
         validateDescription(description);
         validateOwnerId(ownerId);
     }

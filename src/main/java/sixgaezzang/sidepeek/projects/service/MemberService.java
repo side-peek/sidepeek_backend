@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.projects.service;
 
+import static sixgaezzang.sidepeek.projects.util.validation.MemberValidator.validateMembers;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateProject;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -14,8 +16,6 @@ import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
-import sixgaezzang.sidepeek.projects.util.validation.MemberValidator;
-import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -29,8 +29,8 @@ public class MemberService {
 
     @Transactional
     public List<MemberSummary> saveAll(Project project, List<SaveMemberRequest> memberSaveRequests) {
-        ProjectValidator.validateProject(project);
-        MemberValidator.validateMembers(project.getOwnerId(), memberSaveRequests);
+        validateProject(project);
+        validateMembers(project.getOwnerId(), memberSaveRequests);
 
         if (memberRepository.existsByProject(project)) {
             memberRepository.deleteAllByProject(project);

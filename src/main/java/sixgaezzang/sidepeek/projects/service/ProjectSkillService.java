@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.projects.service;
 
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectSkillValidator.validateProjectTechStacks;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateProject;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -12,8 +14,6 @@ import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectSkillRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
-import sixgaezzang.sidepeek.projects.util.validation.ProjectSkillValidator;
-import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 
@@ -31,8 +31,8 @@ public class ProjectSkillService {
 
     @Transactional
     public List<ProjectSkillSummary> saveAll(Project project, List<SaveProjectSkillRequest> techStacks) {
-        ProjectValidator.validateProject(project);
-        ProjectSkillValidator.validateProjectTechStacks(techStacks);
+        validateProject(project);
+        validateProjectTechStacks(techStacks);
 
         if (projectSkillRepository.existsByProject(project)) {
             projectSkillRepository.deleteAllByProject(project);

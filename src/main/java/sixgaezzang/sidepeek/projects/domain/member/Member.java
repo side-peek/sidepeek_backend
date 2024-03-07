@@ -1,7 +1,10 @@
 package sixgaezzang.sidepeek.projects.domain.member;
 
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
+import static sixgaezzang.sidepeek.projects.util.validation.MemberValidator.validateRole;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateProject;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateNickname;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,10 +21,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.projects.domain.Project;
-import sixgaezzang.sidepeek.projects.util.validation.MemberValidator;
-import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.util.validation.UserValidator;
 
 @Entity
 @Table(name = "project_member")
@@ -62,9 +62,9 @@ public class Member {
     }
 
     private void validateConstructorRequiredArguments(Project project, String role, String nickname) {
-        ProjectValidator.validateProject(project);
-        MemberValidator.validateRole(role);
-        UserValidator.validateNickname(nickname);
+        validateProject(project);
+        validateRole(role);
+        validateNickname(nickname);
     }
 
 }

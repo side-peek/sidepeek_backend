@@ -1,6 +1,9 @@
 package sixgaezzang.sidepeek.users.domain;
 
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
+import static sixgaezzang.sidepeek.skill.util.validation.SkillValidator.validateCategory;
+import static sixgaezzang.sidepeek.skill.util.validation.SkillValidator.validateSkill;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateUser;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,8 +20,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.skill.domain.Skill;
-import sixgaezzang.sidepeek.skill.util.validation.SkillValidator;
-import sixgaezzang.sidepeek.users.util.validation.UserValidator;
 
 @Entity
 @Table(name = "user_skill")
@@ -51,9 +52,9 @@ public class UserSkill {
     }
 
     private void validateConstructorArguments(User user, Skill skill, String category) {
-        UserValidator.validateUser(user);
-        SkillValidator.validateSkill(skill);
-        SkillValidator.validateCategory(category);
+        validateUser(user);
+        validateSkill(skill);
+        validateCategory(category);
     }
 
 }
