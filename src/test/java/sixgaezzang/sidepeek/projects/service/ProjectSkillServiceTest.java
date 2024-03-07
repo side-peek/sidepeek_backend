@@ -30,12 +30,12 @@ import sixgaezzang.sidepeek.projects.dto.request.SaveProjectSkillRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
-import sixgaezzang.sidepeek.util.FakeDtoProvider;
-import sixgaezzang.sidepeek.util.FakeEntityProvider;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
+import sixgaezzang.sidepeek.util.FakeDtoProvider;
+import sixgaezzang.sidepeek.util.FakeEntityProvider;
 
 @SpringBootTest
 @Transactional
@@ -70,7 +70,7 @@ class ProjectSkillServiceTest {
         for (int i = 1; i <= MAX_TECH_STACK_COUNT + 1; i++) {
             Skill skill = createAndSaveSkill();
             overLengthTechStacks.add(
-                FakeDtoProvider.createProjectSkillSaveRequest(skill.getId())
+                FakeDtoProvider.createSaveProjectSkillRequest(skill.getId())
             );
         }
 
@@ -142,7 +142,7 @@ class ProjectSkillServiceTest {
         }
 
         @ParameterizedTest
-        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createInvalidProjectSkillInfo")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createInvalidProjectSkillInfo")
         void 기술_스택_카테고리가_유효하지_않아_기술_스택_목록_저장에_실패한다(
             String testMessage, String category, String message
         ) {
@@ -166,7 +166,7 @@ class ProjectSkillServiceTest {
             // given
             List<SaveProjectSkillRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
             techStacksWithNonExistSkill.add(
-                FakeDtoProvider.createProjectSkillSaveRequest(skill.getId() + 1)
+                FakeDtoProvider.createSaveProjectSkillRequest(skill.getId() + 1)
             );
 
             // when
@@ -183,7 +183,7 @@ class ProjectSkillServiceTest {
             // given
             List<SaveProjectSkillRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
             techStacksWithNonExistSkill.add(
-                FakeDtoProvider.createProjectSkillSaveRequest(null)
+                FakeDtoProvider.createSaveProjectSkillRequest(null)
             );
 
             // when
@@ -220,7 +220,7 @@ class ProjectSkillServiceTest {
             // when
             List<SaveProjectSkillRequest> techStacksOnlyOne = new ArrayList<>();
             Skill newSkill = createAndSaveSkill();
-            techStacksOnlyOne.add(FakeDtoProvider.createProjectSkillSaveRequest(newSkill.getId()));
+            techStacksOnlyOne.add(FakeDtoProvider.createSaveProjectSkillRequest(newSkill.getId()));
 
             projectSkillService.saveAll(project, techStacksOnlyOne);
             List<ProjectSkill> savedTechStacks = projectSkillService.findAll(project);

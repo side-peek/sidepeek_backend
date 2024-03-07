@@ -31,10 +31,10 @@ import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.util.FakeDtoProvider;
-import sixgaezzang.sidepeek.util.FakeEntityProvider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
+import sixgaezzang.sidepeek.util.FakeDtoProvider;
+import sixgaezzang.sidepeek.util.FakeEntityProvider;
 
 @SpringBootTest
 @Transactional
@@ -62,15 +62,15 @@ class MemberServiceTest {
         overLengthMembers = new ArrayList<>();
         for (int i = 1; i <= MAX_MEMBER_COUNT / 2; i++) {
             overLengthMembers.add(
-                FakeDtoProvider.createFellowMemberSaveRequest(createAndSaveUser().getId())
+                FakeDtoProvider.createFellowSaveMemberRequest(createAndSaveUser().getId())
             );
             overLengthMembers.add(
-                FakeDtoProvider.createNonFellowMemberSaveRequest()
+                FakeDtoProvider.createNonFellowSaveMemberRequest()
             );
         }
 
         user = createAndSaveUser();
-        overLengthMembers.add(USER_INDEX, FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
+        overLengthMembers.add(USER_INDEX, FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
 
         project = createAndSaveProject(user);
         members = overLengthMembers.subList(0, MEMBER_COUNT);
@@ -154,7 +154,7 @@ class MemberServiceTest {
             // given
             List<SaveMemberRequest> membersWithNonExistFellowMember = new ArrayList<>(members);
             membersWithNonExistFellowMember.add(
-                FakeDtoProvider.createFellowMemberSaveRequest(user.getId() + 1)
+                FakeDtoProvider.createFellowSaveMemberRequest(user.getId() + 1)
             );
 
             // when
@@ -212,7 +212,7 @@ class MemberServiceTest {
 
             // when
             List<SaveMemberRequest> membersOnlyOwner = new ArrayList<>();
-            membersOnlyOwner.add(FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
+            membersOnlyOwner.add(FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
 
             memberService.saveAll(project, membersOnlyOwner);
             List<MemberSummary> savedMembers = memberService.findAllWithUser(project);

@@ -37,13 +37,13 @@ import sixgaezzang.sidepeek.projects.dto.request.SaveProjectSkillRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.util.FakeDtoProvider;
-import sixgaezzang.sidepeek.util.FakeEntityProvider;
-import sixgaezzang.sidepeek.util.FakeValueProvider;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
+import sixgaezzang.sidepeek.util.FakeDtoProvider;
+import sixgaezzang.sidepeek.util.FakeEntityProvider;
+import sixgaezzang.sidepeek.util.FakeValueProvider;
 
 @SpringBootTest
 @Transactional
@@ -111,18 +111,18 @@ class ProjectServiceTest {
         for (int i = 1; i <= MEMBER_COUNT - 1; i++) {
             Long savedUserId = createAndSaveUser().getId();
             fellowMemberIds.add(savedUserId);
-            members.add(FakeDtoProvider.createFellowMemberSaveRequest(savedUserId));
+            members.add(FakeDtoProvider.createFellowSaveMemberRequest(savedUserId));
         }
 
         user = createAndSaveUser();
         fellowMemberIds.add(0, user.getId());
-        members.add(0, FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
+        members.add(0, FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
 
         techStacks = new ArrayList<>();
         for (int i = 1; i <= PROJECT_SKILL_COUNT; i++) {
             Skill skill = createAndSaveSkill();
             techStacks.add(
-                FakeDtoProvider.createProjectSkillSaveRequest(skill.getId())
+                FakeDtoProvider.createSaveProjectSkillRequest(skill.getId())
             );
         }
     }
@@ -257,7 +257,7 @@ class ProjectServiceTest {
             YearMonth startDate, YearMonth endDate, String message
         ) {
             // given
-            SaveProjectRequest request = FakeDtoProvider.createProjectSaveRequestWithOwnerIdAndOption(
+            SaveProjectRequest request = FakeDtoProvider.createSaveProjectRequestWithOwnerIdAndOption(
                 techStacks, user.getId(), subName, thumbnailUrl, deployUrl, troubleShooting,
                 startDate, endDate
             );
