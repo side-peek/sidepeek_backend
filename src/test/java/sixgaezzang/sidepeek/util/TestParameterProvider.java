@@ -28,8 +28,14 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.BLOG_URL_IS_INVALID;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.BLOG_URL_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.INTRODUCTION_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_IS_NULL;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PROFILE_IMAGE_URL_IS_INVALID;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PROFILE_IMAGE_URL_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_INTRODUCTION_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createLongText;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createNickname;
@@ -201,9 +207,132 @@ public class TestParameterProvider {
         );
     }
 
-    public static Stream<Arguments> createInvalidProfileInfo() {
+    public static Stream<Arguments> createProfileRequestWithInvalidIntroduction() {
         return Stream.of(
-            // TODO: 유효하지 않은 request 구현
+            Arguments.of("introduction이 최대 길이를 넘는 경우",
+                new UpdateUserProfileRequest(
+                    FakeValueProvider.createNickname(),
+                    FakeValueProvider.createUrl(),
+                    "I".repeat(MAX_INTRODUCTION_LENGTH + 1),
+                    Job.BACKEND_DEVELOPER.getName(),
+                    Career.JUNIOR.getDescription(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createUrl(),
+                    Collections.emptyList()
+                ), INTRODUCTION_OVER_MAX_LENGTH)
+        );
+    }
+
+    public static Stream<Arguments> createProfileRequestWithInvalidProfileImageUrl() {
+        return Stream.of(
+            Arguments.of("profileImageUrl이 최대 길이를 넘는 경우",
+                new UpdateUserProfileRequest(
+                    FakeValueProvider.createNickname(),
+                    FakeValueProvider.createUrl() + MAX_TEXT_LENGTH,
+                    FakeValueProvider.createIntroduction(),
+                    Job.BACKEND_DEVELOPER.getName(),
+                    Career.JUNIOR.getDescription(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createUrl(),
+                    Collections.emptyList()
+                ), PROFILE_IMAGE_URL_OVER_MAX_LENGTH),
+            Arguments.of("profileImageUrl이 URL 형식이 아닌 경우",
+                new UpdateUserProfileRequest(
+                    FakeValueProvider.createNickname(),
+                    "No URL Pattern",
+                    FakeValueProvider.createIntroduction(),
+                    Job.BACKEND_DEVELOPER.getName(),
+                    Career.JUNIOR.getDescription(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createUrl(),
+                    Collections.emptyList()
+                ), PROFILE_IMAGE_URL_IS_INVALID)
+        );
+    }
+
+    public static Stream<Arguments> createProfileRequestWithInvalidJob() {
+        return Stream.of(
+            Arguments.of("jobName에 해당하는 Job이 없는 경우",
+                new UpdateUserProfileRequest(
+                    FakeValueProvider.createNickname(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createIntroduction(),
+                    "No Job",
+                    Career.JUNIOR.getDescription(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createUrl(),
+                    Collections.emptyList()
+                ), NICKNAME_IS_NULL)
+        );
+    }
+
+    public static Stream<Arguments> createProfileRequestWithInvalidCareer() {
+        return Stream.of(
+            Arguments.of("careerDescription에 해당하는 Career가 없는 경우",
+                new UpdateUserProfileRequest(
+                    FakeValueProvider.createNickname(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createIntroduction(),
+                    Job.BACKEND_DEVELOPER.getName(),
+                    "No Career",
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createUrl(),
+                    Collections.emptyList()
+                ), NICKNAME_IS_NULL)
+        );
+    }
+
+    public static Stream<Arguments> createProfileRequestWithInvalidGithubUrl() {
+        return Stream.of(
+            Arguments.of("githubUrl이 최대 길이를 넘는 경우",
+                new UpdateUserProfileRequest(
+                    FakeValueProvider.createNickname(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createIntroduction(),
+                    Job.BACKEND_DEVELOPER.getName(),
+                    Career.JUNIOR.getDescription(),
+                    FakeValueProvider.createUrl() + MAX_TEXT_LENGTH,
+                    FakeValueProvider.createUrl(),
+                    Collections.emptyList()
+                ), GITHUB_URL_OVER_MAX_LENGTH),
+            Arguments.of("githubUrl이 URL 형식이 아닌 경우",
+                new UpdateUserProfileRequest(
+                    FakeValueProvider.createNickname(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createIntroduction(),
+                    Job.BACKEND_DEVELOPER.getName(),
+                    Career.JUNIOR.getDescription(),
+                    "No URL Pattern",
+                    FakeValueProvider.createUrl(),
+                    Collections.emptyList()
+                ), GITHUB_URL_IS_INVALID)
+        );
+    }
+
+    public static Stream<Arguments> createProfileRequestWithInvalidBlogUrl() {
+        return Stream.of(
+            Arguments.of("blogUrl이 최대 길이를 넘는 경우",
+                new UpdateUserProfileRequest(
+                    FakeValueProvider.createNickname(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createIntroduction(),
+                    Job.BACKEND_DEVELOPER.getName(),
+                    Career.JUNIOR.getDescription(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createUrl() + MAX_TEXT_LENGTH,
+                    Collections.emptyList()
+                ), BLOG_URL_OVER_MAX_LENGTH),
+            Arguments.of("blogUrl이 URL 형식이 아닌 경우",
+                new UpdateUserProfileRequest(
+                    FakeValueProvider.createNickname(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createIntroduction(),
+                    Job.BACKEND_DEVELOPER.getName(),
+                    Career.JUNIOR.getDescription(),
+                    FakeValueProvider.createUrl(),
+                    "No URL Pattern",
+                    Collections.emptyList()
+                ), BLOG_URL_IS_INVALID)
         );
     }
 
