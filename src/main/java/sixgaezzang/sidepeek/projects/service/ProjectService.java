@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.projects.service;
 
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.service.CommentService;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
-import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
@@ -41,7 +41,7 @@ public class ProjectService {
 
     @Transactional
     public ProjectResponse save(Long loginId, Long projectId, SaveProjectRequest request) {
-        ValidationUtils.validateLoginId(loginId);
+        validateLoginId(loginId);
 
         Project project;
         if (Objects.isNull(projectId)) {
@@ -102,7 +102,7 @@ public class ProjectService {
 
     @Transactional
     public void delete(Long loginId, Long projectId) {
-        ValidationUtils.validateLoginId(loginId);
+        validateLoginId(loginId);
 
         Project project = projectRepository.findById(projectId)
             .orElseThrow(

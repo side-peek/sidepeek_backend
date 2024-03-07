@@ -3,6 +3,15 @@ package sixgaezzang.sidepeek.projects.domain;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateDeployUrl;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateDescription;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateDuration;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateName;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOverview;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateSubName;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateThumbnailUrl;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateTroubleshooting;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -23,7 +32,6 @@ import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.util.converter.YearMonthDateAttributeConverter;
-import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 
 @Entity
 @Table(name = "project")
@@ -121,20 +129,20 @@ public class Project extends BaseTimeEntity {
 
     private void validateConstructorRequiredArguments(String name, String overview, String githubUrl,
                                                       String description, Long ownerId) {
-        ProjectValidator.validateName(name);
-        ProjectValidator.validateOverview(overview);
+        validateName(name);
+        validateOverview(overview);
         ValidationUtils.validateGithubUrl(githubUrl);
-        ProjectValidator.validateDescription(description);
-        ProjectValidator.validateOwnerId(ownerId);
+        validateDescription(description);
+        validateOwnerId(ownerId);
     }
 
     private void validateConstructorOptionArguments(String subName, String thumbnailUrl, String deployUrl,
                                                     String troubleshooting, YearMonth startDate, YearMonth endDate) {
-        ProjectValidator.validateSubName(subName);
-        ProjectValidator.validateThumbnailUrl(thumbnailUrl);
-        ProjectValidator.validateDeployUrl(deployUrl);
-        ProjectValidator.validateTroubleshooting(troubleshooting);
-        ProjectValidator.validateDuration(startDate, endDate);
+        validateSubName(subName);
+        validateThumbnailUrl(thumbnailUrl);
+        validateDeployUrl(deployUrl);
+        validateTroubleshooting(troubleshooting);
+        validateDuration(startDate, endDate);
     }
 
     // TODO: User 처럼 Private Setter(Lombok X) 구현하는 것이 나을까 아래와 같은 방식으로 하는 게 나을까?
