@@ -114,3 +114,19 @@ create TABLE IF NOT EXISTS files
     url        TEXT        NOT NULL,
     FOREIGN KEY (project_id) REFERENCES project (id)
 );
+
+-- COMMENT
+create TABLE IF NOT EXISTS comments
+(
+    id                  BIGINT PRIMARY KEY AUTO_INCREMENT,
+    project_id          BIGINT      NOT NULL,
+    user_id             BIGINT      NOT NULL,
+    parent_id           BIGINT,
+    is_anonymous        TINYINT(1)  NOT NULL DEFAULT 0,
+    content             TEXT        NOT NULL,
+    created_at          TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON update CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (project_id) REFERENCES project (id),
+    FOREIGN KEY (parent_id) REFERENCES comments (id)
+);

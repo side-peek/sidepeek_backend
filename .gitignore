@@ -192,3 +192,6 @@ Temporary Items
 .idea/
 
 docker/redis/data/
+
+# Ignore QueryDSL generated files
+/src/main/generated/
