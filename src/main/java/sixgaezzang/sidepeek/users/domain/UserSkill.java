@@ -1,7 +1,7 @@
 package sixgaezzang.sidepeek.users.domain;
 
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
-import static sixgaezzang.sidepeek.skill.util.validation.SkillValidator.validateCategory;
+import static sixgaezzang.sidepeek.common.util.validation.TechStackValidator.validateCategory;
 import static sixgaezzang.sidepeek.skill.util.validation.SkillValidator.validateSkill;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateUser;
 

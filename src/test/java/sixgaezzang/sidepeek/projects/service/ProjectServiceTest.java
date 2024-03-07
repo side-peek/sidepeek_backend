@@ -29,11 +29,11 @@ import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
+import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
-import sixgaezzang.sidepeek.projects.dto.request.SaveProjectSkillRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
@@ -55,7 +55,7 @@ class ProjectServiceTest {
     static final int PROJECT_SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
     static List<SaveMemberRequest> members;
     static List<Long> fellowMemberIds;
-    static List<SaveProjectSkillRequest> techStacks;
+    static List<SaveTechStackRequest> techStacks;
     static String NAME = FakeValueProvider.createProjectName();
     static String OVERVIEW = FakeValueProvider.createOverview();
     static String GITHUB_URL = FakeValueProvider.createUrl();
@@ -122,7 +122,7 @@ class ProjectServiceTest {
         for (int i = 1; i <= PROJECT_SKILL_COUNT; i++) {
             Skill skill = createAndSaveSkill();
             techStacks.add(
-                FakeDtoProvider.createSaveProjectSkillRequest(skill.getId())
+                FakeDtoProvider.createSaveTechStackRequest(skill.getId())
             );
         }
     }
