@@ -63,7 +63,7 @@ class FileServiceTest {
             user = createAndSaveUser();
             project = createAndSaveProject(user);
 
-            overLengthImageUrls = FakeValueProvider.createUrls(MAX_OVERVIEW_IMAGE_COUNT);
+            overLengthImageUrls = FakeValueProvider.createUrls(MAX_OVERVIEW_IMAGE_COUNT + 1);
             imageUrls = overLengthImageUrls.subList(0, IMAGE_COUNT);
         }
 

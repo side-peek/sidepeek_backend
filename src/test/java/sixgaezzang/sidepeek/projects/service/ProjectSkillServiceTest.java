@@ -70,7 +70,7 @@ class ProjectSkillServiceTest {
         @BeforeEach
         void setup() {
             overLengthTechStacks = new ArrayList<>();
-            for (int i = 1; i <= MAX_TECH_STACK_COUNT; i++) {
+            for (int i = 1; i <= MAX_TECH_STACK_COUNT + 1; i++) {
                 Skill skill = createAndSaveSkill();
                 overLengthTechStacks.add(
                     FakeDtoProvider.createProjectSkillSaveRequest(skill.getId())

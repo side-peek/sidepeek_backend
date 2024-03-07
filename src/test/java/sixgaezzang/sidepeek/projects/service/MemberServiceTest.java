@@ -7,6 +7,7 @@ import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -162,7 +163,7 @@ class MemberServiceTest {
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(saveAll)
-                .withMessage("User Id에 해당하는 회원이 없습니다.");
+                .withMessage(USER_NOT_EXISTING);
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
