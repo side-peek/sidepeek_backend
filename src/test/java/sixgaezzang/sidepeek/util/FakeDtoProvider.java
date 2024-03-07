@@ -9,10 +9,14 @@ import static sixgaezzang.sidepeek.util.FakeValueProvider.createSkillCategory;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
 
 import java.time.YearMonth;
+import java.util.Collections;
 import java.util.List;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectSkillRequest;
+import sixgaezzang.sidepeek.users.domain.Career;
+import sixgaezzang.sidepeek.users.domain.Job;
+import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserSkillRequest;
 
 public class FakeDtoProvider {
@@ -55,5 +59,18 @@ public class FakeDtoProvider {
 
     public static SaveMemberRequest createNonFellowSaveMemberRequest() {
         return new SaveMemberRequest(null, createNickname(), createRole());
+    }
+
+    public static UpdateUserProfileRequest createUpdateUserProfileRequestWithEmptyTechStacks() {
+        return new UpdateUserProfileRequest(
+            FakeValueProvider.createNickname(),
+            FakeValueProvider.createUrl(),
+            FakeValueProvider.createIntroduction(),
+            Job.BACKEND_DEVELOPER.getName(),
+            Career.JUNIOR.getDescription(),
+            FakeValueProvider.createUrl(),
+            FakeValueProvider.createUrl(),
+            Collections.emptyList()
+        );
     }
 }
