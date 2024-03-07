@@ -6,7 +6,6 @@ import static sixgaezzang.sidepeek.users.util.validation.UserSkillValidator.vali
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateUser;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,10 +42,9 @@ public class UserSkillService {
         }
 
         if (isNotNullOrEmpty(techStacks)) {
-            return Collections.emptyList();
+            validateUserTechStacks(techStacks);
         }
 
-        validateUserTechStacks(techStacks);
         List<UserSkill> skills = convertAllToEntity(user, techStacks);
         userSkillRepository.saveAll(skills);
 
