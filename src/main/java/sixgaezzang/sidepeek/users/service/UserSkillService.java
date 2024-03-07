@@ -1,11 +1,12 @@
 package sixgaezzang.sidepeek.users.service;
 
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.isNotNullOrEmpty;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.isNullOrEmpty;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.validation.UserSkillValidator.validateUserTechStacks;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateUser;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,10 +42,11 @@ public class UserSkillService {
             userSkillRepository.deleteAllByUser(user);
         }
 
-        if (isNotNullOrEmpty(techStacks)) {
-            validateUserTechStacks(techStacks);
+        if (isNullOrEmpty(techStacks)) {
+            return Collections.emptyList();
         }
 
+        validateUserTechStacks(techStacks);
         List<UserSkill> skills = convertAllToEntity(user, techStacks);
         userSkillRepository.saveAll(skills);
 
