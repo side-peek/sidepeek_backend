@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
@@ -92,10 +91,7 @@ public class UserService {
     }
 
     public UserProfileResponse updateProfile(Long loginId, Long id, UpdateUserProfileRequest request) {
-        ValidationUtils.validateLoginId(loginId);
-        UserValidator.validateUserId(id);
-
-        // TODO: 로그인 아이디와 id 비교
+        UserValidator.validateLoginIdEqualsUserId(loginId, id);
 
         User user = userRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));

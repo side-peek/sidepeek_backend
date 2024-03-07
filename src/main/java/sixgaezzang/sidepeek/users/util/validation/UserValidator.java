@@ -13,13 +13,17 @@ import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICK
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PROFILE_IMAGE_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PROFILE_IMAGE_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_IS_NULL;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_NOT_EQUALS_LOGIN_ID;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_IS_NULL;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_INTRODUCTION_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import java.util.Arrays;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
+import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.users.domain.Career;
 import sixgaezzang.sidepeek.users.domain.Job;
@@ -35,7 +39,16 @@ public class UserValidator {
     }
 
     public static void validateUser(User user) {
-        // TODO: 유저 유효성 검사
+        Assert.notNull(user, USER_IS_NULL);
+    }
+
+    public static void validateLoginIdEqualsUserId(Long loginId, Long id) {
+        ValidationUtils.validateLoginId(loginId);
+        UserValidator.validateUserId(id);
+
+        if (!Objects.equals(loginId, id)) {
+            throw new InvalidAuthenticationException(USER_ID_NOT_EQUALS_LOGIN_ID);
+        }
     }
 
     // Required
