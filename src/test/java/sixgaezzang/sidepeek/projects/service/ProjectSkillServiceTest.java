@@ -67,6 +67,22 @@ class ProjectSkillServiceTest {
         User user;
         Skill skill;
 
+        @BeforeEach
+        void setup() {
+            overLengthTechStacks = new ArrayList<>();
+            for (int i = 1; i <= MAX_TECH_STACK_COUNT; i++) {
+                Skill skill = createAndSaveSkill();
+                overLengthTechStacks.add(
+                    FakeDtoProvider.createProjectSkillSaveRequest(skill.getId())
+                );
+            }
+
+            user = createAndSaveUser();
+            project = createAndSaveProject(user);
+            techStacks = overLengthTechStacks.subList(0, PROJECT_SKILL_COUNT);
+            skill = createAndSaveSkill();
+        }
+
         @Test
         void 프로젝트_기술_스택_목록_저장에_성공한다() {
             // given, when
@@ -108,22 +124,6 @@ class ProjectSkillServiceTest {
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
                 .withMessage(TECH_STACKS_OVER_MAX_COUNT);
-        }
-
-        @BeforeEach
-        void setup() {
-            overLengthTechStacks = new ArrayList<>();
-            for (int i = 1; i <= MAX_TECH_STACK_COUNT; i++) {
-                Skill skill = createAndSaveSkill();
-                overLengthTechStacks.add(
-                    FakeDtoProvider.createProjectSkillSaveRequest(skill.getId())
-                );
-            }
-
-            user = createAndSaveUser();
-            project = createAndSaveProject(user);
-            techStacks = overLengthTechStacks.subList(0, PROJECT_SKILL_COUNT);
-            skill = createAndSaveSkill();
         }
 
         @ParameterizedTest
