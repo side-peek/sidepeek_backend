@@ -138,7 +138,7 @@ public class User extends BaseTimeEntity {
         if (Objects.nonNull(jobName) && !jobName.isBlank()) {
             Job newJob = Job.get(jobName);
             if (!Objects.equals(this.job, newJob)) {
-                this.job = Job.valueOf(jobName);
+                this.job = newJob;
             }
         }
     }
@@ -147,7 +147,7 @@ public class User extends BaseTimeEntity {
         if (Objects.nonNull(careerDescription)) {
             Career newCareer = Career.get(careerDescription);
             if (!Objects.equals(this.career, newCareer)) {
-                this.career = Career.valueOf(careerDescription);
+                this.career = newCareer;
             }
         }
     }
