@@ -22,7 +22,7 @@ public class MemberValidator {
 
     public static void validateMembers(Long ownerId, List<SaveMemberRequest> members) {
         Assert.notEmpty(members, MEMBER_IS_EMPTY);
-        Assert.isTrue(members.size() < MAX_MEMBER_COUNT, MEMBER_OVER_MAX_COUNT);
+        Assert.isTrue(members.size() <= MAX_MEMBER_COUNT, MEMBER_OVER_MAX_COUNT);
         members.stream().filter(member -> Objects.equals(member.userId(), ownerId))
             .findAny()
             .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_INCLUDE_OWNER));
