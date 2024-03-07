@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -292,6 +293,121 @@ class UserServiceTest {
                     checkNicknameDuplicate)
                 .withMessage(NICKNAME_OVER_MAX_LENGTH);
         }
+    }
+
+    @Nested
+    class 회원_프로필_조회_테스트 {
+
+        @Test
+        void 수정_이력이_없는_회원_프로필_조회에_성공한다() {
+            // given
+
+            // when
+
+            // then
+
+        }
+
+        @Test
+        void 수정_이력이_있는_회원_프로필_조회에_성공한다() {
+            // given
+
+            // when
+
+            // then
+
+        }
+
+        @Test
+        void 존재하는_회원_프로필_조회에_성공한다() {
+            // given
+
+            // when
+
+            // then
+        }
+
+        @Test
+        void 존재하지_않는_회원_프로필_조회에_실패한다() {
+            // given
+
+            // when
+
+            // then
+        }
+
+        @ParameterizedTest
+        @NullSource
+        void 프로필_회원_Id가_유효하지_않아_회원_프로필_조회에_실패한다(Long id) {
+            // given
+
+            // when
+
+            // then
+        }
+
+    }
+
+    @Nested
+    class 회원_프로필_수정_테스트 {
+
+        @Test
+        void 로그인_Id가_회원_Id와_일치하여_회원_프로필_수정에_성공한다() {
+            // given
+
+            // when
+
+            // then
+
+        }
+
+        @Test
+        void 로그인을_하지_않아_회원_프로필_수정에_실패한다() {
+            // given
+
+            // when
+
+            // then
+
+        }
+
+        @Test
+        void 로그인_Id와_회원_Id가_일치하지_않아_회원_프로필_수정에_실패한다() {
+            // given
+
+            // when
+
+            // then
+
+        }
+
+        @Test
+        void 존재하지_않는_회원_프로필_수정에_실패한다() {
+            // given
+
+            // when
+
+            // then
+
+        }
+
+        @Test
+        void 유효하지_않은_프로필_정보로_프로필_수정에_실패한다() {
+            // given
+
+            // when
+
+            // then
+
+        }
+
+    }
+
+    @Nested
+    class 회원_비밀번호_수정_테스트 {
+
+        // TODO: 회원_비밀번호_수정_테스트 작성 필요
+
     }
 
     private User createUser(String email, String password, String nickname) {
