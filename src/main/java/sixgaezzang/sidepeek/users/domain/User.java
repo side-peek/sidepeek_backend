@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.users.domain;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
+import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateGithubUrl;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
@@ -24,10 +25,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
-import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 
 @Entity
@@ -113,55 +114,72 @@ public class User extends BaseTimeEntity {
         validateEmail(email, INVALID_EMAIL_FORMAT.getMessage());
     }
 
+    // TODO: setter에서 중복되는 로직 리팩토링 필요
     private void setNickname(String nickname) {
+        validateNickname(nickname);
         if (!Objects.equals(this.nickname, nickname)) {
-            validateNickname(nickname);
             this.nickname = nickname;
         }
     }
 
     private void setIntroduction(String introduction) {
-        if (Objects.nonNull(introduction) && !Objects.equals(this.introduction, introduction)) {
+        if (StringUtils.isNoneBlank(introduction)) {
             validateIntroduction(introduction);
+        }
+
+        if (StringUtils.isBlank(this.introduction) || !Objects.equals(this.introduction, introduction)) {
             this.introduction = introduction;
         }
     }
 
     private void setProfileImageUrl(String profileImageUrl) {
-        if (Objects.nonNull(profileImageUrl) && !Objects.equals(this.profileImageUrl, profileImageUrl)) {
+        if (StringUtils.isNoneBlank(profileImageUrl)) {
             validateProfileImageUrl(profileImageUrl);
+        }
+
+        if (StringUtils.isBlank(this.profileImageUrl) || !Objects.equals(this.profileImageUrl, profileImageUrl)) {
             this.profileImageUrl = profileImageUrl;
         }
     }
 
     private void setJob(String jobName) {
-        if (Objects.nonNull(jobName) && !jobName.isBlank()) {
-            Job newJob = Job.get(jobName);
-            if (!Objects.equals(this.job, newJob)) {
-                this.job = newJob;
-            }
+        Job newJob = null;
+        if (StringUtils.isNoneBlank(jobName)) {
+            newJob = Job.get(jobName);
+        }
+
+        if (Objects.isNull(this.job) || !Objects.equals(this.job, newJob)) {
+            this.job = newJob;
         }
     }
 
     private void setCareer(String careerDescription) {
-        if (Objects.nonNull(careerDescription)) {
-            Career newCareer = Career.get(careerDescription);
-            if (!Objects.equals(this.career, newCareer)) {
-                this.career = newCareer;
-            }
+        Career newCareer = null;
+        if (StringUtils.isNoneBlank(careerDescription)) {
+            newCareer = Career.get(careerDescription);
+        }
+
+        if (Objects.isNull(this.career) || !Objects.equals(this.career, newCareer)) {
+            this.career = newCareer;
         }
     }
 
     private void setGithubUrl(String githubUrl) {
-        if (Objects.nonNull(githubUrl) && !Objects.equals(this.githubUrl, githubUrl)) {
-            ValidationUtils.validateGithubUrl(githubUrl);
+        if (StringUtils.isNoneBlank(githubUrl)) {
+            validateGithubUrl(githubUrl);
+        }
+
+        if (StringUtils.isBlank(this.githubUrl) || !Objects.equals(this.githubUrl, githubUrl)) {
             this.githubUrl = githubUrl;
         }
     }
 
     private void setBlogUrl(String blogUrl) {
-        if (Objects.nonNull(blogUrl) && !Objects.equals(this.blogUrl, blogUrl)) {
+        if (StringUtils.isNoneBlank(blogUrl)) {
             validateBlogUrl(blogUrl);
+        }
+
+        if (StringUtils.isBlank(this.blogUrl) || !Objects.equals(this.blogUrl, blogUrl)) {
             this.blogUrl = blogUrl;
         }
     }
