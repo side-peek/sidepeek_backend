@@ -137,16 +137,20 @@ public class User extends BaseTimeEntity {
     }
 
     private void setJob(String jobName) {
-        if (Objects.nonNull(jobName) && !jobName.isBlank() && !Objects.equals(this.job.getName(), jobName)) {
+        if (Objects.nonNull(jobName) && !jobName.isBlank()) {
             validateJob(jobName);
-            this.job = Job.valueOf(jobName);
+            if (!Objects.equals(this.job.getName(), jobName)) {
+                this.job = Job.valueOf(jobName);
+            }
         }
     }
 
     private void setCareer(String careerDescription) {
-        if (Objects.nonNull(careerDescription) && !Objects.equals(this.career.getDescription(), careerDescription)) {
+        if (Objects.nonNull(careerDescription)) {
             validateCareer(careerDescription);
-            this.career = Career.valueOf(careerDescription);
+            if (!Objects.equals(this.career.getDescription(), careerDescription)) {
+                this.career = Career.valueOf(careerDescription);
+            }
         }
     }
 
