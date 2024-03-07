@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserErrorMessage {
+
     // Common
     public static final String USER_IS_NULL = "User가 null 입니다.";
     public static final String USER_ID_IS_NULL = "회원 Id를 입력해주세요.";
