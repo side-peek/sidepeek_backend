@@ -27,7 +27,6 @@ import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.users.domain.Career;
 import sixgaezzang.sidepeek.users.domain.Job;
-import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -58,10 +57,6 @@ public class UserValidator {
     }
 
     // Option
-    public static void validatePassword(Password password) {
-        // TODO: 비밀번호 유효성 검사
-    }
-
     public static void validateIntroduction(String introduction) {
         validateMaxLength(introduction, MAX_INTRODUCTION_LENGTH, INTRODUCTION_OVER_MAX_LENGTH);
     }
