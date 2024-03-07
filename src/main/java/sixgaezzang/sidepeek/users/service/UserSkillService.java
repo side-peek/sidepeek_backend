@@ -34,7 +34,7 @@ public class UserSkillService {
 
     public List<UserSkillSummary> saveAll(User user, List<UpdateUserSkillRequest> techStacks) {
         UserValidator.validateUser(user);
-        UserSkillValidator.validateTechStacks(techStacks);
+        UserSkillValidator.validateUserTechStacks(techStacks);
 
         if (userSkillRepository.existsByUser(user)) {
             userSkillRepository.deleteAllByUser(user);

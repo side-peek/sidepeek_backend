@@ -32,7 +32,7 @@ public class ProjectSkillService {
     @Transactional
     public List<ProjectSkillSummary> saveAll(Project project, List<SaveProjectSkillRequest> techStacks) {
         ProjectValidator.validateProject(project);
-        ProjectSkillValidator.validateTechStacks(techStacks);
+        ProjectSkillValidator.validateProjectTechStacks(techStacks);
 
         if (projectSkillRepository.existsByProject(project)) {
             projectSkillRepository.deleteAllByProject(project);

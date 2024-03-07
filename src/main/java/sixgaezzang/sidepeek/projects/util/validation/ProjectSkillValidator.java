@@ -13,18 +13,19 @@ import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectSkillRequest;
 
+// TODO: UserSkillValidator와 로직이 상당히 유사해서 추후 리팩터링 예정
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProjectSkillValidator {
 
-    public static void validateTechStacks(List<SaveProjectSkillRequest> techStacks) {
+    public static void validateProjectTechStacks(List<SaveProjectSkillRequest> techStacks) {
         ValidationUtils.validateNotNullAndEmpty(techStacks, TECH_STACKS_IS_NULL);
 
         Assert.isTrue(techStacks.size() <= MAX_TECH_STACK_COUNT, TECH_STACKS_OVER_MAX_COUNT);
 
-        techStacks.forEach(ProjectSkillValidator::validateTechStack);
+        techStacks.forEach(ProjectSkillValidator::validateProjectTechStack);
     }
 
-    public static void validateTechStack(SaveProjectSkillRequest techStack) {
+    public static void validateProjectTechStack(SaveProjectSkillRequest techStack) {
         Assert.notNull(techStack.skillId(), SKILL_ID_IS_NULL);
         Assert.notNull(techStack.category(), CATEGORY_IS_NULL);
     }
