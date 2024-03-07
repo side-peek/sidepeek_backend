@@ -167,7 +167,7 @@ class MemberServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
-        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createInvalidMemberInfo")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createInvalidMemberInfo")
         void 정보가_유효하지_않은_멤버여서_멤버_목록_저장에_실패한다(
             String testMessage, boolean isFellow, String nickname, String role, String message
         ) {

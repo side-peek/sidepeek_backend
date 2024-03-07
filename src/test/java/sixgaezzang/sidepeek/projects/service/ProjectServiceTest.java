@@ -182,7 +182,7 @@ class ProjectServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}이(가) 누락된 경우 실패한다.")
-        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createProjectsWithoutRequired")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createProjectsWithoutRequired")
         void 작성자_Id_외_필수_정보가_누락되어_프로젝트_저장에_실패한다(
             String testMessage, String name, String overview, String githubUrl, String description,
             String message
@@ -231,7 +231,7 @@ class ProjectServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
-        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createProjectsOnlyInvalidRequired")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createProjectsOnlyInvalidRequired")
         void 유효하지_않은_필수_정보로_프로젝트_저장에_실패한다(
             String testMessage, String name, String overview, String githubUrl, String description,
             String message
@@ -250,7 +250,7 @@ class ProjectServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
-        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createProjectsWithInvalidOption")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createProjectsWithInvalidOption")
         void 유효하지_않은_옵션_정보로_프로젝트_저장에_실패한다(
             String testMessage, String subName, String thumbnailUrl, String deployUrl,
             String troubleShooting,

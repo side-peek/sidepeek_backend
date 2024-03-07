@@ -110,7 +110,7 @@ class FileServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
-        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createInvalidFileInfo")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createInvalidFileInfo")
         void 파일_정보가_유효하지_않아_파일_목록_저장에_실패한다(String testMessage, String fileUrl, String message) {
             // given
             List<String> imageUrlsWithInvalidUrl = new ArrayList<>(imageUrls);
