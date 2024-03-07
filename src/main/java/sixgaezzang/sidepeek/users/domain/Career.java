@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.users.domain;
 
-import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.JOB_IS_INVALID;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.CAREER_IS_INVALID;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public enum Career {
         return Arrays.stream(Career.values())
             .filter(career -> Objects.equals(career.getDescription(), description))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException(JOB_IS_INVALID));
+            .orElseThrow(() -> new IllegalArgumentException(CAREER_IS_INVALID));
     }
 
 }
