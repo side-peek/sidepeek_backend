@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.TECH_STACKS_IS_NULL;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.TECH_STACKS_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.TECH_STACK_IS_DUPLICATED;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_ID_IS_NULL;
@@ -12,6 +13,7 @@ import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKI
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -195,13 +197,18 @@ class ProjectSkillServiceTest {
 
         @Test
         void 같은_카테고리_내에_중복된_기술_스택으로_사용자_기술_스택_목록_저장에_실패한다() {
-            // TODO: 유효성 검사로직 추가 필요
             // given
+            SaveTechStackRequest techStack = techStacks.get(0);
+            SaveTechStackRequest duplicatedTechStack = new SaveTechStackRequest(
+                techStack.skillId(), techStack.category());
+            techStacks.add(duplicatedTechStack);
 
             // when
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, techStacks);
 
             // then
-
+            AssertionsForClassTypes.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage(TECH_STACK_IS_DUPLICATED);
         }
 
     }
