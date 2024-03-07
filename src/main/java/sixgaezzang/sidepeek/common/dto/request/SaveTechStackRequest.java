@@ -42,7 +42,7 @@ public record SaveTechStackRequest(
         return ProjectSkill.builder()
             .project(project)
             .skill(skill)
-            .category(this.category())
+            .category(this.category)
             .build();
     }
 

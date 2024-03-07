@@ -29,7 +29,7 @@ public class TechStackValidator {
         Assert.notNull(techStack.category(), CATEGORY_IS_NULL);
     }
 
-    public static void validateCategory(String category) { // TODO: 위치 리팩터링 필요(세희)
+    public static void validateCategory(String category) {
         validateNotBlank(category, CATEGORY_IS_NULL);
         validateMaxLength(category, MAX_CATEGORY_LENGTH,
             CATEGORY_OVER_MAX_LENGTH);
