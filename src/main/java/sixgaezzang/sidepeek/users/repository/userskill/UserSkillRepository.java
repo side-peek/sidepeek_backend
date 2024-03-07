@@ -12,4 +12,5 @@ public interface UserSkillRepository extends JpaRepository<UserSkill, Long> {
     boolean existsByUser(User user);
 
     void deleteAllByUser(User user);
+
 }
