@@ -37,7 +37,7 @@ public interface UserControllerDoc {
         @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @Parameter(name = "id", description = "수정할 회원 ID", example = "1")
+    @Parameter(name = "id", description = "수정할 회원 식별자", example = "1")
     ResponseEntity<Void> updatePassword(@Parameter(hidden = true) Long loginId, Long id,
         UpdatePasswordRequest request);
 
@@ -68,7 +68,7 @@ public interface UserControllerDoc {
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @Parameter(name = "id", description = "조회할 회원 ID", example = "1", in = ParameterIn.PATH)
+    @Parameter(name = "id", description = "조회할 회원 식별자", example = "1", in = ParameterIn.PATH)
     ResponseEntity<UserProfileResponse> getById(Long id);
 
     @Operation(summary = "회원 프로필 정보 수정")

@@ -36,7 +36,7 @@ public interface ProjectControllerDoc {
         @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @Parameter(name = "projectId", description = "수정할 프로젝트 ID", in = ParameterIn.PATH)
+    @Parameter(name = "id", description = "수정할 프로젝트 식별자", in = ParameterIn.PATH)
     ResponseEntity<ProjectResponse> update(@Parameter(hidden = true) Long loginId, Long projectId,
         ProjectRequest request);
 
@@ -55,7 +55,7 @@ public interface ProjectControllerDoc {
         @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @Parameter(name = "id", description = "조회할 프로젝트 ID", in = ParameterIn.PATH)
+    @Parameter(name = "id", description = "조회할 프로젝트 식별자", in = ParameterIn.PATH)
     ResponseEntity<ProjectResponse> getById(Long id);
 
     @Operation(summary = "프로젝트 전체 조회")
