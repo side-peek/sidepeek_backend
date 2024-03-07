@@ -168,7 +168,7 @@ class UserSkillServiceTest {
 
         }
 
-        @ParameterizedTest
+        @ParameterizedTest(name = "[{index}] {0}")
         @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createInvalidTechStackInfo")
         void 기술_스택_카테고리가_유효하지_않아_사용자_기술_스택_목록_수정에_실패한다(
             String testMessage, String category, String message
