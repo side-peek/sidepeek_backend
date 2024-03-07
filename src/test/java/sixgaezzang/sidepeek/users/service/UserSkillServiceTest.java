@@ -40,7 +40,7 @@ import sixgaezzang.sidepeek.util.FakeEntityProvider;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class UserSkillServiceTest {
 
-    static final int USER_SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
+    static final int SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
     static List<SaveTechStackRequest> techStacks;
     static List<SaveTechStackRequest> overLengthTechStacks;
     @Autowired
@@ -56,17 +56,14 @@ class UserSkillServiceTest {
 
     @BeforeEach
     void setup() {
-        // TODO: 중복코드 리팩터링 필요 + createUserSkillSaveRequest와도 중복(세희)
-        overLengthTechStacks = new ArrayList<>();
+        List<Long> createdSkillIds = new ArrayList<>();
         for (int i = 1; i <= MAX_TECH_STACK_COUNT + 1; i++) {
-            Skill skill = createAndSaveSkill();
-            overLengthTechStacks.add(
-                FakeDtoProvider.createSaveTechStackRequest(skill.getId())
-            );
+            createdSkillIds.add(createAndSaveSkill().getId());
         }
+        overLengthTechStacks = FakeDtoProvider.createSaveTechStackRequests(createdSkillIds);
+        techStacks = overLengthTechStacks.subList(0, SKILL_COUNT);
 
         user = createAndSaveUser();
-        techStacks = overLengthTechStacks.subList(0, USER_SKILL_COUNT);
         skill = createAndSaveSkill();
     }
 

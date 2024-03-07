@@ -57,7 +57,7 @@ class ProjectSkillServiceTest {
     @Autowired
     UserRepository userRepository;
 
-    static final int PROJECT_SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
+    static final int SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
     static List<SaveTechStackRequest> techStacks;
     static List<SaveTechStackRequest> overLengthTechStacks;
     Project project;
@@ -66,17 +66,15 @@ class ProjectSkillServiceTest {
 
     @BeforeEach
     void setup() {
-        overLengthTechStacks = new ArrayList<>();
+        List<Long> createdSkillIds = new ArrayList<>();
         for (int i = 1; i <= MAX_TECH_STACK_COUNT + 1; i++) {
-            Skill skill = createAndSaveSkill();
-            overLengthTechStacks.add(
-                FakeDtoProvider.createSaveTechStackRequest(skill.getId())
-            );
+            createdSkillIds.add(createAndSaveSkill().getId());
         }
+        overLengthTechStacks = FakeDtoProvider.createSaveTechStackRequests(createdSkillIds);
+        techStacks = overLengthTechStacks.subList(0, SKILL_COUNT);
 
         user = createAndSaveUser();
         project = createAndSaveProject(user);
-        techStacks = overLengthTechStacks.subList(0, PROJECT_SKILL_COUNT);
         skill = createAndSaveSkill();
     }
 
@@ -104,7 +102,7 @@ class ProjectSkillServiceTest {
             List<ProjectSkillSummary> savedTechStacks = projectSkillService.saveAll(project, techStacks);
 
             // then
-            assertThat(savedTechStacks).hasSize(PROJECT_SKILL_COUNT);
+            assertThat(savedTechStacks).hasSize(SKILL_COUNT);
         }
 
         @ParameterizedTest

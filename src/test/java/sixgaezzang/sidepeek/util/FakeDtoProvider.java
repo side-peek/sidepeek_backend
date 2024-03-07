@@ -9,6 +9,7 @@ import static sixgaezzang.sidepeek.util.FakeValueProvider.createSkillCategory;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
 
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
@@ -25,8 +26,18 @@ public class FakeDtoProvider {
         return new SaveTechStackRequest(skillId, createSkillCategory());
     }
 
+    public static List<SaveTechStackRequest> createSaveTechStackRequests(List<Long> skillIds) {
+        List<SaveTechStackRequest> requests = new ArrayList<>();
+        for (Long skillId : skillIds) {
+            requests.add(
+                FakeDtoProvider.createSaveTechStackRequest(skillId)
+            );
+        }
+        return requests;
+    }
+
     // Project
-    public static SaveProjectRequest createProjectSaveRequestOnlyRequired(
+    public static SaveProjectRequest createSaveProjectRequestOnlyRequired(
         String name, String overview, String githubUrl, String description, Long ownerId,
         List<SaveTechStackRequest> techStacks, List<SaveMemberRequest> members
     ) {

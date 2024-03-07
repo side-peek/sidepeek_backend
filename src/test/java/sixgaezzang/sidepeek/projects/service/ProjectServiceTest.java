@@ -52,7 +52,7 @@ class ProjectServiceTest {
 
     static final Faker faker = new Faker();
     static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
-    static final int PROJECT_SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
+    static final int SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
     static List<SaveMemberRequest> members;
     static List<Long> fellowMemberIds;
     static List<SaveTechStackRequest> techStacks;
@@ -93,7 +93,7 @@ class ProjectServiceTest {
     }
 
     private ProjectResponse getNewSavedProject(Long userId) {
-        SaveProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+        SaveProjectRequest request = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
             NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, userId, techStacks, members
         );
         return projectService.save(userId, null, request);
@@ -117,14 +117,12 @@ class ProjectServiceTest {
         user = createAndSaveUser();
         fellowMemberIds.add(0, user.getId());
         members.add(0, FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
-
-        techStacks = new ArrayList<>();
-        for (int i = 1; i <= PROJECT_SKILL_COUNT; i++) {
-            Skill skill = createAndSaveSkill();
-            techStacks.add(
-                FakeDtoProvider.createSaveTechStackRequest(skill.getId())
-            );
+        
+        List<Long> createdSkillIds = new ArrayList<>();
+        for (int i = 1; i <= SKILL_COUNT; i++) {
+            createdSkillIds.add(createAndSaveSkill().getId());
         }
+        techStacks = FakeDtoProvider.createSaveTechStackRequests(createdSkillIds);
     }
 
     @Nested
@@ -166,7 +164,7 @@ class ProjectServiceTest {
         @Test
         void 필수_정보가_모두_포함되어_프로젝트_저장에_성공한다() {
             // given
-            SaveProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+            SaveProjectRequest request = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
                 NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId(), techStacks, members
             );
 
@@ -188,7 +186,7 @@ class ProjectServiceTest {
             String message
         ) {
             // given
-            SaveProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+            SaveProjectRequest request = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
                 name, overview, githubUrl, description, user.getId(), techStacks, members
             );
 
@@ -203,7 +201,7 @@ class ProjectServiceTest {
         @Test
         void 작성자_Id가_누락되어_프로젝트_저장에_실패한다() {
             // given
-            SaveProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+            SaveProjectRequest request = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
                 NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, null, techStacks, members
             );
 
@@ -218,7 +216,7 @@ class ProjectServiceTest {
         @Test
         void 작성자_Id가_로그인_Id와_불일치하여_프로젝트_저장에_실패한다() {
             // given
-            SaveProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+            SaveProjectRequest request = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
                 NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId() - 1, techStacks, members
             );
 
@@ -237,7 +235,7 @@ class ProjectServiceTest {
             String message
         ) {
             // given
-            SaveProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+            SaveProjectRequest request = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
                 name, overview, githubUrl, description, user.getId(), techStacks, members
             );
 
@@ -273,7 +271,7 @@ class ProjectServiceTest {
         @Test
         void 사용자가_로그인을_하지_않아서_프로젝트_저장에_실패한다() {
             // given
-            SaveProjectRequest request = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+            SaveProjectRequest request = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
                 NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId(), techStacks, members
             );
 
@@ -301,7 +299,7 @@ class ProjectServiceTest {
                 String newOverview = FakeValueProvider.createOverview();
                 String newGithubUrl = FakeValueProvider.createUrl();
                 String newDescription = FakeValueProvider.createLongText();
-                SaveProjectRequest newRequest = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                SaveProjectRequest newRequest = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
                     newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
                     members
                 );
@@ -327,7 +325,7 @@ class ProjectServiceTest {
             String newOverview = FakeValueProvider.createOverview();
             String newGithubUrl = FakeValueProvider.createUrl();
             String newDescription = FakeValueProvider.createLongText();
-            SaveProjectRequest newRequest = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+            SaveProjectRequest newRequest = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
                 newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
                 members
             );
@@ -349,7 +347,7 @@ class ProjectServiceTest {
             String newOverview = FakeValueProvider.createOverview();
             String newGithubUrl = FakeValueProvider.createUrl();
             String newDescription = FakeValueProvider.createLongText();
-            SaveProjectRequest newRequest = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+            SaveProjectRequest newRequest = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
                 newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
             );
             ThrowingCallable update = () -> projectService.save(null, originalProject.id(),
@@ -376,7 +374,7 @@ class ProjectServiceTest {
                 String newOverview = FakeValueProvider.createOverview();
                 String newGithubUrl = FakeValueProvider.createUrl();
                 String newDescription = FakeValueProvider.createLongText();
-                SaveProjectRequest newRequest = FakeDtoProvider.createProjectSaveRequestOnlyRequired(
+                SaveProjectRequest newRequest = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
                     newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
                     members
                 );
