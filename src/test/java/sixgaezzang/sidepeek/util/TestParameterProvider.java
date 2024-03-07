@@ -25,17 +25,17 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.TROUBLESHOOTING_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createLongText;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createNickname;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createOverview;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createProjectName;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_IS_NULL;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createLongText;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createNickname;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createOverview;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createProjectName;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
 
 import java.time.YearMonth;
 import java.util.stream.Stream;
@@ -147,8 +147,8 @@ public class TestParameterProvider {
         );
     }
 
-    // Project Skill
-    public static Stream<Arguments> createInvalidProjectSkillInfo() {
+    // TechStack
+    public static Stream<Arguments> createInvalidTechStackInfo() {
         return Stream.of(
             Arguments.of("기술 스택 카테고리를 누락하는 경우", null,
                 CATEGORY_IS_NULL),
