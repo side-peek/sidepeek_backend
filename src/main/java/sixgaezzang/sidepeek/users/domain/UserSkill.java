@@ -14,6 +14,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.skill.domain.Skill;
+import sixgaezzang.sidepeek.skill.util.validation.SkillValidator;
+import sixgaezzang.sidepeek.users.util.validation.UserValidator;
 
 @Entity
 @Table(name = "user_skill")
@@ -38,9 +40,16 @@ public class UserSkill {
 
     @Builder
     public UserSkill(User user, Skill skill, String category) {
+        validateConstructorArguments(user, skill, category);
         this.user = user;
         this.skill = skill;
         this.category = category;
+    }
+
+    private void validateConstructorArguments(User user, Skill skill, String category) {
+        UserValidator.validateUser(user);
+        SkillValidator.validateSkill(skill);
+        SkillValidator.validateCategory(category);
     }
 
 }
