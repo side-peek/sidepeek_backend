@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOf
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.LOGIN_IS_REQUIRED;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_IS_NULL;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
@@ -302,8 +303,8 @@ class UserServiceTest {
             ThrowingCallable getProfileById = () -> userService.getProfileById(nullUserId);
 
             // then
-            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(getProfileById)
-                .withMessage(USER_NOT_EXISTING);
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(getProfileById)
+                .withMessage(USER_ID_IS_NULL);
         }
 
     }
