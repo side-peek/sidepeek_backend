@@ -1,7 +1,7 @@
 package sixgaezzang.sidepeek.projects.service;
 
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateLoginId;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
 

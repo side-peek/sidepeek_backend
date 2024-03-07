@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.users.service;
 
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.isNullOrEmpty;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.isNullOrEmpty;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.validation.UserSkillValidator.validateUserTechStacks;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateUser;

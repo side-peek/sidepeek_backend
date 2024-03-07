@@ -1,10 +1,10 @@
 package sixgaezzang.sidepeek.users.util.validation;
 
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateLoginId;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateURI;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateNotBlank;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateURI;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.BLOG_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.BLOG_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.INTRODUCTION_OVER_MAX_LENGTH;

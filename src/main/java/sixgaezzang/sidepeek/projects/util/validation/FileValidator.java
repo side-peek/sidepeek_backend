@@ -1,7 +1,7 @@
 package sixgaezzang.sidepeek.projects.util.validation;
 
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateTextLength;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateURI;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateTextLength;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateURI;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_OVER_MAX_LENGTH;

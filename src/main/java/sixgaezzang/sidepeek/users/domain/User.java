@@ -1,8 +1,8 @@
 package sixgaezzang.sidepeek.users.domain;
 
 import static sixgaezzang.sidepeek.common.util.SetUtils.isSetPossible;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateGithubUrl;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateEmail;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateGithubUrl;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;

@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.projects.service;
 
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.isNotNullOrEmpty;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.isNotNullOrEmpty;
 import static sixgaezzang.sidepeek.projects.util.validation.FileValidator.validateFiles;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateProject;
 

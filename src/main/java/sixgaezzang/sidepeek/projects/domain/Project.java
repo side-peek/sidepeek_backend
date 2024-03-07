@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.projects.domain;
 
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateGithubUrl;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateGithubUrl;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;

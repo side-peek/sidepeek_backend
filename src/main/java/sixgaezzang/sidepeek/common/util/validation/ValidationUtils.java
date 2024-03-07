@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.common.util;
+package sixgaezzang.sidepeek.common.util.validation;
 
 import static io.micrometer.common.util.StringUtils.isBlank;
 import static io.micrometer.common.util.StringUtils.isNotBlank;

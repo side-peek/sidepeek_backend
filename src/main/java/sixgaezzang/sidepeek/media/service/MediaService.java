@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.media.service;
 
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateLoginId;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.media.exception.message.MediaErrorMessage.CANNOT_READ_FILE;
 import static sixgaezzang.sidepeek.media.util.MediaConstant.FILE_EXTENSION_SEPARATOR;
 import static sixgaezzang.sidepeek.media.util.validation.MediaValidator.validateFile;
