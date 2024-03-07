@@ -19,7 +19,7 @@ public class SkillValidator {
         Assert.notNull(skill, SKILL_IS_NULL);
     }
 
-    public static void validateCategory(String category) {
+    public static void validateCategory(String category) { // TODO: 위치 리팩터링 필요(세희)
         validateNotBlank(category, CATEGORY_IS_NULL);
         validateMaxLength(category, MAX_CATEGORY_LENGTH,
             CATEGORY_OVER_MAX_LENGTH);
