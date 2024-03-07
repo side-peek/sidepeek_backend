@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import sixgaezzang.sidepeek.users.dto.response.UserSummary;
-// TODO: 대댓글 반영 부탁해용!!
 
 @Schema(description = "댓글 응답 정보")
 public record CommentResponse(

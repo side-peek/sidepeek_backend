@@ -63,7 +63,7 @@ public class Project extends BaseTimeEntity {
     private String githubUrl;
 
     @Column(name = "owner_id", columnDefinition = "BIGINT", nullable = false)
-    private Long ownerId; // TODO: User로 설정하는 것이 좋을까요? 놓는다면 [accessToken id 일치 확인 + 유저 존재 확인(추가 발생)] 해야합니다!
+    private Long ownerId;
 
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
@@ -111,7 +111,7 @@ public class Project extends BaseTimeEntity {
         this.viewCount++;
     }
 
-    public void softDelete() { // TODO: 타임존 설정이 필요할까
+    public void softDelete() {
         if (Objects.isNull(this.deletedAt)) {
             this.deletedAt = LocalDateTime.now();
             return;
