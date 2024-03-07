@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -132,6 +133,17 @@ class UserSkillServiceTest {
             // then
             assertThat(retrievedTechStacks.size()).isNotEqualTo(originalTechStacks.size());
             assertThat(retrievedTechStacks).hasSameSizeAs(savedTechStacks);
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        void 비어있는_사용자_기술_스택_목록_수정에_성공한다(List<UpdateUserSkillRequest> emptyTechStack) {
+            // given, when
+            userSkillService.saveAll(user, emptyTechStack);
+            List<UserSkillSummary> retrievedTechStacks = userSkillService.findAllByUser(user);
+
+            // then
+            assertThat(retrievedTechStacks).isEmpty();
         }
 
         @ParameterizedTest
