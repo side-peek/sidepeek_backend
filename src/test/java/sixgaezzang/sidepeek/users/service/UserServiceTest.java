@@ -391,8 +391,78 @@ class UserServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
-        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createInvalidProfileInfo")
-        void 유효하지_않은_옵션_프로필_정보로_프로필_수정에_실패한다(
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createProfileRequestWithInvalidIntroduction")
+        void 유효하지_않은_소개_정보로_프로필_수정에_실패한다(
+            String testMessage, UpdateUserProfileRequest invalidRequest, String message
+        ) {
+            // given, when
+            ThrowingCallable updateProfile = () -> userService.updateProfile(
+                user.getId(), user.getId(), invalidRequest);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(updateProfile)
+                .withMessage(message);
+        }
+
+        @ParameterizedTest(name = "[{index}] {0}")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createProfileRequestWithInvalidProfileImageUrl")
+        void 유효하지_않은_프로필_이미지_URL_정보로_프로필_수정에_실패한다(
+            String testMessage, UpdateUserProfileRequest invalidRequest, String message
+        ) {
+            // given, when
+            ThrowingCallable updateProfile = () -> userService.updateProfile(
+                user.getId(), user.getId(), invalidRequest);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(updateProfile)
+                .withMessage(message);
+        }
+
+        @ParameterizedTest(name = "[{index}] {0}")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createProfileRequestWithInvalidJob")
+        void 유효하지_않은_직업_정보로_프로필_수정에_실패한다(
+            String testMessage, UpdateUserProfileRequest invalidRequest, String message
+        ) {
+            // given, when
+            ThrowingCallable updateProfile = () -> userService.updateProfile(
+                user.getId(), user.getId(), invalidRequest);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(updateProfile)
+                .withMessage(message);
+        }
+
+        @ParameterizedTest(name = "[{index}] {0}")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createProfileRequestWithInvalidCareer")
+        void 유효하지_않은_경력_정보로_프로필_수정에_실패한다(
+            String testMessage, UpdateUserProfileRequest invalidRequest, String message
+        ) {
+            // given, when
+            ThrowingCallable updateProfile = () -> userService.updateProfile(
+                user.getId(), user.getId(), invalidRequest);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(updateProfile)
+                .withMessage(message);
+        }
+
+        @ParameterizedTest(name = "[{index}] {0}")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createProfileRequestWithInvalidGithubUrl")
+        void 유효하지_않은_Github_URL_정보로_프로필_수정에_실패한다(
+            String testMessage, UpdateUserProfileRequest invalidRequest, String message
+        ) {
+            // given, when
+            ThrowingCallable updateProfile = () -> userService.updateProfile(
+                user.getId(), user.getId(), invalidRequest);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(updateProfile)
+                .withMessage(message);
+        }
+
+        @ParameterizedTest(name = "[{index}] {0}")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createProfileRequestWithInvalidBlogUrl")
+        void 유효하지_않은_블로그_URL_정보로_프로필_수정에_실패한다(
             String testMessage, UpdateUserProfileRequest invalidRequest, String message
         ) {
             // given, when
