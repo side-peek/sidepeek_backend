@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.users.domain;
 
+import static sixgaezzang.sidepeek.common.util.SetUtils.isSetPossible;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateGithubUrl;
 import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
@@ -29,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
+import sixgaezzang.sidepeek.common.util.SetUtils;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 
 @Entity
@@ -114,72 +116,71 @@ public class User extends BaseTimeEntity {
         validateEmail(email, INVALID_EMAIL_FORMAT.getMessage());
     }
 
-    // TODO: setter에서 중복되는 로직 리팩토링 필요
     private void setNickname(String nickname) {
         validateNickname(nickname);
-        if (!Objects.equals(this.nickname, nickname)) {
+        if (SetUtils.isSetPossible(this.nickname, nickname)) {
             this.nickname = nickname;
         }
     }
 
     private void setIntroduction(String introduction) {
-        if (StringUtils.isNoneBlank(introduction)) {
+        if (StringUtils.isNotBlank(introduction)) {
             validateIntroduction(introduction);
         }
 
-        if (StringUtils.isBlank(this.introduction) || !Objects.equals(this.introduction, introduction)) {
+        if (SetUtils.isSetPossible(this.introduction, introduction)) {
             this.introduction = introduction;
         }
     }
 
     private void setProfileImageUrl(String profileImageUrl) {
-        if (StringUtils.isNoneBlank(profileImageUrl)) {
+        if (StringUtils.isNotBlank(profileImageUrl)) {
             validateProfileImageUrl(profileImageUrl);
         }
 
-        if (StringUtils.isBlank(this.profileImageUrl) || !Objects.equals(this.profileImageUrl, profileImageUrl)) {
+        if (SetUtils.isSetPossible(this.profileImageUrl, profileImageUrl)) {
             this.profileImageUrl = profileImageUrl;
         }
     }
 
     private void setJob(String jobName) {
         Job newJob = null;
-        if (StringUtils.isNoneBlank(jobName)) {
+        if (StringUtils.isNotBlank(jobName)) {
             newJob = Job.get(jobName);
         }
 
-        if (Objects.isNull(this.job) || !Objects.equals(this.job, newJob)) {
+        if (isSetPossible(this.job, newJob)) {
             this.job = newJob;
         }
     }
 
     private void setCareer(String careerDescription) {
         Career newCareer = null;
-        if (StringUtils.isNoneBlank(careerDescription)) {
+        if (StringUtils.isNotBlank(careerDescription)) {
             newCareer = Career.get(careerDescription);
         }
 
-        if (Objects.isNull(this.career) || !Objects.equals(this.career, newCareer)) {
+        if (isSetPossible(this.career, newCareer)) {
             this.career = newCareer;
         }
     }
 
     private void setGithubUrl(String githubUrl) {
-        if (StringUtils.isNoneBlank(githubUrl)) {
+        if (StringUtils.isNotBlank(githubUrl)) {
             validateGithubUrl(githubUrl);
         }
 
-        if (StringUtils.isBlank(this.githubUrl) || !Objects.equals(this.githubUrl, githubUrl)) {
+        if (SetUtils.isSetPossible(this.githubUrl, githubUrl)) {
             this.githubUrl = githubUrl;
         }
     }
 
     private void setBlogUrl(String blogUrl) {
-        if (StringUtils.isNoneBlank(blogUrl)) {
+        if (StringUtils.isNotBlank(blogUrl)) {
             validateBlogUrl(blogUrl);
         }
 
-        if (StringUtils.isBlank(this.blogUrl) || !Objects.equals(this.blogUrl, blogUrl)) {
+        if (SetUtils.isSetPossible(this.blogUrl, blogUrl)) {
             this.blogUrl = blogUrl;
         }
     }
