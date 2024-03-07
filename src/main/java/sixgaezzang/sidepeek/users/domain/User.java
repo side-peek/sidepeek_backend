@@ -139,7 +139,7 @@ public class User extends BaseTimeEntity {
     private void setJob(String jobName) {
         if (Objects.nonNull(jobName) && !jobName.isBlank()) {
             validateJob(jobName);
-            if (!Objects.equals(this.job.getName(), jobName)) {
+            if (!Objects.equals(this.job, Job.valueOf(jobName))) {
                 this.job = Job.valueOf(jobName);
             }
         }
@@ -148,7 +148,7 @@ public class User extends BaseTimeEntity {
     private void setCareer(String careerDescription) {
         if (Objects.nonNull(careerDescription)) {
             validateCareer(careerDescription);
-            if (!Objects.equals(this.career.getDescription(), careerDescription)) {
+            if (!Objects.equals(this.career, Career.valueOf(careerDescription))) {
                 this.career = Career.valueOf(careerDescription);
             }
         }
