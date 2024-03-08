@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.skill.controller;
 
 import static sixgaezzang.sidepeek.skill.domain.Skill.MAX_SKILL_NAME_LENGTH;
+import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_NAME_OVER_MAX_LENGTH;
 
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,7 @@ public class SkillController implements SkillControllerDoc {
     @GetMapping
     public ResponseEntity<SkillSearchResponse> searchByName(
         @RequestParam(required = false)
-        @Size(max = MAX_SKILL_NAME_LENGTH, message = "최대 " + MAX_SKILL_NAME_LENGTH
-            + "자의 키워드로 검색할 수 있습니다.") String keyword
+        @Size(max = MAX_SKILL_NAME_LENGTH, message = SKILL_NAME_OVER_MAX_LENGTH) String keyword
     ) {
         return ResponseEntity.ok()
             .body(skillService.searchByName(keyword));
