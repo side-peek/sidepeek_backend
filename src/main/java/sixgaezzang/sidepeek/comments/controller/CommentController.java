@@ -32,10 +32,6 @@ public class CommentController {
         @Login
         Long loginId,
 
-        @Schema(description = "생성할 댓글의 프로젝트 식별자", example = "1")
-        @PathVariable
-        Long projectId,
-
         @Valid
         @RequestBody
         SaveCommentRequest request
@@ -50,10 +46,6 @@ public class CommentController {
         @Schema(description = "로그인한 회원 식별자", example = "1")
         @Login
         Long loginId,
-
-        @Schema(description = "수정할 댓글의 프로젝트 식별자", example = "1")
-        @PathVariable
-        Long projectId,
 
         @Schema(description = "수정할 댓글 식별자", example = "1")
         @PathVariable(value = "id")
@@ -73,10 +65,6 @@ public class CommentController {
         @Schema(description = "로그인한 회원 식별자", example = "1")
         @Login
         Long loginId,
-
-        @Schema(description = "삭제할 댓글의 프로젝트 식별자", example = "1")
-        @PathVariable
-        Long projectId,
 
         @Schema(description = "삭제할 댓글 식별자", example = "1")
         @PathVariable(value = "id")
