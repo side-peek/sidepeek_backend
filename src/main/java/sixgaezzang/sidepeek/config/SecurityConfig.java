@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import sixgaezzang.sidepeek.auth.jwt.JWTValidationFilter;
+import sixgaezzang.sidepeek.auth.service.OAuth2UserServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -22,11 +22,8 @@ import sixgaezzang.sidepeek.auth.jwt.JWTValidationFilter;
 public class SecurityConfig {
 
     private final JWTValidationFilter jwtValidationFilter;
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    private final OAuth2UserServiceImpl oauth2UserServiceImpl;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -38,7 +35,12 @@ public class SecurityConfig {
             .rememberMe(AbstractHttpConfigurer::disable)
             .logout(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-            .addFilterBefore(jwtValidationFilter, BasicAuthenticationFilter.class);
+            .addFilterBefore(jwtValidationFilter, BasicAuthenticationFilter.class)
+            .oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
+                    .userService(oauth2UserServiceImpl))
+                .successHandler(authenticationSuccessHandler)
+            );
 
         return httpSecurity.build();
     }

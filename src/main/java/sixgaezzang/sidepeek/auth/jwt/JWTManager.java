@@ -63,7 +63,11 @@ public class JWTManager {
 
     private Claims parseClaims(String token) {
         try {
-            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+            return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
         } catch (ExpiredJwtException e) {
             throw new TokenValidationFailException("만료된 토큰입니다.");
         } catch (Exception e) {
