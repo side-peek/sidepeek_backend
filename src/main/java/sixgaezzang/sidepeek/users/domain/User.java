@@ -3,9 +3,7 @@ package sixgaezzang.sidepeek.users.domain;
 import static sixgaezzang.sidepeek.common.util.SetUtils.isSetPossible;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateGithubUrl;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAIL_FORMAT_INVALID;
-import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_CAREER_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_EMAIL_LENGTH;
@@ -14,6 +12,7 @@ import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_JOB_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateBlogUrl;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateIntroduction;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateNickname;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateProfileImageUrl;
 
 import io.micrometer.common.util.StringUtils;
@@ -132,10 +131,6 @@ public class User extends BaseTimeEntity {
         }
     }
 
-    private void validateNickname(String nickname) {
-        validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
-            NICKNAME_OVER_MAX_LENGTH);
-    }
     private void setNickname(String nickname) {
         validateNickname(nickname);
         if (isSetPossible(this.nickname, nickname)) {
