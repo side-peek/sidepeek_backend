@@ -47,13 +47,14 @@ import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
 
 import java.time.YearMonth;
 import java.util.Collections;
-import java.util.Objects;
-import java.util.function.Predicate;
+import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.provider.Arguments;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.users.domain.Career;
 import sixgaezzang.sidepeek.users.domain.Job;
+import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 
 public class TestParameterProvider {
@@ -150,14 +151,31 @@ public class TestParameterProvider {
         );
     }
 
-    public static Stream<Arguments> createMemberFilter() {
-        Predicate<SaveMemberRequest> isFellowMember = (memberRequest ->
-            Objects.nonNull(memberRequest.userId()));
-        Predicate<SaveMemberRequest> isNonFellowMember = (memberRequest ->
-            Objects.isNull(memberRequest.userId()));
+    public static Stream<Arguments> createDuplicatedMembers() {
+        String role = FakeValueProvider.createRole();
+
+        Function<User, List<SaveMemberRequest>> getDuplicatedFellowMembers =
+            (user) -> List.of(
+                new SaveMemberRequest(user.getId(), user.getNickname(), role),
+                new SaveMemberRequest(user.getId(), user.getNickname(), role)
+            );
+        Function<User, List<SaveMemberRequest>> getDuplicatedNonFellowMembers =
+            (user) -> List.of(
+                new SaveMemberRequest(null, user.getNickname(), role),
+                new SaveMemberRequest(null, user.getNickname(), role)
+            );
+        Function<User, List<SaveMemberRequest>> getDuplicatedMembers =
+            (user) -> List.of(
+                new SaveMemberRequest(user.getId(), user.getNickname(), role),
+                new SaveMemberRequest(null, user.getNickname(), role)
+            );
         return Stream.of(
-            Arguments.of(isFellowMember),
-            Arguments.of(isNonFellowMember)
+            Arguments.of(
+                "회원 멤버가 중복인 경우", getDuplicatedFellowMembers),
+            Arguments.of(
+                "비회원 멤버가 중복인 경우", getDuplicatedNonFellowMembers),
+            Arguments.of(
+                "회원 멤버와 비회원 멤버가 중복인 경우", getDuplicatedMembers)
         );
     }
 
