@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,8 +15,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sixgaezzang.sidepeek.comments.dto.request.SaveCommentRequest;
-import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
+import sixgaezzang.sidepeek.comments.service.CommentService;
 import sixgaezzang.sidepeek.common.annotation.Login;
 
 @RestController
@@ -24,10 +26,12 @@ import sixgaezzang.sidepeek.common.annotation.Login;
 @RequiredArgsConstructor
 public class CommentController {
 
+    private final CommentService commentService;
+
     @PostMapping
     @Operation(summary = "댓글 생성")
     @ApiResponse(responseCode = "201", description = "댓글 생성 성공")
-    public ResponseEntity<CommentResponse> save(
+    public ResponseEntity<Void> save(
         @Schema(description = "로그인한 회원 식별자", example = "1")
         @Login
         Long loginId,
@@ -36,13 +40,20 @@ public class CommentController {
         @RequestBody
         SaveCommentRequest request
     ) {
-        return null;
+        Long projectId = commentService.save(loginId, null, request);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path("/projects/{id}")
+            .buildAndExpand(projectId).toUri();
+
+        return ResponseEntity.created(uri)
+            .build();
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "댓글 수정")
     @ApiResponse(responseCode = "200", description = "댓글 수정 성공")
-    public ResponseEntity<CommentResponse> update(
+    public ResponseEntity<Void> update(
         @Schema(description = "로그인한 회원 식별자", example = "1")
         @Login
         Long loginId,
@@ -55,7 +66,10 @@ public class CommentController {
         @RequestBody
         SaveCommentRequest request
     ) {
-        return null;
+        commentService.save(loginId, commentId, request);
+
+        return ResponseEntity.noContent()
+            .build();
     }
 
     @DeleteMapping("/{id}")
@@ -70,7 +84,10 @@ public class CommentController {
         @PathVariable(value = "id")
         Long commentId
     ) {
-        return null;
+        commentService.delete(loginId, commentId);
+
+        return ResponseEntity.noContent()
+            .build();
     }
 
 }
