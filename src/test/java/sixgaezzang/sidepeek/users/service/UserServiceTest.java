@@ -90,7 +90,6 @@ class UserServiceTest {
         return userRepository.save(newUser);
     }
 
-
     @Nested
     class 회원가입_테스트 {
 
