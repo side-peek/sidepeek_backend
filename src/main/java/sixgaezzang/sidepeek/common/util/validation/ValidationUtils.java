@@ -11,12 +11,15 @@ import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
 import static sixgaezzang.sidepeek.users.domain.Password.PASSWORD_REGXP;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -85,13 +88,25 @@ public final class ValidationUtils {
             .orElseThrow(() -> new IllegalArgumentException(errorMessage));
     }
 
-    public static <T> void validateAndCheckDuplicate(List<T> values, Consumer<T> validator, String errorMessage) {
+    public static <T extends Collection<U>, U> void validateCollection(T values, Consumer<U> validator) {
+        values.forEach(validator);
+    }
+
+    public static <T> void validateDuplicate(List<T> values, String errorMessage) {
         Set<T> set = new HashSet<>();
         values.forEach(value -> {
-            validator.accept(value);
-
             Assert.isTrue(!set.contains(value), errorMessage);
             set.add(value);
+        });
+    }
+
+    public static <T, U> void validateKeyDuplicate(List<T> values, Function<T, U> getKey, String errorMessage) {
+        Map<U, T> map = new HashMap<>();
+        values.forEach(value -> {
+            U key = getKey.apply(value);
+            T retrievedValue = map.get(key);
+            Assert.isTrue(Objects.isNull(retrievedValue), errorMessage);
+            map.put(getKey.apply(value), value);
         });
     }
 
