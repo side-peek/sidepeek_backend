@@ -2,8 +2,8 @@ package sixgaezzang.sidepeek.users.domain;
 
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
 import static sixgaezzang.sidepeek.common.util.ValidationUtils.validatePassword;
-import static sixgaezzang.sidepeek.users.exception.UserErrorCode.BLANK_PASSWORD;
-import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_PASSWORD_FORMAT;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_FORMAT_INVALID;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_IS_NULL;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -21,8 +21,8 @@ public class Password {
     private String encoded;
 
     public Password(String password, PasswordEncoder passwordEncoder) {
-        validateNotBlank(password, BLANK_PASSWORD.getMessage());
-        validatePassword(password, INVALID_PASSWORD_FORMAT.getMessage());
+        validateNotBlank(password, PASSWORD_IS_NULL);
+        validatePassword(password, PASSWORD_FORMAT_INVALID);
         encoded = passwordEncoder.encode(password);
     }
 

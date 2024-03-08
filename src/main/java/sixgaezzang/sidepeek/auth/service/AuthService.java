@@ -11,6 +11,7 @@ import sixgaezzang.sidepeek.auth.dto.request.LoginRequest;
 import sixgaezzang.sidepeek.auth.dto.request.ReissueTokenRequest;
 import sixgaezzang.sidepeek.auth.dto.response.LoginResponse;
 import sixgaezzang.sidepeek.auth.jwt.JWTManager;
+import sixgaezzang.sidepeek.common.annotation.Login;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.response.UserSummary;
@@ -37,7 +38,7 @@ public class AuthService {
         return createTokens(user);
     }
 
-    public UserSummary loadUser(Long loginId) {
+    public UserSummary loadUser(@Login Long loginId) {
         User user = userRepository.findById(loginId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
 
@@ -57,7 +58,8 @@ public class AuthService {
         return createTokens(user);
     }
 
-    private LoginResponse createTokens(User user) {
+    @Transactional
+    public LoginResponse createTokens(User user) {
         String accessToken = jwtManager.generateAccessToken(user.getId());
         String refreshToken = jwtManager.generateRefreshToken(user.getId());
         refreshTokenService.save(refreshToken);
