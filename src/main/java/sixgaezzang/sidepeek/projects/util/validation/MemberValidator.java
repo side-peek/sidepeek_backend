@@ -1,7 +1,8 @@
 package sixgaezzang.sidepeek.projects.util.validation;
 
-import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateAndCheckDuplicate;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateCollection;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateInclude;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateKeyDuplicate;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateNotBlank;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_DUPLICATED;
@@ -30,8 +31,8 @@ public class MemberValidator {
 
         validateInclude(members, (member, id) -> Objects.equals(member.userId(), id), ownerId,
             MEMBER_NOT_INCLUDE_OWNER);
-
-        validateAndCheckDuplicate(members, MemberValidator::validateSaveMemberRequest, MEMBER_IS_DUPLICATED);
+        validateCollection(members, MemberValidator::validateSaveMemberRequest);
+        validateKeyDuplicate(members, (member) -> member.nickname() + " " + member.role(), MEMBER_IS_DUPLICATED);
     }
 
     // Required
