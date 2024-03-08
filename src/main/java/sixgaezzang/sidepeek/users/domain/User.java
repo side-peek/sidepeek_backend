@@ -3,14 +3,19 @@ package sixgaezzang.sidepeek.users.domain;
 import static sixgaezzang.sidepeek.common.util.SetUtils.isSetPossible;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateGithubUrl;
-import static sixgaezzang.sidepeek.users.exception.UserErrorCode.INVALID_EMAIL_FORMAT;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAIL_FORMAT_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ALREADY_DELETED;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_CAREER_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_EMAIL_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_INTRODUCTION_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_JOB_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateBlogUrl;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateIntroduction;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateNickname;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateProfileImageUrl;
 
+import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -26,7 +31,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
@@ -45,26 +49,26 @@ public class User extends BaseTimeEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "nickname", length = MAX_NICKNAME_LENGTH, nullable = false, unique = true)
+    @Column(name = "nickname", length = MAX_NICKNAME_LENGTH, unique = true)
     private String nickname;
 
-    @Column(name = "email", length = 50, nullable = false, unique = true)
+    @Column(name = "email", length = MAX_EMAIL_LENGTH, unique = true)
     private String email;
 
     @Embedded
     private Password password;
 
-    @Column(name = "introduction", length = 100)
+    @Column(name = "introduction", length = MAX_INTRODUCTION_LENGTH)
     private String introduction;
 
     @Column(name = "profile_image_url", columnDefinition = "TEXT")
     private String profileImageUrl;
 
-    @Column(name = "job", length = 30, columnDefinition = "VARCHAR")
+    @Column(name = "job", length = MAX_JOB_LENGTH, columnDefinition = "VARCHAR")
     @Enumerated(EnumType.STRING)
     private Job job;
 
-    @Column(name = "career", length = 30, columnDefinition = "VARCHAR")
+    @Column(name = "career", length = MAX_CAREER_LENGTH, columnDefinition = "VARCHAR")
     @Enumerated(EnumType.STRING)
     private Career career;
 
@@ -78,16 +82,23 @@ public class User extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public User(String nickname, String email, Password password) {
+    public User(String nickname, String email, Password password, String introduction,
+                String profileImageUrl, Job job, Career career, String githubUrl, String blogUrl) {
         validateConstructorArguments(nickname, email);
 
         this.nickname = nickname;
         this.email = email;
         this.password = password;
+        this.introduction = introduction;
+        this.profileImageUrl = profileImageUrl;
+        this.job = job;
+        this.career = career;
+        this.githubUrl = githubUrl;
+        this.blogUrl = blogUrl;
     }
 
     public boolean checkPassword(String rawPassword, PasswordEncoder passwordEncoder) {
-        return password.check(rawPassword, passwordEncoder);
+        return password != null && password.check(rawPassword, passwordEncoder);
     }
 
     public void update(UpdateUserProfileRequest request) {
@@ -112,8 +123,13 @@ public class User extends BaseTimeEntity {
     }
 
     private void validateConstructorArguments(String nickname, String email) {
-        validateNickname(nickname);
-        validateEmail(email, INVALID_EMAIL_FORMAT.getMessage());
+        if (nickname != null) {
+            validateNickname(nickname);
+        }
+
+        if (email != null) {
+            validateEmail(email, EMAIL_FORMAT_INVALID);
+        }
     }
 
     private void setNickname(String nickname) {

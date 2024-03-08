@@ -3,8 +3,11 @@ package sixgaezzang.sidepeek.users.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.LOGIN_IS_REQUIRED;
-import static sixgaezzang.sidepeek.users.exception.UserErrorCode.EXCESSIVE_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAIL_DUPLICATE;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAIL_FORMAT_INVALID;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_DUPLICATE;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_FORMAT_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_IS_NULL;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
@@ -88,6 +91,91 @@ class UserServiceTest {
     }
 
     @Nested
+    class 회원가입_테스트 {
+
+        @Test
+        void 회원가입에_성공한다() {
+            // given
+            SignUpRequest request = new SignUpRequest(email, password, nickname);
+
+            // when
+            Long saved = userService.signUp(request);
+
+            // then
+            User actual = userRepository.findById(saved).get();
+            Password encodedPassword = actual.getPassword();
+            assertThat(actual).extracting("email", "nickname")
+                .containsExactly(email, nickname);
+            assertThat(encodedPassword.check(password, passwordEncoder)).isTrue();
+        }
+
+        @Test
+        void 이메일이_중복된_경우_회원가입에_실패한다() {
+            // given
+            String duplicatedEmail = email;
+            User user = FakeEntityProvider.createUser(duplicatedEmail, password, nickname, passwordEncoder);
+            userRepository.save(user);
+
+            String newNickname = faker.internet().username();
+            SignUpRequest request = new SignUpRequest(duplicatedEmail, password, newNickname);
+
+            // when
+            ThrowingCallable signup = () -> userService.signUp(request);
+
+            // then
+            assertThatExceptionOfType(EntityExistsException.class).isThrownBy(signup)
+                .withMessage(EMAIL_DUPLICATE);
+        }
+
+        @Test
+        void 닉네임이_중복된_경우_회원가입에_실패한다() {
+            // given
+            String duplicatedNickname = nickname;
+            User user = FakeEntityProvider.createUser(email, password, duplicatedNickname, passwordEncoder);
+            userRepository.save(user);
+
+            String newEmail = FakeValueProvider.createEmail();
+            SignUpRequest request = new SignUpRequest(newEmail, password, duplicatedNickname);
+
+            // when
+            ThrowingCallable signup = () -> userService.signUp(request);
+
+            // then
+            assertThatExceptionOfType(EntityExistsException.class).isThrownBy(signup)
+                .withMessage(NICKNAME_DUPLICATE);
+        }
+
+        @Test
+        void 이메일_형식이_올바르지_않은_경우_회원가입에_실패한다() {
+            // given
+            String invalidEmail = "invalid-email";
+            SignUpRequest request = new SignUpRequest(invalidEmail, password, nickname);
+
+            // when
+            ThrowingCallable signup = () -> userService.signUp(request);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
+                .withMessage(EMAIL_FORMAT_INVALID);
+        }
+
+        @Test
+        void 비밀번호_형식이_올바르지_않은_경우_회원가입에_실패한다() {
+            // given
+            String invalidPassword = "invalid-password";
+            SignUpRequest request = new SignUpRequest(email, invalidPassword, nickname);
+
+            // when
+            ThrowingCallable signup = () -> userService.signUp(request);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
+                .withMessage(PASSWORD_FORMAT_INVALID);
+        }
+
+    }
+
+    @Nested
     class 회원_닉네임_검색_테스트 {
 
         @ParameterizedTest(name = "[{index}] {0}으로 검색할 때 " + USER_COUNT + "명의 모든 회원이 나온다.")
@@ -132,92 +220,7 @@ class UserServiceTest {
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(search)
-                .withMessage(EXCESSIVE_NICKNAME_LENGTH.getMessage());
-        }
-
-    }
-
-    @Nested
-    class 회원가입_테스트 {
-
-        @Test
-        void 회원가입에_성공한다() {
-            // given
-            SignUpRequest request = new SignUpRequest(email, password, nickname);
-
-            // when
-            Long saved = userService.signUp(request);
-
-            // then
-            User actual = userRepository.findById(saved).get();
-            Password encodedPassword = actual.getPassword();
-            assertThat(actual).extracting("email", "nickname")
-                .containsExactly(email, nickname);
-            assertThat(encodedPassword.check(password, passwordEncoder)).isTrue();
-        }
-
-        @Test
-        void 이메일이_중복된_경우_회원가입에_실패한다() {
-            // given
-            String duplicatedEmail = email;
-            User user = FakeEntityProvider.createUser(duplicatedEmail, password, nickname, passwordEncoder);
-            userRepository.save(user);
-
-            String newNickname = faker.internet().username();
-            SignUpRequest request = new SignUpRequest(duplicatedEmail, password, newNickname);
-
-            // when
-            ThrowingCallable signup = () -> userService.signUp(request);
-
-            // then
-            assertThatExceptionOfType(EntityExistsException.class).isThrownBy(signup)
-                .withMessage("이미 사용 중인 이메일입니다.");
-        }
-
-        @Test
-        void 닉네임이_중복된_경우_회원가입에_실패한다() {
-            // given
-            String duplicatedNickname = nickname;
-            User user = FakeEntityProvider.createUser(email, password, duplicatedNickname, passwordEncoder);
-            userRepository.save(user);
-
-            String newEmail = FakeValueProvider.createEmail();
-            SignUpRequest request = new SignUpRequest(newEmail, password, duplicatedNickname);
-
-            // when
-            ThrowingCallable signup = () -> userService.signUp(request);
-
-            // then
-            assertThatExceptionOfType(EntityExistsException.class).isThrownBy(signup)
-                .withMessage("이미 사용 중인 닉네임입니다.");
-        }
-
-        @Test
-        void 이메일_형식이_올바르지_않은_경우_회원가입에_실패한다() {
-            // given
-            String invalidEmail = "invalid-email";
-            SignUpRequest request = new SignUpRequest(invalidEmail, password, nickname);
-
-            // when
-            ThrowingCallable signup = () -> userService.signUp(request);
-
-            // then
-            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
-                .withMessage("유효하지 않은 이메일 형식입니다.");
-        }
-
-        @Test
-        void 비밀번호_형식이_올바르지_않은_경우_회원가입에_실패한다() {
-            // given
-            String invalidPassword = "invalid-password";
-            SignUpRequest request = new SignUpRequest(email, invalidPassword, nickname);
-
-            // when
-            ThrowingCallable signup = () -> userService.signUp(request);
-
-            // then
-            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
-                .withMessage("비밀번호는 8자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.");
+                .withMessage(NICKNAME_OVER_MAX_LENGTH);
         }
 
     }
@@ -260,7 +263,7 @@ class UserServiceTest {
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(
                     checkEmailDuplicate)
-                .withMessage("유효하지 않은 이메일 형식입니다.");
+                .withMessage(EMAIL_FORMAT_INVALID);
         }
     }
 
