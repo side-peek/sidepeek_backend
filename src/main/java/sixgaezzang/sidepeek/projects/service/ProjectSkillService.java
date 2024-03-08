@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.projects.service;
 
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.TECH_STACKS_IS_NULL;
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACKS_IS_NULL;
 import static sixgaezzang.sidepeek.common.util.validation.TechStackValidator.validateTechStacks;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateNotNullAndEmpty;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateProject;
