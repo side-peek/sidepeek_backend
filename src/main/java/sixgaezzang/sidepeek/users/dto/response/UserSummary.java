@@ -23,7 +23,16 @@ public record UserSummary(
             .build();
     }
 
-    // 비회원
+    // 멤버(회원)
+    public static UserSummary from(User user, String nickname) {
+        return UserSummary.builder()
+            .id(user.getId())
+            .nickname(nickname)
+            .profileImageUrl(user.getProfileImageUrl())
+            .build();
+    }
+
+    // 멤버(비회원)
     public static UserSummary from(String nickname) {
         return UserSummary.builder()
             .id(null)

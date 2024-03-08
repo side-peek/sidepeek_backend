@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sixgaezzang.sidepeek.common.annotation.Login;
-import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.service.ProjectService;
@@ -42,7 +42,7 @@ public class ProjectController {
         @Parameter(description = "로그인한 회원 식별자", in = ParameterIn.HEADER)
         @Login Long loginId,
 
-        @Valid @RequestBody ProjectRequest request
+        @Valid @RequestBody SaveProjectRequest request
     ) {
         ProjectResponse response = projectService.save(loginId, null, request);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -63,7 +63,7 @@ public class ProjectController {
         @Parameter(description = "수정할 프로젝트 식별자", in = ParameterIn.PATH)
         @PathVariable(value = "id") Long projectId,
 
-        @Valid @RequestBody ProjectRequest request
+        @Valid @RequestBody SaveProjectRequest request
     ) {
         ProjectResponse response = projectService.save(loginId, projectId, request);
 

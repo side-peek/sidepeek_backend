@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
-import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveProjectSkillRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
 import sixgaezzang.sidepeek.projects.util.validation.ProjectSkillValidator;
@@ -30,7 +30,7 @@ public class ProjectSkillService {
     }
 
     @Transactional
-    public List<ProjectSkillSummary> saveAll(Project project, List<ProjectSkillSaveRequest> techStacks) {
+    public List<ProjectSkillSummary> saveAll(Project project, List<SaveProjectSkillRequest> techStacks) {
         ProjectValidator.validateProject(project);
         ProjectSkillValidator.validateTechStacks(techStacks);
 
@@ -46,7 +46,7 @@ public class ProjectSkillService {
             .toList();
     }
 
-    private List<ProjectSkill> convertAllToEntity(Project project, List<ProjectSkillSaveRequest> techStacks) {
+    private List<ProjectSkill> convertAllToEntity(Project project, List<SaveProjectSkillRequest> techStacks) {
         return techStacks.stream().map(
             techStack -> {
                 Skill skill = skillRepository.findById(techStack.skillId())
