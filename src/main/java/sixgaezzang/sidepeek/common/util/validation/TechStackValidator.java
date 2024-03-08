@@ -6,7 +6,8 @@ import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessag
 import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACK_IS_DUPLICATED;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COUNT;
-import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateAndCheckDuplicate;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateCollection;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateDuplicate;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateNotBlank;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_ID_IS_NULL;
@@ -22,8 +23,8 @@ public class TechStackValidator {
 
     public static void validateTechStacks(List<SaveTechStackRequest> techStacks) {
         Assert.isTrue(techStacks.size() <= MAX_TECH_STACK_COUNT, TECH_STACKS_OVER_MAX_COUNT);
-
-        validateAndCheckDuplicate(techStacks, TechStackValidator::validateTechStack, TECH_STACK_IS_DUPLICATED);
+        validateCollection(techStacks, TechStackValidator::validateTechStack);
+        validateDuplicate(techStacks, TECH_STACK_IS_DUPLICATED);
     }
 
     public static void validateTechStack(SaveTechStackRequest techStack) {
