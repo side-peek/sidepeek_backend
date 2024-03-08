@@ -2,8 +2,8 @@
 create TABLE IF NOT EXISTS users
 (
     id                BIGINT PRIMARY KEY AUTO_INCREMENT,
-    nickname          VARCHAR(20) UNIQUE NOT NULL,
-    email             VARCHAR(50) UNIQUE NOT NULL,
+    nickname          VARCHAR(20) UNIQUE NULL,
+    email             VARCHAR(50) UNIQUE NULL,
     password          VARCHAR(100)       NULL,
     introduction      VARCHAR(100)       NULL,
     profile_image_url TEXT               NULL,
@@ -19,12 +19,13 @@ create TABLE IF NOT EXISTS users
 -- AUTH_PROVIDER
 create TABLE IF NOT EXISTS auth_provider
 (
-    id            BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id       BIGINT       NOT NULL,
-    provider_type VARCHAR(50)  NOT NULL,
-    provider_id   VARCHAR(100) NULL,
-    created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id                       BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id                  BIGINT       NOT NULL,
+    provider_type            VARCHAR(50)  NOT NULL,
+    provider_id              VARCHAR(100) NULL,
+    is_registration_complete TINYINT      NOT NULL DEFAULT 0,
+    created_at               TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at               TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
@@ -77,9 +78,9 @@ create TABLE IF NOT EXISTS likes
 -- SKILL
 create TABLE IF NOT EXISTS skill
 (
-    id             BIGINT       PRIMARY KEY AUTO_INCREMENT,
-    name           VARCHAR(50)  UNIQUE NOT NULL,
-    icon_image_url TEXT         NULL
+    id             BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name           VARCHAR(50) UNIQUE NOT NULL,
+    icon_image_url TEXT               NULL
 );
 
 -- USER_SKILL
