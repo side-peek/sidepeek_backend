@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Predicate;
+import java.util.function.Function;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
@@ -203,18 +203,13 @@ class MemberServiceTest {
                 .withMessage(MEMBER_NOT_INCLUDE_OWNER);
         }
 
-        @ParameterizedTest
-        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createMemberFilter")
-        void 같은_역할에_비회원_멤버가_중복이어서_멤버_목록_저장에_실패한다(Predicate<SaveMemberRequest> memberFilter) {
+        @ParameterizedTest(name = "[{index}] {0}")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createDuplicatedMembers")
+        void 멤버의_역할과_닉네임이_중복이어서_멤버_목록_저장에_실패한다(
+            String testMessage, Function<User, List<SaveMemberRequest>> getDuplicatedMembers
+        ) {
             // given
-            SaveMemberRequest retrievedMember = members.stream()
-                .filter(memberFilter)
-                .findFirst()
-                .get();
-
-            SaveMemberRequest duplicatedMember = new SaveMemberRequest(
-                retrievedMember.userId(), retrievedMember.nickname(), retrievedMember.role());
-            members.add(duplicatedMember);
+            members.addAll(getDuplicatedMembers.apply(createAndSaveUser()));
 
             // when
             ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project, members);
