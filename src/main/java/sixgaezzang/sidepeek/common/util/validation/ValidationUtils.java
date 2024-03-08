@@ -11,10 +11,8 @@ import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
 import static sixgaezzang.sidepeek.users.domain.Password.PASSWORD_REGXP;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
@@ -101,12 +99,11 @@ public final class ValidationUtils {
     }
 
     public static <T, U> void validateKeyDuplicate(List<T> values, Function<T, U> getKey, String errorMessage) {
-        Map<U, T> map = new HashMap<>();
+        Set<U> keySet = new HashSet<>();
         values.forEach(value -> {
             U key = getKey.apply(value);
-            T retrievedValue = map.get(key);
-            Assert.isTrue(Objects.isNull(retrievedValue), errorMessage);
-            map.put(getKey.apply(value), value);
+            Assert.isTrue(!keySet.contains(key), errorMessage);
+            keySet.add(getKey.apply(value));
         });
     }
 
