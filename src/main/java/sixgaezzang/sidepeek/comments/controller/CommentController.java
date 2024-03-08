@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sixgaezzang.sidepeek.comments.dto.request.CommentRequest;
+import sixgaezzang.sidepeek.comments.dto.request.SaveCommentRequest;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.common.annotation.Login;
 
 @RestController
-@RequestMapping("/projects/{projectId}/comments")
+@RequestMapping("/comments")
 @Tag(name = "Project Comment", description = "Project Comment API")
 @RequiredArgsConstructor
 public class CommentController {
@@ -38,7 +38,7 @@ public class CommentController {
 
         @Valid
         @RequestBody
-        CommentRequest request
+        SaveCommentRequest request
     ) {
         return null;
     }
@@ -61,7 +61,7 @@ public class CommentController {
 
         @Valid
         @RequestBody
-        CommentRequest request
+        SaveCommentRequest request
     ) {
         return null;
     }
