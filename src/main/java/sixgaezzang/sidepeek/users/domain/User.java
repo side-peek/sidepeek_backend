@@ -34,7 +34,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
-import sixgaezzang.sidepeek.common.util.SetUtils;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 
 @Entity
@@ -134,7 +133,7 @@ public class User extends BaseTimeEntity {
 
     private void setNickname(String nickname) {
         validateNickname(nickname);
-        if (SetUtils.isSetPossible(this.nickname, nickname)) {
+        if (isSetPossible(this.nickname, nickname)) {
             this.nickname = nickname;
         }
     }
@@ -144,7 +143,7 @@ public class User extends BaseTimeEntity {
             validateIntroduction(introduction);
         }
 
-        if (SetUtils.isSetPossible(this.introduction, introduction)) {
+        if (isSetPossible(this.introduction, introduction)) {
             this.introduction = introduction;
         }
     }
@@ -154,7 +153,7 @@ public class User extends BaseTimeEntity {
             validateProfileImageUrl(profileImageUrl);
         }
 
-        if (SetUtils.isSetPossible(this.profileImageUrl, profileImageUrl)) {
+        if (isSetPossible(this.profileImageUrl, profileImageUrl)) {
             this.profileImageUrl = profileImageUrl;
         }
     }
@@ -186,7 +185,7 @@ public class User extends BaseTimeEntity {
             validateGithubUrl(githubUrl);
         }
 
-        if (SetUtils.isSetPossible(this.githubUrl, githubUrl)) {
+        if (isSetPossible(this.githubUrl, githubUrl)) {
             this.githubUrl = githubUrl;
         }
     }
@@ -196,7 +195,7 @@ public class User extends BaseTimeEntity {
             validateBlogUrl(blogUrl);
         }
 
-        if (SetUtils.isSetPossible(this.blogUrl, blogUrl)) {
+        if (isSetPossible(this.blogUrl, blogUrl)) {
             this.blogUrl = blogUrl;
         }
     }

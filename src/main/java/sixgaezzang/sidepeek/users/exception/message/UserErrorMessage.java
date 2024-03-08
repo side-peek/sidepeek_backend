@@ -41,8 +41,12 @@ public class UserErrorMessage {
     // Career
     public static final String CAREER_IS_INVALID = "경력 정보가 유효하지 않습니다.";
     public static final String CAREER_OVER_MAX_LENGTH = "경력은 " + MAX_CAREER_LENGTH + "자 이하여야 합니다.";
+
+    // Email
     public static final String EMAIL_FORMAT_INVALID = "이메일 형식이 올바르지 않습니다.";
     public static final String EMAIL_DUPLICATE = "이미 사용중인 이메일입니다.";
+
+    // Password
     public static final String PASSWORD_FORMAT_INVALID = "비밀번호 형식이 올바르지 않습니다.";
     public static final String PASSWORD_IS_NULL = "비밀번호를 입력해주세요.";
 
