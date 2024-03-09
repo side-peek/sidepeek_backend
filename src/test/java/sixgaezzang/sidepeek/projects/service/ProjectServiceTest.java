@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
-import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
+import sixgaezzang.sidepeek.common.dto.request.UpdateUserSkillRequest;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
@@ -55,7 +55,7 @@ class ProjectServiceTest {
     static final int SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
     static List<SaveMemberRequest> members;
     static List<Long> fellowMemberIds;
-    static List<SaveTechStackRequest> techStacks;
+    static List<UpdateUserSkillRequest> techStacks;
     static String NAME = FakeValueProvider.createProjectName();
     static String OVERVIEW = FakeValueProvider.createOverview();
     static String GITHUB_URL = FakeValueProvider.createUrl();
@@ -122,7 +122,7 @@ class ProjectServiceTest {
         for (int i = 1; i <= SKILL_COUNT; i++) {
             createdSkillIds.add(createAndSaveSkill().getId());
         }
-        techStacks = FakeDtoProvider.createSaveTechStackRequests(createdSkillIds);
+        techStacks = FakeDtoProvider.createUpdateUserSkillRequests(createdSkillIds);
     }
 
     @Nested

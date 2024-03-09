@@ -8,7 +8,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ProjectErrorMessage {
+public final class ProjectErrorMessage {
     // Project
     public static final String PROJECT_IS_NULL = "프로젝트가 null 입니다.";
     public static final String PROJECT_NOT_EXISTING = "해당 프로젝트가 존재하지 않습니다.";

@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CommonErrorMessage {
+public final class CommonErrorMessage {
 
     // Common
     public static final String LOGIN_IS_REQUIRED = "로그인이 필요합니다.";

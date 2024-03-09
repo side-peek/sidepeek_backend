@@ -41,10 +41,10 @@ import jakarta.validation.constraints.Size;
 import java.time.YearMonth;
 import java.util.List;
 import org.hibernate.validator.constraints.URL;
-import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
+import sixgaezzang.sidepeek.common.dto.request.UpdateUserSkillRequest;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
-@Schema(description = "프로젝트 생성/수정 요청 정보")
+@Schema(description = "프로젝트 생성/수정 요청")
 public record SaveProjectRequest(
     // Required
     @Schema(description = "프로젝트 제목", example = "사이드픽👀")
@@ -57,7 +57,7 @@ public record SaveProjectRequest(
     @NotBlank(message = OVERVIEW_IS_NULL)
     String overview,
 
-    @Schema(description = "프로젝트 작성자 Id(회원 식별자)", example = "1")
+    @Schema(description = "프로젝트 작성자 식별자(회원 식별자)", example = "1")
     @Min(value = MIN_ID, message = "작성자 id는 " + MIN_ID + "보다 작을 수 없습니다.")
     @NotNull(message = OWNER_ID_IS_NULL)
     Long ownerId,
@@ -76,7 +76,7 @@ public record SaveProjectRequest(
     @Schema(description = "프로젝트 기술 스택")
     @Size(max = MAX_TECH_STACK_COUNT, message = TECH_STACKS_OVER_MAX_COUNT)
     @NotEmpty(message = TECH_STACKS_IS_NULL)
-    List<SaveTechStackRequest> techStacks,
+    List<UpdateUserSkillRequest> techStacks,
 
     // Option
     @Schema(description = "프로젝트 부제목", example = "좋은 아이디어? 사이드픽에서 찾아봐!")

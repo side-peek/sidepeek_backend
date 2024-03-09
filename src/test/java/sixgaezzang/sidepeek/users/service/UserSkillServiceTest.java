@@ -26,7 +26,7 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
+import sixgaezzang.sidepeek.common.dto.request.UpdateUserSkillRequest;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -42,8 +42,8 @@ import sixgaezzang.sidepeek.util.FakeEntityProvider;
 class UserSkillServiceTest {
 
     static final int SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
-    static List<SaveTechStackRequest> techStacks;
-    static List<SaveTechStackRequest> overLengthTechStacks;
+    static List<UpdateUserSkillRequest> techStacks;
+    static List<UpdateUserSkillRequest> overLengthTechStacks;
     @Autowired
     UserSkillService userSkillService;
     @Autowired
@@ -61,7 +61,7 @@ class UserSkillServiceTest {
         for (int i = 1; i <= MAX_TECH_STACK_COUNT + 1; i++) {
             createdSkillIds.add(createAndSaveSkill().getId());
         }
-        overLengthTechStacks = FakeDtoProvider.createSaveTechStackRequests(createdSkillIds);
+        overLengthTechStacks = FakeDtoProvider.createUpdateUserSkillRequests(createdSkillIds);
         techStacks = overLengthTechStacks.subList(0, SKILL_COUNT);
 
         user = createAndSaveUser();
@@ -134,7 +134,7 @@ class UserSkillServiceTest {
 
         @ParameterizedTest
         @NullAndEmptySource
-        void 비어있는_사용자_기술_스택_목록_수정에_성공한다(List<SaveTechStackRequest> emptyTechStack) {
+        void 비어있는_사용자_기술_스택_목록_수정에_성공한다(List<UpdateUserSkillRequest> emptyTechStack) {
             // given, when
             userSkillService.saveAll(user, emptyTechStack);
             List<UserSkillSummary> retrievedTechStacks = userSkillService.findAllByUser(user);
@@ -171,9 +171,9 @@ class UserSkillServiceTest {
             String testMessage, String category, String message
         ) {
             // given
-            List<SaveTechStackRequest> techStacksWithInvalidSkill = new ArrayList<>(techStacks);
+            List<UpdateUserSkillRequest> techStacksWithInvalidSkill = new ArrayList<>(techStacks);
             techStacksWithInvalidSkill.add(
-                new SaveTechStackRequest(skill.getId(), category)
+                new UpdateUserSkillRequest(skill.getId(), category)
             );
 
             // when
@@ -188,9 +188,9 @@ class UserSkillServiceTest {
         @Test
         void 존재하지_않는_기술_스택_Id로_사용자_기술_스택_목록_수정에_실패한다() {
             // given
-            List<SaveTechStackRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
+            List<UpdateUserSkillRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
             techStacksWithNonExistSkill.add(
-                FakeDtoProvider.createSaveTechStackRequest(skill.getId() + 1)
+                FakeDtoProvider.createUpdateUserSkillRequest(skill.getId() + 1)
             );
 
             // when
@@ -205,9 +205,9 @@ class UserSkillServiceTest {
         @Test
         void 기술_스택_Id가_누락되어_사용자_기술_스택_목록_수정에_실패한다() {
             // given
-            List<SaveTechStackRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
+            List<UpdateUserSkillRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
             techStacksWithNonExistSkill.add(
-                FakeDtoProvider.createSaveTechStackRequest(null)
+                FakeDtoProvider.createUpdateUserSkillRequest(null)
             );
 
             // when

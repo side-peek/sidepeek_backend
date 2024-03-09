@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserConstant {
+public final class UserConstant {
 
     public static final int MAX_NICKNAME_LENGTH = 20;
     public static final int MAX_INTRODUCTION_LENGTH = 300;

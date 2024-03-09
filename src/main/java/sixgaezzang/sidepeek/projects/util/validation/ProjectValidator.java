@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ProjectValidator {
+public final class ProjectValidator {
 
     // Common
     public static void validateProject(Project project) {

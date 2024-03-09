@@ -21,4 +21,5 @@ public record UpdateCommentRequest(
     @NotBlank(message = CONTENT_IS_NULL)
     String content
 ) {
+
 }
