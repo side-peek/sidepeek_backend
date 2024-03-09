@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sixgaezzang.sidepeek.comments.dto.request.SaveCommentRequest;
+import sixgaezzang.sidepeek.comments.dto.request.UpdateCommentRequest;
 import sixgaezzang.sidepeek.comments.service.CommentService;
 import sixgaezzang.sidepeek.common.annotation.Login;
 
@@ -40,7 +41,7 @@ public class CommentController {
         @RequestBody
         SaveCommentRequest request
     ) {
-        Long projectId = commentService.save(loginId, null, request);
+        Long projectId = commentService.save(loginId, request);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/projects/{id}")
@@ -64,9 +65,9 @@ public class CommentController {
 
         @Valid
         @RequestBody
-        SaveCommentRequest request
+        UpdateCommentRequest request
     ) {
-        commentService.save(loginId, commentId, request);
+        commentService.update(loginId, commentId, request);
 
         return ResponseEntity.noContent()
             .build();
