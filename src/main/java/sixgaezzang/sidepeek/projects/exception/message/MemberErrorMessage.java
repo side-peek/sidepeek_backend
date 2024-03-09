@@ -7,7 +7,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MemberErrorMessage {
+public final class MemberErrorMessage {
 
     // Member List
     public static final String MEMBER_OVER_MAX_COUNT = "멤버 수는 " + MAX_MEMBER_COUNT + "명 미만이어야 합니다.";

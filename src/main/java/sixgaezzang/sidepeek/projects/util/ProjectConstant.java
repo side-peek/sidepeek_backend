@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ProjectConstant {
+public final class ProjectConstant {
     // Project
     public static final int MAX_PROJECT_NAME_LENGTH = 50;
     public static final int MAX_OVERVIEW_LENGTH = 300;

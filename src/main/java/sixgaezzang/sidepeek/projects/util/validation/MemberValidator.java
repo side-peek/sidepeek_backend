@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MemberValidator {
+public final class MemberValidator {
 
     public static void validateMembers(Long ownerId, List<SaveMemberRequest> members) {
         Assert.notEmpty(members, MEMBER_IS_EMPTY);

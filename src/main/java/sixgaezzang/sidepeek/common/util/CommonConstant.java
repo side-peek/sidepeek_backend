@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CommonConstant {
+public final class CommonConstant {
     public static final long MIN_ID = 1;
     public static final int MAX_TEXT_LENGTH = 21_844;
 

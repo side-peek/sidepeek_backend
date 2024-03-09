@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TechStackValidator {
+public final class TechStackValidator {
 
     public static void validateTechStacks(List<SaveTechStackRequest> techStacks) {
         Assert.isTrue(techStacks.size() <= MAX_TECH_STACK_COUNT, TECH_STACKS_OVER_MAX_COUNT);

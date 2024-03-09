@@ -13,7 +13,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class FileValidator {
+public final class FileValidator {
 
     public static void validateFiles(List<String> overviewImageUrls) {
         Assert.isTrue(overviewImageUrls.size() <= MAX_OVERVIEW_IMAGE_COUNT, OVERVIEW_IMAGE_OVER_MAX_COUNT);

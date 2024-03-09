@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SetUtils {
+public final class SetUtils {
 
     public static boolean isSetPossible(String originalValue, String newValues) {
         return StringUtils.isBlank(originalValue) || !Objects.equals(originalValue, newValues);
