@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MediaErrorMessage {
+public final class MediaErrorMessage {
 
     public static final String CONTENT_TYPE_IS_UNSUPPORTED = "지원하는 Content-Type이 아닙니다.";
     public static final String FILE_IS_EMPTY = "파일과 함께 요청을 보내주세요.";

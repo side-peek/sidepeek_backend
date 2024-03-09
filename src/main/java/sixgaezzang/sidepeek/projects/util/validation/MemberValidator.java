@@ -20,10 +20,11 @@ import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MemberValidator {
+public final class MemberValidator {
 
     public static void validateMembers(Long ownerId, List<SaveMemberRequest> members) {
         Assert.notEmpty(members, MEMBER_IS_EMPTY);
@@ -32,7 +33,7 @@ public class MemberValidator {
         validateInclude(members, (member, id) -> Objects.equals(member.userId(), id), ownerId,
             MEMBER_NOT_INCLUDE_OWNER);
         validateCollection(members, MemberValidator::validateSaveMemberRequest);
-        validateKeyDuplicate(members, (member) -> member.nickname() + " " + member.role(), MEMBER_IS_DUPLICATED);
+        validateKeyDuplicate(members, (member) -> Pair.of(member.nickname(), member.role()), MEMBER_IS_DUPLICATED);
     }
 
     // Required

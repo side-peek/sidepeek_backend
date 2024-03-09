@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SkillValidator {
+public final class SkillValidator {
 
     public static void validateSkill(Skill skill) {
         Assert.notNull(skill, SKILL_IS_NULL);

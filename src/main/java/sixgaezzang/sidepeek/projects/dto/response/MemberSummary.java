@@ -13,7 +13,7 @@ public record MemberSummary(
     Long id,
     @Schema(description = "프로젝트 멤버 역할", example = "백엔드")
     String role,
-    @Schema(description = "프로젝트 회원/비회원 멤버 상세정보")
+    @Schema(description = "프로젝트 멤버 회원/비회원 상세 정보")
     UserSummary userSummary
 ) {
 
