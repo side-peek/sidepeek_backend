@@ -12,6 +12,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import sixgaezzang.sidepeek.comments.domain.Comment;
+import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.users.domain.User;
 
 @Schema(description = "댓글/대댓글 생성/수정 요청 정보")
 public record SaveCommentRequest(
@@ -37,4 +40,15 @@ public record SaveCommentRequest(
     @NotBlank(message = CONTENT_IS_NULL)
     String content
 ) {
+
+    public Comment toEntity(Project project, Comment parent, User user) {
+        return Comment.builder()
+            .project(project)
+            .parent(parent)
+            .user(user)
+            .isAnonymous(this.isAnonymous)
+            .content(this.content)
+            .build();
+    }
+
 }
