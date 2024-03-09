@@ -331,4 +331,9 @@
         <property name="message" value="연속적인 공백 라인은 1줄을 넘을 수 없습니다."/>
         <property name="severity" value="error"/>
     </module>
+
+    <!-- Checkstyle 예외 설정 -->
+    <module name="SuppressionFilter">
+        <property name="file" value="${config_loc}/suppressions.xml"/>
+    </module>
 </module>

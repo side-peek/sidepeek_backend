@@ -19,7 +19,7 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 
-@Schema(description = "회원 프로필 수정 요청 정보")
+@Schema(description = "회원 프로필 수정 요청")
 public record UpdateUserProfileRequest(
     @Schema(description = "회원 닉네임", example = "의진")
     @NotNull(message = NICKNAME_IS_NULL)
@@ -53,4 +53,5 @@ public record UpdateUserProfileRequest(
     @Schema(description = "회원 기술 스택 목록")
     List<SaveTechStackRequest> techStacks
 ) {
+
 }
