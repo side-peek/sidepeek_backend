@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-@Schema(description = "댓글 생성/수정 요청 정보")
+@Schema(description = "댓글 생성/수정 요청")
 public record CommentRequest(
     @Schema(description = "댓글 작성자 식별자", example = "1")
     @Min(value = MIN_ID, message = "작성자 id는 " + MIN_ID + "보다 작을 수 없습니다.")
@@ -27,4 +27,5 @@ public record CommentRequest(
     @NotBlank(message = CONTENT_IS_NULL)
     String content
 ) {
+
 }

@@ -17,9 +17,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.List;
-import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
+import sixgaezzang.sidepeek.common.dto.request.UpdateUserSkillRequest;
 
-@Schema(description = "회원 프로필 수정 요청 정보")
+@Schema(description = "회원 프로필 수정 요청")
 public record UpdateUserProfileRequest(
     @Schema(description = "회원 닉네임", example = "의진")
     @NotNull(message = NICKNAME_IS_NULL)
@@ -51,6 +51,7 @@ public record UpdateUserProfileRequest(
     String blogUrl,
 
     @Schema(description = "회원 기술 스택 목록")
-    List<SaveTechStackRequest> techStacks
+    List<UpdateUserSkillRequest> techStacks
 ) {
+
 }

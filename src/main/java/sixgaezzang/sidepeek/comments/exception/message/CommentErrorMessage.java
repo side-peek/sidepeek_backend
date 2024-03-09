@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CommentErrorMessage {
+public final class CommentErrorMessage {
     // isAnonymous
     public static final String IS_ANONYMOUS_IS_NULL = "익명 댓글 여부를 입력해주세요.";
 

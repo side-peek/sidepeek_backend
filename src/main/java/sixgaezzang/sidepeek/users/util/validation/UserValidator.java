@@ -26,7 +26,7 @@ import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.users.domain.User;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserValidator {
+public final class UserValidator {
 
     // Common
     public static void validateUserId(Long id) {

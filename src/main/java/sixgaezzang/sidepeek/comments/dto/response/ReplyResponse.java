@@ -8,8 +8,8 @@ import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 
-@Builder
 @Schema(description = "대댓글 응답 정보")
+@Builder
 public record ReplyResponse(
     @Schema(description = "댓글 식별자", example = "3")
     Long id,

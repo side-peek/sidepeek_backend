@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.comments.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,8 +10,8 @@ import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 
+@Schema(description = "댓글 정보")
 @Builder
-@Schema(description = "댓글 응답 정보")
 public record CommentResponse(
     @Schema(description = "댓글 식별자", example = "1")
     Long id,
@@ -18,10 +19,10 @@ public record CommentResponse(
     @Schema(description = "댓글 작성자 정보(익명 댓글은 null)")
     UserSummary user,
 
-    @Schema(description = "댓글 작성자와 로그인 사용자 일치 여부")
+    @Schema(description = "댓글 작성자와 로그인 사용자 일치 여부", example = "true")
     boolean isOwner,
 
-    @Schema(description = "익명 댓글 여부")
+    @Schema(description = "익명 댓글 여부", example = "true")
     boolean isAnonymous,
 
     @Schema(description = "댓글 내용", example = "우와 이 프로젝트 대박인데요?")
