@@ -1,5 +1,9 @@
 package sixgaezzang.sidepeek.comments.domain;
 
+import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.IS_ANONYMOUS_IS_NULL;
+import static sixgaezzang.sidepeek.comments.util.validation.CommentValidator.validateCommentContent;
+
+import io.jsonwebtoken.lang.Assert;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sixgaezzang.sidepeek.comments.dto.request.UpdateCommentRequest;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -56,4 +61,21 @@ public class Comment extends BaseTimeEntity {
         this.isAnonymous = isAnonymous;
         this.content = content;
     }
+
+    // TODO: 업데이트 메서드는 request 인자를 풀어서 넣으면 더 확장성이 있다고 할 수 있을까?
+    public void update(UpdateCommentRequest request) {
+        setIsAnonymous(request.isAnonymous());
+        setContent(request.content());
+    }
+
+    private void setIsAnonymous(Boolean isAnonymous) {
+        Assert.notNull(isAnonymous, IS_ANONYMOUS_IS_NULL);
+        this.isAnonymous = isAnonymous;
+    }
+
+    private void setContent(String content) {
+        validateCommentContent(content);
+        this.content = content;
+    }
+
 }
