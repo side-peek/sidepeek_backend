@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sixgaezzang.sidepeek.common.annotation.Login;
 import sixgaezzang.sidepeek.common.doc.ProjectControllerDoc;
-import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.service.ProjectService;
@@ -33,7 +33,7 @@ public class ProjectController implements ProjectControllerDoc {
     @PostMapping
     public ResponseEntity<ProjectResponse> save(
         @Login Long loginId,
-        @Valid @RequestBody ProjectRequest request
+        @Valid @RequestBody SaveProjectRequest request
     ) {
         ProjectResponse response = projectService.save(loginId, null, request);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -49,7 +49,7 @@ public class ProjectController implements ProjectControllerDoc {
     public ResponseEntity<ProjectResponse> update(
         @Login Long loginId,
         @PathVariable(value = "id") Long projectId,
-        @Valid @RequestBody ProjectRequest request
+        @Valid @RequestBody SaveProjectRequest request
     ) {
         ProjectResponse response = projectService.save(loginId, projectId, request);
 

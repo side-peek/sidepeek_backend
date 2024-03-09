@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import sixgaezzang.sidepeek.common.exception.ErrorResponse;
-import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 
@@ -26,7 +26,7 @@ public interface ProjectControllerDoc {
         @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     ResponseEntity<ProjectResponse> save(@Parameter(hidden = true) Long loginId,
-        ProjectRequest request);
+                                         SaveProjectRequest request);
 
     @Operation(summary = "프로젝트 수정", description = "프로젝트 작성자와 멤버만 수정이 가능합니다.")
     @ApiResponses({
@@ -38,7 +38,7 @@ public interface ProjectControllerDoc {
     })
     @Parameter(name = "id", description = "수정할 프로젝트 식별자", in = ParameterIn.PATH)
     ResponseEntity<ProjectResponse> update(@Parameter(hidden = true) Long loginId, Long projectId,
-        ProjectRequest request);
+                                           SaveProjectRequest request);
 
     @Operation(summary = "프로젝트 삭제", description = "프로젝트 작성자만 삭제가 가능합니다.")
     @ApiResponses({
