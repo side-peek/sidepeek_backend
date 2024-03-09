@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CommentErrorMessage {
+public final class CommentErrorMessage {
 
     // Common
     public static final String COMMENT_NOT_EXISTING = "존재하지 않는 댓글 입니다.";
