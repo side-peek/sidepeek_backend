@@ -3,7 +3,7 @@ package sixgaezzang.sidepeek.comments.dto.request;
 import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.CONTENT_IS_NULL;
 import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.CONTENT_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.IS_ANONYMOUS_IS_NULL;
-import static sixgaezzang.sidepeek.comments.util.CommentConstant.MAX_COMMENT_LENGTH;
+import static sixgaezzang.sidepeek.comments.util.CommentConstant.MAX_CONTENT_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MIN_ID;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
 
@@ -16,7 +16,7 @@ import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.users.domain.User;
 
-@Schema(description = "댓글/대댓글 생성/수정 요청 정보")
+@Schema(description = "댓글/대댓글 생성 요청 정보")
 public record SaveCommentRequest(
     @Schema(description = "댓글 작성자 식별자", example = "1")
     @NotNull(message = OWNER_ID_IS_NULL)
@@ -36,7 +36,7 @@ public record SaveCommentRequest(
     Boolean isAnonymous,
 
     @Schema(description = "댓글 내용", example = "우와 이 프로젝트 대박인데요?")
-    @Size(max = MAX_COMMENT_LENGTH, message = CONTENT_OVER_MAX_LENGTH)
+    @Size(max = MAX_CONTENT_LENGTH, message = CONTENT_OVER_MAX_LENGTH)
     @NotBlank(message = CONTENT_IS_NULL)
     String content
 ) {
