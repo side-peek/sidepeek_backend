@@ -44,7 +44,7 @@ import org.hibernate.validator.constraints.URL;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
 @Schema(description = "프로젝트 생성/수정 요청")
-public record ProjectRequest(
+public record SaveProjectRequest(
     // Required
     @Schema(description = "프로젝트 제목", example = "사이드픽👀")
     @Size(max = MAX_PROJECT_NAME_LENGTH, message = NAME_OVER_MAX_LENGTH)
@@ -75,7 +75,7 @@ public record ProjectRequest(
     @Schema(description = "프로젝트 기술 스택")
     @Size(max = MAX_PROJECT_SKILL_COUNT, message = PROJECT_TECH_STACKS_OVER_MAX_COUNT)
     @NotEmpty(message = PROJECT_TECH_STACKS_IS_NULL)
-    List<ProjectSkillSaveRequest> techStacks,
+    List<SaveProjectSkillRequest> techStacks,
 
     // Option
     @Schema(description = "프로젝트 부제목", example = "좋은 아이디어? 사이드픽에서 찾아봐!")
@@ -111,7 +111,7 @@ public record ProjectRequest(
     @Schema(description = "프로젝트 레이아웃 멤버 목록")
     @Size(max = MAX_MEMBER_COUNT, message = MEMBER_OVER_MAX_COUNT)
     @NotEmpty(message = MEMBER_IS_EMPTY)
-    List<MemberSaveRequest> members
+    List<SaveMemberRequest> members
 ) {
 
     public Project toEntity() {

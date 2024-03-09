@@ -19,18 +19,10 @@ public record MemberSummary(
 
     public static MemberSummary from(Member member) {
         User user = member.getUser();
-        UserSummary userSummary = (user == null)
-            ? UserSummary.from(member.getNickname())
-            : UserSummary.from(user);
-        return MemberSummary.from(member, userSummary);
-    }
+        UserSummary userSummary = (user != null) ? UserSummary.from(user, member.getNickname()) :
+            UserSummary.from(member.getNickname());
 
-    public static MemberSummary from(Member member, UserSummary userSummary) {
-        return MemberSummary.builder()
-            .id(member.getId())
-            .role(member.getRole())
-            .userSummary(userSummary)
-            .build();
+        return new MemberSummary(member.getId(), member.getRole(), userSummary);
     }
 
 }

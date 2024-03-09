@@ -18,7 +18,7 @@ import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
-import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
@@ -41,7 +41,7 @@ public class ProjectService {
     private final CommentService commentService;
 
     @Transactional
-    public ProjectResponse save(Long loginId, Long projectId, ProjectRequest request) {
+    public ProjectResponse save(Long loginId, Long projectId, SaveProjectRequest request) {
         ValidationUtils.validateLoginId(loginId);
 
         Project project;

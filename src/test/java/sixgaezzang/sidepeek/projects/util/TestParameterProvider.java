@@ -6,8 +6,6 @@ import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.G
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_INVALID;
-import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.NON_FELLOW_MEMBER_NICKNAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.ROLE_IS_NULL;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.ROLE_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DEPLOY_URL_IS_INVALID;
@@ -24,12 +22,19 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.TROUBLESHOOTING_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createLongText;
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createNickname;
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createOverview;
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createProjectName;
+import static sixgaezzang.sidepeek.projects.util.FakeValueProvider.createUrl;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.CATEGORY_IS_NULL;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.CATEGORY_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_IS_NULL;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import java.time.YearMonth;
@@ -39,10 +44,10 @@ import org.junit.jupiter.params.provider.Arguments;
 public class TestParameterProvider {
     //Project
     public static Stream<Arguments> createProjectsWithoutRequired() {
-        String name = FakeValueProvider.createProjectName();
-        String overview = FakeValueProvider.createOverview();
-        String githubUrl = FakeValueProvider.createUrl();
-        String description = FakeValueProvider.createLongText();
+        String name = createProjectName();
+        String overview = createOverview();
+        String githubUrl = createUrl();
+        String description = createLongText();
 
         return Stream.of(
             Arguments.of("프로젝트 이름",
@@ -57,10 +62,10 @@ public class TestParameterProvider {
     }
 
     public static Stream<Arguments> createProjectsOnlyInvalidRequired() {
-        String name = FakeValueProvider.createProjectName();
-        String overview = FakeValueProvider.createOverview();
-        String githubUrl = FakeValueProvider.createUrl();
-        String description = FakeValueProvider.createLongText();
+        String name = createProjectName();
+        String overview = createOverview();
+        String githubUrl = createUrl();
+        String description = createLongText();
 
         return Stream.of(
             Arguments.of("프로젝트 이름이 최대 길이를 넘는 경우",
@@ -82,7 +87,7 @@ public class TestParameterProvider {
     }
 
     public static Stream<Arguments> createProjectsWithInvalidOption() {
-        String url = FakeValueProvider.createUrl();
+        String url = createUrl();
 
         return Stream.of(
             Arguments.of("프로젝트 부제목이 최대 길이를 넘는 경우",
@@ -115,24 +120,18 @@ public class TestParameterProvider {
     // Member
     public static Stream<Arguments> createInvalidMemberInfo() {
         return Stream.of(
-            Arguments.of("비회원 멤버 닉네임이 최대 길이를 넘는 경우",
+            Arguments.of("멤버 닉네임이 최대 길이를 넘는 경우",
                 false, "N".repeat(MAX_NICKNAME_LENGTH + 1), "role",
-                NON_FELLOW_MEMBER_NICKNAME_OVER_MAX_LENGTH),
-            Arguments.of("비회원 멤버 역할을 적지 않는 경우",
-                false, "Nickname", null,
+                NICKNAME_OVER_MAX_LENGTH),
+            Arguments.of("멤버 역할을 적지 않는 경우",
+                true, createNickname(), null,
                 ROLE_IS_NULL),
-            Arguments.of("비회원 멤버 역할이 최대 길이를 넘는 경우",
-                false, "Nickname", "R".repeat(MAX_ROLE_LENGTH + 1),
-                ROLE_OVER_MAX_LENGTH),
-            Arguments.of("회원 멤버 역할을 적지 않는 경우",
-                true, null, null,
-                ROLE_IS_NULL),
-            Arguments.of("회원 멤버 역할이 최대 길이를 넘는 경우",
-                true, null, "R".repeat(MAX_ROLE_LENGTH + 1),
+            Arguments.of(" 멤버 역할이 최대 길이를 넘는 경우",
+                true, createNickname(), "R".repeat(MAX_ROLE_LENGTH + 1),
                 ROLE_OVER_MAX_LENGTH),
             Arguments.of("비회원/회원 정보가 모두 없는 경우",
                 false, null, "role",
-                MEMBER_IS_INVALID)
+                NICKNAME_IS_NULL)
         );
     }
 
