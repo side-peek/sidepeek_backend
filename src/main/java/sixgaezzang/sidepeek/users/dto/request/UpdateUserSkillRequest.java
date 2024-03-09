@@ -17,7 +17,7 @@ import sixgaezzang.sidepeek.users.domain.UserSkill;
 
 @Schema(description = "회원 수정 요청 내 회원 기술 스택 정보")
 public record UpdateUserSkillRequest(
-    @Schema(description = "기술 스택 Id", example = "1")
+    @Schema(description = "기술 스택 식별자", example = "1")
     @Min(value = MIN_ID, message = "스킬 id는 " + MIN_ID + "보다 작을 수 없습니다.")
     @NotNull(message = SKILL_ID_IS_NULL)
     Long skillId,

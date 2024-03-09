@@ -30,6 +30,16 @@ public class UserErrorMessage {
         "프로필 이미지 url은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다.";
     public static final String PROFILE_IMAGE_URL_IS_INVALID = "프로필 이미지 URL 형식이 유효하지 않습니다.";
 
+    // Email
+    public static final String EMAIL_FORMAT_INVALID = "이메일 형식이 올바르지 않습니다.";
+    public static final String EMAIL_DUPLICATE = "이미 사용중인 이메일입니다.";
+    public static final String EMAIL_IS_NULL = "이메일을 입력해주세요.";
+
+    // Password
+    public static final String PASSWORD_FORMAT_INVALID = "비밀번호 형식이 올바르지 않습니다.";
+    public static final String PASSWORD_IS_NULL = "비밀번호를 입력해주세요.";
+    public static final String NEW_PASSWORD_IS_NULL = "새로운 비밀번호를 입력해주세요.";
+
     // Introduction
     public static final String INTRODUCTION_OVER_MAX_LENGTH =
         "소개글은 " + MAX_INTRODUCTION_LENGTH + "자 이하여야 합니다.";
@@ -41,14 +51,6 @@ public class UserErrorMessage {
     // Career
     public static final String CAREER_IS_INVALID = "경력 정보가 유효하지 않습니다.";
     public static final String CAREER_OVER_MAX_LENGTH = "경력은 " + MAX_CAREER_LENGTH + "자 이하여야 합니다.";
-
-    // Email
-    public static final String EMAIL_FORMAT_INVALID = "이메일 형식이 올바르지 않습니다.";
-    public static final String EMAIL_DUPLICATE = "이미 사용중인 이메일입니다.";
-
-    // Password
-    public static final String PASSWORD_FORMAT_INVALID = "비밀번호 형식이 올바르지 않습니다.";
-    public static final String PASSWORD_IS_NULL = "비밀번호를 입력해주세요.";
 
     // Blog URL
     public static final String BLOG_URL_OVER_MAX_LENGTH =
