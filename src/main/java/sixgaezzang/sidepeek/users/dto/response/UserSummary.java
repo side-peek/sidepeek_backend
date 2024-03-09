@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import sixgaezzang.sidepeek.users.domain.User;
 
-@Schema(description = "회원 상세정보")
+@Schema(description = "회원 상세 정보")
 @Builder
 public record UserSummary(
     @Schema(description = "회원 식별자(비회원은 null)", example = "1")
