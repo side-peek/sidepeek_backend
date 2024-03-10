@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import sixgaezzang.sidepeek.comments.dto.request.SaveCommentRequest;
+import sixgaezzang.sidepeek.comments.dto.request.UpdateCommentRequest;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
@@ -81,11 +82,28 @@ public class FakeDtoProvider {
     }
 
     // Comment
-    public static SaveCommentRequest createSaveCommentRequest(Long userId, Long projectId, Long parentId) {
+    public static SaveCommentRequest createSaveCommentRequestWithProjectId(Long userId, Long projectId) {
         return new SaveCommentRequest(
             userId,
             projectId,
+            null,
+            FakeValueProvider.createBoolean(),
+            FakeValueProvider.createContent()
+        );
+    }
+
+    public static SaveCommentRequest createSaveCommentRequestWithParentId(Long userId, Long parentId) {
+        return new SaveCommentRequest(
+            userId,
+            null,
             parentId,
+            FakeValueProvider.createBoolean(),
+            FakeValueProvider.createContent()
+        );
+    }
+
+    public static UpdateCommentRequest createUpdateCommentRequest() {
+        return new UpdateCommentRequest(
             FakeValueProvider.createBoolean(),
             FakeValueProvider.createContent()
         );
