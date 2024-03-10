@@ -90,7 +90,9 @@ public class UserService {
         return UserProfileResponse.from(user, techStacks);
     }
 
-    public UserProfileResponse updateProfile(Long loginId, Long id, UpdateUserProfileRequest request) {
+    @Transactional
+    public UserProfileResponse updateProfile(Long loginId, Long id,
+        UpdateUserProfileRequest request) {
         validateLoginIdEqualsUserId(loginId, id);
 
         User user = findUserById(id);
