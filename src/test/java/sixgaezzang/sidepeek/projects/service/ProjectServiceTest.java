@@ -100,7 +100,7 @@ class ProjectServiceTest {
     }
 
     private Comment createAndSaveComment(User user, Project project) {
-        Comment newComment = FakeEntityProvider.createComment(user, project);
+        Comment newComment = FakeEntityProvider.createComment(user, project, null);
         return commentRepository.save(newComment);
     }
 
