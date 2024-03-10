@@ -4,6 +4,7 @@ import static sixgaezzang.sidepeek.common.util.SetUtils.isSetPossible;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateGithubUrl;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAIL_FORMAT_INVALID;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_NOT_REGISTERED;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_CAREER_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_EMAIL_LENGTH;
@@ -34,6 +35,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
+import sixgaezzang.sidepeek.common.util.validation.ValidationUtils;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 
 @Entity
