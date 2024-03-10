@@ -3,6 +3,8 @@ package sixgaezzang.sidepeek.comments.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.CHILD_COMMENT_CANNOT_BE_PARENT;
+import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.COMMENT_ID_IS_NULL;
+import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.COMMENT_NOT_EXISTING;
 import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.PARENT_COMMENT_NOT_EXISTING;
 import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.PROJECT_ID_AND_PARENT_ID_IS_NULL;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.LOGIN_IS_REQUIRED;
@@ -13,6 +15,7 @@ import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER
 
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.ThrowableAssert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -22,9 +25,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.comments.dto.request.SaveCommentRequest;
+import sixgaezzang.sidepeek.comments.dto.request.UpdateCommentRequest;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.projects.domain.Project;
@@ -58,6 +63,7 @@ class CommentServiceTest {
     User user;
     Project project;
     Comment parent;
+    Comment comment;
 
     private User createAndSaveUser() {
         User newUser = FakeEntityProvider.createUser();
@@ -79,6 +85,7 @@ class CommentServiceTest {
         user = createAndSaveUser();
         project = createAndSaveProject(user);
         parent = createAndSaveComment(user, project, null);
+        comment = createAndSaveComment(user, project, null);
     }
 
     @Nested
@@ -306,7 +313,7 @@ class CommentServiceTest {
         @Test
         void 존재하지_않는_댓글의_대댓글_생성에_실패한다() {
             // given
-            Long notExistingParentId = parent.getId() + 1;
+            Long notExistingParentId = comment.getId() + 1;
 
             SaveCommentRequest request = FakeDtoProvider.createSaveCommentRequestWithParentId(
                 user.getId(), notExistingParentId);
@@ -326,115 +333,187 @@ class CommentServiceTest {
         @Test
         void 프로젝트_댓글_수정에_성공한다() {
             // given
+            UpdateCommentRequest request = FakeDtoProvider.createUpdateCommentRequest();
 
             // when
+            commentService.update(user.getId(), comment.getId(), request);
 
             // then
-
+            assertThat(comment.isAnonymous()).isEqualTo(request.isAnonymous());
+            assertThat(comment.getContent()).isEqualTo(request.content());
         }
 
         @Test
         void 존재하지_않는_댓글_수정에_실패한다() {
             // given
+            Long notExistingCommentId = comment.getId() + 1;
+
+            UpdateCommentRequest request = FakeDtoProvider.createUpdateCommentRequest();
 
             // when
+            ThrowableAssert.ThrowingCallable update = () -> commentService.update(
+                user.getId(), notExistingCommentId, request);
 
             // then
-
+            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(update)
+                .withMessage(COMMENT_NOT_EXISTING);
         }
 
         @Test
         void 사용자가_로그인을_하지_않아서_댓글_수정에_실패한다() {
             // given
+            UpdateCommentRequest request = FakeDtoProvider.createUpdateCommentRequest();
 
             // when
+            ThrowableAssert.ThrowingCallable update = () -> commentService.update(
+                null, comment.getId(), request);
 
             // then
-
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(update)
+                .withMessage(LOGIN_IS_REQUIRED);
         }
 
         @Test
         void 작성자_Id가_로그인_Id와_불일치하여_댓글_수정에_실패한다() {
             // given
+            User newUser = createAndSaveUser();
+
+            UpdateCommentRequest request = FakeDtoProvider.createUpdateCommentRequest();
 
             // when
+            ThrowableAssert.ThrowingCallable update = () -> commentService.update(
+                newUser.getId(), comment.getId(), request);
 
             // then
-
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(update)
+                .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
         @Test
-        void 필수_정보가_누락되어_댓글_수정에_실패한다() {
+        void 댓글_Id가_누락되어_댓글_수정에_실패한다() {
             // given
+            UpdateCommentRequest request = FakeDtoProvider.createUpdateCommentRequest();
 
             // when
+            ThrowableAssert.ThrowingCallable update = () -> commentService.update(
+                user.getId(), null, request);
 
             // then
-
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(update)
+                .withMessage(COMMENT_ID_IS_NULL);
         }
 
-        @Test
-        void 유효하지_않은_정보로_댓글_수정에_실패한다() {
+        @ParameterizedTest(name = "[{index}] {0}")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createInvalidCommentInfo")
+        void 유효하지_않은_정보로_댓글_수정에_실패한다(
+            String testMessage, Boolean isAnonymous, String content, String message
+        ) {
             // given
+            UpdateCommentRequest request = new UpdateCommentRequest(isAnonymous, content);
 
             // when
+            ThrowableAssert.ThrowingCallable update = () -> commentService.update(
+                user.getId(), comment.getId(), request);
 
             // then
-
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(update)
+                .withMessage(message);
         }
 
     }
 
     @Nested
+    @Transactional(propagation = Propagation.NEVER)
     class 댓글_삭제_테스트 {
+
+        @BeforeEach
+        void setup() {
+            commentRepository.deleteAll();
+            projectRepository.deleteAll();
+            userRepository.deleteAll();
+
+            user = createAndSaveUser();
+            project = createAndSaveProject(user);
+            parent = createAndSaveComment(user, project, null);
+            comment = createAndSaveComment(user, project, null);
+        }
+
+        @AfterEach
+        void cleanup() {
+            commentRepository.deleteAll();
+            projectRepository.deleteAll();
+            userRepository.deleteAll();
+        }
+
         @Test
         void 프로젝트_댓글_삭제에_성공한다() {
-            // given
-
-            // when
+            // given, when
+            commentService.delete(user.getId(), comment.getId());
 
             // then
+            assertThat(commentRepository.findById(comment.getId())).isEmpty();
+        }
 
+        @Test
+        void 대댓글이_있는_댓글_삭제에_성공한다() {
+            // given, when
+            Comment subComment = createAndSaveComment(user, null, comment);
+
+            commentService.delete(user.getId(), comment.getId());
+
+            // then
+            assertThat(commentRepository.findById(comment.getId())).isEmpty();
+            assertThat(commentRepository.findById(subComment.getId())).isEmpty();
         }
 
         @Test
         void 존재하지_않는_댓글_삭제에_실패한다() {
             // given
+            Long notExistingCommentId = comment.getId() + 1;
 
             // when
+            ThrowableAssert.ThrowingCallable delete = () -> commentService.delete(
+                user.getId(), notExistingCommentId);
 
             // then
-
+            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(delete)
+                .withMessage(COMMENT_NOT_EXISTING);
         }
 
         @Test
         void 사용자가_로그인을_하지_않아서_댓글_삭제에_실패한다() {
-            // given
-
-            // when
+            // given, when
+            ThrowableAssert.ThrowingCallable delete = () -> commentService.delete(
+                null, comment.getId());
 
             // then
-
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(delete)
+                .withMessage(LOGIN_IS_REQUIRED);
         }
 
         @Test
         void 작성자_Id가_로그인_Id와_불일치하여_댓글_삭제에_실패한다() {
             // given
+            User newUser = createAndSaveUser();
 
             // when
+            ThrowableAssert.ThrowingCallable delete = () -> commentService.delete(
+                newUser.getId(), comment.getId());
 
             // then
-
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(delete)
+                .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
         @Test
-        void 필수_정보가_누락되어_댓글_수정에_삭제한다() {
-            // given
-
-            // when
+        void 댓글_Id가_누락되어_댓글_수정에_삭제한다() {
+            // given, when
+            ThrowableAssert.ThrowingCallable delete = () -> commentService.delete(
+                user.getId(), null);
 
             // then
-
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(delete)
+                .withMessage(COMMENT_ID_IS_NULL);
         }
 
     }
