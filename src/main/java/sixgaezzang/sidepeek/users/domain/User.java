@@ -81,13 +81,14 @@ public class User extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public User(String nickname, String email, Password password, String introduction,
-                String profileImageUrl, Job job, Career career, String githubUrl, String blogUrl) {
+    public User(String nickname, String email, String password, PasswordEncoder passwordEncoder,
+        String introduction,
+        String profileImageUrl, Job job, Career career, String githubUrl, String blogUrl) {
         validateConstructorArguments(nickname, email);
 
         this.nickname = nickname;
         this.email = email;
-        this.password = password;
+        this.password = new Password(password, passwordEncoder);
         this.introduction = introduction;
         this.profileImageUrl = profileImageUrl;
         this.job = job;

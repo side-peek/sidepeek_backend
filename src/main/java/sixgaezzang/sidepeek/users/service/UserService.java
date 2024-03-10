@@ -43,11 +43,11 @@ public class UserService {
         verifyUniqueEmail(request.email());
         verifyUniqueNickname(request.nickname());
 
-        Password encodedPassword = new Password(request.password(), passwordEncoder);
         User user = User.builder()
             .email(request.email())
             .nickname(request.nickname())
-            .password(encodedPassword)
+            .password(request.password())
+            .passwordEncoder(passwordEncoder)
             .build();
 
         userRepository.save(user);
