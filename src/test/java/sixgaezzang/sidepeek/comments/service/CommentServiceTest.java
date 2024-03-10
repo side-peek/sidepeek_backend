@@ -32,6 +32,7 @@ import sixgaezzang.sidepeek.comments.dto.request.SaveCommentRequest;
 import sixgaezzang.sidepeek.comments.dto.request.UpdateCommentRequest;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
+import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.service.ProjectService;
@@ -230,7 +231,7 @@ class CommentServiceTest {
             ThrowableAssert.ThrowingCallable save = () -> commentService.save(newUser.getId(), request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(save)
+            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(save)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
@@ -246,7 +247,7 @@ class CommentServiceTest {
             ThrowableAssert.ThrowingCallable save = () -> commentService.save(newUser.getId(), request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(save)
+            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(save)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
@@ -385,7 +386,7 @@ class CommentServiceTest {
                 newUser.getId(), comment.getId(), request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(update)
+            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(update)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
@@ -501,7 +502,7 @@ class CommentServiceTest {
                 newUser.getId(), comment.getId());
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(delete)
+            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(delete)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 

@@ -25,6 +25,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
+import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ValidationUtils {
@@ -120,7 +121,7 @@ public final class ValidationUtils {
     public static void validateLoginIdEqualsOwnerId(Long loginId, Long ownerId) {
         validateOwnerId(ownerId);
         if (!loginId.equals(ownerId)) {
-            throw new InvalidAuthenticationException(OWNER_ID_NOT_EQUALS_LOGIN_ID);
+            throw new InvalidAuthorityException(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
     }
 

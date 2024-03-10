@@ -23,11 +23,11 @@ public record SaveCommentRequest(
     @Min(value = MIN_ID, message = "작성자 id는 " + MIN_ID + "보다 작을 수 없습니다.")
     Long ownerId,
 
-    @Schema(description = "프로젝트 식별자", example = "1")
+    @Schema(description = "프로젝트 식별자(댓글인 경우 필수)", example = "1")
     @Min(value = MIN_ID, message = "프로젝트 id는 " + MIN_ID + "보다 작을 수 없습니다.")
     Long projectId,
 
-    @Schema(description = "부모 댓글 식별자", example = "null")
+    @Schema(description = "부모 댓글 식별자(대댓글인 경우 필수)")
     @Min(value = MIN_ID, message = "댓글 id는 " + MIN_ID + "보다 작을 수 없습니다.")
     Long parentId,
 
