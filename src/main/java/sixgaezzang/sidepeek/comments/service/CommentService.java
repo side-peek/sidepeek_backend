@@ -2,6 +2,8 @@ package sixgaezzang.sidepeek.comments.service;
 
 import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.COMMENT_NOT_EXISTING;
 import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.PARENT_COMMENT_NOT_EXISTING;
+import static sixgaezzang.sidepeek.comments.util.validation.CommentValidator.validateCommentId;
+import static sixgaezzang.sidepeek.comments.util.validation.CommentValidator.validateParentCommentHasParent;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginIdEqualsOwnerId;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
@@ -37,10 +39,11 @@ public class CommentService {
     public Long save(Long loginId, SaveCommentRequest request) {
         validateLoginId(loginId);
         validateLoginIdEqualsOwnerId(loginId, request.ownerId());
+
         User owner = userRepository.findById(request.ownerId())
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
 
-        Project project = null;
+        Project project;
         Comment parent = null;
         if (Objects.isNull(request.parentId())) {
             project = projectRepository.findById(request.projectId())
@@ -48,25 +51,15 @@ public class CommentService {
         } else {
             parent = commentRepository.findById(request.parentId())
                 .orElseThrow(() -> new EntityNotFoundException(PARENT_COMMENT_NOT_EXISTING));
+            validateParentCommentHasParent(parent);
+
+            project = parent.getProject();
         }
 
         Comment comment = request.toEntity(project, parent, owner);
-
         commentRepository.save(comment);
 
-        return Objects.nonNull(project) ? project.getId() : parent.getProject().getId();
-    }
-
-    @Transactional
-    public void update(Long loginId, Long commentId, UpdateCommentRequest request) {
-        validateLoginId(loginId);
-
-        Comment comment = commentRepository.findById(commentId)
-            .orElseThrow(() -> new EntityNotFoundException(COMMENT_NOT_EXISTING));
-
-        validateLoginIdEqualsOwnerId(loginId, comment.getUser().getId());
-
-        comment.update(request);
+        return comment.getProject().getId();
     }
 
     public List<CommentResponse> findAll(Project project) {
@@ -80,8 +73,28 @@ public class CommentService {
             .toList();
     }
 
+    @Transactional
+    public void update(Long loginId, Long commentId, UpdateCommentRequest request) {
+        validateLoginId(loginId);
+        validateCommentId(commentId);
+
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new EntityNotFoundException(COMMENT_NOT_EXISTING));
+
+        validateLoginIdEqualsOwnerId(loginId, comment.getUser().getId());
+        comment.update(request);
+    }
+
+    @Transactional
     public void delete(Long loginId, Long commentId) {
-        // TODO: 댓글 삭제 구현
+        validateLoginId(loginId);
+        validateCommentId(commentId);
+
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new EntityNotFoundException(COMMENT_NOT_EXISTING));
+
+        validateLoginIdEqualsOwnerId(loginId, comment.getUser().getId());
+        commentRepository.delete(comment);
     }
 
     private boolean isSameOwner(Comment comment, Project project) {
