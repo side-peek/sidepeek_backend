@@ -206,5 +206,4 @@ public class User extends BaseTimeEntity {
             this.blogUrl = blogUrl;
         }
     }
-
 }
