@@ -1,11 +1,12 @@
-package sixgaezzang.sidepeek.projects.util;
+package sixgaezzang.sidepeek.util;
 
+import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
 import static sixgaezzang.sidepeek.skill.domain.Skill.MAX_SKILL_NAME_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_INTRODUCTION_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class FakeValueProvider {
     }
 
     public static String createSkillName() {
-        return FAKER.text().text(1, MAX_SKILL_NAME_LENGTH);
+        return FAKER.text().text(10, MAX_SKILL_NAME_LENGTH);
     }
 
     // Member
@@ -67,7 +68,7 @@ public class FakeValueProvider {
     }
 
     public static String createNickname() {
-        return checkAndCutLength(FAKER.internet().username(), MAX_NICKNAME_LENGTH);
+        return FAKER.text().text(10, MAX_NICKNAME_LENGTH);
     }
 
     public static String createEmail() {
@@ -81,6 +82,11 @@ public class FakeValueProvider {
     // Comment
     public static String createContent() {
         return FAKER.lorem().sentence();
+    }
+
+    // User
+    public static String createIntroduction() {
+        return FAKER.text().text(1, MAX_INTRODUCTION_LENGTH);
     }
 
 }

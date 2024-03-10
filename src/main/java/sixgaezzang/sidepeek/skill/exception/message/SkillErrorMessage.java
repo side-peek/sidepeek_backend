@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.skill.exception.message;
 
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LENGTH;
+import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
 import static sixgaezzang.sidepeek.skill.domain.Skill.MAX_SKILL_NAME_LENGTH;
 
 import lombok.AccessLevel;
@@ -19,4 +19,5 @@ public class SkillErrorMessage {
     public static final String CATEGORY_OVER_MAX_LENGTH =
         "기술 스택 카테고리는 " + MAX_CATEGORY_LENGTH + "자 이하여야 합니다.";
     public static final String CATEGORY_IS_NULL = "기술 스택 카테고리를 입력해주세요.";
+
 }

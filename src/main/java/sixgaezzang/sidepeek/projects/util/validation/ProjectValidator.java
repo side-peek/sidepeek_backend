@@ -1,12 +1,9 @@
 package sixgaezzang.sidepeek.projects.util.validation;
 
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_INVALID;
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_NULL;
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateTextLength;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateURI;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateNotBlank;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateTextLength;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateURI;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DEPLOY_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DEPLOY_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DESCRIPTION_IS_NULL;
@@ -34,7 +31,7 @@ import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ProjectValidator {
+public final class ProjectValidator {
 
     // Common
     public static void validateProject(Project project) {
@@ -50,12 +47,6 @@ public class ProjectValidator {
     public static void validateOverview(String overview) {
         validateNotBlank(overview, OVERVIEW_IS_NULL);
         validateMaxLength(overview, MAX_OVERVIEW_LENGTH, OVERVIEW_OVER_MAX_LENGTH);
-    }
-
-    public static void validateGithubUrl(String githubUrl) {
-        validateNotBlank(githubUrl, GITHUB_URL_IS_NULL);
-        validateURI(githubUrl, GITHUB_URL_IS_INVALID);
-        validateTextLength(githubUrl, GITHUB_URL_OVER_MAX_LENGTH);
     }
 
     public static void validateDescription(String description) {
@@ -76,8 +67,8 @@ public class ProjectValidator {
 
     public static void validateThumbnailUrl(String thumbnailUrl) {
         if (Objects.nonNull(thumbnailUrl)) {
-            validateURI(thumbnailUrl, THUMBNAIL_URL_IS_INVALID);
             validateTextLength(thumbnailUrl, THUMBNAIL_URL_OVER_MAX_LENGTH);
+            validateURI(thumbnailUrl, THUMBNAIL_URL_IS_INVALID);
         }
     }
 

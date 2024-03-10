@@ -1,10 +1,11 @@
 package sixgaezzang.sidepeek.projects.service;
 
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.service.CommentService;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
-import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
@@ -26,7 +26,6 @@ import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +41,7 @@ public class ProjectService {
 
     @Transactional
     public ProjectResponse save(Long loginId, Long projectId, SaveProjectRequest request) {
-        ValidationUtils.validateLoginId(loginId);
+        validateLoginId(loginId);
 
         Project project;
         if (Objects.isNull(projectId)) {
@@ -56,7 +55,7 @@ public class ProjectService {
                     () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
             validateLoginUserIncludeMembers(loginId, project);
 
-            project = project.update(request);
+            project.update(request);
         }
 
         List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project, request.techStacks());
@@ -103,19 +102,18 @@ public class ProjectService {
 
     @Transactional
     public void delete(Long loginId, Long projectId) {
-        ValidationUtils.validateLoginId(loginId);
+        validateLoginId(loginId);
 
-        // TODO: 생성, 수정할 땐 ownerId와 loginId를 비교하는 로직이 있다. 여기에도 적용하는 것이 좋을까?
         Project project = projectRepository.findById(projectId)
             .orElseThrow(
                 () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
         validateLoginIdEqualsOwnerId(loginId, project.getOwnerId());
 
-        project.setDeletedAt(LocalDateTime.now()); // TODO: 타임존 설정이 필요할까
+        project.softDelete();
     }
 
     private void validateLoginIdEqualsOwnerId(Long loginId, Long ownerId) {
-        ProjectValidator.validateOwnerId(ownerId);
+        validateOwnerId(ownerId);
         if (!loginId.equals(ownerId)) {
             throw new InvalidAuthenticationException(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }

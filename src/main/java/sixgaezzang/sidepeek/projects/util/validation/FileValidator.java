@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.projects.util.validation;
 
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateTextLength;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateURI;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_OVER_MAX_LENGTH;
@@ -9,17 +11,16 @@ import io.jsonwebtoken.lang.Assert;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import sixgaezzang.sidepeek.common.util.ValidationUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class FileValidator {
+public final class FileValidator {
 
     public static void validateFiles(List<String> overviewImageUrls) {
-        Assert.isTrue(overviewImageUrls.size() < MAX_OVERVIEW_IMAGE_COUNT, OVERVIEW_IMAGE_OVER_MAX_COUNT);
+        Assert.isTrue(overviewImageUrls.size() <= MAX_OVERVIEW_IMAGE_COUNT, OVERVIEW_IMAGE_OVER_MAX_COUNT);
     }
 
     public static void validateFileUrl(String url) {
-        ValidationUtils.validateURI(url, OVERVIEW_IMAGE_URL_IS_INVALID);
-        ValidationUtils.validateTextLength(url, OVERVIEW_IMAGE_URL_OVER_MAX_LENGTH);
+        validateURI(url, OVERVIEW_IMAGE_URL_IS_INVALID);
+        validateTextLength(url, OVERVIEW_IMAGE_URL_OVER_MAX_LENGTH);
     }
 }

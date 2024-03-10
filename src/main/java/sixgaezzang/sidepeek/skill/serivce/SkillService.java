@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.skill.serivce;
 
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.skill.domain.Skill.MAX_SKILL_NAME_LENGTH;
 
 import java.util.Objects;

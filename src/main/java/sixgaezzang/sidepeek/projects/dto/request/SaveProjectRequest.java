@@ -3,6 +3,9 @@ package sixgaezzang.sidepeek.projects.dto.request;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_NULL;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.TECH_STACKS_IS_NULL;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.TECH_STACKS_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COUNT;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MIN_ID;
 import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
@@ -22,13 +25,10 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.TROUBLESHOOTING_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectSkillErrorMessage.PROJECT_TECH_STACKS_IS_NULL;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectSkillErrorMessage.PROJECT_TECH_STACKS_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_IMAGE_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_SKILL_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.YEAR_MONTH_PATTERN;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -41,6 +41,7 @@ import jakarta.validation.constraints.Size;
 import java.time.YearMonth;
 import java.util.List;
 import org.hibernate.validator.constraints.URL;
+import sixgaezzang.sidepeek.common.dto.request.UpdateUserSkillRequest;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
 @Schema(description = "프로젝트 생성/수정 요청")
@@ -73,9 +74,9 @@ public record SaveProjectRequest(
     String description,
 
     @Schema(description = "프로젝트 기술 스택")
-    @Size(max = MAX_PROJECT_SKILL_COUNT, message = PROJECT_TECH_STACKS_OVER_MAX_COUNT)
-    @NotEmpty(message = PROJECT_TECH_STACKS_IS_NULL)
-    List<SaveProjectSkillRequest> techStacks,
+    @Size(max = MAX_TECH_STACK_COUNT, message = TECH_STACKS_OVER_MAX_COUNT)
+    @NotEmpty(message = TECH_STACKS_IS_NULL)
+    List<UpdateUserSkillRequest> techStacks,
 
     // Option
     @Schema(description = "프로젝트 부제목", example = "좋은 아이디어? 사이드픽에서 찾아봐!")

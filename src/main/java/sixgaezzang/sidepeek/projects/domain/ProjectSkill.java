@@ -1,6 +1,9 @@
 package sixgaezzang.sidepeek.projects.domain;
 
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_CATEGORY_LENGTH;
+import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
+import static sixgaezzang.sidepeek.common.util.validation.TechStackValidator.validateCategory;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateProject;
+import static sixgaezzang.sidepeek.skill.util.validation.SkillValidator.validateSkill;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,14 +16,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 import sixgaezzang.sidepeek.skill.domain.Skill;
-import sixgaezzang.sidepeek.skill.util.validation.SkillValidator;
 
 @Entity
 @Table(name = "project_skill")
+@EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class ProjectSkill {
@@ -49,9 +52,9 @@ public class ProjectSkill {
     }
 
     private void validateConstructorArguments(Project project, Skill skill, String category) {
-        ProjectValidator.validateProject(project);
-        SkillValidator.validateSkill(skill);
-        SkillValidator.validateCategory(category);
+        validateProject(project);
+        validateSkill(skill);
+        validateCategory(category);
     }
 
 }

@@ -96,8 +96,8 @@ public class UserController implements UserControllerDoc {
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<UserProfileResponse> getById(@PathVariable Long id) {
-        // TODO: 프로필 정보 조회 서비스 로직 구현
-        return null;
+        return ResponseEntity.ok()
+            .body(userService.getProfileById(id));
     }
 
     @Override
@@ -107,8 +107,8 @@ public class UserController implements UserControllerDoc {
         @PathVariable Long id,
         @RequestBody @Valid UpdateUserProfileRequest request
     ) {
-        // TODO: 프로필 정보 수정 서비스 로직 구현
-        return null;
+        return ResponseEntity.ok()
+            .body(userService.updateProfile(loginId, id, request));
     }
 
 }

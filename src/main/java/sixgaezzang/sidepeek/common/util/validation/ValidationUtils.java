@@ -1,8 +1,11 @@
-package sixgaezzang.sidepeek.common.util;
+package sixgaezzang.sidepeek.common.util.validation;
 
 import static io.micrometer.common.util.StringUtils.isBlank;
 import static io.micrometer.common.util.StringUtils.isNotBlank;
-import static sixgaezzang.sidepeek.common.util.CommonConstant.LOGIN_IS_REQUIRED;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_INVALID;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_NULL;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.LOGIN_IS_REQUIRED;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
 import static sixgaezzang.sidepeek.users.domain.Password.PASSWORD_REGXP;
@@ -63,8 +66,18 @@ public final class ValidationUtils {
         Assert.isTrue(isNotNullOrEmpty(input), message);
     }
 
+    public static void validateGithubUrl(String githubUrl) {
+        validateNotBlank(githubUrl, GITHUB_URL_IS_NULL);
+        validateTextLength(githubUrl, GITHUB_URL_OVER_MAX_LENGTH);
+        validateURI(githubUrl, GITHUB_URL_IS_INVALID);
+    }
+
     public static <T> boolean isNotNullOrEmpty(Collection<T> input) {
         return Objects.nonNull(input) && !input.isEmpty();
+    }
+
+    public static <T> boolean isNullOrEmpty(Collection<T> input) {
+        return Objects.isNull(input) || input.isEmpty();
     }
 
     private static void pattern(String input, Pattern pattern, String message) {

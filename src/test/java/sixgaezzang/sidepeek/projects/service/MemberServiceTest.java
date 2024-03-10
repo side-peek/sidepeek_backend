@@ -7,6 +7,7 @@ import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -30,10 +31,10 @@ import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.projects.util.FakeDtoProvider;
-import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
+import sixgaezzang.sidepeek.util.FakeDtoProvider;
+import sixgaezzang.sidepeek.util.FakeEntityProvider;
 
 @SpringBootTest
 @Transactional
@@ -61,18 +62,19 @@ class MemberServiceTest {
         overLengthMembers = new ArrayList<>();
         for (int i = 1; i <= MAX_MEMBER_COUNT / 2; i++) {
             overLengthMembers.add(
-                FakeDtoProvider.createFellowMemberSaveRequest(createAndSaveUser().getId())
+                FakeDtoProvider.createFellowSaveMemberRequest(createAndSaveUser().getId())
             );
             overLengthMembers.add(
-                FakeDtoProvider.createNonFellowMemberSaveRequest()
+                FakeDtoProvider.createNonFellowSaveMemberRequest()
             );
         }
 
         user = createAndSaveUser();
-        overLengthMembers.add(USER_INDEX, FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
+
+        overLengthMembers.add(USER_INDEX, FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
+        members = overLengthMembers.subList(0, MEMBER_COUNT);
 
         project = createAndSaveProject(user);
-        members = overLengthMembers.subList(0, MEMBER_COUNT);
     }
 
     private User createAndSaveUser() {
@@ -153,7 +155,7 @@ class MemberServiceTest {
             // given
             List<SaveMemberRequest> membersWithNonExistFellowMember = new ArrayList<>(members);
             membersWithNonExistFellowMember.add(
-                FakeDtoProvider.createFellowMemberSaveRequest(user.getId() + 1)
+                FakeDtoProvider.createFellowSaveMemberRequest(user.getId() + 1)
             );
 
             // when
@@ -162,11 +164,11 @@ class MemberServiceTest {
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(saveAll)
-                .withMessage("User Id에 해당하는 회원이 없습니다.");
+                .withMessage(USER_NOT_EXISTING);
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
-        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createInvalidMemberInfo")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createInvalidMemberInfo")
         void 정보가_유효하지_않은_멤버여서_멤버_목록_저장에_실패한다(
             String testMessage, boolean isFellow, String nickname, String role, String message
         ) {
@@ -211,7 +213,7 @@ class MemberServiceTest {
 
             // when
             List<SaveMemberRequest> membersOnlyOwner = new ArrayList<>();
-            membersOnlyOwner.add(FakeDtoProvider.createFellowMemberSaveRequest(user.getId()));
+            membersOnlyOwner.add(FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
 
             memberService.saveAll(project, membersOnlyOwner);
             List<MemberSummary> savedMembers = memberService.findAllWithUser(project);

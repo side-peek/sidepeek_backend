@@ -27,10 +27,10 @@ import sixgaezzang.sidepeek.projects.domain.file.FileType;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
-import sixgaezzang.sidepeek.projects.util.FakeValueProvider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
+import sixgaezzang.sidepeek.util.FakeEntityProvider;
+import sixgaezzang.sidepeek.util.FakeValueProvider;
 
 @SpringBootTest
 @Transactional
@@ -63,7 +63,7 @@ class FileServiceTest {
             user = createAndSaveUser();
             project = createAndSaveProject(user);
 
-            overLengthImageUrls = FakeValueProvider.createUrls(MAX_OVERVIEW_IMAGE_COUNT);
+            overLengthImageUrls = FakeValueProvider.createUrls(MAX_OVERVIEW_IMAGE_COUNT + 1);
             imageUrls = overLengthImageUrls.subList(0, IMAGE_COUNT);
         }
 
@@ -110,7 +110,7 @@ class FileServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
-        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createInvalidFileInfo")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createInvalidFileInfo")
         void 파일_정보가_유효하지_않아_파일_목록_저장에_실패한다(String testMessage, String fileUrl, String message) {
             // given
             List<String> imageUrlsWithInvalidUrl = new ArrayList<>(imageUrls);
