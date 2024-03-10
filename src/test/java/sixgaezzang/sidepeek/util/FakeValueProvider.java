@@ -81,7 +81,7 @@ public class FakeValueProvider {
 
     // Comment
     public static String createContent() {
-        return FAKER.lorem().sentence();
+        return FAKER.text().text(1, MAX_CONTENT_LENGTH);
     }
 
     // User
