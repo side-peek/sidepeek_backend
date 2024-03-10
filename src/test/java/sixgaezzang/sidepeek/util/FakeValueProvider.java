@@ -44,6 +44,10 @@ public class FakeValueProvider {
         return FAKER.text().text(1, 2);
     }
 
+    public static Boolean createBoolean() {
+        return FAKER.bool().bool();
+    }
+
     // Project
     public static String createProjectName() { // 프로젝트 제목/부제목
         return checkAndCutLength(FAKER.name().title(), MAX_PROJECT_NAME_LENGTH);
