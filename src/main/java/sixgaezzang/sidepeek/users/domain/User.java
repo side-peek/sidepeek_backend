@@ -100,6 +100,8 @@ public class User extends BaseTimeEntity {
     }
 
     public boolean checkPassword(String rawPassword, PasswordEncoder passwordEncoder) {
+        ValidationUtils.validateNotNull(password, PASSWORD_NOT_REGISTERED);
+
         return password != null && password.check(rawPassword, passwordEncoder);
     }
 
