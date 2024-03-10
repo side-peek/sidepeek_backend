@@ -4,6 +4,7 @@ import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessag
 import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.PARENT_COMMENT_NOT_EXISTING;
 import static sixgaezzang.sidepeek.comments.util.validation.CommentValidator.validateCommentId;
 import static sixgaezzang.sidepeek.comments.util.validation.CommentValidator.validateParentCommentHasParent;
+import static sixgaezzang.sidepeek.comments.util.validation.CommentValidator.validateSaveCommentRequest;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginIdEqualsOwnerId;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
@@ -39,6 +40,7 @@ public class CommentService {
     public Long save(Long loginId, SaveCommentRequest request) {
         validateLoginId(loginId);
         validateLoginIdEqualsOwnerId(loginId, request.ownerId());
+        validateSaveCommentRequest(request);
 
         User owner = userRepository.findById(request.ownerId())
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
