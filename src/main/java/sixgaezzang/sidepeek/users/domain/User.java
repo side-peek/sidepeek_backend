@@ -114,6 +114,10 @@ public class User extends BaseTimeEntity {
         setBlogUrl(request.blogUrl());
     }
 
+    public void updatePassword(String newPassword, PasswordEncoder passwordEncoder) {
+        this.password = new Password(newPassword, passwordEncoder);
+    }
+
     public void softDelete() { // TODO: 회원탈퇴할 때 언젠가는 쓰일 것 같아서 구현
         if (Objects.isNull(this.deletedAt)) {
             this.deletedAt = LocalDateTime.now();
