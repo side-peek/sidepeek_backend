@@ -6,6 +6,8 @@ import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAI
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAIL_FORMAT_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_DUPLICATE;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_IS_SAME_AS_BEFORE;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_NOT_MATCH;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateLoginIdEqualsUserId;
@@ -16,12 +18,13 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
+import sixgaezzang.sidepeek.users.dto.request.UpdatePasswordRequest;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserProfileResponse;
@@ -104,6 +107,21 @@ public class UserService {
         return UserProfileResponse.from(user, techStacks);
     }
 
+    @Transactional
+    public void updatePassword(Long loginId, Long userId, UpdatePasswordRequest request) {
+        validateLoginIdEqualsUserId(loginId, userId);
+
+        String originalPassword = request.originalPassword();
+        String newPassword = request.password();
+
+        User user = findUserById(userId);
+
+        validateOriginalPassword(user, originalPassword);
+        validateNewPasswordIsDifferent(originalPassword, newPassword);
+
+        user.updatePassword(newPassword, passwordEncoder);
+    }
+
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
@@ -118,6 +136,18 @@ public class UserService {
     private void verifyUniqueEmail(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new EntityExistsException(EMAIL_DUPLICATE);
+        }
+    }
+
+    private void validateOriginalPassword(User user, String originalPassword) {
+        if (!user.checkPassword(originalPassword, passwordEncoder)) {
+            throw new AccessDeniedException(PASSWORD_NOT_MATCH);
+        }
+    }
+
+    private void validateNewPasswordIsDifferent(String originalPassword, String newPassword) {
+        if (originalPassword.equals(newPassword)) {
+            throw new IllegalArgumentException(PASSWORD_IS_SAME_AS_BEFORE);
         }
     }
 
