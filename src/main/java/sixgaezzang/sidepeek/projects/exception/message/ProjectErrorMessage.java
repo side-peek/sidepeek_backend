@@ -8,7 +8,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ProjectErrorMessage {
+public final class ProjectErrorMessage {
     // Project
     public static final String PROJECT_IS_NULL = "프로젝트가 null 입니다.";
     public static final String ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE = "게사글 작성자와 회원 멤버만이 수정할 수 있습니다.";

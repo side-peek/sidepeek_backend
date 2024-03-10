@@ -1,5 +1,8 @@
 package sixgaezzang.sidepeek.projects.domain.file;
 
+import static sixgaezzang.sidepeek.projects.util.validation.FileValidator.validateFileUrl;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateProject;
+
 import io.jsonwebtoken.lang.Assert;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,8 +20,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.projects.domain.Project;
-import sixgaezzang.sidepeek.projects.util.validation.FileValidator;
-import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 
 @Entity
 @Table(name = "files")
@@ -50,9 +51,9 @@ public class File {
     }
 
     private void validateConstructorArguments(Project project, FileType type, String url) {
-        ProjectValidator.validateProject(project);
+        validateProject(project);
         Assert.notNull(type, "type을 입력해주세요.");
-        FileValidator.validateFileUrl(url);
+        validateFileUrl(url);
     }
 
 }

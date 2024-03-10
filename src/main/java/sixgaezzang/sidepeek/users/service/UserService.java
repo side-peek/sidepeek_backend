@@ -1,13 +1,15 @@
 package sixgaezzang.sidepeek.users.service;
 
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateEmail;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAIL_DUPLICATE;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAIL_FORMAT_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_DUPLICATE;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateLoginIdEqualsUserId;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateUserId;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,7 +28,6 @@ import sixgaezzang.sidepeek.users.dto.response.UserProfileResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserSearchResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserSkillSummary;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
-import sixgaezzang.sidepeek.users.util.validation.UserValidator;
 
 @Service
 @Transactional(readOnly = true)
@@ -80,7 +81,7 @@ public class UserService {
     }
 
     public UserProfileResponse getProfileById(Long id) {
-        UserValidator.validateUserId(id);
+        validateUserId(id);
 
         User user = userRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
@@ -91,7 +92,7 @@ public class UserService {
     }
 
     public UserProfileResponse updateProfile(Long loginId, Long id, UpdateUserProfileRequest request) {
-        UserValidator.validateLoginIdEqualsUserId(loginId, id);
+        validateLoginIdEqualsUserId(loginId, id);
 
         User user = userRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));

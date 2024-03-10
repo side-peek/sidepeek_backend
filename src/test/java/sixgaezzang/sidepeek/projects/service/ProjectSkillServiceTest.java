@@ -24,9 +24,9 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.common.dto.request.UpdateUserSkillRequest;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
-import sixgaezzang.sidepeek.projects.dto.request.SaveProjectSkillRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
@@ -57,26 +57,24 @@ class ProjectSkillServiceTest {
     @Autowired
     UserRepository userRepository;
 
-    static final int PROJECT_SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
-    static List<SaveProjectSkillRequest> techStacks;
-    static List<SaveProjectSkillRequest> overLengthTechStacks;
+    static final int SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
+    static List<UpdateUserSkillRequest> techStacks;
+    static List<UpdateUserSkillRequest> overLengthTechStacks;
     Project project;
     User user;
     Skill skill;
 
     @BeforeEach
     void setup() {
-        overLengthTechStacks = new ArrayList<>();
+        List<Long> createdSkillIds = new ArrayList<>();
         for (int i = 1; i <= MAX_TECH_STACK_COUNT + 1; i++) {
-            Skill skill = createAndSaveSkill();
-            overLengthTechStacks.add(
-                FakeDtoProvider.createSaveProjectSkillRequest(skill.getId())
-            );
+            createdSkillIds.add(createAndSaveSkill().getId());
         }
+        overLengthTechStacks = FakeDtoProvider.createUpdateUserSkillRequests(createdSkillIds);
+        techStacks = overLengthTechStacks.subList(0, SKILL_COUNT);
 
         user = createAndSaveUser();
         project = createAndSaveProject(user);
-        techStacks = overLengthTechStacks.subList(0, PROJECT_SKILL_COUNT);
         skill = createAndSaveSkill();
     }
 
@@ -104,12 +102,12 @@ class ProjectSkillServiceTest {
             List<ProjectSkillSummary> savedTechStacks = projectSkillService.saveAll(project, techStacks);
 
             // then
-            assertThat(savedTechStacks).hasSize(PROJECT_SKILL_COUNT);
+            assertThat(savedTechStacks).hasSize(SKILL_COUNT);
         }
 
         @ParameterizedTest
         @NullAndEmptySource
-        void 빈_기술_스택_목록_저장에_실패한다(List<SaveProjectSkillRequest> emptyTechStacks) {
+        void 빈_기술_스택_목록_저장에_실패한다(List<UpdateUserSkillRequest> emptyTechStacks) {
             // given, when
             ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, emptyTechStacks);
 
@@ -147,9 +145,9 @@ class ProjectSkillServiceTest {
             String testMessage, String category, String message
         ) {
             // given
-            List<SaveProjectSkillRequest> techStacksWithInvalidSkill = new ArrayList<>(techStacks);
+            List<UpdateUserSkillRequest> techStacksWithInvalidSkill = new ArrayList<>(techStacks);
             techStacksWithInvalidSkill.add(
-                new SaveProjectSkillRequest(skill.getId(), category)
+                new UpdateUserSkillRequest(skill.getId(), category)
             );
 
             // when
@@ -164,9 +162,9 @@ class ProjectSkillServiceTest {
         @Test
         void 존재하지_않는_기술_스택_Id로_기술_스택_목록_저장에_실패한다() {
             // given
-            List<SaveProjectSkillRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
+            List<UpdateUserSkillRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
             techStacksWithNonExistSkill.add(
-                FakeDtoProvider.createSaveProjectSkillRequest(skill.getId() + 1)
+                FakeDtoProvider.createUpdateUserSkillRequest(skill.getId() + 1)
             );
 
             // when
@@ -181,9 +179,9 @@ class ProjectSkillServiceTest {
         @Test
         void 기술_스택_Id가_누락되어_기술_스택_목록_저장에_실패한다() {
             // given
-            List<SaveProjectSkillRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
+            List<UpdateUserSkillRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
             techStacksWithNonExistSkill.add(
-                FakeDtoProvider.createSaveProjectSkillRequest(null)
+                FakeDtoProvider.createUpdateUserSkillRequest(null)
             );
 
             // when
@@ -218,9 +216,9 @@ class ProjectSkillServiceTest {
             List<ProjectSkill> originalTechStacks = projectSkillService.findAll(project);
 
             // when
-            List<SaveProjectSkillRequest> techStacksOnlyOne = new ArrayList<>();
+            List<UpdateUserSkillRequest> techStacksOnlyOne = new ArrayList<>();
             Skill newSkill = createAndSaveSkill();
-            techStacksOnlyOne.add(FakeDtoProvider.createSaveProjectSkillRequest(newSkill.getId()));
+            techStacksOnlyOne.add(FakeDtoProvider.createUpdateUserSkillRequest(newSkill.getId()));
 
             projectSkillService.saveAll(project, techStacksOnlyOne);
             List<ProjectSkill> savedTechStacks = projectSkillService.findAll(project);

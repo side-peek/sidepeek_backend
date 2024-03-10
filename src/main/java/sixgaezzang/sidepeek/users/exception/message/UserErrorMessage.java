@@ -10,7 +10,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserErrorMessage {
+public final class UserErrorMessage {
 
     // Common
     public static final String USER_IS_NULL = "User가 null 입니다.";

@@ -25,10 +25,10 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.common.dto.request.UpdateUserSkillRequest;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.dto.request.UpdateUserSkillRequest;
 import sixgaezzang.sidepeek.users.dto.response.UserSkillSummary;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 import sixgaezzang.sidepeek.users.repository.userskill.UserSkillRepository;
@@ -40,7 +40,7 @@ import sixgaezzang.sidepeek.util.FakeEntityProvider;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class UserSkillServiceTest {
 
-    static final int USER_SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
+    static final int SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
     static List<UpdateUserSkillRequest> techStacks;
     static List<UpdateUserSkillRequest> overLengthTechStacks;
     @Autowired
@@ -56,17 +56,14 @@ class UserSkillServiceTest {
 
     @BeforeEach
     void setup() {
-        // TODO: 중복코드 리팩터링 필요 + createUserSkillSaveRequest와도 중복(세희)
-        overLengthTechStacks = new ArrayList<>();
+        List<Long> createdSkillIds = new ArrayList<>();
         for (int i = 1; i <= MAX_TECH_STACK_COUNT + 1; i++) {
-            Skill skill = createAndSaveSkill();
-            overLengthTechStacks.add(
-                FakeDtoProvider.createUpdateUserSkillRequest(skill.getId())
-            );
+            createdSkillIds.add(createAndSaveSkill().getId());
         }
+        overLengthTechStacks = FakeDtoProvider.createUpdateUserSkillRequests(createdSkillIds);
+        techStacks = overLengthTechStacks.subList(0, SKILL_COUNT);
 
         user = createAndSaveUser();
-        techStacks = overLengthTechStacks.subList(0, USER_SKILL_COUNT);
         skill = createAndSaveSkill();
     }
 

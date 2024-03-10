@@ -1,7 +1,7 @@
 package sixgaezzang.sidepeek.projects.util.validation;
 
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateNotBlank;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_EMPTY;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_NOT_INCLUDE_OWNER;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_OVER_MAX_COUNT;
@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MemberValidator {
+public final class MemberValidator {
 
     public static void validateMembers(Long ownerId, List<SaveMemberRequest> members) {
         Assert.notEmpty(members, MEMBER_IS_EMPTY);

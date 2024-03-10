@@ -1,8 +1,8 @@
 package sixgaezzang.sidepeek.users.service;
 
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.isNullOrEmpty;
+import static sixgaezzang.sidepeek.common.util.validation.TechStackValidator.validateTechStacks;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.isNullOrEmpty;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_NOT_EXISTING;
-import static sixgaezzang.sidepeek.users.util.validation.UserSkillValidator.validateUserTechStacks;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateUser;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -11,11 +11,11 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.common.dto.request.UpdateUserSkillRequest;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.domain.UserSkill;
-import sixgaezzang.sidepeek.users.dto.request.UpdateUserSkillRequest;
 import sixgaezzang.sidepeek.users.dto.response.UserSkillSummary;
 import sixgaezzang.sidepeek.users.repository.userskill.UserSkillRepository;
 
@@ -46,7 +46,7 @@ public class UserSkillService {
             return Collections.emptyList();
         }
 
-        validateUserTechStacks(techStacks);
+        validateTechStacks(techStacks);
         List<UserSkill> skills = convertAllToEntity(user, techStacks);
         userSkillRepository.saveAll(skills);
 
@@ -61,7 +61,7 @@ public class UserSkillService {
                 Skill skill = skillRepository.findById(techStack.skillId())
                     .orElseThrow(() -> new EntityNotFoundException(SKILL_NOT_EXISTING));
 
-                return techStack.toEntity(user, skill);
+                return techStack.toUserSkill(user, skill);
             })
             .toList();
     }

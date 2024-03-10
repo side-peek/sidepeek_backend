@@ -1,7 +1,7 @@
 package sixgaezzang.sidepeek.users.domain;
 
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateNotBlank;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validatePassword;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateNotBlank;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validatePassword;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_FORMAT_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_IS_NULL;
 

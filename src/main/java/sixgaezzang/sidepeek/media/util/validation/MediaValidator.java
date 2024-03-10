@@ -13,7 +13,7 @@ import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MediaValidator {
+public final class MediaValidator {
     public static void validateFile(MultipartFile file, DataSize fileMaxSize) {
         Assert.isTrue(Objects.nonNull(file) && !file.isEmpty(), FILE_IS_EMPTY);
         Assert.isTrue(file.getSize() <= fileMaxSize.toBytes(),

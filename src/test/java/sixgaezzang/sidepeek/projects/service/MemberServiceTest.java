@@ -70,10 +70,11 @@ class MemberServiceTest {
         }
 
         user = createAndSaveUser();
+
         overLengthMembers.add(USER_INDEX, FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
+        members = overLengthMembers.subList(0, MEMBER_COUNT);
 
         project = createAndSaveProject(user);
-        members = overLengthMembers.subList(0, MEMBER_COUNT);
     }
 
     private User createAndSaveUser() {
