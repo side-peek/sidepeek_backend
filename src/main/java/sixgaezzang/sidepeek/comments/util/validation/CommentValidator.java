@@ -1,10 +1,10 @@
 package sixgaezzang.sidepeek.comments.util.validation;
 
+import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.CHILD_COMMENT_CANNOT_BE_PARENT;
+import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.COMMENT_ID_IS_NULL;
 import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.CONTENT_IS_NULL;
 import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.CONTENT_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.IS_ANONYMOUS_IS_NULL;
-import static sixgaezzang.sidepeek.comments.util.CommentConstant.CHILD_COMMENT_CANNOT_BE_PARENT;
-import static sixgaezzang.sidepeek.comments.util.CommentConstant.COMMENT_ID_IS_NULL;
 import static sixgaezzang.sidepeek.comments.util.CommentConstant.MAX_CONTENT_LENGTH;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateNotBlank;
