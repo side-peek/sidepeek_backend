@@ -83,8 +83,7 @@ public class UserService {
     public UserProfileResponse getProfileById(Long id) {
         validateUserId(id);
 
-        User user = userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
+        User user = findUserById(id);
 
         List<UserSkillSummary> techStacks = userSkillService.findAllByUser(user);
 
@@ -94,14 +93,18 @@ public class UserService {
     public UserProfileResponse updateProfile(Long loginId, Long id, UpdateUserProfileRequest request) {
         validateLoginIdEqualsUserId(loginId, id);
 
-        User user = userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
+        User user = findUserById(id);
 
         user.update(request);
 
         List<UserSkillSummary> techStacks = userSkillService.saveAll(user, request.techStacks());
 
         return UserProfileResponse.from(user, techStacks);
+    }
+
+    private User findUserById(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
     }
 
     private void verifyUniqueNickname(String nickname) {
