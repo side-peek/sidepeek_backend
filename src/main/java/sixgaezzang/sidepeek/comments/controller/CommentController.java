@@ -23,13 +23,12 @@ import sixgaezzang.sidepeek.common.doc.CommentControllerDoc;
 @RequiredArgsConstructor
 public class CommentController implements CommentControllerDoc {
 
-    @Override
     private final CommentService commentService;
 
+    @Override
     @PostMapping
     public ResponseEntity<Void> save(
         @Login Long loginId,
-        @PathVariable Long projectId,
         @Valid @RequestBody SaveCommentRequest request
     ) {
         Long projectId = commentService.save(loginId, request);
@@ -46,7 +45,6 @@ public class CommentController implements CommentControllerDoc {
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(
         @Login Long loginId,
-        @PathVariable Long projectId,
         @PathVariable(value = "id") Long commentId,
         @Valid @RequestBody UpdateCommentRequest request
     ) {
@@ -60,7 +58,6 @@ public class CommentController implements CommentControllerDoc {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
         @Login Long loginId,
-        @PathVariable Long projectId,
         @PathVariable(value = "id") Long commentId
     ) {
         commentService.delete(loginId, commentId);
