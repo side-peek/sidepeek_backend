@@ -12,6 +12,7 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import sixgaezzang.sidepeek.comments.dto.request.SaveCommentRequest;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
@@ -78,4 +79,16 @@ public class FakeDtoProvider {
             Collections.emptyList()
         );
     }
+
+    // Comment
+    public static SaveCommentRequest createSaveCommentRequest(Long userId, Long projectId, Long parentId) {
+        return new SaveCommentRequest(
+            userId,
+            projectId,
+            parentId,
+            FakeValueProvider.createBoolean(),
+            FakeValueProvider.createContent()
+        );
+    }
+
 }
