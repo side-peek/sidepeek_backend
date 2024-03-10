@@ -16,18 +16,18 @@ import io.jsonwebtoken.lang.Assert;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import sixgaezzang.sidepeek.common.dto.request.UpdateUserSkillRequest;
+import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TechStackValidator {
 
-    public static void validateTechStacks(List<UpdateUserSkillRequest> techStacks) {
+    public static void validateTechStacks(List<SaveTechStackRequest> techStacks) {
         Assert.isTrue(techStacks.size() <= MAX_TECH_STACK_COUNT, TECH_STACKS_OVER_MAX_COUNT);
         validateCollection(techStacks, TechStackValidator::validateTechStack);
         validateDuplicate(techStacks, TECH_STACK_IS_DUPLICATED);
     }
 
-    public static void validateTechStack(UpdateUserSkillRequest techStack) {
+    public static void validateTechStack(SaveTechStackRequest techStack) {
         Assert.notNull(techStack.skillId(), SKILL_ID_IS_NULL);
         Assert.notNull(techStack.category(), CATEGORY_IS_NULL);
     }
