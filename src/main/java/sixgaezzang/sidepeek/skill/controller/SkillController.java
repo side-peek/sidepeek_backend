@@ -24,8 +24,8 @@ public class SkillController implements SkillControllerDoc {
     @Override
     @GetMapping
     public ResponseEntity<SkillSearchResponse> searchByName(
-        @RequestParam(required = false)
-        @Size(max = MAX_SKILL_NAME_LENGTH, message = SKILL_NAME_OVER_MAX_LENGTH) String keyword
+        @Size(max = MAX_SKILL_NAME_LENGTH, message = SKILL_NAME_OVER_MAX_LENGTH)
+        @RequestParam(required = false) String keyword
     ) {
         return ResponseEntity.ok()
             .body(skillService.searchByName(keyword));
