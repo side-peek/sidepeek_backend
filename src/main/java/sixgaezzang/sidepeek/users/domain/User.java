@@ -90,7 +90,7 @@ public class User extends BaseTimeEntity {
 
         this.nickname = nickname;
         this.email = email;
-        this.password = new Password(password, passwordEncoder);
+        this.password = isNull(password) ? null : new Password(password, passwordEncoder);
         this.introduction = introduction;
         this.profileImageUrl = profileImageUrl;
         this.job = job;
