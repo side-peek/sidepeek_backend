@@ -1,5 +1,8 @@
 package sixgaezzang.sidepeek.common.doc;
 
+import static sixgaezzang.sidepeek.skill.domain.Skill.MAX_SKILL_NAME_LENGTH;
+import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_NAME_OVER_MAX_LENGTH;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -8,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
 import sixgaezzang.sidepeek.common.exception.ErrorResponse;
 import sixgaezzang.sidepeek.skill.dto.response.SkillSearchResponse;
@@ -21,6 +25,8 @@ public interface SkillControllerDoc {
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameter(name = "keyword", description = "검색어", example = "spring", in = ParameterIn.QUERY)
-    ResponseEntity<SkillSearchResponse> searchByName(String keyword);
+    ResponseEntity<SkillSearchResponse> searchByName(
+        @Size(max = MAX_SKILL_NAME_LENGTH, message = SKILL_NAME_OVER_MAX_LENGTH) String keyword
+    );
 
 }

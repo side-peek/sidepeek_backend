@@ -1,5 +1,8 @@
 package sixgaezzang.sidepeek.common.doc;
 
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -8,6 +11,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
 import sixgaezzang.sidepeek.common.exception.ErrorResponse;
 import sixgaezzang.sidepeek.users.dto.request.CheckEmailRequest;
@@ -27,7 +32,7 @@ public interface UserControllerDoc {
         @ApiResponse(responseCode = "201", description = "CREATED", useReturnTypeSchema = true),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    ResponseEntity<Void> signUp(SignUpRequest request);
+    ResponseEntity<Void> signUp(@Valid SignUpRequest request);
 
     @Operation(summary = "비밀번호 수정")
     @ApiResponses({
@@ -39,21 +44,21 @@ public interface UserControllerDoc {
     })
     @Parameter(name = "id", description = "수정할 회원 식별자", example = "1")
     ResponseEntity<Void> updatePassword(@Parameter(hidden = true) Long loginId, Long id,
-        UpdatePasswordRequest request);
+                                        @Valid UpdatePasswordRequest request);
 
     @Operation(summary = "이메일 중복 확인")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    ResponseEntity<CheckDuplicateResponse> checkEmailDuplicate(CheckEmailRequest request);
+    ResponseEntity<CheckDuplicateResponse> checkEmailDuplicate(@Valid CheckEmailRequest request);
 
     @Operation(summary = "닉네임 중복 확인")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    ResponseEntity<CheckDuplicateResponse> checkNicknameDuplicate(CheckNicknameRequest request);
+    ResponseEntity<CheckDuplicateResponse> checkNicknameDuplicate(@Valid CheckNicknameRequest request);
 
     @Operation(summary = "회원 검색", description = "닉네임으로 회원을 검색합니다.")
     @ApiResponses({
@@ -61,7 +66,10 @@ public interface UserControllerDoc {
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameter(name = "keyword", description = "검색어", example = "sixgaezzang6", in = ParameterIn.QUERY)
-    ResponseEntity<UserSearchResponse> searchByNickname(String keyword);
+    ResponseEntity<UserSearchResponse> searchByNickname(
+        @Size(max = MAX_NICKNAME_LENGTH, message = NICKNAME_OVER_MAX_LENGTH)
+        String keyword
+    );
 
     @Operation(summary = "회원 프로필 정보 조회")
     @ApiResponses({
@@ -81,5 +89,5 @@ public interface UserControllerDoc {
     })
     @Parameter(name = "id", description = "수정할 회원 식별자", example = "1", in = ParameterIn.PATH)
     ResponseEntity<UserProfileResponse> update(@Parameter(hidden = true) Long loginId, Long id,
-        UpdateUserProfileRequest request);
+                                               @Valid UpdateUserProfileRequest request);
 }
