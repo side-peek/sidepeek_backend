@@ -1,21 +1,18 @@
 package sixgaezzang.sidepeek.projects.service;
 
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginIdEqualsOwnerId;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
-import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.service.CommentService;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
@@ -33,31 +30,37 @@ import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 @Transactional(readOnly = true)
 public class ProjectService {
 
-    private final ProjectRepository projectRepository;
     private final ProjectSkillService projectSkillService;
     private final MemberService memberService;
     private final FileService fileService;
-    private final LikeRepository likeRepository;
     private final CommentService commentService;
+    private final ProjectRepository projectRepository;
+    private final LikeRepository likeRepository;
 
     @Transactional
-    public ProjectResponse save(Long loginId, Long projectId, SaveProjectRequest request) {
+    public ProjectResponse save(Long loginId, SaveProjectRequest request) {
+        validateLoginId(loginId);
+        validateLoginIdEqualsOwnerId(loginId, request.ownerId());
+
+        Project project = request.toEntity();
+        projectRepository.save(project);
+
+        List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project, request.techStacks());
+        List<MemberSummary> members = memberService.saveAll(project, request.members());
+        List<OverviewImageSummary> overviewImages = fileService.saveAll(project, request.overviewImageUrls());
+
+        return ProjectResponse.from(project, overviewImages, techStacks, members);
+    }
+
+    @Transactional
+    public ProjectResponse update(Long loginId, Long projectId, SaveProjectRequest request) {
         validateLoginId(loginId);
 
-        Project project;
-        if (Objects.isNull(projectId)) {
-            validateLoginIdEqualsOwnerId(loginId, request.ownerId());
+        Project project = projectRepository.findById(projectId)
+            .orElseThrow(() -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
+        validateLoginUserIncludeMembers(loginId, project);
 
-            project = request.toEntity();
-            projectRepository.save(project);
-        } else {
-            project = projectRepository.findById(projectId)
-                .orElseThrow(
-                    () -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
-            validateLoginUserIncludeMembers(loginId, project);
-
-            project.update(request);
-        }
+        project.update(request);
 
         List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project, request.techStacks());
         List<MemberSummary> members = memberService.saveAll(project, request.members());
@@ -111,13 +114,6 @@ public class ProjectService {
         validateLoginIdEqualsOwnerId(loginId, project.getOwnerId());
 
         project.softDelete();
-    }
-
-    private void validateLoginIdEqualsOwnerId(Long loginId, Long ownerId) {
-        validateOwnerId(ownerId);
-        if (!loginId.equals(ownerId)) {
-            throw new InvalidAuthenticationException(OWNER_ID_NOT_EQUALS_LOGIN_ID);
-        }
     }
 
     private void validateLoginUserIncludeMembers(Long loginId, Project project) {

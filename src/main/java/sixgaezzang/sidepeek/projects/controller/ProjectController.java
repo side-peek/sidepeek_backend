@@ -35,7 +35,7 @@ public class ProjectController implements ProjectControllerDoc {
         @Login Long loginId,
         @Valid @RequestBody SaveProjectRequest request
     ) {
-        ProjectResponse response = projectService.save(loginId, null, request);
+        ProjectResponse response = projectService.save(loginId, request);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/projects/{id}")
             .buildAndExpand(response.id()).toUri();
@@ -51,7 +51,7 @@ public class ProjectController implements ProjectControllerDoc {
         @PathVariable(value = "id") Long projectId,
         @Valid @RequestBody SaveProjectRequest request
     ) {
-        ProjectResponse response = projectService.save(loginId, projectId, request);
+        ProjectResponse response = projectService.update(loginId, projectId, request);
 
         return ResponseEntity.ok(response);
     }

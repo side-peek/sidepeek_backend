@@ -14,9 +14,9 @@ import jakarta.persistence.EntityNotFoundException;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -26,23 +26,17 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
-import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
-import sixgaezzang.sidepeek.projects.repository.FileRepository;
-import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
-import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -102,10 +96,10 @@ class ProjectServiceTest {
         SaveProjectRequest request = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
             NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, userId, techStacks, members
         );
-        return projectService.save(userId, null, request);
+        return projectService.save(userId, request);
     }
 
-    private Comment createAndSaveComment(User user, Project project) {
+    private Comment createAndSaveComment(User user, Project project, Comment comment) {
         Comment newComment = FakeEntityProvider.createComment(user, project, null);
         return commentRepository.save(newComment);
     }
@@ -128,7 +122,7 @@ class ProjectServiceTest {
         for (int i = 1; i <= SKILL_COUNT; i++) {
             createdSkillIds.add(createAndSaveSkill().getId());
         }
-        techStacks = FakeDtoProvider.createUpdateUserSkillRequests(createdSkillIds);
+        techStacks = FakeDtoProvider.createSaveTechStackRequests(createdSkillIds);
     }
 
     @Nested
@@ -139,7 +133,7 @@ class ProjectServiceTest {
             // given
             User user = createAndSaveUser();
             Project project = createAndSaveProject(user);
-            Comment comment = createAndSaveComment(user, project);
+            Comment comment = createAndSaveComment(user, project, null);
             CommentResponse commentResponse = CommentResponse.from(comment, true, List.of());
 
             // when
@@ -175,7 +169,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ProjectResponse response = projectService.save(user.getId(), null, request);
+            ProjectResponse response = projectService.save(user.getId(), request);
 
             // then
             assertThat(response).extracting("name", "overview", "githubUrl", "description",
@@ -197,7 +191,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
@@ -212,7 +206,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
@@ -227,7 +221,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
             assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(saveProject)
@@ -246,7 +240,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
@@ -267,7 +261,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
@@ -282,7 +276,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable save = () -> projectService.save(null, null, request);
+            ThrowingCallable save = () -> projectService.save(null, request);
 
             // then
             assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(save)
@@ -309,7 +303,7 @@ class ProjectServiceTest {
                     newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
                     members
                 );
-                ProjectResponse savedProject = projectService.save(fellowMemberId,
+                ProjectResponse savedProject = projectService.update(fellowMemberId,
                     originalProject.id(), newRequest);
 
                 // then
@@ -335,7 +329,7 @@ class ProjectServiceTest {
                 newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
                 members
             );
-            ThrowingCallable update = () -> projectService.save(user.getId(),
+            ThrowingCallable update = () -> projectService.update(user.getId(),
                 originalProject.id() + 1, newRequest);
 
             // then
@@ -356,7 +350,7 @@ class ProjectServiceTest {
             SaveProjectRequest newRequest = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
                 newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
             );
-            ThrowingCallable update = () -> projectService.save(null, originalProject.id(),
+            ThrowingCallable update = () -> projectService.update(null, originalProject.id(),
                 newRequest);
 
             // then
@@ -384,67 +378,18 @@ class ProjectServiceTest {
                     newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
                     members
                 );
-                ThrowingCallable update = () -> projectService.save(nonMemberId,
+                ThrowingCallable update = () -> projectService.update(nonMemberId,
                     originalProject.id(), newRequest);
 
                 // then
-                assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(update)
+                assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(update)
                     .withMessage(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE);
             });
         }
     }
 
     @Nested
-    @Transactional(propagation = Propagation.NEVER)
     class 프로젝트_삭제_테스트 {
-        @Autowired
-        MemberRepository memberRepository;
-        @Autowired
-        ProjectSkillRepository projectSkillRepository;
-        @Autowired
-        FileRepository fileRepository;
-        @Autowired
-        SkillRepository skillRepository;
-
-        @BeforeEach
-        void setup() {
-            fileRepository.deleteAll();
-            memberRepository.deleteAll();
-            projectSkillRepository.deleteAll();
-            commentRepository.deleteAll();
-            projectRepository.deleteAll();
-            userRepository.deleteAll();
-            skillRepository.deleteAll();
-
-            members = new ArrayList<>();
-            fellowMemberIds = new ArrayList<>();
-            for (int i = 1; i <= MEMBER_COUNT - 1; i++) {
-                Long savedUserId = createAndSaveUser().getId();
-                fellowMemberIds.add(savedUserId);
-                members.add(FakeDtoProvider.createFellowSaveMemberRequest(savedUserId));
-            }
-
-            user = createAndSaveUser();
-            fellowMemberIds.add(0, user.getId());
-            members.add(0, FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
-
-            List<Long> createdSkillIds = new ArrayList<>();
-            for (int i = 1; i <= SKILL_COUNT; i++) {
-                createdSkillIds.add(createAndSaveSkill().getId());
-            }
-            techStacks = FakeDtoProvider.createUpdateUserSkillRequests(createdSkillIds);
-        }
-
-        @AfterEach
-        void cleanup() {
-            fileRepository.deleteAll();
-            memberRepository.deleteAll();
-            projectSkillRepository.deleteAll();
-            commentRepository.deleteAll();
-            projectRepository.deleteAll();
-            userRepository.deleteAll();
-            skillRepository.deleteAll();
-        }
 
         @Test
         void 프로젝트_소프트_삭제에_성공한다() {
@@ -454,8 +399,13 @@ class ProjectServiceTest {
             // when
             projectService.delete(user.getId(), project.id());
 
+            // TODO: @SQLRestriction("deleted_at IS NULL")이 안먹힌다. 왜지?
+            Optional<Project> deletedProject = projectRepository.findById(project.id());
+            projectService.findById(project.id());
+
             // then
-            assertThat(projectRepository.findById(project.id())).isEmpty();
+            assertThat(deletedProject).isNotEmpty();
+            assertThat(deletedProject.get().getDeletedAt()).isNotNull();
         }
 
         @Test

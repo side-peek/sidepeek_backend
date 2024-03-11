@@ -24,15 +24,15 @@ import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 public class FakeDtoProvider {
 
     // TechStack
-    public static SaveTechStackRequest createUpdateUserSkillRequest(Long skillId) {
+    public static SaveTechStackRequest createSaveTechStackRequest(Long skillId) {
         return new SaveTechStackRequest(skillId, createSkillCategory());
     }
 
-    public static List<SaveTechStackRequest> createUpdateUserSkillRequests(List<Long> skillIds) {
+    public static List<SaveTechStackRequest> createSaveTechStackRequests(List<Long> skillIds) {
         List<SaveTechStackRequest> requests = new ArrayList<>();
         for (Long skillId : skillIds) {
             requests.add(
-                FakeDtoProvider.createUpdateUserSkillRequest(skillId)
+                FakeDtoProvider.createSaveTechStackRequest(skillId)
             );
         }
         return requests;
