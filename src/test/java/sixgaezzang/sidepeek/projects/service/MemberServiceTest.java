@@ -182,7 +182,8 @@ class MemberServiceTest {
             );
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.cleanAndSaveAll(project, membersWithInvalidMember);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.cleanAndSaveAll(
+                project, membersWithInvalidMember);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -196,7 +197,8 @@ class MemberServiceTest {
             membersWithoutOwner.remove(USER_INDEX);
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.cleanAndSaveAll(project, membersWithoutOwner);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.cleanAndSaveAll(
+                project, membersWithoutOwner);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)

@@ -117,7 +117,8 @@ class FileServiceTest {
             imageUrlsWithInvalidUrl.add(fileUrl);
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.cleanAndSaveAll(project, imageUrlsWithInvalidUrl);
+            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.cleanAndSaveAll(
+                project, imageUrlsWithInvalidUrl);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)

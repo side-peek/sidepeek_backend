@@ -111,7 +111,8 @@ class ProjectSkillServiceTest {
         @NullAndEmptySource
         void 빈_기술_스택_목록_저장에_실패한다(List<SaveTechStackRequest> emptyTechStacks) {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.cleanAndSaveAll(project, emptyTechStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.cleanAndSaveAll(
+                project, emptyTechStacks);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -124,7 +125,8 @@ class ProjectSkillServiceTest {
             Project nullProject = null;
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.cleanAndSaveAll(nullProject, techStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.cleanAndSaveAll(
+                nullProject, techStacks);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -134,7 +136,8 @@ class ProjectSkillServiceTest {
         @Test
         void 목록_개수가_최대를_넘어서_기술_스택_목록_저장에_실패한다() {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.cleanAndSaveAll(project, overLengthTechStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.cleanAndSaveAll(
+                project, overLengthTechStacks);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
