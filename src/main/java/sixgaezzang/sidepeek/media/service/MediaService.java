@@ -3,6 +3,7 @@ package sixgaezzang.sidepeek.media.service;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.media.exception.message.MediaErrorMessage.CANNOT_READ_FILE;
 import static sixgaezzang.sidepeek.media.util.MediaConstant.FILE_EXTENSION_SEPARATOR;
+import static sixgaezzang.sidepeek.media.util.MediaConstant.FOLDER_PATH_SEPARATOR;
 import static sixgaezzang.sidepeek.media.util.validation.MediaValidator.validateFile;
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class MediaService {
         try {
             PutObjectRequest putOb = PutObjectRequest.builder()
                 .bucket(s3Properties.baseBucket())
-                .key(fileName)
+                .key(s3Properties.keyPrefix() + FOLDER_PATH_SEPARATOR + fileName)
                 .build();
 
             s3Client.putObject(putOb, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
@@ -41,7 +42,9 @@ public class MediaService {
             throw new IllegalStateException(CANNOT_READ_FILE);
         }
 
-        return MediaUploadResponse.from(s3Properties.basePath() + fileName);
+        return MediaUploadResponse.from(
+            s3Properties.basePath() + FOLDER_PATH_SEPARATOR
+                + s3Properties.keyPrefix() + FOLDER_PATH_SEPARATOR + fileName);
     }
 
     private String createUniqueFileName(MultipartFile file) {
