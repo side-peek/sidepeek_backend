@@ -86,9 +86,8 @@ public class UserController implements UserControllerDoc {
     @Override
     @GetMapping("/nickname")
     public ResponseEntity<UserSearchResponse> searchByNickname(
-        @RequestParam(required = false)
         @Size(max = MAX_NICKNAME_LENGTH, message = NICKNAME_OVER_MAX_LENGTH)
-        String keyword
+        @RequestParam(required = false) String keyword
     ) {
         return ResponseEntity.ok()
             .body(userService.searchByNickname(keyword));
