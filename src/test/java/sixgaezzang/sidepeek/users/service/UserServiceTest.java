@@ -163,7 +163,8 @@ class UserServiceTest {
         void 이메일이_중복된_경우_회원가입에_실패한다() {
             // given
             String duplicatedEmail = email;
-            User user = FakeEntityProvider.createUser(duplicatedEmail, password, nickname, passwordEncoder);
+            User user = FakeEntityProvider.createUser(duplicatedEmail, password, nickname,
+                passwordEncoder);
             userRepository.save(user);
 
             String newNickname = faker.internet().username();
@@ -181,7 +182,8 @@ class UserServiceTest {
         void 닉네임이_중복된_경우_회원가입에_실패한다() {
             // given
             String duplicatedNickname = nickname;
-            User user = FakeEntityProvider.createUser(email, password, duplicatedNickname, passwordEncoder);
+            User user = FakeEntityProvider.createUser(email, password, duplicatedNickname,
+                passwordEncoder);
             userRepository.save(user);
 
             String newEmail = FakeValueProvider.createEmail();
@@ -241,7 +243,8 @@ class UserServiceTest {
         void 이메일이_중복된_경우_중복_확인에_성공한다() {
             // given
             String duplicatedEmail = email;
-            User user = FakeEntityProvider.createUser(duplicatedEmail, password, nickname, passwordEncoder);
+            User user = FakeEntityProvider.createUser(duplicatedEmail, password, nickname,
+                passwordEncoder);
             userRepository.save(user);
 
             // when
@@ -347,10 +350,12 @@ class UserServiceTest {
         @Test
         void 로그인을_하지_않아_회원_프로필_수정에_실패한다() {
             // given, when
-            ThrowingCallable updateProfile = () -> userService.updateProfile(null, user.getId(), request);
+            ThrowingCallable updateProfile = () -> userService.updateProfile(null, user.getId(),
+                request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(updateProfile)
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(
+                    updateProfile)
                 .withMessage(LOGIN_IS_REQUIRED);
         }
 
@@ -360,10 +365,12 @@ class UserServiceTest {
             User newUser = createAndSaveUser();
 
             // when
-            ThrowingCallable updateProfile = () -> userService.updateProfile(newUser.getId(), user.getId(), request);
+            ThrowingCallable updateProfile = () -> userService.updateProfile(newUser.getId(),
+                user.getId(), request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(updateProfile)
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(
+                    updateProfile)
                 .withMessage(USER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
@@ -483,7 +490,6 @@ class UserServiceTest {
     @Nested
     class 회원_비밀번호_수정_테스트 {
 
-        // TODO: 회원_비밀번호_수정_테스트 작성 필요
 
     }
 
@@ -503,7 +509,8 @@ class UserServiceTest {
         void 닉네임이_중복된_경우_중복_확인에_성공한다() {
             // given
             String duplicatedNickname = nickname;
-            User user = FakeEntityProvider.createUser(email, password, duplicatedNickname, passwordEncoder);
+            User user = FakeEntityProvider.createUser(email, password, duplicatedNickname,
+                passwordEncoder);
             userRepository.save(user);
 
             // when
