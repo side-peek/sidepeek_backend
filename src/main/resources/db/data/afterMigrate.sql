@@ -60,13 +60,47 @@ values (2, 1, 'OVERVIEW_IMAGE', 'https://project-images.sidepeek.com/2.png');
 
 -- SKILL
 insert into skill(id, name, icon_image_url)
-values (1, 'React', 'https://cdn.iconscout.com/icon/react.png');
+values (1, 'AWS EC2', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/aws-ec2.png');
 insert into skill(id, name, icon_image_url)
-values (2, 'Spring', 'https://cdn.iconscout.com/icon/spring.png');
+values (2, 'AWS RDS', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/aws-rds.png');
 insert into skill(id, name, icon_image_url)
-values (3, 'GitHub', 'https://cdn.iconscout.com/icon/github.png');
+values (3, 'AWS S3', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/aws-s3.png');
 insert into skill(id, name, icon_image_url)
-values (4, 'React Query', 'https://cdn.iconscout.com/icon/reactQuery.png');
+values (4, 'Figma', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/figma.png');
+insert into skill(id, name, icon_image_url)
+values (5, 'Git', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/git-icon.png');
+insert into skill(id, name, icon_image_url)
+values (6, 'Github Actions', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/github-actions.png');
+insert into skill(id, name, icon_image_url)
+values (7, 'Github', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/github-icon.png');
+insert into skill(id, name, icon_image_url)
+values (8, 'Java', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/java.png');
+insert into skill(id, name, icon_image_url)
+values (9, 'Javascript', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/javascript.png');
+insert into skill(id, name, icon_image_url)
+values (10, 'Kotlin', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/kotlin-icon.png');
+insert into skill(id, name, icon_image_url)
+values (11, 'Notion', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/notion-icon.png');
+insert into skill(id, name, icon_image_url)
+values (12, 'PostgreSQL', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/postgresql.png');
+insert into skill(id, name, icon_image_url)
+values (13, 'React Query', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/react-query-icon.png');
+insert into skill(id, name, icon_image_url)
+values (14, 'React', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/react.png');
+insert into skill(id, name, icon_image_url)
+values (15, 'Slack', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/slack-icon.png');
+insert into skill(id, name, icon_image_url)
+values (16, 'Spring', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/spring-icon.png');
+insert into skill(id, name, icon_image_url)
+values (17, 'Swagger', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/swagger.png');
+insert into skill(id, name, icon_image_url)
+values (18, 'Thymeleaf', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/thymeleaf-icon.png');
+insert into skill(id, name, icon_image_url)
+values (19, 'Tomcat', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/tomcat.png');
+insert into skill(id, name, icon_image_url)
+values (20, 'Typescript', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/typescript-icon.png');
+insert into skill(id, name, icon_image_url)
+values (21, 'Vercel', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/vercel-icon.png');
 
 -- PROJECT_SKILL
 insert into project_skill(id, project_id, skill_id, category)

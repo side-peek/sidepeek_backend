@@ -1,7 +1,7 @@
 package sixgaezzang.sidepeek.common.dto.request;
 
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.CATEGORY_IS_NULL;
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.CATEGORY_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.CATEGORY_IS_NULL;
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.CATEGORY_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MIN_ID;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_ID_IS_NULL;
@@ -18,7 +18,7 @@ import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.domain.UserSkill;
 
 @Schema(description = "기술 스택 저장 요청 정보")
-public record UpdateUserSkillRequest(
+public record SaveTechStackRequest(
     @Schema(description = "기술 스택 Id", example = "1")
     @Min(value = MIN_ID, message = "스킬 id는 " + MIN_ID + "보다 작을 수 없습니다.")
     @NotNull(message = SKILL_ID_IS_NULL)
