@@ -2,9 +2,7 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static sixgaezzang.sidepeek.projects.util.validation.MemberValidator.validateMembers;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateProject;
-import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,39 +15,32 @@ import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.repository.UserRepository;
+import sixgaezzang.sidepeek.users.service.UserService;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final UserRepository userRepository;
     private final MemberRepository memberRepository;
+    private final UserService userService;
 
     @Transactional
-    public List<MemberSummary> saveAll(Project project, List<SaveMemberRequest> memberSaveRequests) {
+    public List<MemberSummary> cleanAndSaveAll(Project project, List<SaveMemberRequest> memberSaveRequests) {
         validateProject(project);
         validateMembers(project.getOwnerId(), memberSaveRequests);
 
-        if (memberRepository.existsByProject(project)) {
-            memberRepository.deleteAllByProject(project);
-        }
+        cleanExistingMembersByProject(project);
 
-        List<Member> members = memberSaveRequests.stream().map(
-            member -> {
-                User user = null;
-                if (Objects.nonNull(member.userId())) {
-                    user = userRepository.findById(member.userId())
-                        .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
-                }
+        List<Member> members = memberSaveRequests.stream()
+            .map(member -> member.toEntity(
+                project,
+                Objects.nonNull(member.userId()) ? userService.getUser(member.userId()) : null)
+            )
+            .toList();
 
-                return member.toEntity(project, user);
-            }
-        ).toList();
-        memberRepository.saveAll(members);
-
-        return members.stream()
+        return memberRepository.saveAll(members)
+            .stream()
             .map(MemberSummary::from)
             .toList();
     }
@@ -61,8 +52,14 @@ public class MemberService {
     public Optional<User> findFellowMemberByProject(Long userId, Project project) {
         return memberRepository.findAllByProject(project)
             .stream()
-            .filter(member -> Objects.equals(member.getUser().getId(), userId))
+            .filter(member -> Objects.equals(member.getUserId(), userId))
             .findAny()
             .map(Member::getUser);
+    }
+
+    private void cleanExistingMembersByProject(Project project) {
+        if (memberRepository.existsByProject(project)) {
+            memberRepository.deleteAllByProject(project);
+        }
     }
 }
