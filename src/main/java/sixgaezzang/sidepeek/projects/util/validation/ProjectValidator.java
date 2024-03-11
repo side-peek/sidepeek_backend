@@ -16,9 +16,11 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OVERVIEW_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.SUB_NAME_IS_BLANK;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.SUB_NAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.TROUBLESHOOTING_IS_BLANK;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.TROUBLESHOOTING_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
@@ -61,12 +63,14 @@ public final class ProjectValidator {
     // Option
     public static void validateSubName(String subName) {
         if (Objects.nonNull(subName)) {
+            validateNotBlank(subName, SUB_NAME_IS_BLANK);
             validateMaxLength(subName, MAX_PROJECT_NAME_LENGTH, SUB_NAME_OVER_MAX_LENGTH);
         }
     }
 
     public static void validateThumbnailUrl(String thumbnailUrl) {
         if (Objects.nonNull(thumbnailUrl)) {
+            validateNotBlank(thumbnailUrl, THUMBNAIL_URL_IS_INVALID);
             validateTextLength(thumbnailUrl, THUMBNAIL_URL_OVER_MAX_LENGTH);
             validateURI(thumbnailUrl, THUMBNAIL_URL_IS_INVALID);
         }
@@ -74,6 +78,7 @@ public final class ProjectValidator {
 
     public static void validateDeployUrl(String deployUrl) {
         if (Objects.nonNull(deployUrl)) {
+            validateNotBlank(deployUrl, DEPLOY_URL_OVER_MAX_LENGTH);
             validateURI(deployUrl, DEPLOY_URL_IS_INVALID);
             validateTextLength(deployUrl, DEPLOY_URL_OVER_MAX_LENGTH);
         }
@@ -81,6 +86,7 @@ public final class ProjectValidator {
 
     public static void validateTroubleshooting(String troubleshooting) {
         if (Objects.nonNull(troubleshooting)) {
+            validateNotBlank(troubleshooting, TROUBLESHOOTING_IS_BLANK);
             validateTextLength(troubleshooting, TROUBLESHOOTING_OVER_MAX_LENGTH);
         }
     }
