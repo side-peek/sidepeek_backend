@@ -18,6 +18,7 @@ import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
@@ -53,7 +54,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectResponse update(Long loginId, Long projectId, SaveProjectRequest request) {
+    public ProjectResponse update(Long loginId, Long projectId, UpdateProjectRequest request) {
         validateLoginId(loginId);
 
         Project project = projectRepository.findById(projectId)
