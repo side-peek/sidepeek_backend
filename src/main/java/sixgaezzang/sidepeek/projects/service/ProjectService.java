@@ -13,10 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.service.CommentService;
+import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
+import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
@@ -46,44 +48,19 @@ public class ProjectService {
         Project project = request.toEntity();
         projectRepository.save(project);
 
-        List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project, request.techStacks());
-        List<MemberSummary> members = memberService.saveAll(project, request.members());
-        List<OverviewImageSummary> overviewImages = fileService.saveAll(project, request.overviewImageUrls());
-
-        return ProjectResponse.from(project, overviewImages, techStacks, members);
+        return GetProjectResponseAfterSaveLists(project, request.techStacks(), request.members(),
+            request.overviewImageUrls());
     }
 
-    @Transactional
-    public ProjectResponse update(Long loginId, Long projectId, UpdateProjectRequest request) {
-        validateLoginId(loginId);
-
-        Project project = projectRepository.findById(projectId)
+    public Project getProject(Long projectId) {
+        return projectRepository.findById(projectId)
             .orElseThrow(() -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
-        validateLoginUserIncludeMembers(loginId, project);
-
-        project.update(request);
-
-        List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project, request.techStacks());
-        List<MemberSummary> members = memberService.saveAll(project, request.members());
-        List<OverviewImageSummary> overviewImages = fileService.saveAll(project, request.overviewImageUrls());
-
-        return ProjectResponse.from(project, overviewImages, techStacks, members);
-    }
-
-    public List<ProjectListResponse> findAll(Long userId, String sort, boolean isReleased) {
-        List<Long> likedProjectIds =
-            (userId != null) ? likeRepository.findAllProjectIdsByUser(userId)
-                : Collections.emptyList();
-
-        return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, isReleased);
     }
 
     @Transactional
     public ProjectResponse findById(Long id) {
 
-        Project project = projectRepository.findById(id)
-            .orElseThrow(
-                () -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
+        Project project = getProject(id);
 
         project.increaseViewCount();
 
@@ -105,13 +82,32 @@ public class ProjectService {
         return ProjectResponse.from(project, overviewImages, techStacks, members, comments);
     }
 
+    public List<ProjectListResponse> findAll(Long userId, String sort, boolean isReleased) {
+        List<Long> likedProjectIds =
+            (userId != null) ? likeRepository.findAllProjectIdsByUser(userId)
+                : Collections.emptyList();
+
+        return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, isReleased);
+    }
+
+    @Transactional
+    public ProjectResponse update(Long loginId, Long projectId, UpdateProjectRequest request) {
+        validateLoginId(loginId);
+
+        Project project = getProject(projectId);
+        validateLoginUserIncludeMembers(loginId, project);
+
+        project.update(request);
+
+        return GetProjectResponseAfterSaveLists(project, request.techStacks(), request.members(),
+            request.overviewImageUrls());
+    }
+
     @Transactional
     public void delete(Long loginId, Long projectId) {
         validateLoginId(loginId);
 
-        Project project = projectRepository.findById(projectId)
-            .orElseThrow(
-                () -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
+        Project project = getProject(projectId);
         validateLoginIdEqualsOwnerId(loginId, project.getOwnerId());
 
         project.softDelete();
@@ -120,6 +116,16 @@ public class ProjectService {
     private void validateLoginUserIncludeMembers(Long loginId, Project project) {
         memberService.findFellowMemberByProject(loginId, project)
             .orElseThrow(() -> new InvalidAuthorityException(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE));
+    }
+
+    private ProjectResponse GetProjectResponseAfterSaveLists(Project project, List<SaveTechStackRequest> request,
+                                                             List<SaveMemberRequest> request1,
+                                                             List<String> request2) {
+        List<ProjectSkillSummary> techStacks = projectSkillService.cleanAndSaveAll(project, request);
+        List<MemberSummary> members = memberService.cleanAndSaveAll(project, request1);
+        List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project, request2);
+
+        return ProjectResponse.from(project, overviewImages, techStacks, members);
     }
 
 }
