@@ -101,7 +101,7 @@ class ProjectSkillServiceTest {
         @Test
         void 프로젝트_기술_스택_목록_저장에_성공한다() {
             // given, when
-            List<ProjectSkillSummary> savedTechStacks = projectSkillService.saveAll(project, techStacks);
+            List<ProjectSkillSummary> savedTechStacks = projectSkillService.cleanAndSaveAll(project, techStacks);
 
             // then
             assertThat(savedTechStacks).hasSize(SKILL_COUNT);
@@ -111,7 +111,7 @@ class ProjectSkillServiceTest {
         @NullAndEmptySource
         void 빈_기술_스택_목록_저장에_실패한다(List<SaveTechStackRequest> emptyTechStacks) {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, emptyTechStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.cleanAndSaveAll(project, emptyTechStacks);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -124,7 +124,7 @@ class ProjectSkillServiceTest {
             Project nullProject = null;
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(nullProject, techStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.cleanAndSaveAll(nullProject, techStacks);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -134,7 +134,7 @@ class ProjectSkillServiceTest {
         @Test
         void 목록_개수가_최대를_넘어서_기술_스택_목록_저장에_실패한다() {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, overLengthTechStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.cleanAndSaveAll(project, overLengthTechStacks);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -154,7 +154,7 @@ class ProjectSkillServiceTest {
 
             // when
             ThrowableAssert.ThrowingCallable saveAll =
-                () -> projectSkillService.saveAll(project, techStacksWithInvalidSkill);
+                () -> projectSkillService.cleanAndSaveAll(project, techStacksWithInvalidSkill);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -171,7 +171,7 @@ class ProjectSkillServiceTest {
 
             // when
             ThrowableAssert.ThrowingCallable saveAll =
-                () -> projectSkillService.saveAll(project, techStacksWithNonExistSkill);
+                () -> projectSkillService.cleanAndSaveAll(project, techStacksWithNonExistSkill);
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(saveAll)
@@ -188,7 +188,7 @@ class ProjectSkillServiceTest {
 
             // when
             ThrowableAssert.ThrowingCallable saveAll =
-                () -> projectSkillService.saveAll(project, techStacksWithNonExistSkill);
+                () -> projectSkillService.cleanAndSaveAll(project, techStacksWithNonExistSkill);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -204,7 +204,7 @@ class ProjectSkillServiceTest {
             techStacks.add(duplicatedTechStack);
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, techStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.cleanAndSaveAll(project, techStacks);
 
             // then
             AssertionsForClassTypes.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -219,7 +219,7 @@ class ProjectSkillServiceTest {
         @Test
         void 기존_프로젝트_기술_스택_목록을_지우고_새로운_기술_스택_목록_수정에_성공한다() {
             // given
-            projectSkillService.saveAll(project, techStacks);
+            projectSkillService.cleanAndSaveAll(project, techStacks);
             List<ProjectSkill> originalTechStacks = projectSkillService.findAll(project);
 
             // when
@@ -227,7 +227,7 @@ class ProjectSkillServiceTest {
             Skill newSkill = createAndSaveSkill();
             techStacksOnlyOne.add(FakeDtoProvider.createSaveTechStackRequest(newSkill.getId()));
 
-            projectSkillService.saveAll(project, techStacksOnlyOne);
+            projectSkillService.cleanAndSaveAll(project, techStacksOnlyOne);
             List<ProjectSkill> savedTechStacks = projectSkillService.findAll(project);
 
             // then
