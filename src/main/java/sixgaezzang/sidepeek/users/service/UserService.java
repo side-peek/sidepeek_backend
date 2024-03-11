@@ -55,6 +55,11 @@ public class UserService {
         return user.getId();
     }
 
+    public User getUser(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
+    }
+
     public UserSearchResponse searchByNickname(String keyword) {
         if (Objects.isNull(keyword) || keyword.isBlank()) {
             return UserSearchResponse.from(userRepository.findAll());
