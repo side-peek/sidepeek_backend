@@ -41,6 +41,7 @@ public final class UserErrorMessage {
     public static final String NEW_PASSWORD_IS_NULL = "새로운 비밀번호를 입력해주세요.";
 
     // Introduction
+    public static final String INTRODUCTION_IS_BLANK = "소개글을 입력해주세요";
     public static final String INTRODUCTION_OVER_MAX_LENGTH =
         "소개글은 " + MAX_INTRODUCTION_LENGTH + "자 이하여야 합니다.";
 

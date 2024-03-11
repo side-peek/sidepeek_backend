@@ -131,6 +131,7 @@ public class User extends BaseTimeEntity {
         }
     }
 
+    // Required
     private void setNickname(String nickname) {
         validateNickname(nickname);
         if (isSetPossible(this.nickname, nickname)) {
@@ -138,21 +139,16 @@ public class User extends BaseTimeEntity {
         }
     }
 
+    // Option
     private void setIntroduction(String introduction) {
-        if (StringUtils.isNotBlank(introduction)) {
-            validateIntroduction(introduction);
-        }
-
+        validateIntroduction(introduction);
         if (isSetPossible(this.introduction, introduction)) {
             this.introduction = introduction;
         }
     }
 
     private void setProfileImageUrl(String profileImageUrl) {
-        if (StringUtils.isNotBlank(profileImageUrl)) {
-            validateProfileImageUrl(profileImageUrl);
-        }
-
+        validateProfileImageUrl(profileImageUrl);
         if (isSetPossible(this.profileImageUrl, profileImageUrl)) {
             this.profileImageUrl = profileImageUrl;
         }
@@ -181,7 +177,7 @@ public class User extends BaseTimeEntity {
     }
 
     private void setGithubUrl(String githubUrl) {
-        if (StringUtils.isNotBlank(githubUrl)) {
+        if (Objects.nonNull(githubUrl)) {
             validateGithubUrl(githubUrl);
         }
 
@@ -191,10 +187,7 @@ public class User extends BaseTimeEntity {
     }
 
     private void setBlogUrl(String blogUrl) {
-        if (StringUtils.isNotBlank(blogUrl)) {
-            validateBlogUrl(blogUrl);
-        }
-
+        validateBlogUrl(blogUrl);
         if (isSetPossible(this.blogUrl, blogUrl)) {
             this.blogUrl = blogUrl;
         }
