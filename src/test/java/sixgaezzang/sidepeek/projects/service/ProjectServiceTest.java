@@ -32,6 +32,7 @@ import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
+import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
@@ -224,7 +225,7 @@ class ProjectServiceTest {
             ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(saveProject)
+            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(saveProject)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
@@ -382,7 +383,7 @@ class ProjectServiceTest {
                     originalProject.id(), newRequest);
 
                 // then
-                assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(update)
+                assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(update)
                     .withMessage(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE);
             });
         }
@@ -445,7 +446,7 @@ class ProjectServiceTest {
             ThrowingCallable delete = () -> projectService.delete(newUser.getId(), project.id());
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(delete)
+            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(delete)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
