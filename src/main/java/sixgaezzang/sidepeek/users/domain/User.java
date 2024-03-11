@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.users.domain;
 
+import static java.util.Objects.isNull;
 import static sixgaezzang.sidepeek.common.util.SetUtils.isSetPossible;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateGithubUrl;
@@ -27,7 +28,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -123,7 +123,7 @@ public class User extends BaseTimeEntity {
     }
 
     public void softDelete() { // TODO: 회원탈퇴할 때 언젠가는 쓰일 것 같아서 구현
-        if (Objects.isNull(this.deletedAt)) {
+        if (isNull(this.deletedAt)) {
             this.deletedAt = LocalDateTime.now();
             return;
         }
