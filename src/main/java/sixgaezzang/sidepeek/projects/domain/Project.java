@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.projects.domain;
 
+import static sixgaezzang.sidepeek.common.util.SetUtils.isSetPossible;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateGithubUrl;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
@@ -30,7 +31,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
-import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.util.converter.YearMonthDateAttributeConverter;
 
 @Entity
@@ -145,28 +146,90 @@ public class Project extends BaseTimeEntity {
         validateDuration(startDate, endDate);
     }
 
-    // TODO: User 처럼 Private Setter(Lombok X) 구현하는 것이 나을까 아래와 같은 방식으로 하는 게 나을까?
-    public Project update(SaveProjectRequest request) {
-        validateConstructorRequiredArguments(request.name(), request.overview(), request.githubUrl(),
-            request.description(), request.ownerId());
-        validateConstructorOptionArguments(request.subName(), request.thumbnailUrl(), request.deployUrl(),
-            request.troubleShooting(), request.startDate(), request.endDate());
-
+    public Project update(UpdateProjectRequest request) {
         // Required
-        this.name = request.name();
-        this.overview = request.overview();
-        this.githubUrl = request.githubUrl();
-        this.description = request.description();
-        this.ownerId = request.ownerId();
+        setName(request.name());
+        setOverview(request.overview());
+        setGithubUrl(request.githubUrl());
+        setDescription(request.description());
 
         // Option
-        this.subName = request.subName();
-        this.startDate = request.startDate();
-        this.endDate = request.endDate();
-        this.thumbnailUrl = request.thumbnailUrl();
-        this.deployUrl = request.deployUrl();
-        this.troubleshooting = request.troubleShooting();
+        setSubName(request.subName());
+        setDuration(request.startDate(), request.endDate());
+        setThumbnailUrl(request.thumbnailUrl());
+        setDeployUrl(request.deployUrl());
+        setTroubleshooting(request.troubleShooting());
 
         return this;
     }
+
+    // Required
+    private void setName(String name) {
+        validateName(name);
+        if (isSetPossible(this.name, name)) {
+            this.name = name;
+        }
+    }
+
+    private void setOverview(String overview) {
+        validateOverview(overview);
+        if (isSetPossible(this.overview, overview)) {
+            this.overview = overview;
+        }
+    }
+
+    private void setGithubUrl(String githubUrl) {
+        validateGithubUrl(githubUrl);
+        if (isSetPossible(this.githubUrl, githubUrl)) {
+            this.githubUrl = githubUrl;
+        }
+    }
+
+    private void setDescription(String description) {
+        validateDescription(description);
+        if (isSetPossible(this.description, description)) {
+            this.description = description;
+        }
+    }
+
+    // Option
+    private void setSubName(String subName) {
+        validateSubName(subName);
+        if (isSetPossible(this.subName, subName)) {
+            this.subName = subName;
+        }
+    }
+
+    private void setDuration(YearMonth startDate, YearMonth endDate) {
+        validateDuration(startDate, endDate);
+        if (isSetPossible(this.startDate, startDate)) {
+            this.startDate = startDate;
+        }
+
+        if (isSetPossible(this.endDate, endDate)) {
+            this.endDate = endDate;
+        }
+    }
+
+    private void setThumbnailUrl(String thumbnailUrl) {
+        validateThumbnailUrl(thumbnailUrl);
+        if (isSetPossible(this.thumbnailUrl, thumbnailUrl)) {
+            this.thumbnailUrl = thumbnailUrl;
+        }
+    }
+
+    private void setDeployUrl(String deployUrl) {
+        validateDeployUrl(deployUrl);
+        if (isSetPossible(this.deployUrl, deployUrl)) {
+            this.deployUrl = deployUrl;
+        }
+    }
+
+    private void setTroubleshooting(String troubleShooting) {
+        validateTroubleshooting(troubleshooting);
+        if (isSetPossible(this.troubleshooting, troubleshooting)) {
+            this.troubleshooting = troubleShooting;
+        }
+    }
+
 }
