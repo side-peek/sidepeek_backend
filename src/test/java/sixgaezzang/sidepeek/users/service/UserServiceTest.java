@@ -8,13 +8,18 @@ import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAI
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_DUPLICATE;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_FORMAT_INVALID;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_IS_SAME_AS_BEFORE;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_NOT_MATCH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_NOT_REGISTERED;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_IS_NULL;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.util.FakeEntityProvider.createSocialUser;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createUser;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createEmail;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createEnglishKeyword;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createId;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createNickname;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createPassword;
 
@@ -35,12 +40,14 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
+import sixgaezzang.sidepeek.users.dto.request.UpdatePasswordRequest;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 import sixgaezzang.sidepeek.users.dto.response.CheckDuplicateResponse;
 import sixgaezzang.sidepeek.users.dto.response.UserProfileResponse;
@@ -493,6 +500,139 @@ class UserServiceTest {
     @Nested
     class 회원_비밀번호_수정_테스트 {
 
+        User user;
+        String newPassword;
+
+        @BeforeEach
+        void setup() {
+            user = createUser(email, password, nickname, passwordEncoder);
+            userRepository.save(user);
+            newPassword = createPassword();
+        }
+
+        @Test
+        void 비밀번호_수정에_성공한다() {
+            // given
+            Long loginId = user.getId();
+            UpdatePasswordRequest request = new UpdatePasswordRequest(password, newPassword);
+
+            // when
+            userService.updatePassword(loginId, user.getId(), request);
+
+            // then
+            User actual = userRepository.findById(user.getId()).get();
+            Password encodedPassword = actual.getPassword();
+            assertThat(encodedPassword.check(newPassword, passwordEncoder)).isTrue();
+        }
+
+        @Test
+        void 로그인_Id가_회원_Id와_일치하지_않아_비밀번호_수정에_실패한다() {
+            // given
+            Long anotherUserId = createId();
+            UpdatePasswordRequest request = new UpdatePasswordRequest(password, newPassword);
+
+            // when
+            ThrowingCallable updatePassword = () -> userService.updatePassword(anotherUserId,
+                user.getId(), request);
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(
+                    updatePassword)
+                .withMessage(USER_ID_NOT_EQUALS_LOGIN_ID);
+        }
+
+        @Test
+        void 로그인을_하지_않아_비밀번호_수정에_실패한다() {
+            // given
+            Long loginId = null;
+            UpdatePasswordRequest request = new UpdatePasswordRequest(password, newPassword);
+
+            // when
+            ThrowingCallable updatePassword = () -> userService.updatePassword(loginId,
+                user.getId(),
+                request);
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(
+                    updatePassword)
+                .withMessage(LOGIN_IS_REQUIRED);
+        }
+
+        @Test
+        void 존재하지_않는_회원_비밀번호_수정에_실패한다() {
+            // given
+            Long nonExistingUserId = createId();
+            UpdatePasswordRequest request = new UpdatePasswordRequest(password, newPassword);
+
+            // when
+            ThrowingCallable updatePassword = () -> userService.updatePassword(nonExistingUserId,
+                nonExistingUserId, request);
+
+            // then
+            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(updatePassword)
+                .withMessage(USER_NOT_EXISTING);
+        }
+
+        @Test
+        void 기존_비밀번호가_일치하지_않아_비밀번호_수정에_실패한다() {
+            // given
+            String wrongPassword = createPassword();
+            UpdatePasswordRequest request = new UpdatePasswordRequest(wrongPassword, newPassword);
+
+            // when
+            ThrowingCallable updatePassword = () -> userService.updatePassword(user.getId(),
+                user.getId(), request);
+
+            // then
+            assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(
+                    updatePassword)
+                .withMessage(PASSWORD_NOT_MATCH);
+        }
+
+        @Test
+        void 새로운_비밀번호가_기존_비밀번호와_같아_비밀번호_수정에_실패한다() {
+            // given
+            UpdatePasswordRequest request = new UpdatePasswordRequest(password, password);
+
+            // when
+            ThrowingCallable updatePassword = () -> userService.updatePassword(user.getId(),
+                user.getId(), request);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(updatePassword)
+                .withMessage(PASSWORD_IS_SAME_AS_BEFORE);
+        }
+
+        @Test
+        void 소셜로그인_회원은_비밀번호_수정에_실패한다() {
+            // given
+            User socialUser = createSocialUser();
+            userRepository.save(socialUser);
+            UpdatePasswordRequest request = new UpdatePasswordRequest(password, newPassword);
+
+            // when
+            ThrowingCallable updatePassword = () -> userService.updatePassword(socialUser.getId(),
+                socialUser.getId(), request);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(updatePassword)
+                .withMessage(PASSWORD_NOT_REGISTERED);
+        }
+
+        @ParameterizedTest(name = "[{index}] {0}")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createInvalidFormatPassword")
+        void 변경할_비밀번호의_형식이_올바르지_않아_비밀번호_수정에_실패한다(String invalidPassword) {
+            // given
+            UpdatePasswordRequest request = new UpdatePasswordRequest(password, invalidPassword);
+
+            // when
+            ThrowingCallable updatePassword = () -> userService.updatePassword(user.getId(),
+                user.getId(), request);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(updatePassword)
+                .withMessage(PASSWORD_FORMAT_INVALID);
+        }
 
     }
 
