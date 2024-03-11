@@ -17,6 +17,7 @@ import sixgaezzang.sidepeek.comments.dto.request.UpdateCommentRequest;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.users.domain.Career;
 import sixgaezzang.sidepeek.users.domain.Job;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
@@ -56,6 +57,26 @@ public class FakeDtoProvider {
             createProjectName(), createOverview(), ownerId,
             createUrl(), createLongText(), techStacks, subName,
             thumbnailUrl, deployUrl, startDate, endDate, troubleShooting, null, null
+        );
+    }
+
+    public static UpdateProjectRequest createUpdateProjectRequestOnlyRequired(
+        String name, String overview, String githubUrl, String description,
+        List<SaveTechStackRequest> techStacks, List<SaveMemberRequest> members
+    ) {
+        return new UpdateProjectRequest(name, overview, githubUrl, description,
+            techStacks, null, null, null, null,
+            null, null, null, members);
+    }
+
+    public static UpdateProjectRequest createUpdateProjectRequestWithOption(
+        List<SaveTechStackRequest> techStacks, String subName, String thumbnailUrl,
+        String deployUrl, String troubleShooting, YearMonth startDate, YearMonth endDate
+    ) {
+        return new UpdateProjectRequest(
+            createProjectName(), createOverview(), createUrl(), createLongText(),
+            techStacks, subName, thumbnailUrl, deployUrl, startDate, endDate,
+            troubleShooting, null, null
         );
     }
 

@@ -36,6 +36,7 @@ import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.skill.domain.Skill;
@@ -300,8 +301,8 @@ class ProjectServiceTest {
                 String newOverview = FakeValueProvider.createOverview();
                 String newGithubUrl = FakeValueProvider.createUrl();
                 String newDescription = FakeValueProvider.createLongText();
-                SaveProjectRequest newRequest = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
-                    newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
+                UpdateProjectRequest newRequest = FakeDtoProvider.createUpdateProjectRequestOnlyRequired(
+                    newName, newOverview, newGithubUrl, newDescription, techStacks,
                     members
                 );
                 ProjectResponse savedProject = projectService.update(fellowMemberId,
@@ -326,8 +327,8 @@ class ProjectServiceTest {
             String newOverview = FakeValueProvider.createOverview();
             String newGithubUrl = FakeValueProvider.createUrl();
             String newDescription = FakeValueProvider.createLongText();
-            SaveProjectRequest newRequest = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
-                newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
+            UpdateProjectRequest newRequest = FakeDtoProvider.createUpdateProjectRequestOnlyRequired(
+                newName, newOverview, newGithubUrl, newDescription, techStacks,
                 members
             );
             ThrowingCallable update = () -> projectService.update(user.getId(),
@@ -348,8 +349,8 @@ class ProjectServiceTest {
             String newOverview = FakeValueProvider.createOverview();
             String newGithubUrl = FakeValueProvider.createUrl();
             String newDescription = FakeValueProvider.createLongText();
-            SaveProjectRequest newRequest = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
-                newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
+            UpdateProjectRequest newRequest = FakeDtoProvider.createUpdateProjectRequestOnlyRequired(
+                newName, newOverview, newGithubUrl, newDescription, techStacks, members
             );
             ThrowingCallable update = () -> projectService.update(null, originalProject.id(),
                 newRequest);
@@ -375,8 +376,8 @@ class ProjectServiceTest {
                 String newOverview = FakeValueProvider.createOverview();
                 String newGithubUrl = FakeValueProvider.createUrl();
                 String newDescription = FakeValueProvider.createLongText();
-                SaveProjectRequest newRequest = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
-                    newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
+                UpdateProjectRequest newRequest = FakeDtoProvider.createUpdateProjectRequestOnlyRequired(
+                    newName, newOverview, newGithubUrl, newDescription, techStacks,
                     members
                 );
                 ThrowingCallable update = () -> projectService.update(nonMemberId,
