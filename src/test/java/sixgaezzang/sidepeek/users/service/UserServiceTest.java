@@ -12,6 +12,11 @@ import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.util.FakeEntityProvider.createUser;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createEmail;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createEnglishKeyword;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createNickname;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createPassword;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -43,8 +48,6 @@ import sixgaezzang.sidepeek.users.dto.response.UserSkillSummary;
 import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 import sixgaezzang.sidepeek.util.FakeDtoProvider;
-import sixgaezzang.sidepeek.util.FakeEntityProvider;
-import sixgaezzang.sidepeek.util.FakeValueProvider;
 
 @SpringBootTest
 @Transactional
@@ -74,9 +77,9 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        email = FakeValueProvider.createEmail();
-        password = FakeValueProvider.createPassword();
-        nickname = FakeValueProvider.createNickname();
+        email = createEmail();
+        password = createPassword();
+        nickname = createNickname();
 
         userRepository.deleteAll(); // TODO: 아래 TODO 참고!
         userNicknames = new ArrayList<>();
@@ -86,7 +89,7 @@ class UserServiceTest {
     }
 
     private User createAndSaveUser() {
-        User newUser = FakeEntityProvider.createUser();
+        User newUser = createUser();
         return userRepository.save(newUser);
     }
 
@@ -108,7 +111,7 @@ class UserServiceTest {
         @Test
         void 검색어로_회원_닉네임_검색에_성공한다() {
             // given,
-            String keyword = FakeValueProvider.createEnglishKeyword();
+            String keyword = createEnglishKeyword();
             int count = 0;
             for (String nickname : userNicknames) {
                 if (nickname.contains(keyword)) {
@@ -163,7 +166,7 @@ class UserServiceTest {
         void 이메일이_중복된_경우_회원가입에_실패한다() {
             // given
             String duplicatedEmail = email;
-            User user = FakeEntityProvider.createUser(duplicatedEmail, password, nickname,
+            User user = createUser(duplicatedEmail, password, nickname,
                 passwordEncoder);
             userRepository.save(user);
 
@@ -182,11 +185,11 @@ class UserServiceTest {
         void 닉네임이_중복된_경우_회원가입에_실패한다() {
             // given
             String duplicatedNickname = nickname;
-            User user = FakeEntityProvider.createUser(email, password, duplicatedNickname,
+            User user = createUser(email, password, duplicatedNickname,
                 passwordEncoder);
             userRepository.save(user);
 
-            String newEmail = FakeValueProvider.createEmail();
+            String newEmail = createEmail();
             SignUpRequest request = new SignUpRequest(newEmail, password, duplicatedNickname);
 
             // when
@@ -243,7 +246,7 @@ class UserServiceTest {
         void 이메일이_중복된_경우_중복_확인에_성공한다() {
             // given
             String duplicatedEmail = email;
-            User user = FakeEntityProvider.createUser(duplicatedEmail, password, nickname,
+            User user = createUser(duplicatedEmail, password, nickname,
                 passwordEncoder);
             userRepository.save(user);
 
@@ -509,7 +512,7 @@ class UserServiceTest {
         void 닉네임이_중복된_경우_중복_확인에_성공한다() {
             // given
             String duplicatedNickname = nickname;
-            User user = FakeEntityProvider.createUser(email, password, duplicatedNickname,
+            User user = createUser(email, password, duplicatedNickname,
                 passwordEncoder);
             userRepository.save(user);
 
