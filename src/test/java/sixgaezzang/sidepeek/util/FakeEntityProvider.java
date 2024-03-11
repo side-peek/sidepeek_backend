@@ -55,6 +55,13 @@ public class FakeEntityProvider {
             .build();
     }
 
+    public static User createSocialUser() {
+        return User.builder()
+            .email(FakeValueProvider.createEmail())
+            .nickname(FakeValueProvider.createNickname())
+            .build();
+    }
+
     public static Skill createSkill() {
         return Skill.builder()
             .name(FakeValueProvider.createSkillName())
