@@ -70,7 +70,7 @@ class FileServiceTest {
         @Test
         void 파일_목록_저장에_성공한다() {
             // given, when
-            List<OverviewImageSummary> savedImageUrls = fileService.saveAll(project, imageUrls);
+            List<OverviewImageSummary> savedImageUrls = fileService.cleanAndSaveAll(project, imageUrls);
 
             // then
             assertThat(savedImageUrls).hasSize(IMAGE_COUNT);
@@ -80,7 +80,7 @@ class FileServiceTest {
         @NullAndEmptySource
         void 빈_파일_목록_저장은_무시되어_성공한다(List<String> emptyImageUrls) {
             // given, when
-            List<OverviewImageSummary> savedImageUrls = fileService.saveAll(project, emptyImageUrls);
+            List<OverviewImageSummary> savedImageUrls = fileService.cleanAndSaveAll(project, emptyImageUrls);
 
             // then
             assertThat(savedImageUrls).isEmpty();
@@ -89,7 +89,7 @@ class FileServiceTest {
         @Test
         void 목록_개수가_최대를_넘어서_파일_목록_저장에_실패한다() {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(project, overLengthImageUrls);
+            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.cleanAndSaveAll(project, overLengthImageUrls);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -102,7 +102,7 @@ class FileServiceTest {
             Project nullProject = null;
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(nullProject, imageUrls);
+            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.cleanAndSaveAll(nullProject, imageUrls);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -117,7 +117,7 @@ class FileServiceTest {
             imageUrlsWithInvalidUrl.add(fileUrl);
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(project, imageUrlsWithInvalidUrl);
+            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.cleanAndSaveAll(project, imageUrlsWithInvalidUrl);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -127,12 +127,12 @@ class FileServiceTest {
         @Test
         void 기존_프로젝트_파일_목록을_지우고_파일_목록_수정에_성공한다() {
             // given
-            fileService.saveAll(project, imageUrls);
+            fileService.cleanAndSaveAll(project, imageUrls);
             List<File> originalFiles = fileService.findAllByType(project, FileType.OVERVIEW_IMAGE);
 
             // when
             List<String> emptyFile = Collections.emptyList();
-            fileService.saveAll(project, emptyFile);
+            fileService.cleanAndSaveAll(project, emptyFile);
             List<File> savedFiles = fileService.findAllByType(project, FileType.OVERVIEW_IMAGE);
 
             // then
