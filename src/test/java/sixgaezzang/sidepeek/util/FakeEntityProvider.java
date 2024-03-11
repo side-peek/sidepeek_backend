@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.skill.domain.Skill;
-import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 
 public class FakeEntityProvider {
@@ -39,7 +38,8 @@ public class FakeEntityProvider {
 
         return User.builder()
             .email(email)
-            .password(new Password(password, new BCryptPasswordEncoder()))
+            .password(password)
+            .passwordEncoder(new BCryptPasswordEncoder())
             .nickname(FakeValueProvider.createNickname())
             .build();
     }
@@ -49,8 +49,8 @@ public class FakeEntityProvider {
     ) {
         return User.builder()
             .email(isBlank(email) ? FakeValueProvider.createEmail() : email)
-            .password(isBlank(password) ? new Password(FakeValueProvider.createPassword(), passwordEncoder)
-                : new Password(password, passwordEncoder))
+            .password(isBlank(password) ? FakeValueProvider.createPassword() : password)
+            .passwordEncoder(passwordEncoder)
             .nickname(isBlank(nickname) ? FakeValueProvider.createNickname() : nickname)
             .build();
     }
