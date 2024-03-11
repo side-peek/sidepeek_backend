@@ -10,6 +10,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
@@ -18,8 +19,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<ErrorResponse>> handleMethodArgumentNotValidException(
-        MethodArgumentNotValidException e
-    ) {
+        MethodArgumentNotValidException e) {
+        List<ErrorResponse> responses = convertToErrorResponses(e);
+        log.debug(e.getMessage(), e.fillInStackTrace());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(responses);
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<List<ErrorResponse>> handleHandlerMethodValidationException(
+        HandlerMethodValidationException e) {
         List<ErrorResponse> responses = convertToErrorResponses(e);
         log.debug(e.getMessage(), e.fillInStackTrace());
 
@@ -106,6 +116,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(errorResponse);
+    }
+
+    private List<ErrorResponse> convertToErrorResponses(HandlerMethodValidationException e) {
+        return e.getAllErrors()
+            .stream()
+            .map(fieldError -> ErrorResponse.of(HttpStatus.BAD_REQUEST,
+                fieldError.getDefaultMessage()))
+            .toList();
     }
 
     private List<ErrorResponse> convertToErrorResponses(MethodArgumentNotValidException e) {
