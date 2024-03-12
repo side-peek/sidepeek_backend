@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.util;
 
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createGithubUrl;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createLongText;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createNickname;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createOverview;
@@ -55,7 +56,7 @@ public class FakeDtoProvider {
     ) {
         return new SaveProjectRequest(
             createProjectName(), createOverview(), ownerId,
-            createUrl(), createLongText(), techStacks, subName,
+            createGithubUrl(), createLongText(), techStacks, subName,
             thumbnailUrl, deployUrl, startDate, endDate, troubleShooting, null, null
         );
     }
