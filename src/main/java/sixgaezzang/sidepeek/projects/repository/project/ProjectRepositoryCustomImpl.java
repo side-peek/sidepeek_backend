@@ -4,17 +4,17 @@ import static sixgaezzang.sidepeek.projects.domain.QProject.project;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SortType;
 import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 
-@Slf4j
 @Repository
 public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
 
@@ -33,6 +33,7 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
         BooleanExpression cursorCondition = getCursorCondition(pageable.sort(),
             pageable.lastProjectId(), pageable.lastOrderCount());
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(pageable.sort());
+        long totalElements = getTotalElementsByCondition(deployCondition);
 
         List<ProjectListResponse> results = queryFactory
             .selectFrom(project)
@@ -42,7 +43,6 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             )
             .orderBy(orderSpecifier, project.id.desc())
             .limit(pageable.pageSize() + 1)
-            .fetch()
             .stream()
             .map(project -> {
                 boolean isLiked = likedProjectIds.contains(project.getId());
@@ -50,18 +50,27 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             })
             .toList();
 
-        return checkEndPage(results, pageable.pageSize());
+        return checkEndPage(results, pageable.pageSize(), totalElements);
+    }
+
+    private long getTotalElementsByCondition(BooleanExpression deployCondition) {
+        NumberTemplate<Long> countTemplate = Expressions.numberTemplate(Long.class, "COUNT({0})",
+            project.id);
+
+        return queryFactory
+            .select(countTemplate)
+            .from(project)
+            .where(deployCondition)
+            .fetchOne();
     }
 
     private BooleanExpression getCursorCondition(SortType sort, Long lastProjectId,
         Long orderCount) {
-        if (lastProjectId == null && orderCount == null) {
-            log.info("첫 번째 페이지");
+        if (lastProjectId == null && orderCount == null) {  // 첫 번째 페이지
             return null;
         }
 
-        log.info("두 번째 페이지");
-        switch (sort) {
+        switch (sort) { // 다음 페이지
             case like: // 좋아요순
                 return project.likeCount.eq(orderCount)
                     .and(project.id.gt(lastProjectId))
@@ -87,7 +96,7 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
     }
 
     private CursorPaginationResponse<ProjectListResponse> checkEndPage(
-        List<ProjectListResponse> results, int pageSize) {
+        List<ProjectListResponse> results, int pageSize, long totalElements) {
         boolean hasNext = false;
 
         if (results.size() > pageSize) { //다음 게시물이 있는 경우
@@ -95,7 +104,7 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             results = results.subList(0, pageSize);
         }
 
-        return CursorPaginationResponse.from(results, hasNext);
+        return CursorPaginationResponse.from(results, totalElements, hasNext);
     }
 
 }
