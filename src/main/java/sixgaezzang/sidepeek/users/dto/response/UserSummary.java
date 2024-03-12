@@ -21,6 +21,10 @@ public record UserSummary(
     String profileImageUrl
 ) {
 
+    public UserSummary(Long id, String nickname, String profileImageUrl) {
+        this(id, null, nickname, profileImageUrl);
+    }
+
     public static UserSummary fromWithIsSocialLogin(User user, boolean isSocialLogin) {
         return UserSummary.builder()
             .id(user.getId())
