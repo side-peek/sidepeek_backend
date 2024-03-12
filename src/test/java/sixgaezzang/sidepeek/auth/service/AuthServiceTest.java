@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.Instant;
@@ -93,7 +94,7 @@ class AuthServiceTest {
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(login)
-                .withMessage("존재하지 않는 사용자입니다.");
+                .withMessage(USER_NOT_EXISTING);
         }
 
         @Test
@@ -138,7 +139,7 @@ class AuthServiceTest {
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(loadUser)
-                .withMessage("존재하지 않는 사용자입니다.");
+                .withMessage(USER_NOT_EXISTING);
         }
     }
 
@@ -207,7 +208,7 @@ class AuthServiceTest {
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(reissue)
-                .withMessage("존재하지 않는 사용자입니다.");
+                .withMessage(USER_NOT_EXISTING);
         }
     }
 

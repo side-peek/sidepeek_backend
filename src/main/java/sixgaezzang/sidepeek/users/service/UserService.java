@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.auth.repository.AuthProviderRepository;
 import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
@@ -35,6 +36,7 @@ import sixgaezzang.sidepeek.users.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AuthProviderRepository authProviderRepository;
     private final UserSkillService userSkillService;
     private final PasswordEncoder passwordEncoder;
 
@@ -64,7 +66,6 @@ public class UserService {
         if (Objects.isNull(keyword) || keyword.isBlank()) {
             return UserSearchResponse.from(userRepository.findAll());
         }
-
         validateMaxLength(keyword, MAX_NICKNAME_LENGTH, NICKNAME_OVER_MAX_LENGTH);
 
         return UserSearchResponse.from(userRepository.findAllByNicknameContaining(keyword));
@@ -74,6 +75,7 @@ public class UserService {
         validateEmail(email, EMAIL_FORMAT_INVALID);
 
         boolean isExists = userRepository.existsByEmail(email);
+
         return new CheckDuplicateResponse(isExists);
     }
 
@@ -82,6 +84,7 @@ public class UserService {
             NICKNAME_OVER_MAX_LENGTH);
 
         boolean isExists = userRepository.existsByNickname(nickname);
+
         return new CheckDuplicateResponse(isExists);
     }
 
@@ -93,7 +96,9 @@ public class UserService {
 
         List<UserSkillSummary> techStacks = userSkillService.findAllByUser(user);
 
-        return UserProfileResponse.from(user, techStacks);
+        boolean isSocialLogin = authProviderRepository.existsByUser(user);
+
+        return UserProfileResponse.from(user, isSocialLogin, techStacks);
     }
 
     @Transactional
@@ -107,7 +112,9 @@ public class UserService {
 
         List<UserSkillSummary> techStacks = userSkillService.saveAll(user, request.techStacks());
 
-        return UserProfileResponse.from(user, techStacks);
+        boolean isSocialLogin = authProviderRepository.existsByUser(user);
+
+        return UserProfileResponse.from(user, isSocialLogin, techStacks);
     }
 
     private void verifyUniqueNickname(String nickname) {
