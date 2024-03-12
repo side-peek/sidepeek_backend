@@ -12,6 +12,7 @@ import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
 import static sixgaezzang.sidepeek.users.domain.Password.PASSWORD_REGXP;
 
+import io.micrometer.common.util.StringUtils;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -75,10 +76,12 @@ public final class ValidationUtils {
         Assert.isTrue(isNotNullOrEmpty(input), message);
     }
 
-    public static void validateGithubUrl(String githubUrl) {
-        // TODO: github.com 포함 여부 확인
-        validateTextLength(githubUrl, GITHUB_URL_OVER_MAX_LENGTH);
-        validateURI(githubUrl, GITHUB_URL_IS_INVALID);
+    public static void validateOptionGithubUrl(String githubUrl) {
+        if (StringUtils.isNotBlank(githubUrl)) {
+            // TODO: github.com 포함 여부 확인
+            validateTextLength(githubUrl, GITHUB_URL_OVER_MAX_LENGTH);
+            validateURI(githubUrl, GITHUB_URL_IS_INVALID);
+        }
     }
 
     public static void validateRequiredGithubUrl(String githubUrl) {

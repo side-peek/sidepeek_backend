@@ -2,7 +2,7 @@ package sixgaezzang.sidepeek.users.domain;
 
 import static sixgaezzang.sidepeek.common.util.SetUtils.isSetPossible;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateEmail;
-import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateGithubUrl;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateOptionGithubUrl;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAIL_FORMAT_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_CAREER_LENGTH;
@@ -177,10 +177,7 @@ public class User extends BaseTimeEntity {
     }
 
     private void setGithubUrl(String githubUrl) {
-        if (Objects.nonNull(githubUrl)) {
-            validateGithubUrl(githubUrl);
-        }
-
+        validateOptionGithubUrl(githubUrl);
         if (isSetPossible(this.githubUrl, githubUrl)) {
             this.githubUrl = githubUrl;
         }
