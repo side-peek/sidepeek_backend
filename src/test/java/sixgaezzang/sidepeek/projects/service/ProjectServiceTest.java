@@ -236,7 +236,7 @@ class ProjectServiceTest {
         }
 
         @Test
-        void 유저가_댓글한_단_프로젝트_조회에_성공한다() {
+        void 유저가_댓글_단_프로젝트_조회에_성공한다() {
             // given
             Long loginId = user.getId();
             commentOnProjects(user, projects);
