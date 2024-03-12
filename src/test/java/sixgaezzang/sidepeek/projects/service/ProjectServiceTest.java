@@ -8,6 +8,10 @@ import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COU
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_NOT_EQUALS_LOGIN_ID;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
+import static sixgaezzang.sidepeek.util.FakeEntityProvider.createProject;
+import static sixgaezzang.sidepeek.util.FakeEntityProvider.createUser;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.YearMonth;
@@ -25,17 +29,25 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.common.dto.request.UpdateUserSkillRequest;
+import sixgaezzang.sidepeek.common.dto.response.Page;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
+import sixgaezzang.sidepeek.like.domain.Like;
+import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
+import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
+import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
@@ -75,6 +87,12 @@ class ProjectServiceTest {
 
     @Autowired
     CommentRepository commentRepository;
+
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
+    LikeRepository likeRepository;
 
     User user;
 
@@ -161,6 +179,180 @@ class ProjectServiceTest {
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(findById)
                 .withMessage(ProjectErrorCode.ID_NOT_EXISTING.getMessage());
+        }
+    }
+
+    @Nested
+    class 회원_관련_프로젝트_전체_조회_테스트 {
+
+        User user;
+        List<Project> projects;
+        long projectCount;
+        static int defaultPageSize = 12;
+
+        @BeforeEach
+        void setup() {
+            user = createAndSaveUser();
+            projectCount = faker.random().nextLong(1, 50);
+            projects = new ArrayList<>();
+            for (int i = 0; i < projectCount; i++) {
+                projects.add(createProject(user));
+            }
+            projectRepository.saveAll(projects);
+        }
+
+        @Test
+        void 유저가_참여한_프로젝트_조회에_성공한다() {
+            // given
+            Long loginId = user.getId();
+            joinProjects(user, projects);
+
+            // when
+            Page<ProjectListResponse> expected = projectService.findByUser(user.getId(), loginId,
+                UserProjectSearchType.JOINED, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThat(expected.data()).isNotEmpty();
+            assertThat(expected).extracting("totalElements", "totalPages", "pageSize", "pageNumber")
+                .containsExactly(projectCount, calculatePageNumber(projectCount, defaultPageSize),
+                    defaultPageSize, 0);
+        }
+
+        @Test
+        void 유저가_좋아요_한_프로젝트_조회에_성공한다() {
+            // given
+            Long loginId = user.getId();
+            likeProjects(user, projects);
+
+            // when
+            Page<ProjectListResponse> expected = projectService.findByUser(user.getId(), loginId,
+                UserProjectSearchType.LIKED, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThat(expected.data()).isNotEmpty();
+            assertThat(expected).extracting("totalElements", "totalPages", "pageSize", "pageNumber")
+                .containsExactly(projectCount, calculatePageNumber(projectCount, defaultPageSize),
+                    defaultPageSize, 0);
+        }
+
+        @Test
+        void 유저가_댓글한_단_프로젝트_조회에_성공한다() {
+            // given
+            Long loginId = user.getId();
+            commentOnProjects(user, projects);
+
+            // when
+            Page<ProjectListResponse> expected = projectService.findByUser(user.getId(), loginId,
+                UserProjectSearchType.COMMENTED, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThat(expected.data()).isNotEmpty();
+            assertThat(expected).extracting("totalElements", "totalPages", "pageSize", "pageNumber")
+                .containsExactly(projectCount, calculatePageNumber(projectCount, defaultPageSize),
+                    defaultPageSize, 0);
+        }
+
+        @Test
+        void 사용자가_존재하지_않는_경우_사용자_프로젝트_조회에_실패한다() {
+            // given
+            Long invalidUserId = FakeValueProvider.createId();
+            UserProjectSearchType type = FakeValueProvider.createUserProjectSearchType();
+
+            // when
+            ThrowingCallable findByUser = () -> projectService.findByUser(invalidUserId,
+                user.getId(), type, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(findByUser)
+                .withMessage(USER_NOT_EXISTING);
+        }
+
+        @Test
+        void 로그인하지_않은_사용자일_경우_좋아요_한_프로젝트_조회에_실패한다() {
+            // when
+            ThrowingCallable findByUser = () -> projectService.findByUser(user.getId(), null,
+                UserProjectSearchType.LIKED, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(findByUser)
+                .withMessage(LOGIN_IS_REQUIRED);
+        }
+
+        @Test
+        void 로그인하지_않은_사용자일_경우_댓글_단_프로젝트_조회에_실패한다() {
+            // when
+            ThrowingCallable findByUser = () -> projectService.findByUser(user.getId(), null,
+                UserProjectSearchType.COMMENTED, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(findByUser)
+                .withMessage(LOGIN_IS_REQUIRED);
+        }
+
+        @Test
+        void 본인이_아닐_경우_좋아요_한_프로젝트_조회에_실패한다() {
+            // given
+            User anotherUser = createAndSaveUser();
+            likeProjects(user, projects);
+
+            // when
+            ThrowingCallable findByUser = () -> projectService.findByUser(user.getId(),
+                anotherUser.getId(),
+                UserProjectSearchType.LIKED, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(findByUser)
+                .withMessage(USER_ID_NOT_EQUALS_LOGIN_ID);
+        }
+
+        @Test
+        void 본인이_아닐_경우_댓글_단_프로젝트_조회에_실패한다() {
+            // given
+            User anotherUser = createAndSaveUser();
+            commentOnProjects(user, projects);
+
+            // when
+            ThrowingCallable findByUser = () -> projectService.findByUser(user.getId(),
+                anotherUser.getId(),
+                UserProjectSearchType.COMMENTED, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(findByUser)
+                .withMessage(USER_ID_NOT_EQUALS_LOGIN_ID);
+        }
+
+        private void joinProjects(User user, List<Project> projects) {
+            projects.stream()
+                .forEach(project -> memberRepository.save(Member.builder()
+                    .user(user)
+                    .nickname(user.getNickname())
+                    .project(project)
+                    .role(FakeValueProvider.createRole())
+                    .build())
+                );
+        }
+
+        private void likeProjects(User user, List<Project> projects) {
+            projects.stream()
+                .forEach(project -> likeRepository.save(Like.builder()
+                    .user(user)
+                    .project(project)
+                    .build())
+                );
+        }
+
+        private void commentOnProjects(User user, List<Project> projects) {
+            projects.stream()
+                .forEach(project -> commentRepository.save(Comment.builder()
+                    .user(user)
+                    .project(project)
+                    .content(FakeValueProvider.createContent())
+                    .build())
+                );
+        }
+
+        private int calculatePageNumber(long totalElements, int pageSize) {
+            return (int) Math.ceil((double) totalElements / pageSize);
         }
     }
 
