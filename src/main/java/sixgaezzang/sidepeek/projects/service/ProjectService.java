@@ -22,6 +22,7 @@ import sixgaezzang.sidepeek.projects.domain.file.FileType;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
@@ -71,6 +72,11 @@ public class ProjectService {
                 : Collections.emptyList();
 
         return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, isReleased);
+    }
+
+    public List<ProjectBannerResponse> findAllWeeklyPopular() {
+        // TODO: 금주의 인기 프로젝트 조회 기능 구현
+        return null;
     }
 
     @Transactional
@@ -123,5 +129,4 @@ public class ProjectService {
         memberService.findFellowMemberByProject(loginId, project)
             .orElseThrow(() -> new InvalidAuthenticationException(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE));
     }
-
 }
