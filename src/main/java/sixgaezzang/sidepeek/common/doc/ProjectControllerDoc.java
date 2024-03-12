@@ -74,6 +74,6 @@ public interface ProjectControllerDoc {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true)
     })
-    ResponseEntity<List<ProjectBannerResponse>> getWeeklyPopular();
+    ResponseEntity<List<ProjectBannerResponse>> getAllPopularThisWeek();
 
 }
