@@ -4,12 +4,17 @@ import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.O
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateLoginIdEqualsUserId;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
@@ -17,6 +22,7 @@ import sixgaezzang.sidepeek.comments.service.CommentService;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
@@ -26,6 +32,8 @@ import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.users.domain.User;
+import sixgaezzang.sidepeek.users.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +42,7 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final LikeRepository likeRepository;
+    private final UserRepository userRepository;
     private final ProjectSkillService projectSkillService;
     private final MemberService memberService;
     private final FileService fileService;
@@ -100,6 +109,27 @@ public class ProjectService {
         return ProjectResponse.from(project, overviewImages, techStacks, members, comments);
     }
 
+    public Page<ProjectListResponse> findByUser(Long userId, Long loginId,
+        UserProjectSearchType type, Pageable pageable) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
+
+        List<Long> likedProjectIds = getLikedProjectIds(userId);
+
+        switch (type) {
+            case JOINED:
+                return findJoinedProjectsByUser(user, likedProjectIds, pageable);
+            case LIKED:
+                validateLoginIdEqualsUserId(loginId, userId);
+                return findLikedProjectsByUser(user, likedProjectIds, pageable);
+            case COMMENTED:
+                validateLoginIdEqualsUserId(loginId, userId);
+                return findAllByUserCommentedByUser(user, likedProjectIds, pageable);
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
     @Transactional
     public void delete(Long loginId, Long projectId) {
         validateLoginId(loginId);
@@ -129,6 +159,23 @@ public class ProjectService {
         return Optional.ofNullable(userId)
             .map(likeRepository::findAllProjectIdsByUser)
             .orElse(Collections.emptyList());
+    }
+
+    private Page<ProjectListResponse> findJoinedProjectsByUser(User user,
+        List<Long> likedProjectIds,
+        Pageable pageable) {
+        return projectRepository.findAllByUserJoined(likedProjectIds, user, pageable);
+    }
+
+    private Page<ProjectListResponse> findLikedProjectsByUser(User user, List<Long> likedProjectIds,
+        Pageable pageable) {
+        return projectRepository.findAllByUserLiked(likedProjectIds, user, pageable);
+    }
+
+    private Page<ProjectListResponse> findAllByUserCommentedByUser(User user,
+        List<Long> likedProjectIds,
+        Pageable pageable) {
+        return projectRepository.findAllByUserCommented(likedProjectIds, user, pageable);
     }
 
 }
