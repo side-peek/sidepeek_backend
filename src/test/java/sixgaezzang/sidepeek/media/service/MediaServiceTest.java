@@ -20,6 +20,7 @@ import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.config.properties.S3Properties;
@@ -30,6 +31,7 @@ import sixgaezzang.sidepeek.util.FakeEntityProvider;
 import software.amazon.awssdk.services.s3.S3Client;
 
 @SpringBootTest
+@Transactional
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class MediaServiceTest {
 
