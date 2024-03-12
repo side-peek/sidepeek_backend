@@ -38,7 +38,7 @@ public record UserProfileResponse(
     @Schema(description = "회원 기술 스택 목록")
     List<UserSkillSummary> techStacks
 ) {
-    public static UserProfileResponse from(User user, List<UserSkillSummary> techStacks) {
+    public static UserProfileResponse from(User user, boolean isSocialLogin, List<UserSkillSummary> techStacks) {
         Job userJob = user.getJob();
         String jobName = Objects.nonNull(userJob) ? userJob.getName() : null;
 
@@ -46,7 +46,7 @@ public record UserProfileResponse(
         String careerDescription = Objects.nonNull(userCareer) ? userCareer.getDescription() : null;
 
         return UserProfileResponse.builder()
-//            .isSocialLogin()
+            .isSocialLogin(isSocialLogin)
             .nickname(user.getNickname())
             .profileImageUrl(user.getProfileImageUrl())
             .introduction(user.getIntroduction())
