@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sixgaezzang.sidepeek.common.annotation.Login;
 import sixgaezzang.sidepeek.common.doc.ProjectControllerDoc;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.service.ProjectService;
@@ -90,4 +91,13 @@ public class ProjectController implements ProjectControllerDoc {
 
         return ResponseEntity.ok(responses);
     }
+
+    @Override
+    @GetMapping("/weekly")
+    public ResponseEntity<List<ProjectBannerResponse>> getWeeklyPopular() {
+        List<ProjectBannerResponse> responses = projectService.findAllWeeklyPopular();
+
+        return ResponseEntity.ok(responses);
+    }
+
 }

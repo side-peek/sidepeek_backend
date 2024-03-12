@@ -13,6 +13,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import sixgaezzang.sidepeek.common.exception.ErrorResponse;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 
@@ -68,4 +69,11 @@ public interface ProjectControllerDoc {
     })
     ResponseEntity<List<ProjectListResponse>> getAll(@Parameter(hidden = true) Long loginId,
         String sort, boolean isReleased);
+
+    @Operation(summary = "금주의 인기 프로젝트 조회(배너용)", description = "주간 좋아요 기록을 통해 프로젝트 인기순으로 정렬")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true)
+    })
+    ResponseEntity<List<ProjectBannerResponse>> getWeeklyPopular();
+
 }
