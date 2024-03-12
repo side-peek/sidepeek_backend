@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.service.CommentService;
+import sixgaezzang.sidepeek.common.dto.response.Page;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
@@ -164,18 +164,18 @@ public class ProjectService {
     private Page<ProjectListResponse> findJoinedProjectsByUser(User user,
         List<Long> likedProjectIds,
         Pageable pageable) {
-        return projectRepository.findAllByUserJoined(likedProjectIds, user, pageable);
+        return Page.from(projectRepository.findAllByUserJoined(likedProjectIds, user, pageable));
     }
 
     private Page<ProjectListResponse> findLikedProjectsByUser(User user, List<Long> likedProjectIds,
         Pageable pageable) {
-        return projectRepository.findAllByUserLiked(likedProjectIds, user, pageable);
+        return Page.from(projectRepository.findAllByUserLiked(likedProjectIds, user, pageable));
     }
 
     private Page<ProjectListResponse> findAllByUserCommentedByUser(User user,
         List<Long> likedProjectIds,
         Pageable pageable) {
-        return projectRepository.findAllByUserCommented(likedProjectIds, user, pageable);
+        return Page.from(projectRepository.findAllByUserCommented(likedProjectIds, user, pageable));
     }
 
 }
