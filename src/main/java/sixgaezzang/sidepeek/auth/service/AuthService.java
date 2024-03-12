@@ -46,7 +46,7 @@ public class AuthService {
         User user = getUserById(userRepository.findById(loginId));
         boolean isSocialLogin = authProviderRepository.existsByUser(user);
 
-        return UserSummary.from(user, isSocialLogin);
+        return UserSummary.fromWithIsSocialLogin(user, isSocialLogin);
     }
 
     public LoginResponse reissue(ReissueTokenRequest request) {
@@ -72,7 +72,7 @@ public class AuthService {
         return LoginResponse.builder()
             .accessToken(accessToken)
             .refreshToken(refreshToken)
-            .user(UserSummary.from(user, isSocialLogin))
+            .user(UserSummary.fromWithIsSocialLogin(user, isSocialLogin))
             .build();
     }
 
