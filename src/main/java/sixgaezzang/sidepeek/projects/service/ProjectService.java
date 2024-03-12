@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.service.CommentService;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
+import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
@@ -121,7 +122,7 @@ public class ProjectService {
 
     private void validateLoginUserIncludeMembers(Long loginId, Project project) {
         memberService.findFellowMemberByProject(loginId, project)
-            .orElseThrow(() -> new InvalidAuthenticationException(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE));
+            .orElseThrow(() -> new InvalidAuthorityException(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE));
     }
 
 }

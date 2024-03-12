@@ -1,5 +1,9 @@
 package sixgaezzang.sidepeek.util;
 
+import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.CONTENT_IS_NULL;
+import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.CONTENT_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.IS_ANONYMOUS_IS_NULL;
+import static sixgaezzang.sidepeek.comments.util.CommentConstant.MAX_CONTENT_LENGTH;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_NULL;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
@@ -382,6 +386,24 @@ public class TestParameterProvider {
                 "password12", PASSWORD_FORMAT_INVALID),
             Arguments.of("비밀번호가 영문자를 포함하지 않는 경우",
                 "12345678!", PASSWORD_FORMAT_INVALID)
+        );
+    }
+
+    // Comment
+    public static Stream<Arguments> createInvalidCommentInfo() {
+        return Stream.of(
+            Arguments.of("isAnonymous가 null인 경우",
+                null, FakeValueProvider.createContent(),
+                IS_ANONYMOUS_IS_NULL),
+            Arguments.of("content가 null인 경우",
+                FakeValueProvider.createBoolean(), null,
+                CONTENT_IS_NULL),
+            Arguments.of("content가 빈 문자열인 경우",
+                FakeValueProvider.createBoolean(), "",
+                CONTENT_IS_NULL),
+            Arguments.of("content가 최대 길이를 넘은 경우",
+                FakeValueProvider.createBoolean(), "C".repeat(MAX_CONTENT_LENGTH + 1),
+                CONTENT_OVER_MAX_LENGTH)
         );
     }
 

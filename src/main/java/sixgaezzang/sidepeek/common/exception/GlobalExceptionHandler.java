@@ -88,6 +88,16 @@ public class GlobalExceptionHandler {
             .body(errorResponse);
     }
 
+    @ExceptionHandler(InvalidAuthorityException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidAuthorityException(
+        InvalidAuthorityException e) {
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.FORBIDDEN, e.getMessage());
+        log.warn(e.getMessage(), e.fillInStackTrace());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(errorResponse);
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
         HttpMessageNotReadableException e) {
