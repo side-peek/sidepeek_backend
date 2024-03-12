@@ -2,6 +2,7 @@ package sixgaezzang.sidepeek.projects.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.YearMonth;
+import java.util.Collections;
 import java.util.List;
 import lombok.Builder;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
@@ -51,25 +52,7 @@ public record ProjectResponse(
     public static ProjectResponse from(Project project, List<OverviewImageSummary> overviewImageUrl,
         List<ProjectSkillSummary> techStacks, List<MemberSummary> members
     ) {
-        return ProjectResponse.builder()
-            .id(project.getId())
-            .name(project.getName())
-            .subName(project.getSubName())
-            .overview(project.getOverview())
-            .thumbnailUrl(project.getThumbnailUrl())
-            .overviewImageUrl(overviewImageUrl)
-            .githubUrl(project.getGithubUrl())
-            .deployUrl(project.getDeployUrl())
-            .viewCount(project.getViewCount())
-            .likeCount(project.getLikeCount())
-            .techStacks(techStacks)
-            .ownerId(project.getOwnerId())
-            .startDate(project.getStartDate())
-            .endDate(project.getEndDate())
-            .members(members)
-            .description(project.getDescription())
-            .troubleShooting(project.getTroubleshooting())
-            .build();
+        return ProjectResponse.from(project, overviewImageUrl, techStacks, members, Collections.emptyList());
     }
 
     public static ProjectResponse from(Project project, List<OverviewImageSummary> overviewImageUrl,
