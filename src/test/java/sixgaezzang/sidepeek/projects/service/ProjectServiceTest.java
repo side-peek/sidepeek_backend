@@ -7,6 +7,7 @@ import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.O
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
@@ -34,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
-import sixgaezzang.sidepeek.common.dto.request.UpdateUserSkillRequest;
+import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.dto.response.Page;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.like.domain.Like;
@@ -46,7 +47,6 @@ import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
-import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.skill.domain.Skill;
@@ -67,7 +67,7 @@ class ProjectServiceTest {
     static final int SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
     static List<SaveMemberRequest> members;
     static List<Long> fellowMemberIds;
-    static List<UpdateUserSkillRequest> techStacks;
+    static List<SaveTechStackRequest> techStacks;
     static String NAME = FakeValueProvider.createProjectName();
     static String OVERVIEW = FakeValueProvider.createOverview();
     static String GITHUB_URL = FakeValueProvider.createUrl();
@@ -178,7 +178,7 @@ class ProjectServiceTest {
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(findById)
-                .withMessage(ProjectErrorCode.ID_NOT_EXISTING.getMessage());
+                .withMessage(PROJECT_NOT_EXISTING);
         }
     }
 
@@ -532,7 +532,7 @@ class ProjectServiceTest {
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(update)
-                .withMessage(ProjectErrorCode.ID_NOT_EXISTING.getMessage());
+                .withMessage(PROJECT_NOT_EXISTING);
         }
 
         @Test
@@ -546,7 +546,8 @@ class ProjectServiceTest {
             String newGithubUrl = FakeValueProvider.createUrl();
             String newDescription = FakeValueProvider.createLongText();
             SaveProjectRequest newRequest = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
-                newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
+                newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
+                members
             );
             ThrowingCallable update = () -> projectService.save(null, originalProject.id(),
                 newRequest);
@@ -629,7 +630,7 @@ class ProjectServiceTest {
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(delete)
-                .withMessage(ProjectErrorCode.ID_NOT_EXISTING.getMessage());
+                .withMessage(PROJECT_NOT_EXISTING);
         }
 
         @Test

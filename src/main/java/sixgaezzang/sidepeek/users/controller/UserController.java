@@ -62,7 +62,8 @@ public class UserController implements UserControllerDoc {
         @PathVariable Long id,
         @RequestBody @Valid UpdatePasswordRequest request
     ) {
-        // TODO: 비밀번호 변경 서비스 기능 구현
+        userService.updatePassword(loginId, id, request);
+
         return ResponseEntity.noContent()
             .build();
     }

@@ -1,10 +1,10 @@
 package sixgaezzang.sidepeek.util;
 
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.CATEGORY_IS_NULL;
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.CATEGORY_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_NULL;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.CATEGORY_IS_NULL;
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.CATEGORY_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_URL_IS_INVALID;
@@ -35,6 +35,7 @@ import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.INTR
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.JOB_IS_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_IS_NULL;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_FORMAT_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PROFILE_IMAGE_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PROFILE_IMAGE_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_INTRODUCTION_LENGTH;
@@ -47,13 +48,18 @@ import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
 
 import java.time.YearMonth;
 import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.provider.Arguments;
+import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.users.domain.Career;
 import sixgaezzang.sidepeek.users.domain.Job;
+import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 
 public class TestParameterProvider {
+
     //Project
     public static Stream<Arguments> createProjectsWithoutRequired() {
         String name = createProjectName();
@@ -144,6 +150,34 @@ public class TestParameterProvider {
             Arguments.of("비회원/회원 정보가 모두 없는 경우",
                 false, null, "role",
                 NICKNAME_IS_NULL)
+        );
+    }
+
+    public static Stream<Arguments> createDuplicatedMembers() {
+        String role = FakeValueProvider.createRole();
+
+        Function<User, List<SaveMemberRequest>> getDuplicatedFellowMembers =
+            (user) -> List.of(
+                new SaveMemberRequest(user.getId(), user.getNickname(), role),
+                new SaveMemberRequest(user.getId(), user.getNickname(), role)
+            );
+        Function<User, List<SaveMemberRequest>> getDuplicatedNonFellowMembers =
+            (user) -> List.of(
+                new SaveMemberRequest(null, user.getNickname(), role),
+                new SaveMemberRequest(null, user.getNickname(), role)
+            );
+        Function<User, List<SaveMemberRequest>> getDuplicatedMembers =
+            (user) -> List.of(
+                new SaveMemberRequest(user.getId(), user.getNickname(), role),
+                new SaveMemberRequest(null, user.getNickname(), role)
+            );
+        return Stream.of(
+            Arguments.of(
+                "회원 멤버가 중복인 경우", getDuplicatedFellowMembers),
+            Arguments.of(
+                "비회원 멤버가 중복인 경우", getDuplicatedNonFellowMembers),
+            Arguments.of(
+                "회원 멤버와 비회원 멤버가 중복인 경우", getDuplicatedMembers)
         );
     }
 
@@ -334,6 +368,20 @@ public class TestParameterProvider {
                     "No URL Pattern",
                     Collections.emptyList()
                 ), BLOG_URL_IS_INVALID)
+        );
+    }
+
+    // Password
+    public static Stream<Arguments> createInvalidFormatPassword() {
+        return Stream.of(
+            Arguments.of("비밀번호가 숫자를 포함하지 않는 경우",
+                "password!", PASSWORD_FORMAT_INVALID),
+            Arguments.of("비밀번호가 최소 길이(8자)를 만족하지 못하는 경우",
+                "shor12!", PASSWORD_FORMAT_INVALID),
+            Arguments.of("비밀번호가 특수문자를 포함하지 않는 경우",
+                "password12", PASSWORD_FORMAT_INVALID),
+            Arguments.of("비밀번호가 영문자를 포함하지 않는 경우",
+                "12345678!", PASSWORD_FORMAT_INVALID)
         );
     }
 

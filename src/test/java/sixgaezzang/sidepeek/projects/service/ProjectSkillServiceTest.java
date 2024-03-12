@@ -2,8 +2,9 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.TECH_STACKS_IS_NULL;
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.TECH_STACKS_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACKS_IS_NULL;
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACKS_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACK_IS_DUPLICATED;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_ID_IS_NULL;
@@ -12,6 +13,7 @@ import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKI
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -24,7 +26,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.common.dto.request.UpdateUserSkillRequest;
+import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
@@ -58,8 +60,8 @@ class ProjectSkillServiceTest {
     UserRepository userRepository;
 
     static final int SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
-    static List<UpdateUserSkillRequest> techStacks;
-    static List<UpdateUserSkillRequest> overLengthTechStacks;
+    static List<SaveTechStackRequest> techStacks;
+    static List<SaveTechStackRequest> overLengthTechStacks;
     Project project;
     User user;
     Skill skill;
@@ -107,7 +109,7 @@ class ProjectSkillServiceTest {
 
         @ParameterizedTest
         @NullAndEmptySource
-        void 빈_기술_스택_목록_저장에_실패한다(List<UpdateUserSkillRequest> emptyTechStacks) {
+        void 빈_기술_스택_목록_저장에_실패한다(List<SaveTechStackRequest> emptyTechStacks) {
             // given, when
             ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, emptyTechStacks);
 
@@ -145,9 +147,9 @@ class ProjectSkillServiceTest {
             String testMessage, String category, String message
         ) {
             // given
-            List<UpdateUserSkillRequest> techStacksWithInvalidSkill = new ArrayList<>(techStacks);
+            List<SaveTechStackRequest> techStacksWithInvalidSkill = new ArrayList<>(techStacks);
             techStacksWithInvalidSkill.add(
-                new UpdateUserSkillRequest(skill.getId(), category)
+                new SaveTechStackRequest(skill.getId(), category)
             );
 
             // when
@@ -162,7 +164,7 @@ class ProjectSkillServiceTest {
         @Test
         void 존재하지_않는_기술_스택_Id로_기술_스택_목록_저장에_실패한다() {
             // given
-            List<UpdateUserSkillRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
+            List<SaveTechStackRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
             techStacksWithNonExistSkill.add(
                 FakeDtoProvider.createUpdateUserSkillRequest(skill.getId() + 1)
             );
@@ -179,7 +181,7 @@ class ProjectSkillServiceTest {
         @Test
         void 기술_스택_Id가_누락되어_기술_스택_목록_저장에_실패한다() {
             // given
-            List<UpdateUserSkillRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
+            List<SaveTechStackRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
             techStacksWithNonExistSkill.add(
                 FakeDtoProvider.createUpdateUserSkillRequest(null)
             );
@@ -195,13 +197,18 @@ class ProjectSkillServiceTest {
 
         @Test
         void 같은_카테고리_내에_중복된_기술_스택으로_사용자_기술_스택_목록_저장에_실패한다() {
-            // TODO: 유효성 검사로직 추가 필요
             // given
+            SaveTechStackRequest techStack = techStacks.get(0);
+            SaveTechStackRequest duplicatedTechStack = new SaveTechStackRequest(
+                techStack.skillId(), techStack.category());
+            techStacks.add(duplicatedTechStack);
 
             // when
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, techStacks);
 
             // then
-
+            AssertionsForClassTypes.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+                .withMessage(TECH_STACK_IS_DUPLICATED);
         }
 
     }
@@ -216,7 +223,7 @@ class ProjectSkillServiceTest {
             List<ProjectSkill> originalTechStacks = projectSkillService.findAll(project);
 
             // when
-            List<UpdateUserSkillRequest> techStacksOnlyOne = new ArrayList<>();
+            List<SaveTechStackRequest> techStacksOnlyOne = new ArrayList<>();
             Skill newSkill = createAndSaveSkill();
             techStacksOnlyOne.add(FakeDtoProvider.createUpdateUserSkillRequest(newSkill.getId()));
 

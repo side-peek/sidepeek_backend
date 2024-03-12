@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -90,7 +91,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
         HttpMessageNotReadableException e) {
-        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST, "API 요청 형식이 올바르지 않습니다.");
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST,
+            "API 요청 형식이 올바르지 않습니다.");
         log.debug(e.getMessage(), e.fillInStackTrace());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -104,6 +106,15 @@ public class GlobalExceptionHandler {
         log.warn(e.getMessage(), e.fillInStackTrace());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(errorResponse);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.FORBIDDEN, e.getMessage());
+        log.warn(e.getMessage(), e.fillInStackTrace());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
             .body(errorResponse);
     }
 

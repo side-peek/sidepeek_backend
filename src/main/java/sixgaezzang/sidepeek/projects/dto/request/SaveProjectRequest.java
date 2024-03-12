@@ -3,8 +3,8 @@ package sixgaezzang.sidepeek.projects.dto.request;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_NULL;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.TECH_STACKS_IS_NULL;
-import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.TECH_STACKS_OVER_MAX_COUNT;
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACKS_IS_NULL;
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACKS_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COUNT;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MIN_ID;
@@ -41,7 +41,7 @@ import jakarta.validation.constraints.Size;
 import java.time.YearMonth;
 import java.util.List;
 import org.hibernate.validator.constraints.URL;
-import sixgaezzang.sidepeek.common.dto.request.UpdateUserSkillRequest;
+import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
 @Schema(description = "프로젝트 생성/수정 요청")
@@ -76,7 +76,7 @@ public record SaveProjectRequest(
     @Schema(description = "프로젝트 기술 스택")
     @Size(max = MAX_TECH_STACK_COUNT, message = TECH_STACKS_OVER_MAX_COUNT)
     @NotEmpty(message = TECH_STACKS_IS_NULL)
-    List<UpdateUserSkillRequest> techStacks,
+    List<SaveTechStackRequest> techStacks,
 
     // Option
     @Schema(description = "프로젝트 부제목", example = "좋은 아이디어? 사이드픽에서 찾아봐!")
