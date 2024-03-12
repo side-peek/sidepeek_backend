@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.like.service;
 
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
+import static sixgaezzang.sidepeek.like.util.validation.LikeValidator.validateLikeRequest;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 
@@ -27,9 +29,12 @@ public class LikeService {
     private final ProjectRepository projectRepository;
 
     @Transactional
-    public LikeResponse toggle(Long userId, LikeRequest request) {
+    public LikeResponse toggle(Long loginId, LikeRequest request) {
 
-        User user = userRepository.findById(userId)
+        validateLoginId(loginId);
+        validateLikeRequest(request);
+
+        User user = userRepository.findById(loginId)
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
 
         Project project = projectRepository.findById(request.projectId())
