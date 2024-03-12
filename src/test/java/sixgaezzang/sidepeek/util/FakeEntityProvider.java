@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -67,6 +68,15 @@ public class FakeEntityProvider {
             .user(user)
             .project(project)
             .content(FakeValueProvider.createContent())
+            .build();
+    }
+
+    public static Member createMember(User user, Project project) {
+        return Member.builder()
+            .user(user)
+            .nickname(user.getNickname())
+            .project(project)
+            .role(FakeValueProvider.createRole())
             .build();
     }
 }
