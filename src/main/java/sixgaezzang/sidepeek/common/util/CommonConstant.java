@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 public final class CommonConstant {
     public static final long MIN_ID = 1;
     public static final int MAX_TEXT_LENGTH = 21_844;
+    public static final String BLANK_STRING = "";
 
     // TechStack
     public static final int MAX_TECH_STACK_COUNT = 30;
