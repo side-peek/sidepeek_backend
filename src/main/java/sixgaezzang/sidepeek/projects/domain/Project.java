@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.projects.domain;
 
-import static sixgaezzang.sidepeek.common.util.SetUtils.isSetPossible;
+import static sixgaezzang.sidepeek.common.util.SetUtils.getBlankIfNullOrBlank;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateRequiredGithubUrl;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
@@ -104,12 +104,12 @@ public class Project extends BaseTimeEntity {
         this.ownerId = ownerId;
 
         // Option
-        this.subName = subName;
+        this.subName = getBlankIfNullOrBlank(subName);
         this.startDate = startDate;
         this.endDate = endDate;
-        this.thumbnailUrl = thumbnailUrl;
-        this.deployUrl = deployUrl;
-        this.troubleshooting = troubleshooting;
+        this.thumbnailUrl = getBlankIfNullOrBlank(thumbnailUrl);
+        this.deployUrl = getBlankIfNullOrBlank(deployUrl);
+        this.troubleshooting = getBlankIfNullOrBlank(troubleshooting);
 
         // Etc
         this.likeCount = 0L;
@@ -166,70 +166,53 @@ public class Project extends BaseTimeEntity {
     // Required
     private void setName(String name) {
         validateName(name);
-        if (isSetPossible(this.name, name)) {
-            this.name = name;
-        }
+        this.name = name;
     }
 
     private void setOverview(String overview) {
         validateOverview(overview);
-        if (isSetPossible(this.overview, overview)) {
-            this.overview = overview;
-        }
+        this.overview = overview;
     }
 
     private void setGithubUrl(String githubUrl) {
         validateRequiredGithubUrl(githubUrl);
-        if (isSetPossible(this.githubUrl, githubUrl)) {
-            this.githubUrl = githubUrl;
-        }
+        this.githubUrl = githubUrl;
+
     }
 
     private void setDescription(String description) {
         validateDescription(description);
-        if (isSetPossible(this.description, description)) {
-            this.description = description;
-        }
+        this.description = description;
+
     }
 
     // Option
     private void setSubName(String subName) {
         validateSubName(subName);
-        if (isSetPossible(this.subName, subName)) {
-            this.subName = subName;
-        }
+        this.subName = getBlankIfNullOrBlank(subName);
+
     }
 
     private void setDuration(YearMonth startDate, YearMonth endDate) {
         validateDuration(startDate, endDate);
-        if (isSetPossible(this.startDate, startDate)) {
-            this.startDate = startDate;
-        }
-
-        if (isSetPossible(this.endDate, endDate)) {
-            this.endDate = endDate;
-        }
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     private void setThumbnailUrl(String thumbnailUrl) {
         validateThumbnailUrl(thumbnailUrl);
-        if (isSetPossible(this.thumbnailUrl, thumbnailUrl)) {
-            this.thumbnailUrl = thumbnailUrl;
-        }
+        this.thumbnailUrl = getBlankIfNullOrBlank(thumbnailUrl);
     }
 
     private void setDeployUrl(String deployUrl) {
         validateDeployUrl(deployUrl);
-        if (isSetPossible(this.deployUrl, deployUrl)) {
-            this.deployUrl = deployUrl;
-        }
+        this.deployUrl = getBlankIfNullOrBlank(deployUrl);
+
     }
 
     private void setTroubleshooting(String troubleShooting) {
         validateTroubleshooting(troubleshooting);
-        if (isSetPossible(this.troubleshooting, troubleshooting)) {
-            this.troubleshooting = troubleShooting;
-        }
+        this.troubleshooting = getBlankIfNullOrBlank(troubleShooting);
     }
 
 }

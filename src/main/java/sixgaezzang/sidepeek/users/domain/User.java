@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.users.domain;
 
-import static sixgaezzang.sidepeek.common.util.SetUtils.isSetPossible;
+import static sixgaezzang.sidepeek.common.util.SetUtils.getBlankIfNullOrBlank;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateOptionGithubUrl;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAIL_FORMAT_INVALID;
@@ -85,19 +85,24 @@ public class User extends BaseTimeEntity {
                 String profileImageUrl, Job job, Career career, String githubUrl, String blogUrl) {
         validateConstructorArguments(nickname, email);
 
+        // required
         this.nickname = nickname;
         this.email = email;
+
+        // option - auth
         this.password = password;
-        this.introduction = introduction;
-        this.profileImageUrl = profileImageUrl;
+
+        // option - profile
+        this.introduction = getBlankIfNullOrBlank(introduction);
+        this.profileImageUrl = getBlankIfNullOrBlank(profileImageUrl);
         this.job = job;
         this.career = career;
-        this.githubUrl = githubUrl;
-        this.blogUrl = blogUrl;
+        this.githubUrl = getBlankIfNullOrBlank(githubUrl);
+        this.blogUrl = getBlankIfNullOrBlank(blogUrl);
     }
 
     public boolean checkPassword(String rawPassword, PasswordEncoder passwordEncoder) {
-        return password != null && password.check(rawPassword, passwordEncoder);
+        return Objects.nonNull(password) && password.check(rawPassword, passwordEncoder);
     }
 
     public void update(UpdateUserProfileRequest request) {
@@ -122,11 +127,11 @@ public class User extends BaseTimeEntity {
     }
 
     private void validateConstructorArguments(String nickname, String email) {
-        if (nickname != null) {
+        if (Objects.nonNull(nickname)) {
             validateNickname(nickname);
         }
 
-        if (email != null) {
+        if (Objects.nonNull(email)) {
             validateEmail(email, EMAIL_FORMAT_INVALID);
         }
     }
@@ -134,24 +139,18 @@ public class User extends BaseTimeEntity {
     // Required
     private void setNickname(String nickname) {
         validateNickname(nickname);
-        if (isSetPossible(this.nickname, nickname)) {
-            this.nickname = nickname;
-        }
+        this.nickname = nickname;
     }
 
     // Option
     private void setIntroduction(String introduction) {
         validateIntroduction(introduction);
-        if (isSetPossible(this.introduction, introduction)) {
-            this.introduction = introduction;
-        }
+        this.introduction = introduction;
     }
 
     private void setProfileImageUrl(String profileImageUrl) {
         validateProfileImageUrl(profileImageUrl);
-        if (isSetPossible(this.profileImageUrl, profileImageUrl)) {
-            this.profileImageUrl = profileImageUrl;
-        }
+        this.profileImageUrl = profileImageUrl;
     }
 
     private void setJob(String jobName) {
@@ -159,10 +158,7 @@ public class User extends BaseTimeEntity {
         if (StringUtils.isNotBlank(jobName)) {
             newJob = Job.get(jobName);
         }
-
-        if (isSetPossible(this.job, newJob)) {
-            this.job = newJob;
-        }
+        this.job = newJob;
     }
 
     private void setCareer(String careerDescription) {
@@ -170,24 +166,18 @@ public class User extends BaseTimeEntity {
         if (StringUtils.isNotBlank(careerDescription)) {
             newCareer = Career.get(careerDescription);
         }
-
-        if (isSetPossible(this.career, newCareer)) {
-            this.career = newCareer;
-        }
+        this.career = newCareer;
     }
 
     private void setGithubUrl(String githubUrl) {
         validateOptionGithubUrl(githubUrl);
-        if (isSetPossible(this.githubUrl, githubUrl)) {
-            this.githubUrl = githubUrl;
-        }
+        this.githubUrl = getBlankIfNullOrBlank(githubUrl);
+
     }
 
     private void setBlogUrl(String blogUrl) {
         validateBlogUrl(blogUrl);
-        if (isSetPossible(this.blogUrl, blogUrl)) {
-            this.blogUrl = blogUrl;
-        }
+        this.blogUrl = getBlankIfNullOrBlank(blogUrl);
     }
 
 }
