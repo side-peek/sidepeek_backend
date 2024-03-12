@@ -9,8 +9,13 @@ import sixgaezzang.sidepeek.users.domain.User;
 public record UserSummary(
     @Schema(description = "회원 식별자(비회원은 null)", example = "1")
     Long id,
+
+    @Schema(description = "소셜 로그인 회원 여부", example = "false")
+    boolean isSocialLogin,
+
     @Schema(description = "회원/비회원 닉네임", example = "의진")
     String nickname,
+
     @Schema(description = "회원 프로필 이미지(비회원은 null)", example = "https://user-images.githubusercontent.com/uijin.png")
     String profileImageUrl
 ) {
@@ -18,6 +23,7 @@ public record UserSummary(
     public static UserSummary from(User user) {
         return UserSummary.builder()
             .id(user.getId())
+//            .isSocialLogin()
             .nickname(user.getNickname())
             .profileImageUrl(user.getProfileImageUrl())
             .build();

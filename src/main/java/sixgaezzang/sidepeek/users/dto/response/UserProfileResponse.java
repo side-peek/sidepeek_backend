@@ -11,6 +11,9 @@ import sixgaezzang.sidepeek.users.domain.User;
 @Schema(description = "회원 프로필 정보")
 @Builder
 public record UserProfileResponse(
+    @Schema(description = "소셜 로그인 회원 여부", example = "false")
+    boolean isSocialLogin,
+
     @Schema(description = "회원/비회원 닉네임", example = "의진")
     String nickname,
 
@@ -43,6 +46,7 @@ public record UserProfileResponse(
         String careerDescription = Objects.nonNull(userCareer) ? userCareer.getDescription() : null;
 
         return UserProfileResponse.builder()
+//            .isSocialLogin()
             .nickname(user.getNickname())
             .profileImageUrl(user.getProfileImageUrl())
             .introduction(user.getIntroduction())
