@@ -79,12 +79,12 @@ class ProjectServiceTest {
     User user;
 
     private User createAndSaveUser() {
-        User newUser = FakeEntityProvider.createUser();
+        User newUser = createUser();
         return userRepository.save(newUser);
     }
 
     private Project createAndSaveProject(User user) {
-        Project newProject = FakeEntityProvider.createProject(user);
+        Project newProject = createProject(user);
         return projectRepository.save(newProject);
     }
 
