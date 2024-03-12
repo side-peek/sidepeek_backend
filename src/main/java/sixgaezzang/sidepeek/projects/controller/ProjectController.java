@@ -2,27 +2,27 @@ package sixgaezzang.sidepeek.projects.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sixgaezzang.sidepeek.common.annotation.Login;
+import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.service.ProjectService;
@@ -98,22 +98,74 @@ public class ProjectController {
         return ResponseEntity.ok(response);
     }
 
+//    @GetMapping
+//    @Operation(summary = "프로젝트 전체 조회")
+//    @ApiResponse(responseCode = "200", description = "프로젝트 전체 조회 성공")
+//    @Parameters({
+//        @Parameter(name = "sort", description = "정렬 조건 [ latest(최신순), view(조회수순), like(좋아요순) ]", in = ParameterIn.QUERY),
+//        @Parameter(name = "isReleased", description = "출시서비스만 보기", in = ParameterIn.QUERY)
+//    })
+//    public ResponseEntity<Slice<ProjectListResponse>> getAll(
+//        @Login Long loginId,
+//        @RequestParam(required = false) String sort,
+//        @RequestParam(required = false, defaultValue = "false") boolean isReleased,
+//        @RequestParam(required = false) Long lastProjectId,
+//        @RequestParam(required = false) Long lastOrderNum,
+//        @RequestParam(required = false) Integer pageSize
+//    ) {
+//        sort = (sort == null) ? "createdAt" : sort;
+//        pageSize = (pageSize == null) ? 24 : pageSize;
+//        Slice<ProjectListResponse> responses = projectService.findAll(loginId, sort, isReleased,
+//            lastProjectId, lastOrderNum, pageSize);
+//
+//        return ResponseEntity.ok(responses);
+//    }
+
+//    @GetMapping
+//    @Operation(summary = "프로젝트 전체 조회")
+//    @ApiResponse(responseCode = "200", description = "프로젝트 전체 조회 성공")
+//    @Parameters({
+//        @Parameter(name = "sort", description = "정렬 조건 [ latest(최신순), view(조회수순), like(좋아요순) ]", in = ParameterIn.QUERY),
+//        @Parameter(name = "isReleased", description = "출시서비스만 보기", in = ParameterIn.QUERY)
+//    })
+//    public ResponseEntity<ProjectListResponse> getAll(
+//        @Login Long loginId,
+//        @RequestParam(required = false) String sort,
+//        @RequestParam(required = false, defaultValue = "false") boolean isReleased,
+//        @RequestParam(required = false) Long lastProjectId,
+//        @RequestParam(required = false) Long lastOrderNum,
+//        @RequestParam(required = false) Integer pageSize
+//    ) {
+//        sort = (sort == null) ? "createdAt" : sort;
+//        pageSize = (pageSize == null) ? 2 : pageSize;
+//        ProjectListResponse responses = projectService.findAll(loginId, sort, isReleased,
+//            lastProjectId, lastOrderNum, pageSize);
+//
+//        return ResponseEntity.ok(responses);
+//    }
+
+//    @GetMapping
+//    @Operation(summary = "프로젝트 전체 조회")
+//    @ApiResponse(responseCode = "200", description = "프로젝트 전체 조회 성공")
+//    public ResponseEntity<List<ProjectListResponse>> getAll(
+//        @Login Long loginId,
+//        @RequestParam(required = false) String sort,
+//        @RequestParam(required = false, defaultValue = "false") boolean isReleased
+//    ) {
+////        List<ProjectListResponse> responses = projectService.findAll(loginId, sort, isReleased);
+//
+//        return ResponseEntity.ok().build();
+//    }
+
     @GetMapping
     @Operation(summary = "프로젝트 전체 조회")
     @ApiResponse(responseCode = "200", description = "프로젝트 전체 조회 성공")
-    @Parameters({
-        @Parameter(name = "loginId", description = "로그인한 회원 식별자", in = ParameterIn.HEADER),
-        @Parameter(name = "sort", description = "정렬 조건 [ createdAt(default), view, like ]", in = ParameterIn.QUERY),
-        @Parameter(name = "isReleased", description = "출시서비스만 보기", in = ParameterIn.QUERY)
-    })
-    public ResponseEntity<List<ProjectListResponse>> getAll(
+    public ResponseEntity<CursorPaginationResponse<ProjectListResponse>> getByCondition(
         @Login Long loginId,
-        @RequestParam(required = false) String sort,
-        @RequestParam(required = false, defaultValue = "false") boolean isReleased
+        @Valid @ModelAttribute CursorPaginationInfoRequest pageable
     ) {
-        sort = (sort == null) ? "createdAt" : sort;
-        List<ProjectListResponse> responses = projectService.findAll(loginId, sort, isReleased);
-
-        return ResponseEntity.ok(responses);
+        CursorPaginationResponse<ProjectListResponse> responses = projectService.findByCondition(
+            loginId, pageable);
+        return ResponseEntity.ok().body(responses);
     }
 }
