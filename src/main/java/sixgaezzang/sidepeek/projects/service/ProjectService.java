@@ -33,10 +33,10 @@ import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final LikeRepository likeRepository;
     private final ProjectSkillService projectSkillService;
     private final MemberService memberService;
     private final FileService fileService;
-    private final LikeRepository likeRepository;
     private final CommentService commentService;
 
     @Transactional
