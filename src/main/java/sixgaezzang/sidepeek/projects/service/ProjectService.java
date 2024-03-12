@@ -66,9 +66,7 @@ public class ProjectService {
     }
 
     public List<ProjectListResponse> findAll(Long userId, String sort, boolean isReleased) {
-        List<Long> likedProjectIds =
-            (userId != null) ? likeRepository.findAllProjectIdsByUser(userId)
-                : Collections.emptyList();
+        List<Long> likedProjectIds = getLikedProjectIds(userId);
 
         return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, isReleased);
     }
@@ -122,6 +120,11 @@ public class ProjectService {
     private void validateLoginUserIncludeMembers(Long loginId, Project project) {
         memberService.findFellowMemberByProject(loginId, project)
             .orElseThrow(() -> new InvalidAuthenticationException(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE));
+
+    private List<Long> getLikedProjectIds(Long userId) {
+        return Optional.ofNullable(userId)
+            .map(likeRepository::findAllProjectIdsByUser)
+            .orElse(Collections.emptyList());
     }
 
 }
