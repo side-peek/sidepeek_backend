@@ -1,13 +1,17 @@
 package sixgaezzang.sidepeek.projects.repository;
 
+import static sixgaezzang.sidepeek.like.domain.QLike.like;
 import static sixgaezzang.sidepeek.projects.domain.QProject.project;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Repository;
+import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 
 @Repository
@@ -39,6 +43,23 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             .toList();
     }
 
+    @Override
+    public List<ProjectBannerResponse> findAllPopularOfPeriod(LocalDate startDate, LocalDate endDate) {
+        List<Project> projects = queryFactory
+            .select(project)
+            .from(like)
+            .join(like.project, project)
+            .where(like.createdAt.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
+            .distinct()
+            .orderBy(project.likeCount.desc())
+            .limit(5L)
+            .fetch();
+
+        return projects.stream()
+            .map(ProjectBannerResponse::from)
+            .toList();
+    }
+
     private OrderSpecifier<?> getOrderSpecifier(String sort) {
         switch (sort) {
             case "like":
@@ -49,4 +70,5 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
                 return project.createdAt.desc();
         }
     }
+
 }
