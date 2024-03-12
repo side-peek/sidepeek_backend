@@ -18,7 +18,6 @@ import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createSocialUser;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createUser;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createEmail;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createEnglishKeyword;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createId;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createNickname;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createPassword;
@@ -55,6 +54,7 @@ import sixgaezzang.sidepeek.users.dto.response.UserSkillSummary;
 import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 import sixgaezzang.sidepeek.util.FakeDtoProvider;
+import sixgaezzang.sidepeek.util.FakeValueProvider;
 
 @SpringBootTest
 @Transactional
@@ -98,56 +98,6 @@ class UserServiceTest {
     private User createAndSaveUser() {
         User newUser = createUser();
         return userRepository.save(newUser);
-    }
-
-    @Nested
-    class 회원_닉네임_검색_테스트 {
-
-        @ParameterizedTest(name = "[{index}] {0}으로 검색할 때 " + USER_COUNT + "명의 모든 회원이 나온다.")
-        @NullAndEmptySource
-        void 검색어_없이_전체_회원_닉네임_검색에_성공한다(String keyword) {
-            // given, when
-            List<UserSummary> users = userService.searchByNickname(keyword)
-                .users();
-
-            // then
-            // TODO: 분명 5개를 BeforeEach로 저장했는데 그 이상이 나온다.
-            assertThat(users).hasSize(USER_COUNT);
-        }
-
-        @Test
-        void 검색어로_회원_닉네임_검색에_성공한다() {
-            // given,
-            String keyword = createEnglishKeyword();
-            int count = 0;
-            for (String nickname : userNicknames) {
-                if (nickname.contains(keyword)) {
-                    count++;
-                }
-            }
-
-            // when
-            List<UserSummary> users = userService.searchByNickname(keyword)
-                .users();
-
-            // then
-            assertThat(users.size()).isEqualTo(count);
-        }
-
-        @Test
-        void 검색어_최대_글자_수가_넘어_회원_닉네임_검색에_실패한다() {
-            // given
-            int keywordLength = MAX_NICKNAME_LENGTH + 1;
-            String keyword = "a".repeat(keywordLength);
-
-            // when
-            ThrowingCallable search = () -> userService.searchByNickname(keyword);
-
-            // then
-            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(search)
-                .withMessage(NICKNAME_OVER_MAX_LENGTH);
-        }
-
     }
 
     @Nested
@@ -233,6 +183,56 @@ class UserServiceTest {
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(signup)
                 .withMessage(PASSWORD_FORMAT_INVALID);
+        }
+
+    }
+
+    @Nested
+    class 회원_닉네임_검색_테스트 {
+
+        @ParameterizedTest(name = "[{index}] {0}으로 검색할 때 " + USER_COUNT + "명의 모든 회원이 나온다.")
+        @NullAndEmptySource
+        void 검색어_없이_전체_회원_닉네임_검색에_성공한다(String keyword) {
+            // given, when
+            List<UserSummary> users = userService.searchByNickname(keyword)
+                .users();
+
+            // then
+            // TODO: 분명 5개를 BeforeEach로 저장했는데 그 이상이 나온다.
+            assertThat(users).hasSize(USER_COUNT);
+        }
+
+        @Test
+        void 검색어로_회원_닉네임_검색에_성공한다() {
+            // given,
+            String keyword = FakeValueProvider.createEnglishKeyword();
+            int count = 0;
+            for (String nickname : userNicknames) {
+                if (nickname.contains(keyword)) {
+                    count++;
+                }
+            }
+
+            // when
+            List<UserSummary> users = userService.searchByNickname(keyword)
+                .users();
+
+            // then
+            assertThat(users.size()).isEqualTo(count);
+        }
+
+        @Test
+        void 검색어_최대_글자_수가_넘어_회원_닉네임_검색에_실패한다() {
+            // given
+            int keywordLength = MAX_NICKNAME_LENGTH + 1;
+            String keyword = "a".repeat(keywordLength);
+
+            // when
+            ThrowingCallable search = () -> userService.searchByNickname(keyword);
+
+            // then
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(search)
+                .withMessage(NICKNAME_OVER_MAX_LENGTH);
         }
 
     }

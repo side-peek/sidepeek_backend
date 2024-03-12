@@ -11,7 +11,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.common.dto.request.UpdateUserSkillRequest;
+import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -36,7 +36,7 @@ public class UserSkillService {
             .toList();
     }
 
-    public List<UserSkillSummary> saveAll(User user, List<UpdateUserSkillRequest> techStacks) {
+    public List<UserSkillSummary> saveAll(User user, List<SaveTechStackRequest> techStacks) {
         validateUser(user);
         if (userSkillRepository.existsByUser(user)) {
             userSkillRepository.deleteAllByUser(user);
@@ -55,7 +55,7 @@ public class UserSkillService {
             .toList();
     }
 
-    private List<UserSkill> convertAllToEntity(User user, List<UpdateUserSkillRequest> techStacks) {
+    private List<UserSkill> convertAllToEntity(User user, List<SaveTechStackRequest> techStacks) {
         return techStacks.stream()
             .map(techStack -> {
                 Skill skill = skillRepository.findById(techStack.skillId())
