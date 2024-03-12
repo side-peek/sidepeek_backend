@@ -13,7 +13,7 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
+import sixgaezzang.sidepeek.comments.dto.response.CommentWithCountResponse;
 import sixgaezzang.sidepeek.comments.service.CommentService;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
@@ -58,9 +58,11 @@ public class ProjectService {
             project.update(request);
         }
 
-        List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project, request.techStacks());
+        List<ProjectSkillSummary> techStacks = projectSkillService.saveAll(project,
+            request.techStacks());
         List<MemberSummary> members = memberService.saveAll(project, request.members());
-        List<OverviewImageSummary> overviewImages = fileService.saveAll(project, request.overviewImageUrls());
+        List<OverviewImageSummary> overviewImages = fileService.saveAll(project,
+            request.overviewImageUrls());
 
         return ProjectResponse.from(project, overviewImages, techStacks, members);
     }
@@ -95,7 +97,7 @@ public class ProjectService {
 
         List<MemberSummary> members = memberService.findAllWithUser(project);
 
-        List<CommentResponse> comments = commentService.findAll(project);
+        CommentWithCountResponse comments = commentService.findAll(project);
 
         return ProjectResponse.from(project, overviewImages, techStacks, members, comments);
     }
@@ -121,7 +123,8 @@ public class ProjectService {
 
     private void validateLoginUserIncludeMembers(Long loginId, Project project) {
         memberService.findFellowMemberByProject(loginId, project)
-            .orElseThrow(() -> new InvalidAuthenticationException(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE));
+            .orElseThrow(
+                () -> new InvalidAuthenticationException(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE));
     }
 
 }
