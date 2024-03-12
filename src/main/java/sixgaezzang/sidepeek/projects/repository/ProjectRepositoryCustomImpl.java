@@ -40,13 +40,10 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
     }
 
     private OrderSpecifier<?> getOrderSpecifier(String sort) {
-        switch (sort) {
-            case "like":
-                return project.likeCount.desc();
-            case "view":
-                return project.viewCount.desc();
-            default:
-                return project.createdAt.desc();
-        }
+        return switch (sort) {
+            case "like" -> project.likeCount.desc();
+            case "view" -> project.viewCount.desc();
+            default -> project.createdAt.desc();
+        };
     }
 }
