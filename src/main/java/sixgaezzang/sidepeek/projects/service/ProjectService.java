@@ -18,7 +18,9 @@ import sixgaezzang.sidepeek.common.util.ValidationUtils;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
+import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
 import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
@@ -39,6 +41,7 @@ public class ProjectService {
     private final FileService fileService;
     private final LikeRepository likeRepository;
     private final CommentService commentService;
+
 
     @Transactional
     public ProjectResponse save(Long loginId, Long projectId, ProjectRequest request) {
@@ -69,12 +72,14 @@ public class ProjectService {
         return ProjectResponse.from(project, overviewImages, techStacks, members);
     }
 
-    public List<ProjectListResponse> findAll(Long userId, String sort, boolean isReleased) {
+    public CursorPaginationResponse<ProjectListResponse> findByCondition(Long userId,
+        CursorPaginationInfoRequest pageable) {
+        // 사용자가 좋아요한 프로젝트 ID를 조회
         List<Long> likedProjectIds =
             (userId != null) ? likeRepository.findAllProjectIdsByUser(userId)
                 : Collections.emptyList();
 
-        return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, isReleased);
+        return projectRepository.findByCondition(likedProjectIds, pageable);
     }
 
     @Transactional
