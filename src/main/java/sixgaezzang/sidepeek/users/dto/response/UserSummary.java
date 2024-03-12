@@ -20,19 +20,20 @@ public record UserSummary(
     String profileImageUrl
 ) {
 
-    public static UserSummary from(User user) {
+    public static UserSummary from(User user, boolean isSocialLogin) {
         return UserSummary.builder()
             .id(user.getId())
-//            .isSocialLogin()
+            .isSocialLogin(isSocialLogin)
             .nickname(user.getNickname())
             .profileImageUrl(user.getProfileImageUrl())
             .build();
     }
 
     // 멤버(회원)
-    public static UserSummary from(User user, String nickname) {
+    public static UserSummary from(User user, String nickname, boolean isSocialLogin) {
         return UserSummary.builder()
             .id(user.getId())
+            .isSocialLogin(isSocialLogin)
             .nickname(nickname)
             .profileImageUrl(user.getProfileImageUrl())
             .build();
@@ -42,6 +43,7 @@ public record UserSummary(
     public static UserSummary from(String nickname) {
         return UserSummary.builder()
             .id(null)
+            .isSocialLogin(false)
             .nickname(nickname)
             .profileImageUrl(null)
             .build();
