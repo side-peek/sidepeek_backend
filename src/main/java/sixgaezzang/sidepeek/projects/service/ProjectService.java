@@ -33,12 +33,12 @@ import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 @Transactional(readOnly = true)
 public class ProjectService {
 
+    private final ProjectRepository projectRepository;
+    private final LikeRepository likeRepository;
     private final ProjectSkillService projectSkillService;
     private final MemberService memberService;
     private final FileService fileService;
     private final CommentService commentService;
-    private final ProjectRepository projectRepository;
-    private final LikeRepository likeRepository;
 
     @Transactional
     public ProjectResponse save(Long loginId, SaveProjectRequest request) {
