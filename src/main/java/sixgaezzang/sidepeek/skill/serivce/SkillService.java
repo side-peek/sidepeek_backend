@@ -31,7 +31,7 @@ public class SkillService {
         return SkillSearchResponse.from(skillRepository.findAllByNameContaining(keyword));
     }
 
-    public Skill getSkill(Long skillId) {
+    public Skill getById(Long skillId) {
         return skillRepository.findById(skillId)
             .orElseThrow(() -> new EntityNotFoundException(SKILL_NOT_EXISTING));
     }

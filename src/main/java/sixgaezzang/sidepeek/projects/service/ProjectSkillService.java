@@ -51,7 +51,7 @@ public class ProjectSkillService {
         return techStacks.stream()
             .map(techStack -> techStack.toProjectSkill(
                 project,
-                skillService.getSkill(techStack.skillId()))
+                skillService.getById(techStack.skillId()))
             )
             .toList();
     }

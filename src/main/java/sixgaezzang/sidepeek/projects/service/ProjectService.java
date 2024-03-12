@@ -52,7 +52,7 @@ public class ProjectService {
             request.overviewImageUrls());
     }
 
-    public Project getProject(Long projectId) {
+    public Project getById(Long projectId) {
         return projectRepository.findById(projectId)
             .orElseThrow(() -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
     }
@@ -60,7 +60,7 @@ public class ProjectService {
     @Transactional
     public ProjectResponse findById(Long id) {
 
-        Project project = getProject(id);
+        Project project = getById(id);
 
         project.increaseViewCount();
 
@@ -94,7 +94,7 @@ public class ProjectService {
     public ProjectResponse update(Long loginId, Long projectId, UpdateProjectRequest request) {
         validateLoginId(loginId);
 
-        Project project = getProject(projectId);
+        Project project = getById(projectId);
         validateLoginUserIncludeMembers(loginId, project);
 
         project.update(request);
@@ -107,7 +107,7 @@ public class ProjectService {
     public void delete(Long loginId, Long projectId) {
         validateLoginId(loginId);
 
-        Project project = getProject(projectId);
+        Project project = getById(projectId);
         validateLoginIdEqualsOwnerId(loginId, project.getOwnerId());
 
         project.softDelete();
