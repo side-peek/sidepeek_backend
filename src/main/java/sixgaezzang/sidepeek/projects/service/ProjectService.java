@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.projects.service;
 
+import static java.time.DayOfWeek.MONDAY;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
@@ -7,6 +8,7 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -74,11 +76,6 @@ public class ProjectService {
         return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, isReleased);
     }
 
-    public List<ProjectBannerResponse> findAllWeeklyPopular() {
-        // TODO: 금주의 인기 프로젝트 조회 기능 구현
-        return null;
-    }
-
     @Transactional
     public ProjectResponse findById(Long id) {
 
@@ -106,6 +103,14 @@ public class ProjectService {
         return ProjectResponse.from(project, overviewImages, techStacks, members, comments);
     }
 
+    public List<ProjectBannerResponse> findAllPopularThisWeek() {
+        LocalDate today = LocalDate.now();
+        LocalDate endDate = today.plusDays(1L);
+        LocalDate startDate = getStartDayOfWeek(today);
+
+        return projectRepository.findAllPopularOfPeriod(startDate, endDate);
+    }
+
     @Transactional
     public void delete(Long loginId, Long projectId) {
         validateLoginId(loginId);
@@ -129,4 +134,13 @@ public class ProjectService {
         memberService.findFellowMemberByProject(loginId, project)
             .orElseThrow(() -> new InvalidAuthenticationException(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE));
     }
+
+    private LocalDate getStartDayOfWeek(LocalDate endWeekDay) {
+        LocalDate startWeekDay = endWeekDay;
+        while (!startWeekDay.getDayOfWeek().equals(MONDAY)) {
+            startWeekDay = startWeekDay.minusDays(1L);
+        }
+        return startWeekDay;
+    }
+
 }
