@@ -26,16 +26,21 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
         BooleanExpression deployCondition = isReleased ? project.deployUrl.isNotNull() : null;
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(sort);
 
-        return queryFactory
+        List<Project> projects = queryFactory
             .selectFrom(project)
             .where(deployCondition)
             .orderBy(orderSpecifier, project.id.asc())
-            .fetch()
-            .stream()
-            .map(project -> {
-                boolean isLiked = likedProjectIds.contains(project.getId());
-                return ProjectListResponse.from(project, isLiked);
-            })
+            .fetch();
+
+        return toProjectListResponseList(likedProjectIds, projects);
+    }
+
+    @Override
+    private List<ProjectListResponse> toProjectListResponseList(List<Long> likedProjectIds,
+        List<Project> projects) {
+        return projects.stream()
+            .map(project -> ProjectListResponse.from(project,
+                likedProjectIds.contains(project.getId())))
             .toList();
     }
 
