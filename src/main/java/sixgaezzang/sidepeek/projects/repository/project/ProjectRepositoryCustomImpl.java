@@ -41,7 +41,7 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
                 cursorCondition
             )
             .orderBy(orderSpecifier, project.id.desc())
-            .limit(pageable.pageSize())
+            .limit(pageable.pageSize() + 1)
             .fetch()
             .stream()
             .map(project -> {
@@ -92,7 +92,7 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
 
         if (results.size() > pageSize) { //다음 게시물이 있는 경우
             hasNext = true;
-            results = results.subList(0, results.size());
+            results = results.subList(0, pageSize);
         }
 
         return CursorPaginationResponse.from(results, hasNext);
