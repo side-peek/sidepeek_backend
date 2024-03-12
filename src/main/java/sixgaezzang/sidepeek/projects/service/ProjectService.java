@@ -3,6 +3,7 @@ package sixgaezzang.sidepeek.projects.service;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -25,7 +26,6 @@ import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
-import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 
 @Service
@@ -53,7 +53,7 @@ public class ProjectService {
         } else {
             project = projectRepository.findById(projectId)
                 .orElseThrow(
-                    () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
+                    () -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
             validateLoginUserIncludeMembers(loginId, project);
 
             project.update(request);
@@ -79,7 +79,7 @@ public class ProjectService {
 
         Project project = projectRepository.findById(id)
             .orElseThrow(
-                () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
+                () -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
 
         project.increaseViewCount();
 
@@ -107,7 +107,7 @@ public class ProjectService {
 
         Project project = projectRepository.findById(projectId)
             .orElseThrow(
-                () -> new EntityNotFoundException(ProjectErrorCode.ID_NOT_EXISTING.getMessage()));
+                () -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
         validateLoginIdEqualsOwnerId(loginId, project.getOwnerId());
 
         project.softDelete();

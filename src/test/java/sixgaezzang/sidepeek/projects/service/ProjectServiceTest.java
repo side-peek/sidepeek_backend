@@ -7,6 +7,7 @@ import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.O
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -37,7 +38,6 @@ import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
-import sixgaezzang.sidepeek.projects.exception.ProjectErrorCode;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
@@ -159,7 +159,7 @@ class ProjectServiceTest {
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(findById)
-                .withMessage(ProjectErrorCode.ID_NOT_EXISTING.getMessage());
+                .withMessage(PROJECT_NOT_EXISTING);
         }
     }
 
@@ -339,7 +339,7 @@ class ProjectServiceTest {
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(update)
-                .withMessage(ProjectErrorCode.ID_NOT_EXISTING.getMessage());
+                .withMessage(PROJECT_NOT_EXISTING);
         }
 
         @Test
@@ -480,7 +480,7 @@ class ProjectServiceTest {
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(delete)
-                .withMessage(ProjectErrorCode.ID_NOT_EXISTING.getMessage());
+                .withMessage(PROJECT_NOT_EXISTING);
         }
 
         @Test

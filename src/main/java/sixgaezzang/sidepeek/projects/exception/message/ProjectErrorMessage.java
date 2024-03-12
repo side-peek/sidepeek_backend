@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProjectErrorMessage {
+
     // Project
     public static final String PROJECT_IS_NULL = "프로젝트가 null 입니다.";
     public static final String PROJECT_NOT_EXISTING = "해당 프로젝트가 존재하지 않습니다.";
@@ -47,4 +48,5 @@ public final class ProjectErrorMessage {
     // Duration
     public static final String DURATION_IS_REVERSED = "시작 날짜가 종료 날짜와 같거나 종료 날짜보다 이전이어야합니다.";
     public static final String DURATION_IS_INVALID = "프로젝트 기간은 시작 날짜와 종료 날짜가 모두 기입되어야 합니다.";
+
 }
