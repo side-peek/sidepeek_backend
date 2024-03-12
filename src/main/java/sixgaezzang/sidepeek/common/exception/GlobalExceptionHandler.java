@@ -7,9 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
@@ -18,8 +20,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<ErrorResponse>> handleMethodArgumentNotValidException(
-        MethodArgumentNotValidException e
-    ) {
+        MethodArgumentNotValidException e) {
+        List<ErrorResponse> responses = convertToErrorResponses(e);
+        log.debug(e.getMessage(), e.fillInStackTrace());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(responses);
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<List<ErrorResponse>> handleHandlerMethodValidationException(
+        HandlerMethodValidationException e) {
         List<ErrorResponse> responses = convertToErrorResponses(e);
         log.debug(e.getMessage(), e.fillInStackTrace());
 
@@ -80,7 +91,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
         HttpMessageNotReadableException e) {
-        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST, "API 요청 형식이 올바르지 않습니다.");
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST,
+            "API 요청 형식이 올바르지 않습니다.");
         log.debug(e.getMessage(), e.fillInStackTrace());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -97,6 +109,15 @@ public class GlobalExceptionHandler {
             .body(errorResponse);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.FORBIDDEN, e.getMessage());
+        log.warn(e.getMessage(), e.fillInStackTrace());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(errorResponse);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR,
@@ -106,6 +127,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(errorResponse);
+    }
+
+    private List<ErrorResponse> convertToErrorResponses(HandlerMethodValidationException e) {
+        return e.getAllErrors()
+            .stream()
+            .map(fieldError -> ErrorResponse.of(HttpStatus.BAD_REQUEST,
+                fieldError.getDefaultMessage()))
+            .toList();
     }
 
     private List<ErrorResponse> convertToErrorResponses(MethodArgumentNotValidException e) {

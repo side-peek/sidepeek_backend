@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.projects.service;
 
+import static sixgaezzang.sidepeek.projects.util.validation.MemberValidator.validateMembers;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateProject;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -11,11 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.member.Member;
-import sixgaezzang.sidepeek.projects.dto.request.MemberSaveRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
-import sixgaezzang.sidepeek.projects.repository.member.MemberRepository;
-import sixgaezzang.sidepeek.projects.util.validation.MemberValidator;
-import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
+import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -28,10 +28,9 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public List<MemberSummary> saveAll(Project project,
-        List<MemberSaveRequest> memberSaveRequests) {
-        ProjectValidator.validateProject(project);
-        MemberValidator.validateMembers(project.getOwnerId(), memberSaveRequests);
+    public List<MemberSummary> saveAll(Project project, List<SaveMemberRequest> memberSaveRequests) {
+        validateProject(project);
+        validateMembers(project.getOwnerId(), memberSaveRequests);
 
         if (memberRepository.existsByProject(project)) {
             memberRepository.deleteAllByProject(project);
@@ -39,20 +38,13 @@ public class MemberService {
 
         List<Member> members = memberSaveRequests.stream().map(
             member -> {
-                Member.MemberBuilder memberBuilder = Member.builder()
-                    .project(project)
-                    .nickname(member.nickname())
-                    .role(member.role());
-
-                if (Objects.isNull(member.userId())) {
-                    return memberBuilder.build();
+                User user = null;
+                if (Objects.nonNull(member.userId())) {
+                    user = userRepository.findById(member.userId())
+                        .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
                 }
 
-                User user = userRepository.findById(member.userId())
-                    .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
-
-                return memberBuilder.user(user)
-                    .build();
+                return member.toEntity(project, user);
             }
         ).toList();
         memberRepository.saveAll(members);

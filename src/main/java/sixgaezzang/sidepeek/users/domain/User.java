@@ -1,15 +1,23 @@
 package sixgaezzang.sidepeek.users.domain;
 
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateEmail;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
+import static java.util.Objects.isNull;
+import static sixgaezzang.sidepeek.common.util.SetUtils.isSetPossible;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateEmail;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateGithubUrl;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAIL_FORMAT_INVALID;
-import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_NOT_REGISTERED;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_CAREER_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_EMAIL_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_INTRODUCTION_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_JOB_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateBlogUrl;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateIntroduction;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateNickname;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateProfileImageUrl;
 
+import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -27,6 +35,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
+import sixgaezzang.sidepeek.common.util.validation.ValidationUtils;
+import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 
 @Entity
 @Table(name = "users")
@@ -73,13 +83,14 @@ public class User extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public User(String nickname, String email, Password password, String introduction,
+    public User(String nickname, String email, String password, PasswordEncoder passwordEncoder,
+        String introduction,
         String profileImageUrl, Job job, Career career, String githubUrl, String blogUrl) {
         validateConstructorArguments(nickname, email);
 
         this.nickname = nickname;
         this.email = email;
-        this.password = password;
+        this.password = isNull(password) ? null : new Password(password, passwordEncoder);
         this.introduction = introduction;
         this.profileImageUrl = profileImageUrl;
         this.job = job;
@@ -89,7 +100,34 @@ public class User extends BaseTimeEntity {
     }
 
     public boolean checkPassword(String rawPassword, PasswordEncoder passwordEncoder) {
+        ValidationUtils.validateNotNull(password, PASSWORD_NOT_REGISTERED);
+
         return password != null && password.check(rawPassword, passwordEncoder);
+    }
+
+    public void update(UpdateUserProfileRequest request) {
+        // Required
+        setNickname(request.nickname());
+
+        // Option
+        setIntroduction(request.introduction());
+        setProfileImageUrl(request.profileImageUrl());
+        setJob(request.job());
+        setCareer(request.career());
+        setGithubUrl(request.githubUrl());
+        setBlogUrl(request.blogUrl());
+    }
+
+    public void updatePassword(String newPassword, PasswordEncoder passwordEncoder) {
+        this.password = new Password(newPassword, passwordEncoder);
+    }
+
+    public void softDelete() { // TODO: 회원탈퇴할 때 언젠가는 쓰일 것 같아서 구현
+        if (isNull(this.deletedAt)) {
+            this.deletedAt = LocalDateTime.now();
+            return;
+        }
+        throw new IllegalStateException(USER_ALREADY_DELETED);
     }
 
     private void validateConstructorArguments(String nickname, String email) {
@@ -102,8 +140,72 @@ public class User extends BaseTimeEntity {
         }
     }
 
-    private void validateNickname(String nickname) {
-        validateMaxLength(nickname, MAX_NICKNAME_LENGTH,
-            NICKNAME_OVER_MAX_LENGTH);
+    private void setNickname(String nickname) {
+        validateNickname(nickname);
+        if (isSetPossible(this.nickname, nickname)) {
+            this.nickname = nickname;
+        }
+    }
+
+    private void setIntroduction(String introduction) {
+        if (StringUtils.isNotBlank(introduction)) {
+            validateIntroduction(introduction);
+        }
+
+        if (isSetPossible(this.introduction, introduction)) {
+            this.introduction = introduction;
+        }
+    }
+
+    private void setProfileImageUrl(String profileImageUrl) {
+        if (StringUtils.isNotBlank(profileImageUrl)) {
+            validateProfileImageUrl(profileImageUrl);
+        }
+
+        if (isSetPossible(this.profileImageUrl, profileImageUrl)) {
+            this.profileImageUrl = profileImageUrl;
+        }
+    }
+
+    private void setJob(String jobName) {
+        Job newJob = null;
+        if (StringUtils.isNotBlank(jobName)) {
+            newJob = Job.get(jobName);
+        }
+
+        if (isSetPossible(this.job, newJob)) {
+            this.job = newJob;
+        }
+    }
+
+    private void setCareer(String careerDescription) {
+        Career newCareer = null;
+        if (StringUtils.isNotBlank(careerDescription)) {
+            newCareer = Career.get(careerDescription);
+        }
+
+        if (isSetPossible(this.career, newCareer)) {
+            this.career = newCareer;
+        }
+    }
+
+    private void setGithubUrl(String githubUrl) {
+        if (StringUtils.isNotBlank(githubUrl)) {
+            validateGithubUrl(githubUrl);
+        }
+
+        if (isSetPossible(this.githubUrl, githubUrl)) {
+            this.githubUrl = githubUrl;
+        }
+    }
+
+    private void setBlogUrl(String blogUrl) {
+        if (StringUtils.isNotBlank(blogUrl)) {
+            validateBlogUrl(blogUrl);
+        }
+
+        if (isSetPossible(this.blogUrl, blogUrl)) {
+            this.blogUrl = blogUrl;
+        }
     }
 }

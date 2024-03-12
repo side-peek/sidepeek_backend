@@ -2,7 +2,7 @@ package sixgaezzang.sidepeek.media.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static sixgaezzang.sidepeek.common.util.CommonConstant.LOGIN_IS_REQUIRED;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.LOGIN_IS_REQUIRED;
 import static sixgaezzang.sidepeek.media.exception.message.MediaErrorMessage.FILE_IS_EMPTY;
 import static sixgaezzang.sidepeek.media.exception.message.MediaErrorMessage.FILE_IS_INVALID;
 
@@ -24,9 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.config.properties.S3Properties;
 import sixgaezzang.sidepeek.media.dto.response.MediaUploadResponse;
-import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
+import sixgaezzang.sidepeek.util.FakeEntityProvider;
 import software.amazon.awssdk.services.s3.S3Client;
 
 @SpringBootTest

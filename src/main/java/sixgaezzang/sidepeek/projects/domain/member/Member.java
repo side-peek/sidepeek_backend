@@ -1,8 +1,10 @@
 package sixgaezzang.sidepeek.projects.domain.member;
 
-import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_ROLE_LENGTH;
+import static sixgaezzang.sidepeek.projects.util.validation.MemberValidator.validateRole;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateProject;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateNickname;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,18 +15,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.projects.domain.Project;
-import sixgaezzang.sidepeek.projects.util.validation.MemberValidator;
-import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 import sixgaezzang.sidepeek.users.domain.User;
 
 @Entity
 @Table(name = "project_member")
+@EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Member {
@@ -44,37 +45,26 @@ public class Member {
     @Column(name = "role", nullable = false, length = MAX_ROLE_LENGTH)
     private String role;
 
-    @Column(name = "nickname", length = MAX_NICKNAME_LENGTH)
+    @Column(name = "nickname", nullable = false, length = MAX_NICKNAME_LENGTH)
     private String nickname;
 
     @Builder
     public Member(User user, Project project, String role, String nickname) {
-        validateConstructorRequiredArguments(project, role);
-        validateConstructorMemberInfoArguments(user, nickname);
+        validateConstructorRequiredArguments(project, role, nickname);
 
         // Required
         this.project = project;
         this.role = role;
-        this.user = user;
         this.nickname = nickname;
+
+        // Option
+        this.user = user;
     }
 
-    private void validateConstructorMemberInfoArguments(User user, String nickname) {
-        if (Objects.nonNull(user)) { // 회원인 경우
-            MemberValidator.validateFellowMemberUser(user);
-            return;
-        }
-        if (Objects.nonNull(nickname)) { // 비회원인 경우
-            MemberValidator.validateNonFellowMemberNickname(nickname);
-            return;
-        }
-
-        throw new IllegalArgumentException(MEMBER_IS_INVALID);
-    }
-
-    private void validateConstructorRequiredArguments(Project project, String role) {
-        ProjectValidator.validateProject(project);
-        MemberValidator.validateRole(role);
+    private void validateConstructorRequiredArguments(Project project, String role, String nickname) {
+        validateProject(project);
+        validateRole(role);
+        validateNickname(nickname);
     }
 
 }

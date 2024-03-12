@@ -17,11 +17,11 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
-import sixgaezzang.sidepeek.projects.util.FakeValueProvider;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.dto.response.SkillResponse;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
+import sixgaezzang.sidepeek.util.FakeEntityProvider;
+import sixgaezzang.sidepeek.util.FakeValueProvider;
 
 @SpringBootTest
 @Transactional

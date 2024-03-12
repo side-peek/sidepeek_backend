@@ -13,24 +13,16 @@ public record MemberSummary(
     Long id,
     @Schema(description = "프로젝트 멤버 역할", example = "백엔드")
     String role,
-    @Schema(description = "프로젝트 멤버 회원/비회원 상세정보")
+    @Schema(description = "프로젝트 멤버 회원/비회원 상세 정보")
     UserSummary userSummary
 ) {
 
     public static MemberSummary from(Member member) {
         User user = member.getUser();
-        UserSummary userSummary = (user == null)
-            ? UserSummary.from(member.getNickname())
-            : UserSummary.from(user);
-        return MemberSummary.from(member, userSummary);
-    }
+        UserSummary userSummary = (user != null) ? UserSummary.from(user, member.getNickname()) :
+            UserSummary.from(member.getNickname());
 
-    public static MemberSummary from(Member member, UserSummary userSummary) {
-        return MemberSummary.builder()
-            .id(member.getId())
-            .role(member.getRole())
-            .userSummary(userSummary)
-            .build();
+        return new MemberSummary(member.getId(), member.getRole(), userSummary);
     }
 
 }

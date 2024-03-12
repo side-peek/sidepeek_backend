@@ -1,6 +1,10 @@
 package sixgaezzang.sidepeek.users.domain;
 
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.CAREER_IS_INVALID;
+
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Arrays;
+import java.util.Objects;
 
 public enum Career {
     ENTRY_LEVEL("0년차"),
@@ -19,4 +23,12 @@ public enum Career {
     public String getDescription() {
         return description;
     }
+
+    public static Career get(String description) {
+        return Arrays.stream(Career.values())
+            .filter(career -> Objects.equals(career.getDescription(), description))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException(CAREER_IS_INVALID));
+    }
+
 }

@@ -1,11 +1,12 @@
 package sixgaezzang.sidepeek.projects.domain;
 
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateGithubUrl;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateDeployUrl;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateDescription;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateDuration;
-import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateGithubUrl;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateName;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOverview;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
@@ -22,14 +23,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
-import sixgaezzang.sidepeek.projects.dto.request.ProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.util.converter.YearMonthDateAttributeConverter;
 
 @Entity
@@ -70,7 +71,7 @@ public class Project extends BaseTimeEntity {
     private String githubUrl;
 
     @Column(name = "owner_id", columnDefinition = "BIGINT", nullable = false)
-    private Long ownerId; // TODO: User로 설정하는 것이 좋을까요? 놓는다면 [accessToken id 일치 확인 + 유저 존재 확인(추가 발생)] 해야합니다!
+    private Long ownerId;
 
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
@@ -84,7 +85,6 @@ public class Project extends BaseTimeEntity {
     @Column(name = "view_count", nullable = false)
     private Long viewCount;
 
-    @Setter
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
@@ -119,6 +119,14 @@ public class Project extends BaseTimeEntity {
         this.viewCount++;
     }
 
+    public void softDelete() {
+        if (Objects.isNull(this.deletedAt)) {
+            this.deletedAt = LocalDateTime.now();
+            return;
+        }
+        throw new IllegalStateException(PROJECT_ALREADY_DELETED);
+    }
+
     private void validateConstructorRequiredArguments(String name, String overview, String githubUrl,
                                                       String description, Long ownerId) {
         validateName(name);
@@ -137,7 +145,8 @@ public class Project extends BaseTimeEntity {
         validateDuration(startDate, endDate);
     }
 
-    public Project update(ProjectRequest request) {
+    // TODO: User 처럼 Private Setter(Lombok X) 구현하는 것이 나을까 아래와 같은 방식으로 하는 게 나을까?
+    public Project update(SaveProjectRequest request) {
         validateConstructorRequiredArguments(request.name(), request.overview(), request.githubUrl(),
             request.description(), request.ownerId());
         validateConstructorOptionArguments(request.subName(), request.thumbnailUrl(), request.deployUrl(),

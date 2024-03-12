@@ -1,7 +1,7 @@
 package sixgaezzang.sidepeek.skill.domain;
 
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateMaxLength;
-import static sixgaezzang.sidepeek.common.util.ValidationUtils.validateURI;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateMaxLength;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateURI;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

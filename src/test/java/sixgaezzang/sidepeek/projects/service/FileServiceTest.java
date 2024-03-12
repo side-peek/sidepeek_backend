@@ -26,11 +26,11 @@ import sixgaezzang.sidepeek.projects.domain.file.File;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
-import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
-import sixgaezzang.sidepeek.projects.util.FakeEntityProvider;
-import sixgaezzang.sidepeek.projects.util.FakeValueProvider;
+import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
+import sixgaezzang.sidepeek.util.FakeEntityProvider;
+import sixgaezzang.sidepeek.util.FakeValueProvider;
 
 @SpringBootTest
 @Transactional
@@ -63,7 +63,7 @@ class FileServiceTest {
             user = createAndSaveUser();
             project = createAndSaveProject(user);
 
-            overLengthImageUrls = FakeValueProvider.createUrls(MAX_OVERVIEW_IMAGE_COUNT);
+            overLengthImageUrls = FakeValueProvider.createUrls(MAX_OVERVIEW_IMAGE_COUNT + 1);
             imageUrls = overLengthImageUrls.subList(0, IMAGE_COUNT);
         }
 
@@ -80,8 +80,7 @@ class FileServiceTest {
         @NullAndEmptySource
         void 빈_파일_목록_저장은_무시되어_성공한다(List<String> emptyImageUrls) {
             // given, when
-            List<OverviewImageSummary> savedImageUrls = fileService.saveAll(project,
-                emptyImageUrls);
+            List<OverviewImageSummary> savedImageUrls = fileService.saveAll(project, emptyImageUrls);
 
             // then
             assertThat(savedImageUrls).isEmpty();
@@ -90,8 +89,7 @@ class FileServiceTest {
         @Test
         void 목록_개수가_최대를_넘어서_파일_목록_저장에_실패한다() {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(project,
-                overLengthImageUrls);
+            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(project, overLengthImageUrls);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -104,8 +102,7 @@ class FileServiceTest {
             Project nullProject = null;
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(nullProject,
-                imageUrls);
+            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(nullProject, imageUrls);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -113,15 +110,14 @@ class FileServiceTest {
         }
 
         @ParameterizedTest(name = "[{index}] {0}")
-        @MethodSource("sixgaezzang.sidepeek.projects.util.TestParameterProvider#createInvalidFileInfo")
+        @MethodSource("sixgaezzang.sidepeek.util.TestParameterProvider#createInvalidFileInfo")
         void 파일_정보가_유효하지_않아_파일_목록_저장에_실패한다(String testMessage, String fileUrl, String message) {
             // given
             List<String> imageUrlsWithInvalidUrl = new ArrayList<>(imageUrls);
             imageUrlsWithInvalidUrl.add(fileUrl);
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(project,
-                imageUrlsWithInvalidUrl);
+            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(project, imageUrlsWithInvalidUrl);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)

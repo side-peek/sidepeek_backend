@@ -1,5 +1,9 @@
 package sixgaezzang.sidepeek.projects.service;
 
+import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACKS_IS_NULL;
+import static sixgaezzang.sidepeek.common.util.validation.TechStackValidator.validateTechStacks;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateNotNullAndEmpty;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateProject;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -7,13 +11,11 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
-import sixgaezzang.sidepeek.projects.dto.request.ProjectSkillSaveRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
-import sixgaezzang.sidepeek.projects.util.validation.ProjectSkillValidator;
-import sixgaezzang.sidepeek.projects.util.validation.ProjectValidator;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 
@@ -30,9 +32,10 @@ public class ProjectSkillService {
     }
 
     @Transactional
-    public List<ProjectSkillSummary> saveAll(Project project, List<ProjectSkillSaveRequest> techStacks) {
-        ProjectValidator.validateProject(project);
-        ProjectSkillValidator.validateTechStacks(techStacks);
+    public List<ProjectSkillSummary> saveAll(Project project, List<SaveTechStackRequest> techStacks) {
+        validateProject(project);
+        validateNotNullAndEmpty(techStacks, TECH_STACKS_IS_NULL);
+        validateTechStacks(techStacks);
 
         if (projectSkillRepository.existsByProject(project)) {
             projectSkillRepository.deleteAllByProject(project);
@@ -46,13 +49,13 @@ public class ProjectSkillService {
             .toList();
     }
 
-    private List<ProjectSkill> convertAllToEntity(Project project, List<ProjectSkillSaveRequest> techStacks) {
+    private List<ProjectSkill> convertAllToEntity(Project project, List<SaveTechStackRequest> techStacks) {
         return techStacks.stream().map(
             techStack -> {
                 Skill skill = skillRepository.findById(techStack.skillId())
                     .orElseThrow(() -> new EntityNotFoundException(SKILL_NOT_EXISTING));
 
-                return techStack.toEntity(project, skill);
+                return techStack.toProjectSkill(project, skill);
             }
         ).toList();
     }

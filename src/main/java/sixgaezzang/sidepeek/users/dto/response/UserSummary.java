@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import sixgaezzang.sidepeek.users.domain.User;
 
-@Schema(description = "회원 상세정보")
+@Schema(description = "회원 상세 정보")
 @Builder
 public record UserSummary(
     @Schema(description = "회원 식별자(비회원은 null)", example = "1")
@@ -23,7 +23,16 @@ public record UserSummary(
             .build();
     }
 
-    // 비회원
+    // 멤버(회원)
+    public static UserSummary from(User user, String nickname) {
+        return UserSummary.builder()
+            .id(user.getId())
+            .nickname(nickname)
+            .profileImageUrl(user.getProfileImageUrl())
+            .build();
+    }
+
+    // 멤버(비회원)
     public static UserSummary from(String nickname) {
         return UserSummary.builder()
             .id(null)

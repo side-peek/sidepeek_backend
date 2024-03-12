@@ -7,7 +7,7 @@ import lombok.Builder;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
-@Schema(description = "프로젝트 상세조회 응답")
+@Schema(description = "프로젝트 상세 조회 응답")
 @Builder
 public record ProjectResponse(
     @Schema(description = "프로젝트 식별자", example = "1")
@@ -36,7 +36,7 @@ public record ProjectResponse(
     YearMonth startDate,
     @Schema(description = "프로젝트 종료 연-월", example = "2024-03")
     YearMonth endDate,
-    @Schema(description = "프로젝트 작성자 Id", example = "1")
+    @Schema(description = "프로젝트 작성자 식별자", example = "1")
     Long ownerId,
     @Schema(description = "프로젝트 멤버 목록")
     List<MemberSummary> members,
