@@ -7,6 +7,7 @@ import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.G
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.LOGIN_IS_REQUIRED;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
+import static sixgaezzang.sidepeek.common.util.CommonConstant.GITHUB_URL;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
@@ -78,17 +79,15 @@ public final class ValidationUtils {
 
     public static void validateOptionGithubUrl(String githubUrl) {
         if (StringUtils.isNotBlank(githubUrl)) {
-            // TODO: github.com 포함 여부 확인
             validateTextLength(githubUrl, GITHUB_URL_OVER_MAX_LENGTH);
+            Assert.isTrue(githubUrl.startsWith(GITHUB_URL), GITHUB_URL_IS_INVALID);
             validateURI(githubUrl, GITHUB_URL_IS_INVALID);
         }
     }
 
     public static void validateRequiredGithubUrl(String githubUrl) {
-        // TODO: github.com 포함 여부 확인
         validateNotBlank(githubUrl, GITHUB_URL_IS_NULL);
-        validateTextLength(githubUrl, GITHUB_URL_OVER_MAX_LENGTH);
-        validateURI(githubUrl, GITHUB_URL_IS_INVALID);
+        validateOptionGithubUrl(githubUrl);
     }
 
     public static <T, U> void validateInclude(
