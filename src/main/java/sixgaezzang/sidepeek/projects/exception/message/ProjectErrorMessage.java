@@ -46,4 +46,7 @@ public final class ProjectErrorMessage {
     // Duration
     public static final String DURATION_IS_REVERSED = "시작 날짜가 종료 날짜와 같거나 종료 날짜보다 이전이어야합니다.";
     public static final String DURATION_IS_INVALID = "프로젝트 기간은 시작 날짜와 종료 날짜가 모두 기입되어야 합니다.";
+
+    // Search Type
+    public static final String USER_PROJECT_SEARCH_TYPE_IS_INVALID = "유효하지 않은 프로젝트 검색 타입입니다.";
 }
