@@ -117,7 +117,7 @@ class ProjectServiceTest {
         user = createAndSaveUser();
         fellowMemberIds.add(0, user.getId());
         members.add(0, FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
-        
+
         List<Long> createdSkillIds = new ArrayList<>();
         for (int i = 1; i <= SKILL_COUNT; i++) {
             createdSkillIds.add(createAndSaveSkill().getId());
@@ -134,7 +134,7 @@ class ProjectServiceTest {
             User user = createAndSaveUser();
             Project project = createAndSaveProject(user);
             Comment comment = createAndSaveComment(user, project);
-            CommentResponse commentResponse = CommentResponse.from(comment, true, List.of());
+            CommentResponse commentResponse = CommentResponse.from(comment, true, null);
 
             // when
             ProjectResponse response = projectService.findById(project.getId());
@@ -348,7 +348,8 @@ class ProjectServiceTest {
             String newGithubUrl = FakeValueProvider.createUrl();
             String newDescription = FakeValueProvider.createLongText();
             SaveProjectRequest newRequest = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
-                newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
+                newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
+                members
             );
             ThrowingCallable update = () -> projectService.save(null, originalProject.id(),
                 newRequest);
