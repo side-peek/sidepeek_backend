@@ -35,6 +35,7 @@ import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.INTR
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.JOB_IS_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_IS_NULL;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_FORMAT_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PROFILE_IMAGE_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PROFILE_IMAGE_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_INTRODUCTION_LENGTH;
@@ -58,6 +59,7 @@ import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 
 public class TestParameterProvider {
+
     //Project
     public static Stream<Arguments> createProjectsWithoutRequired() {
         String name = createProjectName();
@@ -366,6 +368,20 @@ public class TestParameterProvider {
                     "No URL Pattern",
                     Collections.emptyList()
                 ), BLOG_URL_IS_INVALID)
+        );
+    }
+
+    // Password
+    public static Stream<Arguments> createInvalidFormatPassword() {
+        return Stream.of(
+            Arguments.of("비밀번호가 숫자를 포함하지 않는 경우",
+                "password!", PASSWORD_FORMAT_INVALID),
+            Arguments.of("비밀번호가 최소 길이(8자)를 만족하지 못하는 경우",
+                "shor12!", PASSWORD_FORMAT_INVALID),
+            Arguments.of("비밀번호가 특수문자를 포함하지 않는 경우",
+                "password12", PASSWORD_FORMAT_INVALID),
+            Arguments.of("비밀번호가 영문자를 포함하지 않는 경우",
+                "12345678!", PASSWORD_FORMAT_INVALID)
         );
     }
 

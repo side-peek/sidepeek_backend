@@ -26,7 +26,6 @@ import sixgaezzang.sidepeek.auth.dto.request.ReissueTokenRequest;
 import sixgaezzang.sidepeek.auth.dto.response.LoginResponse;
 import sixgaezzang.sidepeek.auth.jwt.JWTManager;
 import sixgaezzang.sidepeek.common.exception.TokenValidationFailException;
-import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
@@ -214,7 +213,8 @@ class AuthServiceTest {
     private User createUser() {
         User user = User.builder()
             .email(email)
-            .password(new Password(password, passwordEncoder))
+            .password(password)
+            .passwordEncoder(passwordEncoder)
             .nickname(nickname)
             .build();
 

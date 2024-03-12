@@ -64,6 +64,10 @@ public final class ValidationUtils {
         Assert.isTrue(isNotBlank(input), message);
     }
 
+    public static void validateNotNull(Object input, String message) {
+        Assert.notNull(input, message);
+    }
+
     public static void validateBlank(String input, String message) {
         Assert.isTrue(isBlank(input), message);
     }

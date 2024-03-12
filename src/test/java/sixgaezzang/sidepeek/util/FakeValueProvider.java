@@ -36,6 +36,10 @@ public class FakeValueProvider {
         return urls;
     }
 
+    public static Long createId() {
+        return FAKER.random().nextLong(Long.MAX_VALUE);
+    }
+
     public static String createUrl() { // 파일, 깃허브, 배포 등등 url
         return FAKER.internet().url();
     }
