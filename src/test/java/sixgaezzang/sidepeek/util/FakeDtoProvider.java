@@ -96,7 +96,7 @@ public class FakeDtoProvider {
             FakeValueProvider.createIntroduction(),
             Job.BACKEND_DEVELOPER.getName(),
             Career.JUNIOR.getDescription(),
-            FakeValueProvider.createUrl(),
+            FakeValueProvider.createGithubUrl(),
             FakeValueProvider.createUrl(),
             Collections.emptyList()
         );

@@ -24,7 +24,7 @@ public class FakeEntityProvider {
             .subName(FakeValueProvider.createProjectName())
             .overview(FakeValueProvider.createOverview())
             .thumbnailUrl(FakeValueProvider.createUrl())
-            .githubUrl(FakeValueProvider.createUrl())
+            .githubUrl(FakeValueProvider.createGithubUrl())
             .startDate(startDate)
             .endDate(endDate)
             .ownerId(user.getId())

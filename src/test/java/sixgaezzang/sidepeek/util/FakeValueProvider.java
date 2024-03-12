@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.util;
 
 import static sixgaezzang.sidepeek.comments.util.CommentConstant.MAX_CONTENT_LENGTH;
+import static sixgaezzang.sidepeek.common.util.CommonConstant.GITHUB_URL;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
@@ -39,6 +40,10 @@ public class FakeValueProvider {
 
     public static String createUrl() { // 파일, 깃허브, 배포 등등 url
         return FAKER.internet().url();
+    }
+
+    public static String createGithubUrl() {
+        return GITHUB_URL + "/" + createEnglishKeyword();
     }
 
     public static String createEnglishKeyword() { // 검색 키워드(영어)
