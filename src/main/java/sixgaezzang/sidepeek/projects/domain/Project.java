@@ -1,7 +1,7 @@
 package sixgaezzang.sidepeek.projects.domain;
 
 import static sixgaezzang.sidepeek.common.util.SetUtils.isSetPossible;
-import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateGithubUrl;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateRequiredGithubUrl;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
@@ -132,7 +132,7 @@ public class Project extends BaseTimeEntity {
                                                       String description, Long ownerId) {
         validateName(name);
         validateOverview(overview);
-        validateGithubUrl(githubUrl);
+        validateRequiredGithubUrl(githubUrl);
         validateDescription(description);
         validateOwnerId(ownerId);
     }
@@ -179,7 +179,7 @@ public class Project extends BaseTimeEntity {
     }
 
     private void setGithubUrl(String githubUrl) {
-        validateGithubUrl(githubUrl);
+        validateRequiredGithubUrl(githubUrl);
         if (isSetPossible(this.githubUrl, githubUrl)) {
             this.githubUrl = githubUrl;
         }
