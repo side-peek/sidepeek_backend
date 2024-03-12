@@ -10,6 +10,6 @@ public interface ProjectRepositoryCustom {
     List<ProjectListResponse> findAllBySortAndStatus(List<Long> likedProjectIds, String sort,
         boolean isReleased);
 
-    List<ProjectBannerResponse> findAllPopularOfPeriod(LocalDate startDate, LocalDate endDate);
+    List<ProjectBannerResponse> findAllPopularOfPeriod(LocalDate startDate, LocalDate endDate, int count);
 
 }

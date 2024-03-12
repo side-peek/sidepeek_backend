@@ -2,10 +2,11 @@ package sixgaezzang.sidepeek.projects.repository;
 
 import static sixgaezzang.sidepeek.like.domain.QLike.like;
 import static sixgaezzang.sidepeek.projects.domain.QProject.project;
-import static sixgaezzang.sidepeek.projects.util.ProjectConstant.BANNER_PROJECT_COUNT;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.DateTemplate;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
@@ -45,15 +46,18 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
     }
 
     @Override
-    public List<ProjectBannerResponse> findAllPopularOfPeriod(LocalDate startDate, LocalDate endDate) {
+    public List<ProjectBannerResponse> findAllPopularOfPeriod(LocalDate startDate, LocalDate endDate, int count) {
+        DateTemplate<LocalDate> createdAt = Expressions.dateTemplate(
+            LocalDate.class, "DATE_FORMAT({0}, {1})", like.createdAt, "%Y-%m-%d");
+
         List<Project> projects = queryFactory
             .select(project)
             .from(like)
             .join(like.project, project)
-            .where(like.createdAt.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
+            .where(createdAt.between(startDate, endDate))
             .distinct()
             .orderBy(project.likeCount.desc())
-            .limit(BANNER_PROJECT_COUNT)
+            .limit(count)
             .fetch();
 
         return projects.stream()
