@@ -7,6 +7,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sixgaezzang.sidepeek.common.annotation.Login;
 import sixgaezzang.sidepeek.common.doc.UserControllerDoc;
+import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
+import sixgaezzang.sidepeek.projects.service.ProjectService;
 import sixgaezzang.sidepeek.users.dto.request.CheckEmailRequest;
 import sixgaezzang.sidepeek.users.dto.request.CheckNicknameRequest;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
@@ -35,6 +41,7 @@ import sixgaezzang.sidepeek.users.service.UserService;
 public class UserController implements UserControllerDoc {
 
     private final UserService userService;
+    private final ProjectService projectService;
 
     @Override
     @PostMapping
@@ -110,4 +117,18 @@ public class UserController implements UserControllerDoc {
             .body(userService.updateProfile(loginId, id, request));
     }
 
+    @Override
+    @GetMapping("/{id}/projects")
+    public ResponseEntity<Page<ProjectListResponse>> getProjects(
+        @Login Long loginId,
+        @PathVariable Long id,
+        @RequestParam UserProjectSearchType type,
+        @PageableDefault(size = 12) Pageable pageable
+    ) {
+        Page<ProjectListResponse> projects = projectService.findByUser(id, loginId,
+            type, pageable);
+
+        return ResponseEntity.ok()
+            .body(projects);
+    }
 }
