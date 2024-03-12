@@ -2,6 +2,7 @@ package sixgaezzang.sidepeek.projects.repository;
 
 import static sixgaezzang.sidepeek.like.domain.QLike.like;
 import static sixgaezzang.sidepeek.projects.domain.QProject.project;
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.BANNER_PROJECT_COUNT;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -52,7 +53,7 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             .where(like.createdAt.between(startDate.atStartOfDay(), endDate.atStartOfDay()))
             .distinct()
             .orderBy(project.likeCount.desc())
-            .limit(5L)
+            .limit(BANNER_PROJECT_COUNT)
             .fetch();
 
         return projects.stream()
