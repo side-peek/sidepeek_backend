@@ -1,14 +1,16 @@
 package sixgaezzang.sidepeek.projects.service;
 
-import static java.time.DayOfWeek.MONDAY;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.BANNER_PROJECT_COUNT;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -104,11 +106,10 @@ public class ProjectService {
     }
 
     public List<ProjectBannerResponse> findAllPopularThisWeek() {
-        LocalDate today = LocalDate.now();
-        LocalDate endDate = today.plusDays(1L);
-        LocalDate startDate = getStartDayOfWeek(today);
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = getStartDayOfWeek(endDate);
 
-        return projectRepository.findAllPopularOfPeriod(startDate, endDate);
+        return projectRepository.findAllPopularOfPeriod(startDate, endDate, (int) BANNER_PROJECT_COUNT);
     }
 
     @Transactional
@@ -136,11 +137,7 @@ public class ProjectService {
     }
 
     private LocalDate getStartDayOfWeek(LocalDate endWeekDay) {
-        LocalDate startWeekDay = endWeekDay;
-        while (!startWeekDay.getDayOfWeek().equals(MONDAY)) {
-            startWeekDay = startWeekDay.minusDays(1L);
-        }
-        return startWeekDay;
+        return endWeekDay.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
     }
 
 }
