@@ -7,6 +7,7 @@ import static sixgaezzang.sidepeek.comments.util.validation.CommentValidator.val
 import static sixgaezzang.sidepeek.comments.util.validation.CommentValidator.validateSaveCommentRequest;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginIdEqualsOwnerId;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -21,7 +22,7 @@ import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.dto.response.ReplyResponse;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
-import sixgaezzang.sidepeek.projects.service.ProjectService;
+import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.service.UserService;
 
@@ -31,8 +32,8 @@ import sixgaezzang.sidepeek.users.service.UserService;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final ProjectRepository projectRepository;
     private final UserService userService;
-    private final ProjectService projectService;
 
     @Transactional
     public Long save(Long loginId, SaveCommentRequest request) {
@@ -45,7 +46,8 @@ public class CommentService {
         Project project;
         Comment parent = null;
         if (Objects.isNull(request.parentId())) {
-            project = projectService.getById(request.projectId());
+            project = projectRepository.findById(request.projectId())
+                .orElseThrow(() -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
         } else {
             parent = getById(request.parentId(), PARENT_COMMENT_NOT_EXISTING);
             validateParentCommentHasParent(parent);
