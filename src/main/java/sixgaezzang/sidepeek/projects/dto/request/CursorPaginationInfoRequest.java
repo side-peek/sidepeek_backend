@@ -34,7 +34,7 @@ public record CursorPaginationInfoRequest(
         Boolean isReleased) {
         this.lastProjectId = lastProjectId;
         this.lastOrderCount = lastOrderCount;
-        this.pageSize = (pageSize != null) ? pageSize : 1;
+        this.pageSize = (pageSize != null) ? pageSize : 24;
         this.sort = (sort != null) ? sort : SortType.createdAt;
         this.isReleased = (isReleased != null) ? isReleased : false;
     }
