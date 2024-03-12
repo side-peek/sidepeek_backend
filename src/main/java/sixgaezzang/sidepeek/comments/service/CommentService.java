@@ -34,6 +34,11 @@ public class CommentService {
 
     private List<ReplyResponse> mapReplies(Comment comment) {
         List<Comment> replies = commentRepository.findAllReplies(comment);
+
+        if (replies.isEmpty()) {
+            return null;    // 대댓글이 없는 경우 null 반환
+        }
+
         return replies.stream()
             .map(reply -> {
                 boolean isOwner = isSameOwner(reply, reply.getProject());
