@@ -3,6 +3,7 @@ package sixgaezzang.sidepeek.projects.service;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
+import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.USER_PROJECT_SEARCH_TYPE_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateLoginIdEqualsUserId;
@@ -126,7 +127,7 @@ public class ProjectService {
                 validateLoginIdEqualsUserId(loginId, userId);
                 return findAllByUserCommentedByUser(user, likedProjectIds, pageable);
             default:
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException(USER_PROJECT_SEARCH_TYPE_IS_INVALID);
         }
     }
 
