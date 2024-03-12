@@ -25,7 +25,6 @@ public final class ProjectErrorMessage {
     public static final String OVERVIEW_OVER_MAX_LENGTH = "프로젝트 개요는 " + MAX_OVERVIEW_LENGTH + "자 이하여야 합니다.";
 
     // Sub Name
-    public static final String SUB_NAME_IS_BLANK = "부제목이 빈 문자열입니다.";
     public static final String SUB_NAME_OVER_MAX_LENGTH = "프로젝트 부제목은 " + MAX_PROJECT_NAME_LENGTH + "자 이하여야 합니다.";
 
     // Deploy url
@@ -33,7 +32,6 @@ public final class ProjectErrorMessage {
     public static final String DEPLOY_URL_IS_INVALID = "프로젝트 배포 URL 형식이 유효하지 않습니다.";
 
     // Troubleshooting
-    public static final String TROUBLESHOOTING_IS_BLANK = "트러블 슈팅이 빈 문자열입니다.";
     public static final String TROUBLESHOOTING_OVER_MAX_LENGTH = "프로젝트 트러블 슈팅 설명은 " + MAX_TEXT_LENGTH + "자 이하여야 합니다.";
 
     // Thumbnail url
