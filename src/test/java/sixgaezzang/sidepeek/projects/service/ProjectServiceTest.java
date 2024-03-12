@@ -78,10 +78,6 @@ class ProjectServiceTest {
 
     User user;
 
-    private Skill createAndSaveSkill() {
-        return skillRepository.save(FakeEntityProvider.createSkill());
-    }
-
     private User createAndSaveUser() {
         User newUser = FakeEntityProvider.createUser();
         return userRepository.save(newUser);
@@ -108,20 +104,30 @@ class ProjectServiceTest {
     void setup() {
         members = new ArrayList<>();
         fellowMemberIds = new ArrayList<>();
+        List<User> users = new ArrayList<>();
         for (int i = 1; i <= MEMBER_COUNT - 1; i++) {
-            Long savedUserId = createAndSaveUser().getId();
-            fellowMemberIds.add(savedUserId);
-            members.add(FakeDtoProvider.createFellowSaveMemberRequest(savedUserId));
+            users.add(createUser());
         }
+        userRepository.saveAll(users)
+            .stream()
+            .forEach(user -> {
+                fellowMemberIds.add(user.getId());
+                members.add(FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
+            });
 
         user = createAndSaveUser();
         fellowMemberIds.add(0, user.getId());
         members.add(0, FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
-        
-        List<Long> createdSkillIds = new ArrayList<>();
+
+        List<Skill> skills = new ArrayList<>();
         for (int i = 1; i <= SKILL_COUNT; i++) {
-            createdSkillIds.add(createAndSaveSkill().getId());
+            skills.add(FakeEntityProvider.createSkill());
         }
+        List<Long> createdSkillIds = skillRepository.saveAll(skills)
+            .stream()
+            .map(skill -> skill.getId())
+            .toList();
+
         techStacks = FakeDtoProvider.createUpdateUserSkillRequests(createdSkillIds);
     }
 
