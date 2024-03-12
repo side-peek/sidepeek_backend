@@ -46,30 +46,6 @@ public class ProjectController implements ProjectControllerDoc {
     }
 
     @Override
-    @PutMapping("/{id}")
-    public ResponseEntity<ProjectResponse> update(
-        @Login Long loginId,
-        @PathVariable(value = "id") Long projectId,
-        @Valid @RequestBody SaveProjectRequest request
-    ) {
-        ProjectResponse response = projectService.save(loginId, projectId, request);
-
-        return ResponseEntity.ok(response);
-    }
-
-    @Override
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
-        @Login Long loginId,
-        @PathVariable(value = "id") Long projectId
-    ) {
-        projectService.delete(loginId, projectId);
-
-        return ResponseEntity.noContent()
-            .build();
-    }
-
-    @Override
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponse> getById(
         @PathVariable Long id
@@ -98,6 +74,30 @@ public class ProjectController implements ProjectControllerDoc {
         List<ProjectBannerResponse> responses = projectService.findAllWeeklyPopular();
 
         return ResponseEntity.ok(responses);
+    }
+
+    @Override
+    @PutMapping("/{id}")
+    public ResponseEntity<ProjectResponse> update(
+        @Login Long loginId,
+        @PathVariable(value = "id") Long projectId,
+        @Valid @RequestBody SaveProjectRequest request
+    ) {
+        ProjectResponse response = projectService.save(loginId, projectId, request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(
+        @Login Long loginId,
+        @PathVariable(value = "id") Long projectId
+    ) {
+        projectService.delete(loginId, projectId);
+
+        return ResponseEntity.noContent()
+            .build();
     }
 
 }
