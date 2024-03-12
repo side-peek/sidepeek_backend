@@ -30,8 +30,8 @@ import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
-import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
+import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -44,24 +44,19 @@ import sixgaezzang.sidepeek.util.FakeEntityProvider;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ProjectSkillServiceTest {
 
-    @Autowired
-    ProjectSkillService projectSkillService;
-
-    @Autowired
-    ProjectSkillRepository projectSkillRepository;
-
-    @Autowired
-    SkillRepository skillRepository;
-
-    @Autowired
-    ProjectRepository projectRepository;
-    
-    @Autowired
-    UserRepository userRepository;
-
     static final int SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
     static List<SaveTechStackRequest> techStacks;
     static List<SaveTechStackRequest> overLengthTechStacks;
+    @Autowired
+    ProjectSkillService projectSkillService;
+    @Autowired
+    ProjectSkillRepository projectSkillRepository;
+    @Autowired
+    SkillRepository skillRepository;
+    @Autowired
+    ProjectRepository projectRepository;
+    @Autowired
+    UserRepository userRepository;
     Project project;
     User user;
     Skill skill;
@@ -101,7 +96,8 @@ class ProjectSkillServiceTest {
         @Test
         void 프로젝트_기술_스택_목록_저장에_성공한다() {
             // given, when
-            List<ProjectSkillSummary> savedTechStacks = projectSkillService.saveAll(project, techStacks);
+            List<ProjectSkillSummary> savedTechStacks = projectSkillService.saveAll(project,
+                techStacks);
 
             // then
             assertThat(savedTechStacks).hasSize(SKILL_COUNT);
@@ -111,7 +107,8 @@ class ProjectSkillServiceTest {
         @NullAndEmptySource
         void 빈_기술_스택_목록_저장에_실패한다(List<SaveTechStackRequest> emptyTechStacks) {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, emptyTechStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project,
+                emptyTechStacks);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -124,7 +121,8 @@ class ProjectSkillServiceTest {
             Project nullProject = null;
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(nullProject, techStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(
+                nullProject, techStacks);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -134,7 +132,8 @@ class ProjectSkillServiceTest {
         @Test
         void 목록_개수가_최대를_넘어서_기술_스택_목록_저장에_실패한다() {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, overLengthTechStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project,
+                overLengthTechStacks);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -204,10 +203,12 @@ class ProjectSkillServiceTest {
             techStacks.add(duplicatedTechStack);
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project, techStacks);
+            ThrowableAssert.ThrowingCallable saveAll = () -> projectSkillService.saveAll(project,
+                techStacks);
 
             // then
-            AssertionsForClassTypes.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
+            AssertionsForClassTypes.assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(saveAll)
                 .withMessage(TECH_STACK_IS_DUPLICATED);
         }
 

@@ -26,7 +26,7 @@ import sixgaezzang.sidepeek.projects.domain.file.File;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
-import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 import sixgaezzang.sidepeek.util.FakeEntityProvider;
@@ -80,7 +80,8 @@ class FileServiceTest {
         @NullAndEmptySource
         void 빈_파일_목록_저장은_무시되어_성공한다(List<String> emptyImageUrls) {
             // given, when
-            List<OverviewImageSummary> savedImageUrls = fileService.saveAll(project, emptyImageUrls);
+            List<OverviewImageSummary> savedImageUrls = fileService.saveAll(project,
+                emptyImageUrls);
 
             // then
             assertThat(savedImageUrls).isEmpty();
@@ -89,7 +90,8 @@ class FileServiceTest {
         @Test
         void 목록_개수가_최대를_넘어서_파일_목록_저장에_실패한다() {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(project, overLengthImageUrls);
+            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(project,
+                overLengthImageUrls);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -102,7 +104,8 @@ class FileServiceTest {
             Project nullProject = null;
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(nullProject, imageUrls);
+            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(nullProject,
+                imageUrls);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -117,7 +120,8 @@ class FileServiceTest {
             imageUrlsWithInvalidUrl.add(fileUrl);
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(project, imageUrlsWithInvalidUrl);
+            ThrowableAssert.ThrowingCallable saveAll = () -> fileService.saveAll(project,
+                imageUrlsWithInvalidUrl);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)

@@ -36,7 +36,7 @@ import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
-import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -117,7 +117,7 @@ class ProjectServiceTest {
         user = createAndSaveUser();
         fellowMemberIds.add(0, user.getId());
         members.add(0, FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
-        
+
         List<Long> createdSkillIds = new ArrayList<>();
         for (int i = 1; i <= SKILL_COUNT; i++) {
             createdSkillIds.add(createAndSaveSkill().getId());
@@ -348,7 +348,8 @@ class ProjectServiceTest {
             String newGithubUrl = FakeValueProvider.createUrl();
             String newDescription = FakeValueProvider.createLongText();
             SaveProjectRequest newRequest = FakeDtoProvider.createSaveProjectRequestOnlyRequired(
-                newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
+                newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
+                members
             );
             ThrowingCallable update = () -> projectService.save(null, originalProject.id(),
                 newRequest);
