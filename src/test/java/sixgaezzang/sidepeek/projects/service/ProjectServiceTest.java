@@ -119,6 +119,10 @@ class ProjectServiceTest {
 
     User user;
 
+    private Skill createAndSaveSkill() {
+        return skillRepository.save(FakeEntityProvider.createSkill());
+    }
+
     private User createAndSaveUser() {
         User newUser = createUser();
         return userRepository.save(newUser);
