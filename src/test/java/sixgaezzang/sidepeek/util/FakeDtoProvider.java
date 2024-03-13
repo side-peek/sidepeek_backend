@@ -50,7 +50,8 @@ public class FakeDtoProvider {
     }
 
     public static SaveProjectRequest createSaveProjectRequestWithOwnerIdAndOption(
-        List<SaveTechStackRequest> techStacks, Long ownerId, String subName, String thumbnailUrl, String deployUrl,
+        List<SaveTechStackRequest> techStacks, Long ownerId, String subName, String thumbnailUrl,
+        String deployUrl,
         String troubleShooting, YearMonth startDate, YearMonth endDate
     ) {
         return new SaveProjectRequest(
@@ -83,7 +84,8 @@ public class FakeDtoProvider {
     }
 
     // Comment
-    public static SaveCommentRequest createSaveCommentRequestWithProjectId(Long userId, Long projectId) {
+    public static SaveCommentRequest createSaveCommentRequestWithProjectId(Long userId,
+        Long projectId) {
         return new SaveCommentRequest(
             userId,
             projectId,
@@ -93,7 +95,8 @@ public class FakeDtoProvider {
         );
     }
 
-    public static SaveCommentRequest createSaveCommentRequestWithParentId(Long userId, Long parentId) {
+    public static SaveCommentRequest createSaveCommentRequestWithParentId(Long userId,
+        Long parentId) {
         return new SaveCommentRequest(
             userId,
             null,
@@ -109,7 +112,6 @@ public class FakeDtoProvider {
             FakeValueProvider.createContent()
         );
     }
-
 
     // Like
     public static LikeRequest createLikeRequest(Long projectId) {
