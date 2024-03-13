@@ -130,8 +130,8 @@ public class Project extends BaseTimeEntity {
         this.commentCount++;
     }
 
-    public void decreaseCommentCount() {
-        this.commentCount--;
+    public void decreaseCommentCount(long commentCount) {
+        this.commentCount -= commentCount;
     }
 
     public void softDelete(LocalDateTime now) {
