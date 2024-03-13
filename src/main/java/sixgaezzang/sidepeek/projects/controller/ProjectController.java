@@ -72,7 +72,7 @@ public class ProjectController implements ProjectControllerDoc {
     @Override
     @GetMapping("/weekly")
     public ResponseEntity<List<ProjectBannerResponse>> getAllPopularThisWeek() {
-        List<ProjectBannerResponse> responses = projectService.findAllPopularThisWeek();
+        List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
 
         return ResponseEntity.ok(responses);
     }

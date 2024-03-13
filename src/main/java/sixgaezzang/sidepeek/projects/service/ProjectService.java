@@ -97,7 +97,7 @@ public class ProjectService {
         return ProjectResponse.from(project, overviewImages, techStacks, members, comments);
     }
 
-    public List<ProjectBannerResponse> findAllPopularThisWeek() {
+    public List<ProjectBannerResponse> findAllPopularLastWeek() {
         LocalDate today = LocalDate.now();
         LocalDate startDate = getStartDayOfLastWeek(today);
         LocalDate endDate = getEndDayOfLastWeek(today);
