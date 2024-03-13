@@ -15,26 +15,13 @@ import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER
 import static sixgaezzang.sidepeek.util.FakeDtoProvider.createFellowSaveMemberRequest;
 import static sixgaezzang.sidepeek.util.FakeDtoProvider.createSaveProjectRequestOnlyRequired;
 import static sixgaezzang.sidepeek.util.FakeDtoProvider.createSaveProjectRequestWithOwnerIdAndOption;
-import static sixgaezzang.sidepeek.util.FakeDtoProvider.createUpdateUserSkillRequests;
-import static sixgaezzang.sidepeek.util.FakeEntityProvider.createComment;
-import static sixgaezzang.sidepeek.util.FakeEntityProvider.createLike;
-import static sixgaezzang.sidepeek.util.FakeDtoProvider.createFellowSaveMemberRequest;
-import static sixgaezzang.sidepeek.util.FakeDtoProvider.createSaveProjectRequestOnlyRequired;
-import static sixgaezzang.sidepeek.util.FakeDtoProvider.createSaveProjectRequestWithOwnerIdAndOption;
 import static sixgaezzang.sidepeek.util.FakeDtoProvider.createSaveTechStackRequests;
 import static sixgaezzang.sidepeek.util.FakeDtoProvider.createUpdateProjectRequestOnlyRequired;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createComment;
+import static sixgaezzang.sidepeek.util.FakeEntityProvider.createLike;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createProject;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createSkill;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createUser;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createContent;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createId;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createLongText;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createOverview;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createProjectName;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createRole;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createUserProjectSearchType;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createContent;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createGithubUrl;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createId;
@@ -42,7 +29,6 @@ import static sixgaezzang.sidepeek.util.FakeValueProvider.createLongText;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createOverview;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createProjectName;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createRole;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createUserProjectSearchType;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -78,8 +64,8 @@ import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
 import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
-import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
@@ -90,11 +76,10 @@ import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
-import sixgaezzang.sidepeek.util.FakeEntityProvider;
 
 @SpringBootTest
 @Transactional
-@DisplayNameGeneration(ReplaceUnderscores.class)
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ProjectServiceTest {
 
     static final Faker faker = new Faker();
