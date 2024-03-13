@@ -4,6 +4,7 @@ import static sixgaezzang.sidepeek.common.util.CommonConstant.BLANK_STRING;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Objects;
 import lombok.Builder;
 import sixgaezzang.sidepeek.users.domain.User;
 
@@ -26,7 +27,7 @@ public record UserSummary(
 ) {
 
     public UserSummary(Long id, String nickname, String profileImageUrl) {
-        this(id, null, nickname, profileImageUrl);
+        this(id, null, nickname, Objects.isNull(profileImageUrl) ? BLANK_STRING : profileImageUrl);
     }
 
     public static UserSummary fromWithIsSocialLogin(User user, boolean isSocialLogin) {
