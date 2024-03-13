@@ -124,7 +124,7 @@ public class UserController implements UserControllerDoc {
         @Login Long loginId,
         @PathVariable Long id,
         @RequestParam UserProjectSearchType type,
-        @PageableDefault(size = 12) Pageable pageable
+        @PageableDefault(size = 24) Pageable pageable
     ) {
         Page<ProjectListResponse> projects = projectService.findByUser(id, loginId,
             type, pageable);
