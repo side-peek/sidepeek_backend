@@ -12,7 +12,6 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +19,6 @@ import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.comments.dto.request.SaveCommentRequest;
 import sixgaezzang.sidepeek.comments.dto.request.UpdateCommentRequest;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
-import sixgaezzang.sidepeek.comments.dto.response.CommentWithCountResponse;
 import sixgaezzang.sidepeek.comments.dto.response.ReplyResponse;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
@@ -68,22 +66,16 @@ public class CommentService {
             .orElseThrow(() -> new EntityNotFoundException(message));
     }
 
-    public CommentWithCountResponse findAll(Project project) {
+    public List<CommentResponse> findAll(Project project) {
         List<Comment> comments = commentRepository.findAll(project);
-        AtomicLong commentCount = new AtomicLong((long) comments.size());    // 댓글 개수
 
-        List<CommentResponse> results = comments.stream()
+        return comments.stream()
             .map(comment -> {
                 boolean isOwner = isSameOwner(comment, project);
                 List<ReplyResponse> replies = mapReplies(comment);
-                if (Objects.nonNull(replies)) {
-                    commentCount.addAndGet(replies.size()); // 대댓글 개수 추가
-                }
                 return CommentResponse.from(comment, isOwner, replies);
             })
             .toList();
-
-        return CommentWithCountResponse.from(results, commentCount.get());
     }
 
     @Transactional
