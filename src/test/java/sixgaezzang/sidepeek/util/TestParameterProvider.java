@@ -1,5 +1,9 @@
 package sixgaezzang.sidepeek.util;
 
+import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.CONTENT_IS_NULL;
+import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.CONTENT_OVER_MAX_LENGTH;
+import static sixgaezzang.sidepeek.comments.exception.message.CommentErrorMessage.IS_ANONYMOUS_IS_NULL;
+import static sixgaezzang.sidepeek.comments.util.CommentConstant.MAX_CONTENT_LENGTH;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_NULL;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
@@ -40,6 +44,7 @@ import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PROF
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PROFILE_IMAGE_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_INTRODUCTION_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createGithubUrl;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createLongText;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createNickname;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createOverview;
@@ -64,7 +69,7 @@ public class TestParameterProvider {
     public static Stream<Arguments> createProjectsWithoutRequired() {
         String name = createProjectName();
         String overview = createOverview();
-        String githubUrl = createUrl();
+        String githubUrl = createGithubUrl();
         String description = createLongText();
 
         return Stream.of(
@@ -82,7 +87,7 @@ public class TestParameterProvider {
     public static Stream<Arguments> createProjectsOnlyInvalidRequired() {
         String name = createProjectName();
         String overview = createOverview();
-        String githubUrl = createUrl();
+        String githubUrl = createGithubUrl();
         String description = createLongText();
 
         return Stream.of(
@@ -213,7 +218,7 @@ public class TestParameterProvider {
                     FakeValueProvider.createIntroduction(),
                     Job.BACKEND_DEVELOPER.getName(),
                     Career.JUNIOR.getDescription(),
-                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createGithubUrl(),
                     FakeValueProvider.createUrl(),
                     Collections.emptyList()
                 ), NICKNAME_OVER_MAX_LENGTH),
@@ -224,7 +229,7 @@ public class TestParameterProvider {
                     FakeValueProvider.createIntroduction(),
                     Job.BACKEND_DEVELOPER.getName(),
                     Career.JUNIOR.getDescription(),
-                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createGithubUrl(),
                     FakeValueProvider.createUrl(),
                     Collections.emptyList()
                 ), NICKNAME_IS_NULL),
@@ -235,7 +240,7 @@ public class TestParameterProvider {
                     FakeValueProvider.createIntroduction(),
                     Job.BACKEND_DEVELOPER.getName(),
                     Career.JUNIOR.getDescription(),
-                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createGithubUrl(),
                     FakeValueProvider.createUrl(),
                     Collections.emptyList()
                 ), NICKNAME_IS_NULL)
@@ -251,7 +256,7 @@ public class TestParameterProvider {
                     "I".repeat(MAX_INTRODUCTION_LENGTH + 1),
                     Job.BACKEND_DEVELOPER.getName(),
                     Career.JUNIOR.getDescription(),
-                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createGithubUrl(),
                     FakeValueProvider.createUrl(),
                     Collections.emptyList()
                 ), INTRODUCTION_OVER_MAX_LENGTH)
@@ -267,7 +272,7 @@ public class TestParameterProvider {
                     FakeValueProvider.createIntroduction(),
                     Job.BACKEND_DEVELOPER.getName(),
                     Career.JUNIOR.getDescription(),
-                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createGithubUrl(),
                     FakeValueProvider.createUrl(),
                     Collections.emptyList()
                 ), PROFILE_IMAGE_URL_OVER_MAX_LENGTH),
@@ -278,7 +283,7 @@ public class TestParameterProvider {
                     FakeValueProvider.createIntroduction(),
                     Job.BACKEND_DEVELOPER.getName(),
                     Career.JUNIOR.getDescription(),
-                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createGithubUrl(),
                     FakeValueProvider.createUrl(),
                     Collections.emptyList()
                 ), PROFILE_IMAGE_URL_IS_INVALID)
@@ -294,7 +299,7 @@ public class TestParameterProvider {
                     FakeValueProvider.createIntroduction(),
                     "No Job",
                     Career.JUNIOR.getDescription(),
-                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createGithubUrl(),
                     FakeValueProvider.createUrl(),
                     Collections.emptyList()
                 ), JOB_IS_INVALID)
@@ -310,7 +315,7 @@ public class TestParameterProvider {
                     FakeValueProvider.createIntroduction(),
                     Job.BACKEND_DEVELOPER.getName(),
                     "No Career",
-                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createGithubUrl(),
                     FakeValueProvider.createUrl(),
                     Collections.emptyList()
                 ), CAREER_IS_INVALID)
@@ -326,7 +331,7 @@ public class TestParameterProvider {
                     FakeValueProvider.createIntroduction(),
                     Job.BACKEND_DEVELOPER.getName(),
                     Career.JUNIOR.getDescription(),
-                    FakeValueProvider.createUrl() + "G".repeat(MAX_TEXT_LENGTH),
+                    FakeValueProvider.createGithubUrl() + "G".repeat(MAX_TEXT_LENGTH),
                     FakeValueProvider.createUrl(),
                     Collections.emptyList()
                 ), GITHUB_URL_OVER_MAX_LENGTH),
@@ -338,6 +343,17 @@ public class TestParameterProvider {
                     Job.BACKEND_DEVELOPER.getName(),
                     Career.JUNIOR.getDescription(),
                     "No URL Pattern",
+                    FakeValueProvider.createUrl(),
+                    Collections.emptyList()
+                ), GITHUB_URL_IS_INVALID),
+            Arguments.of("githubUrl이 github 도메인 URL이 아닌 경우",
+                new UpdateUserProfileRequest(
+                    FakeValueProvider.createNickname(),
+                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createIntroduction(),
+                    Job.BACKEND_DEVELOPER.getName(),
+                    Career.JUNIOR.getDescription(),
+                    FakeValueProvider.createUrl(),
                     FakeValueProvider.createUrl(),
                     Collections.emptyList()
                 ), GITHUB_URL_IS_INVALID)
@@ -353,7 +369,7 @@ public class TestParameterProvider {
                     FakeValueProvider.createIntroduction(),
                     Job.BACKEND_DEVELOPER.getName(),
                     Career.JUNIOR.getDescription(),
-                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createGithubUrl(),
                     FakeValueProvider.createUrl() + "B".repeat(MAX_TEXT_LENGTH),
                     Collections.emptyList()
                 ), BLOG_URL_OVER_MAX_LENGTH),
@@ -364,7 +380,7 @@ public class TestParameterProvider {
                     FakeValueProvider.createIntroduction(),
                     Job.BACKEND_DEVELOPER.getName(),
                     Career.JUNIOR.getDescription(),
-                    FakeValueProvider.createUrl(),
+                    FakeValueProvider.createGithubUrl(),
                     "No URL Pattern",
                     Collections.emptyList()
                 ), BLOG_URL_IS_INVALID)
@@ -382,6 +398,24 @@ public class TestParameterProvider {
                 "password12", PASSWORD_FORMAT_INVALID),
             Arguments.of("비밀번호가 영문자를 포함하지 않는 경우",
                 "12345678!", PASSWORD_FORMAT_INVALID)
+        );
+    }
+
+    // Comment
+    public static Stream<Arguments> createInvalidCommentInfo() {
+        return Stream.of(
+            Arguments.of("isAnonymous가 null인 경우",
+                null, FakeValueProvider.createContent(),
+                IS_ANONYMOUS_IS_NULL),
+            Arguments.of("content가 null인 경우",
+                FakeValueProvider.createBoolean(), null,
+                CONTENT_IS_NULL),
+            Arguments.of("content가 빈 문자열인 경우",
+                FakeValueProvider.createBoolean(), "",
+                CONTENT_IS_NULL),
+            Arguments.of("content가 최대 길이를 넘은 경우",
+                FakeValueProvider.createBoolean(), "C".repeat(MAX_CONTENT_LENGTH + 1),
+                CONTENT_OVER_MAX_LENGTH)
         );
     }
 

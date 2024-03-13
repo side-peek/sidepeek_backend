@@ -19,6 +19,7 @@ import sixgaezzang.sidepeek.common.doc.ProjectControllerDoc;
 import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
+import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.service.ProjectService;
@@ -36,7 +37,7 @@ public class ProjectController implements ProjectControllerDoc {
         @Login Long loginId,
         @Valid @RequestBody SaveProjectRequest request
     ) {
-        ProjectResponse response = projectService.save(loginId, null, request);
+        ProjectResponse response = projectService.save(loginId, request);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/projects/{id}")
             .buildAndExpand(response.id()).toUri();
@@ -50,9 +51,9 @@ public class ProjectController implements ProjectControllerDoc {
     public ResponseEntity<ProjectResponse> update(
         @Login Long loginId,
         @PathVariable(value = "id") Long projectId,
-        @Valid @RequestBody SaveProjectRequest request
+        @Valid @RequestBody UpdateProjectRequest request
     ) {
-        ProjectResponse response = projectService.save(loginId, projectId, request);
+        ProjectResponse response = projectService.update(loginId, projectId, request);
 
         return ResponseEntity.ok(response);
     }

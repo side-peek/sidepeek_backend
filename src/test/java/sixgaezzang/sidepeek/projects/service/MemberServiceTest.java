@@ -44,10 +44,6 @@ import sixgaezzang.sidepeek.util.FakeEntityProvider;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class MemberServiceTest {
 
-    static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
-    static List<SaveMemberRequest> members;
-    static int USER_INDEX = 0;
-    static List<SaveMemberRequest> overLengthMembers;
     @Autowired
     MemberService memberService;
     @Autowired
@@ -56,6 +52,12 @@ class MemberServiceTest {
     ProjectRepository projectRepository;
     @Autowired
     UserRepository userRepository;
+
+    static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
+    static List<SaveMemberRequest> members;
+    static int USER_INDEX = 0;
+    static List<SaveMemberRequest> overLengthMembers;
+
     Project project;
     User user;
 
@@ -73,8 +75,7 @@ class MemberServiceTest {
 
         user = createAndSaveUser();
 
-        overLengthMembers.add(USER_INDEX,
-            FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
+        overLengthMembers.add(USER_INDEX, FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
         members = overLengthMembers.subList(0, MEMBER_COUNT);
 
         project = createAndSaveProject(user);
@@ -96,7 +97,7 @@ class MemberServiceTest {
         @Test
         void 작성자를_포함한_프로젝트_멤버_목록_저장에_성공한다() {
             // given, when
-            List<MemberSummary> savedMembers = memberService.saveAll(project, members);
+            List<MemberSummary> savedMembers = memberService.cleanAndSaveAll(project, members);
 
             // then
             assertThat(savedMembers).hasSize(MEMBER_COUNT);
@@ -109,7 +110,7 @@ class MemberServiceTest {
             String originalNickname = user.getNickname();
 
             // when
-            List<MemberSummary> savedMembers = memberService.saveAll(project, members);
+            List<MemberSummary> savedMembers = memberService.cleanAndSaveAll(project, members);
             Optional<MemberSummary> fellowMember = savedMembers.stream()
                 .filter(member -> Objects.equals(member.userSummary().id(), userId))
                 .findFirst();
@@ -123,8 +124,7 @@ class MemberServiceTest {
         @NullAndEmptySource
         void 빈_멤버_목록_저장은_실패한다(List<SaveMemberRequest> emptyMembers) {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project,
-                emptyMembers);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.cleanAndSaveAll(project, emptyMembers);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -134,8 +134,7 @@ class MemberServiceTest {
         @Test
         void 목록_개수가_최대를_넘어서_멤버_목록_저장에_실패한다() {
             // given, when
-            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project,
-                overLengthMembers);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.cleanAndSaveAll(project, overLengthMembers);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -148,8 +147,7 @@ class MemberServiceTest {
             Project nullProject = null;
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(nullProject,
-                members);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.cleanAndSaveAll(nullProject, members);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -166,7 +164,7 @@ class MemberServiceTest {
 
             // when
             ThrowableAssert.ThrowingCallable saveAll =
-                () -> memberService.saveAll(project, membersWithNonExistFellowMember);
+                () -> memberService.cleanAndSaveAll(project, membersWithNonExistFellowMember);
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(saveAll)
@@ -185,8 +183,8 @@ class MemberServiceTest {
             );
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project,
-                membersWithInvalidMember);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.cleanAndSaveAll(
+                project, membersWithInvalidMember);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -200,8 +198,8 @@ class MemberServiceTest {
             membersWithoutOwner.remove(USER_INDEX);
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project,
-                membersWithoutOwner);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.cleanAndSaveAll(
+                project, membersWithoutOwner);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
@@ -217,12 +215,10 @@ class MemberServiceTest {
             members.addAll(getDuplicatedMembers.apply(createAndSaveUser()));
 
             // when
-            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.saveAll(project,
-                members);
+            ThrowableAssert.ThrowingCallable saveAll = () -> memberService.cleanAndSaveAll(project, members);
 
             // then
-            AssertionsForClassTypes.assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(saveAll)
+            AssertionsForClassTypes.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveAll)
                 .withMessage(MEMBER_IS_DUPLICATED);
         }
 
@@ -234,14 +230,14 @@ class MemberServiceTest {
         @Test
         void 기존_프로젝트_멤버_목록을_지우고_새로운_멤버_목록_수정에_성공한다() {
             // given
-            memberService.saveAll(project, members);
+            memberService.cleanAndSaveAll(project, members);
             List<MemberSummary> originalMembers = memberService.findAllWithUser(project);
 
             // when
             List<SaveMemberRequest> membersOnlyOwner = new ArrayList<>();
             membersOnlyOwner.add(FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
 
-            memberService.saveAll(project, membersOnlyOwner);
+            memberService.cleanAndSaveAll(project, membersOnlyOwner);
             List<MemberSummary> savedMembers = memberService.findAllWithUser(project);
 
             // then

@@ -23,11 +23,10 @@ public class FileService {
     private final FileRepository fileRepository;
 
     @Transactional
-    public List<OverviewImageSummary> saveAll(Project project, List<String> overviewImageUrls) {
+    public List<OverviewImageSummary> cleanAndSaveAll(Project project, List<String> overviewImageUrls) {
         validateProject(project);
-        if (fileRepository.existsByProject(project)) {
-            fileRepository.deleteAllByProjectAndType(project, FileType.OVERVIEW_IMAGE);
-        }
+
+        cleanExistingFilesByProject(project);
 
         if (!isNotNullOrEmpty(overviewImageUrls)) {
             return Collections.emptyList();
@@ -35,23 +34,31 @@ public class FileService {
 
         validateFiles(overviewImageUrls);
         List<File> overviewImages = overviewImageUrls.stream()
-            .map(
-                overviewImage -> File.builder()
-                    .project(project)
-                    .url(overviewImage)
-                    .type(FileType.OVERVIEW_IMAGE)
-                    .build()
-            ).toList();
+            .map(overviewImage -> convertToOverviewImageFile(project, overviewImage))
+            .toList();
 
-        fileRepository.saveAll(overviewImages);
-
-        return overviewImages.stream()
+        return fileRepository.saveAll(overviewImages)
+            .stream()
             .map(OverviewImageSummary::from)
             .toList();
     }
 
     public List<File> findAllByType(Project project, FileType fileType) {
         return fileRepository.findAllByProjectAndType(project, fileType);
+    }
+
+    private void cleanExistingFilesByProject(Project project) {
+        if (fileRepository.existsByProject(project)) {
+            fileRepository.deleteAllByProjectAndType(project, FileType.OVERVIEW_IMAGE);
+        }
+    }
+
+    private File convertToOverviewImageFile(Project project, String overviewImage) {
+        return File.builder()
+            .project(project)
+            .url(overviewImage)
+            .type(FileType.OVERVIEW_IMAGE)
+            .build();
     }
 
 }
