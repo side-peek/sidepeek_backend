@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import sixgaezzang.sidepeek.like.dto.request.LikeRequest;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class LikeValidator {
+public final class LikeValidator {
 
     public static void validateLikeRequest(LikeRequest request) {
         if (Objects.isNull(request.projectId())) {
