@@ -119,8 +119,8 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             .from(like)
             .join(like.project, project)
             .where(createdAt.between(startDate, endDate))
-            .distinct()
-            .orderBy(project.likeCount.desc())
+            .groupBy(project)
+            .orderBy(like.count().desc())
             .limit(count)
             .fetch();
 
