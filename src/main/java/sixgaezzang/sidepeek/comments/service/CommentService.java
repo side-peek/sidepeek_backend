@@ -99,10 +99,10 @@ public class CommentService {
         Comment comment = getById(commentId, COMMENT_NOT_EXISTING);
 
         validateLoginIdEqualsOwnerId(loginId, comment.getOwnerId());
-        commentRepository.delete(comment);
 
-        Project project = comment.getProject();
-        project.decreaseCommentCount();    // 댓글 수 감소
+        decreaseAllCommentCount(comment);    // 댓글 수 감소
+
+        commentRepository.delete(comment);
     }
 
     private boolean isSameOwner(Comment comment, Project project) {
@@ -118,6 +118,13 @@ public class CommentService {
                 return ReplyResponse.from(reply, isOwner);
             })
             .toList();
+    }
+
+    private void decreaseAllCommentCount(Comment comment) { // 댓글 삭제 시 대댓글도 삭제하기 위한 메서드
+        Project project = comment.getProject();
+
+        long replyCount = commentRepository.countRepliesByParent(comment);  // 대댓글 수 가져오기
+        project.decreaseCommentCount(replyCount + 1); // 대댓글 수 + 댓글 수(1) 감소
     }
 
 }
