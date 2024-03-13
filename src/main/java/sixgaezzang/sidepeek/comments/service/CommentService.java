@@ -58,6 +58,8 @@ public class CommentService {
         Comment comment = request.toEntity(project, parent, owner);
         commentRepository.save(comment);
 
+        project.increaseCommentCount();    // 댓글 수 증가
+
         return comment.getProject().getId();
     }
 
@@ -98,6 +100,9 @@ public class CommentService {
 
         validateLoginIdEqualsOwnerId(loginId, comment.getOwnerId());
         commentRepository.delete(comment);
+
+        Project project = comment.getProject();
+        project.decreaseCommentCount();    // 댓글 수 감소
     }
 
     private boolean isSameOwner(Comment comment, Project project) {
