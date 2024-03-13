@@ -55,7 +55,13 @@ public record ProjectResponse(
     public static ProjectResponse from(Project project, List<OverviewImageSummary> overviewImageUrl,
         List<ProjectSkillSummary> techStacks, List<MemberSummary> members
     ) {
-        return ProjectResponse.from(project, overviewImageUrl, techStacks, members, Collections.emptyList());
+        return ProjectResponse.from(
+            project,
+            overviewImageUrl,
+            techStacks,
+            members,
+            new CommentWithCountResponse(Collections.emptyList(), 0L)
+        );
     }
 
     public static ProjectResponse from(Project project, List<OverviewImageSummary> overviewImageUrl,
