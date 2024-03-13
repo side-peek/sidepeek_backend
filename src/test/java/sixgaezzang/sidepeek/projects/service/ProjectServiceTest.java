@@ -171,7 +171,7 @@ class ProjectServiceTest {
             User user = createAndSaveUser();
             Project project = createAndSaveProject(user);
             Comment comment = createAndSaveComment(user, project);
-            CommentResponse commentResponse = CommentResponse.from(comment, true, List.of());
+            CommentResponse commentResponse = CommentResponse.from(comment, true, null);
 
             // when
             ProjectResponse response = projectService.findById(project.getId());
