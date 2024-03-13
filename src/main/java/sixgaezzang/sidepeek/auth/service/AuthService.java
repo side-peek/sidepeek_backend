@@ -1,6 +1,9 @@
 package sixgaezzang.sidepeek.auth.service;
 
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
+
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +14,7 @@ import sixgaezzang.sidepeek.auth.dto.request.LoginRequest;
 import sixgaezzang.sidepeek.auth.dto.request.ReissueTokenRequest;
 import sixgaezzang.sidepeek.auth.dto.response.LoginResponse;
 import sixgaezzang.sidepeek.auth.jwt.JWTManager;
+import sixgaezzang.sidepeek.auth.repository.AuthProviderRepository;
 import sixgaezzang.sidepeek.common.annotation.Login;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -23,13 +27,13 @@ import sixgaezzang.sidepeek.users.repository.UserRepository;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final AuthProviderRepository authProviderRepository;
     private final RefreshTokenService refreshTokenService;
     private final PasswordEncoder passwordEncoder;
     private final JWTManager jwtManager;
 
     public LoginResponse login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.email())
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
+        User user = getUserById(userRepository.findByEmail(request.email()));
 
         if (!user.checkPassword(request.password(), passwordEncoder)) {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
@@ -39,10 +43,10 @@ public class AuthService {
     }
 
     public UserSummary loadUser(@Login Long loginId) {
-        User user = userRepository.findById(loginId)
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
+        User user = getUserById(userRepository.findById(loginId));
+        boolean isSocialLogin = authProviderRepository.existsByUser(user);
 
-        return UserSummary.from(user);
+        return UserSummary.fromWithIsSocialLogin(user, isSocialLogin);
     }
 
     public LoginResponse reissue(ReissueTokenRequest request) {
@@ -52,8 +56,7 @@ public class AuthService {
 
         validateRefreshToken(redisRefreshToken.refreshToken(), refreshToken);
 
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
+        User user = getUserById(userRepository.findById(userId));
 
         return createTokens(user);
     }
@@ -64,11 +67,18 @@ public class AuthService {
         String refreshToken = jwtManager.generateRefreshToken(user.getId());
         refreshTokenService.save(refreshToken);
 
+        boolean isSocialLogin = authProviderRepository.existsByUser(user);
+
         return LoginResponse.builder()
             .accessToken(accessToken)
             .refreshToken(refreshToken)
-            .user(UserSummary.from(user))
+            .user(UserSummary.fromWithIsSocialLogin(user, isSocialLogin))
             .build();
+    }
+
+    private User getUserById(Optional<User> userRepository) {
+        return userRepository
+            .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
     }
 
     private void validateRefreshToken(String redisRefreshToken, String refreshToken) {

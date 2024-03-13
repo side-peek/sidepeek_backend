@@ -61,7 +61,7 @@ class UserSkillServiceTest {
         for (int i = 1; i <= MAX_TECH_STACK_COUNT + 1; i++) {
             createdSkillIds.add(createAndSaveSkill().getId());
         }
-        overLengthTechStacks = FakeDtoProvider.createUpdateUserSkillRequests(createdSkillIds);
+        overLengthTechStacks = FakeDtoProvider.createSaveTechStackRequests(createdSkillIds);
         techStacks = overLengthTechStacks.subList(0, SKILL_COUNT);
 
         user = createAndSaveUser();
@@ -190,7 +190,7 @@ class UserSkillServiceTest {
             // given
             List<SaveTechStackRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
             techStacksWithNonExistSkill.add(
-                FakeDtoProvider.createUpdateUserSkillRequest(skill.getId() + 1)
+                FakeDtoProvider.createSaveTechStackRequest(skill.getId() + 1)
             );
 
             // when
@@ -207,7 +207,7 @@ class UserSkillServiceTest {
             // given
             List<SaveTechStackRequest> techStacksWithNonExistSkill = new ArrayList<>(techStacks);
             techStacksWithNonExistSkill.add(
-                FakeDtoProvider.createUpdateUserSkillRequest(null)
+                FakeDtoProvider.createSaveTechStackRequest(null)
             );
 
             // when

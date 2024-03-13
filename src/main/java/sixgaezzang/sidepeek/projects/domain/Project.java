@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.projects.domain;
 
-import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateGithubUrl;
+import static sixgaezzang.sidepeek.common.util.SetUtils.getBlankIfNullOrBlank;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateRequiredGithubUrl;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
@@ -30,7 +31,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
-import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.util.converter.YearMonthDateAttributeConverter;
 
 @Entity
@@ -103,12 +104,12 @@ public class Project extends BaseTimeEntity {
         this.ownerId = ownerId;
 
         // Option
-        this.subName = subName;
+        this.subName = getBlankIfNullOrBlank(subName);
         this.startDate = startDate;
         this.endDate = endDate;
-        this.thumbnailUrl = thumbnailUrl;
-        this.deployUrl = deployUrl;
-        this.troubleshooting = troubleshooting;
+        this.thumbnailUrl = getBlankIfNullOrBlank(thumbnailUrl);
+        this.deployUrl = getBlankIfNullOrBlank(deployUrl);
+        this.troubleshooting = getBlankIfNullOrBlank(troubleshooting);
 
         // Etc
         this.likeCount = 0L;
@@ -131,7 +132,7 @@ public class Project extends BaseTimeEntity {
                                                       String description, Long ownerId) {
         validateName(name);
         validateOverview(overview);
-        validateGithubUrl(githubUrl);
+        validateRequiredGithubUrl(githubUrl);
         validateDescription(description);
         validateOwnerId(ownerId);
     }
@@ -145,28 +146,73 @@ public class Project extends BaseTimeEntity {
         validateDuration(startDate, endDate);
     }
 
-    // TODO: User 처럼 Private Setter(Lombok X) 구현하는 것이 나을까 아래와 같은 방식으로 하는 게 나을까?
-    public Project update(SaveProjectRequest request) {
-        validateConstructorRequiredArguments(request.name(), request.overview(), request.githubUrl(),
-            request.description(), request.ownerId());
-        validateConstructorOptionArguments(request.subName(), request.thumbnailUrl(), request.deployUrl(),
-            request.troubleShooting(), request.startDate(), request.endDate());
-
+    public Project update(UpdateProjectRequest request) {
         // Required
-        this.name = request.name();
-        this.overview = request.overview();
-        this.githubUrl = request.githubUrl();
-        this.description = request.description();
-        this.ownerId = request.ownerId();
+        setName(request.name());
+        setOverview(request.overview());
+        setGithubUrl(request.githubUrl());
+        setDescription(request.description());
 
         // Option
-        this.subName = request.subName();
-        this.startDate = request.startDate();
-        this.endDate = request.endDate();
-        this.thumbnailUrl = request.thumbnailUrl();
-        this.deployUrl = request.deployUrl();
-        this.troubleshooting = request.troubleShooting();
+        setSubName(request.subName());
+        setDuration(request.startDate(), request.endDate());
+        setThumbnailUrl(request.thumbnailUrl());
+        setDeployUrl(request.deployUrl());
+        setTroubleshooting(request.troubleShooting());
 
         return this;
     }
+
+    // Required
+    private void setName(String name) {
+        validateName(name);
+        this.name = name;
+    }
+
+    private void setOverview(String overview) {
+        validateOverview(overview);
+        this.overview = overview;
+    }
+
+    private void setGithubUrl(String githubUrl) {
+        validateRequiredGithubUrl(githubUrl);
+        this.githubUrl = githubUrl;
+
+    }
+
+    private void setDescription(String description) {
+        validateDescription(description);
+        this.description = description;
+
+    }
+
+    // Option
+    private void setSubName(String subName) {
+        validateSubName(subName);
+        this.subName = getBlankIfNullOrBlank(subName);
+
+    }
+
+    private void setDuration(YearMonth startDate, YearMonth endDate) {
+        validateDuration(startDate, endDate);
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    private void setThumbnailUrl(String thumbnailUrl) {
+        validateThumbnailUrl(thumbnailUrl);
+        this.thumbnailUrl = getBlankIfNullOrBlank(thumbnailUrl);
+    }
+
+    private void setDeployUrl(String deployUrl) {
+        validateDeployUrl(deployUrl);
+        this.deployUrl = getBlankIfNullOrBlank(deployUrl);
+
+    }
+
+    private void setTroubleshooting(String troubleShooting) {
+        validateTroubleshooting(troubleshooting);
+        this.troubleshooting = getBlankIfNullOrBlank(troubleShooting);
+    }
+
 }

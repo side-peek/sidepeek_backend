@@ -24,6 +24,7 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LE
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_PROJECT_NAME_LENGTH;
 
 import io.jsonwebtoken.lang.Assert;
+import io.micrometer.common.util.StringUtils;
 import java.time.YearMonth;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -60,27 +61,27 @@ public final class ProjectValidator {
 
     // Option
     public static void validateSubName(String subName) {
-        if (Objects.nonNull(subName)) {
+        if (StringUtils.isNotBlank(subName)) {
             validateMaxLength(subName, MAX_PROJECT_NAME_LENGTH, SUB_NAME_OVER_MAX_LENGTH);
         }
     }
 
     public static void validateThumbnailUrl(String thumbnailUrl) {
-        if (Objects.nonNull(thumbnailUrl)) {
+        if (StringUtils.isNotBlank(thumbnailUrl)) {
             validateTextLength(thumbnailUrl, THUMBNAIL_URL_OVER_MAX_LENGTH);
             validateURI(thumbnailUrl, THUMBNAIL_URL_IS_INVALID);
         }
     }
 
     public static void validateDeployUrl(String deployUrl) {
-        if (Objects.nonNull(deployUrl)) {
+        if (StringUtils.isNotBlank(deployUrl)) {
             validateURI(deployUrl, DEPLOY_URL_IS_INVALID);
             validateTextLength(deployUrl, DEPLOY_URL_OVER_MAX_LENGTH);
         }
     }
 
     public static void validateTroubleshooting(String troubleshooting) {
-        if (Objects.nonNull(troubleshooting)) {
+        if (StringUtils.isNotBlank(troubleshooting)) {
             validateTextLength(troubleshooting, TROUBLESHOOTING_OVER_MAX_LENGTH);
         }
     }

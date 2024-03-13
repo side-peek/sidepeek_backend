@@ -18,6 +18,7 @@ import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_INTRODUCTION_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
+import io.micrometer.common.util.StringUtils;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -54,17 +55,23 @@ public final class UserValidator {
 
     // Option
     public static void validateIntroduction(String introduction) {
-        validateMaxLength(introduction, MAX_INTRODUCTION_LENGTH, INTRODUCTION_OVER_MAX_LENGTH);
+        if (StringUtils.isNotBlank(introduction)) {
+            validateMaxLength(introduction, MAX_INTRODUCTION_LENGTH, INTRODUCTION_OVER_MAX_LENGTH);
+        }
     }
 
     public static void validateProfileImageUrl(String profileImageUrl) {
-        validateMaxLength(profileImageUrl, MAX_TEXT_LENGTH, PROFILE_IMAGE_URL_OVER_MAX_LENGTH);
-        validateURI(profileImageUrl, PROFILE_IMAGE_URL_IS_INVALID);
+        if (StringUtils.isNotBlank(profileImageUrl)) {
+            validateMaxLength(profileImageUrl, MAX_TEXT_LENGTH, PROFILE_IMAGE_URL_OVER_MAX_LENGTH);
+            validateURI(profileImageUrl, PROFILE_IMAGE_URL_IS_INVALID);
+        }
     }
 
     public static void validateBlogUrl(String blogUrl) {
-        validateMaxLength(blogUrl, MAX_TEXT_LENGTH, BLOG_URL_OVER_MAX_LENGTH);
-        validateURI(blogUrl, BLOG_URL_IS_INVALID);
+        if (StringUtils.isNotBlank(blogUrl)) {
+            validateMaxLength(blogUrl, MAX_TEXT_LENGTH, BLOG_URL_OVER_MAX_LENGTH);
+            validateURI(blogUrl, BLOG_URL_IS_INVALID);
+        }
     }
 
 }

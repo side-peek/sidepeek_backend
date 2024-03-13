@@ -1,13 +1,11 @@
 package sixgaezzang.sidepeek.comments.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import sixgaezzang.sidepeek.comments.domain.Comment;
-import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 
 @Schema(description = "댓글 정보")
@@ -38,9 +36,8 @@ public record CommentResponse(
 
     public static CommentResponse from(Comment comment, boolean isOwner,
         List<ReplyResponse> replies) {
-        User user = comment.getUser();
-        UserSummary userSummary =
-            comment.isAnonymous() ? null : UserSummary.from(comment.getUser());
+        UserSummary userSummary = comment.isAnonymous() ? null
+            : UserSummary.from(comment.getUser());
 
         return CommentResponse.builder()
             .id(comment.getId())

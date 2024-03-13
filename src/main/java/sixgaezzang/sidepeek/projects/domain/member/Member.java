@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -65,6 +66,10 @@ public class Member {
         validateProject(project);
         validateRole(role);
         validateNickname(nickname);
+    }
+
+    public Long getUserId() {
+        return Objects.isNull(this.user) ? null : user.getId();
     }
 
 }
