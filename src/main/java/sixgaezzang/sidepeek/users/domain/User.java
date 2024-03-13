@@ -28,6 +28,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -109,7 +110,7 @@ public class User extends BaseTimeEntity {
     public boolean checkPassword(String rawPassword, PasswordEncoder passwordEncoder) {
         ValidationUtils.validateNotNull(password, PASSWORD_NOT_REGISTERED);
 
-        return nonNull(password) && password.check(rawPassword, passwordEncoder);
+        return password.check(rawPassword, passwordEncoder);
     }
 
     public void update(UpdateUserProfileRequest request) {
@@ -130,7 +131,7 @@ public class User extends BaseTimeEntity {
     }
 
     public void softDelete() { // TODO: 회원탈퇴할 때 언젠가는 쓰일 것 같아서 구현
-        if (isNull(this.deletedAt)) {
+        if (Objects.isNull(this.deletedAt)) {
             this.deletedAt = LocalDateTime.now();
             return;
         }
