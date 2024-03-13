@@ -15,7 +15,7 @@ import sixgaezzang.sidepeek.like.dto.request.LikeRequest;
 import sixgaezzang.sidepeek.like.dto.response.LikeResponse;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
-import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 

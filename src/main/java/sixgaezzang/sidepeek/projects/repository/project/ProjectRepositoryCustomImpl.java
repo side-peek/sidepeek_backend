@@ -1,19 +1,29 @@
 package sixgaezzang.sidepeek.projects.repository.project;
 
+import static sixgaezzang.sidepeek.comments.domain.QComment.comment;
+import static sixgaezzang.sidepeek.like.domain.QLike.like;
 import static sixgaezzang.sidepeek.projects.domain.QProject.project;
+import static sixgaezzang.sidepeek.projects.domain.member.QMember.member;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.projects.domain.QProject;
 import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SortType;
 import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
+import sixgaezzang.sidepeek.users.domain.User;
 
 @Repository
 public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
@@ -51,6 +61,66 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             .toList();
 
         return checkEndPage(results, pageable.pageSize(), totalElements);
+    }
+
+    @Override
+    public Page<ProjectListResponse> findAllByUserJoined(List<Long> likedProjectIds, User user,
+        Pageable pageable) {
+        BooleanExpression memberCondition = member.user.eq(user);
+        return findPageByCondition(member, member.project, memberCondition, pageable,
+            likedProjectIds);
+    }
+
+    @Override
+    public Page<ProjectListResponse> findAllByUserLiked(List<Long> likedProjectIds, User user,
+        Pageable pageable) {
+        BooleanExpression likeCondition = like.user.eq(user);
+        return findPageByCondition(like, like.project, likeCondition, pageable, likedProjectIds);
+    }
+
+    @Override
+    public Page<ProjectListResponse> findAllByUserCommented(List<Long> likedProjectIds, User user,
+        Pageable pageable) {
+        BooleanExpression commentCondition = comment.user.eq(user);
+        return findPageByCondition(comment, comment.project, commentCondition, pageable,
+            likedProjectIds);
+    }
+
+    private Page<ProjectListResponse> findPageByCondition(EntityPathBase<?> from,
+        QProject join, BooleanExpression condition, Pageable pageable,
+        List<Long> likedProjectIds) {
+        List<Project> projects = queryFactory
+            .select(project)
+            .from(from)
+            .join(join, project)
+            .where(condition)
+            .orderBy(project.id.desc())
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        List<ProjectListResponse> projectDTOs = toProjectListResponseList(likedProjectIds,
+            projects);
+        long count = getCount(from, condition, join);
+
+        return new PageImpl<>(projectDTOs, pageable, count);
+    }
+
+    private Long getCount(EntityPathBase<?> from, BooleanExpression condition, QProject join) {
+        return queryFactory
+            .select(project.count())
+            .from(from)
+            .join(join, project)
+            .where(condition)
+            .fetchOne();
+    }
+
+    private List<ProjectListResponse> toProjectListResponseList(List<Long> likedProjectIds,
+        List<Project> projects) {
+        return projects.stream()
+            .map(project -> ProjectListResponse.from(project,
+                likedProjectIds.contains(project.getId())))
+            .toList();
     }
 
     private long getTotalElementsByCondition(BooleanExpression deployCondition) {
