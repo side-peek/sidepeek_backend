@@ -1,6 +1,7 @@
 package sixgaezzang.sidepeek.common.util;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.ERROR_OCCURRED_SENDING_RESPONSE;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.ERROR_OCCURRED_WRITING_JSON;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.INTERNAL_SERVER_ERROR;
@@ -18,7 +19,6 @@ import sixgaezzang.sidepeek.common.exception.ErrorResponse;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ResponseUtils {
 
-    private static final String APPLICATION_JSON_VALUE = "application/json";
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static void sendErrorResponse(HttpStatus httpStatus, String message,
