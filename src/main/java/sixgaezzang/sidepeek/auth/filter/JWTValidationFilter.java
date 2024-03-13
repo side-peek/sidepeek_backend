@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.auth.filter;
 
+import static sixgaezzang.sidepeek.auth.exeption.message.AuthErrorMessage.TOKEN_IS_INVALID;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +39,7 @@ public class JWTValidationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (Exception e) {
-                throw new BadCredentialsException("유효하지 않은 토큰입니다.");
+                throw new BadCredentialsException(TOKEN_IS_INVALID);
             }
         }
 
