@@ -15,7 +15,6 @@ public interface ProjectRepositoryCustom {
 
     List<ProjectBannerResponse> findAllPopularOfPeriod(LocalDate startDate, LocalDate endDate, int count);
 
-
     Page<ProjectListResponse> findAllByUserJoined(List<Long> likedProjectIds, User user,
                                                   Pageable pageable);
 
