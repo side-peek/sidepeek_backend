@@ -5,6 +5,7 @@ import java.time.YearMonth;
 import java.util.List;
 import lombok.Builder;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
+import sixgaezzang.sidepeek.comments.dto.response.CommentWithCountResponse;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
 @Schema(description = "프로젝트 상세 조회 응답")
@@ -30,6 +31,8 @@ public record ProjectResponse(
     Long viewCount,
     @Schema(description = "프로젝트 좋아요수", example = "0")
     Long likeCount,
+    @Schema(description = "프로젝트 댓글수", example = "0")
+    Long commentCount,
     @Schema(description = "프로젝트 기술 스택 목록")
     List<ProjectSkillSummary> techStacks,
     @Schema(description = "프로젝트 시작 연-월", example = "2024-02")
@@ -74,7 +77,7 @@ public record ProjectResponse(
 
     public static ProjectResponse from(Project project, List<OverviewImageSummary> overviewImageUrl,
         List<ProjectSkillSummary> techStacks, List<MemberSummary> members,
-        List<CommentResponse> comments
+        CommentWithCountResponse comments
     ) {
         return ProjectResponse.builder()
             .id(project.getId())
@@ -87,6 +90,7 @@ public record ProjectResponse(
             .deployUrl(project.getDeployUrl())
             .viewCount(project.getViewCount())
             .likeCount(project.getLikeCount())
+            .commentCount(comments.commentCount())  // 댓글 + 대댓글
             .techStacks(techStacks)
             .ownerId(project.getOwnerId())
             .startDate(project.getStartDate())
@@ -94,7 +98,7 @@ public record ProjectResponse(
             .members(members)
             .description(project.getDescription())
             .troubleShooting(project.getTroubleshooting())
-            .comments(comments)
+            .comments(comments.results())
             .build();
     }
 

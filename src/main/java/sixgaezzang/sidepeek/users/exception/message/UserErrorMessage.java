@@ -39,6 +39,9 @@ public final class UserErrorMessage {
     public static final String PASSWORD_FORMAT_INVALID = "비밀번호 형식이 올바르지 않습니다.";
     public static final String PASSWORD_IS_NULL = "비밀번호를 입력해주세요.";
     public static final String NEW_PASSWORD_IS_NULL = "새로운 비밀번호를 입력해주세요.";
+    public static final String PASSWORD_NOT_MATCH = "비밀번호가 일치하지 않습니다.";
+    public static final String PASSWORD_IS_SAME_AS_BEFORE = "기존 비밀번호와 동일한 비밀번호입니다.";
+    public static final String PASSWORD_NOT_REGISTERED = "소셜 로그인 회원입니다.";
 
     // Introduction
     public static final String INTRODUCTION_OVER_MAX_LENGTH =

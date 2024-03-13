@@ -6,8 +6,10 @@ import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.G
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_IS_NULL;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.GITHUB_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.LOGIN_IS_REQUIRED;
+import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateOwnerId;
 import static sixgaezzang.sidepeek.users.domain.Password.PASSWORD_REGXP;
 
 import java.util.Collection;
@@ -23,6 +25,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
+import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ValidationUtils {
@@ -62,6 +65,10 @@ public final class ValidationUtils {
 
     public static void validateNotBlank(String input, String message) {
         Assert.isTrue(isNotBlank(input), message);
+    }
+
+    public static void validateNotNull(Object input, String message) {
+        Assert.notNull(input, message);
     }
 
     public static void validateBlank(String input, String message) {
@@ -113,6 +120,13 @@ public final class ValidationUtils {
 
     public static <T> boolean isNullOrEmpty(Collection<T> input) {
         return Objects.isNull(input) || input.isEmpty();
+    }
+
+    public static void validateLoginIdEqualsOwnerId(Long loginId, Long ownerId) {
+        validateOwnerId(ownerId);
+        if (!loginId.equals(ownerId)) {
+            throw new InvalidAuthorityException(OWNER_ID_NOT_EQUALS_LOGIN_ID);
+        }
     }
 
     private static void pattern(String input, Pattern pattern, String message) {
