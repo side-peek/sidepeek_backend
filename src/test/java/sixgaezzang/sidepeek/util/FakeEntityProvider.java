@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.users.domain.User;
 
@@ -72,7 +73,8 @@ public class FakeEntityProvider {
     }
 
     // Comment
-    public static Comment createComment(User user, Project project, Comment parent, boolean isAnonymous) {
+    public static Comment createComment(User user, Project project, Comment parent,
+        boolean isAnonymous) {
         return Comment.builder()
             .user(user)
             .project(Objects.nonNull(project) ? project : parent.getProject())
@@ -89,6 +91,16 @@ public class FakeEntityProvider {
             .parent(parent)
             .isAnonymous(false)
             .content(FakeValueProvider.createContent())
+            .build();
+    }
+
+    // Member
+    public static Member createMember(User user, Project project) {
+        return Member.builder()
+            .user(user)
+            .nickname(user.getNickname())
+            .project(project)
+            .role(FakeValueProvider.createRole())
             .build();
     }
 

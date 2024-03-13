@@ -13,6 +13,7 @@ import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 import java.util.ArrayList;
 import java.util.List;
 import net.datafaker.Faker;
+import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
 
 public class FakeValueProvider {
 
@@ -56,6 +57,12 @@ public class FakeValueProvider {
     // Project
     public static String createProjectName() { // 프로젝트 제목/부제목
         return checkAndCutLength(FAKER.name().title(), MAX_PROJECT_NAME_LENGTH);
+    }
+
+    public static UserProjectSearchType createUserProjectSearchType() {
+        UserProjectSearchType[] userProjectSearchTypes = {UserProjectSearchType.JOINED,
+            UserProjectSearchType.LIKED, UserProjectSearchType.COMMENTED};
+        return userProjectSearchTypes[FAKER.random().nextInt(userProjectSearchTypes.length)];
     }
 
     public static String createOverview() {
