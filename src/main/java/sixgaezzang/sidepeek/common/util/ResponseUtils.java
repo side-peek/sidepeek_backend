@@ -26,7 +26,7 @@ public final class ResponseUtils {
         sendResponse(httpStatus.value(), ErrorResponse.of(httpStatus, message), response);
     }
 
-    private static void sendResponse(int httpStatusCode, Object responseBody,
+    public static void sendResponse(int httpStatusCode, Object responseBody,
         HttpServletResponse response) {
         try {
             response.setContentType(APPLICATION_JSON_VALUE);
