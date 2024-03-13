@@ -2,6 +2,7 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.BDDMockito.given;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.LOGIN_IS_REQUIRED;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COUNT;
@@ -32,7 +33,10 @@ import static sixgaezzang.sidepeek.util.FakeValueProvider.createRole;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createUserProjectSearchType;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -48,6 +52,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.domain.Comment;
@@ -57,6 +62,7 @@ import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.dto.response.Page;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
+import sixgaezzang.sidepeek.common.util.component.DateTimeProvider;
 import sixgaezzang.sidepeek.like.domain.Like;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
@@ -147,7 +153,6 @@ class ProjectServiceTest {
     private Like createAndSaveLike(Project project, User user) {
         Like newLike = createLike(user, project);
         return likeRepository.save(newLike);
-
     }
 
     @BeforeEach
@@ -218,10 +223,28 @@ class ProjectServiceTest {
     }
 
     @Nested
-    class 금주의_인기_프로젝트_조회_테스트 {
+    class 지난_주_인기_프로젝트_조회_테스트 {
+
+        @MockBean
+        DateTimeProvider dateTimeProvider;
+
+        @Autowired
+        ProjectService projectService;
+
+        LocalDate nextSunday;
+
+        @BeforeEach
+        void setUp() {
+            LocalDate today = LocalDate.now();
+            if (!today.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+                today = today.with(TemporalAdjusters.next(DayOfWeek.SUNDAY));
+            }
+
+            nextSunday = today.with(TemporalAdjusters.next(DayOfWeek.SUNDAY));
+        }
 
         @Test
-        void 최대_5개로_금주의_인기_프로젝트_조회를_성공한다() {
+        void 최대_5개로_지난_주_인기_프로젝트_조회를_성공한다() {
             // given
             int overBannerProjectCount = BANNER_PROJECT_COUNT * 2;
             for (int i = 0; i < overBannerProjectCount; i++) {
@@ -231,34 +254,42 @@ class ProjectServiceTest {
             }
 
             // when
-            List<ProjectBannerResponse> responses = projectService.findAllPopularThisWeek();
+            given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday);
+            List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
 
             // then
             assertThat(responses).hasSize(BANNER_PROJECT_COUNT);
         }
 
         @Test
-        void 좋아요를_많이_받은_순으로_금주의_인기_프로젝트_조회를_성공한다() {
+        void 좋아요를_많이_받은_순으로_지난_주_인기_프로젝트_조회를_성공한다() {
             // given
+            List<Project> projects = new ArrayList<>();
             for (int i = 0; i < BANNER_PROJECT_COUNT; i++) {
                 Project project = createAndSaveProject(user);
+                projects.add(project);
                 for (int j = 0; j < i + 1; j++) {
                     User newUser = createAndSaveUser();
                     createAndSaveLike(project, newUser);
                 }
             }
+            projects.sort(Comparator.comparing(project -> -project.getLikeCount()));
+            List<ProjectBannerResponse> expectResponses = projects.stream().map(ProjectBannerResponse::from)
+                .toList();
 
             // when
-            List<ProjectBannerResponse> responses = projectService.findAllPopularThisWeek();
+            given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday);
+            List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
 
             // then
-            assertThat(responses).isSortedAccordingTo(Comparator.comparing(a -> -a.likeCount()));
+            assertThat(responses).isEqualTo(expectResponses);
         }
 
         @Test
-        void 금주에_좋아요_기록이_없어_빈_배열로_금주의_인기_프로젝트_조회를_성공한다() {
-            // given,  when
-            List<ProjectBannerResponse> responses = projectService.findAllPopularThisWeek();
+        void 지난_주에_좋아요_기록이_없어_빈_배열로_지난_주_인기_프로젝트_조회를_성공한다() {
+            // given, when
+            given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday);
+            List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
 
             // then
             assertThat(responses).isEmpty();
