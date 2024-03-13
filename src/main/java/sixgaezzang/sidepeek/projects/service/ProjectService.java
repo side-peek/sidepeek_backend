@@ -5,14 +5,14 @@ import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.valida
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.USER_PROJECT_SEARCH_TYPE_IS_INVALID;
+import static sixgaezzang.sidepeek.projects.util.DateUtils.getEndDayOfLastWeek;
+import static sixgaezzang.sidepeek.projects.util.DateUtils.getStartDayOfLastWeek;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.BANNER_PROJECT_COUNT;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateLoginIdEqualsUserId;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -98,8 +98,9 @@ public class ProjectService {
     }
 
     public List<ProjectBannerResponse> findAllPopularThisWeek() {
-        LocalDate endDate = LocalDate.now();
-        LocalDate startDate = getStartDayOfWeek(endDate);
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = getStartDayOfLastWeek(today);
+        LocalDate endDate = getEndDayOfLastWeek(today);
 
         return projectRepository.findAllPopularOfPeriod(startDate, endDate, BANNER_PROJECT_COUNT);
     }
@@ -181,10 +182,6 @@ public class ProjectService {
                                                                    List<Long> likedProjectIds,
                                                                    Pageable pageable) {
         return Page.from(projectRepository.findAllByUserCommented(likedProjectIds, user, pageable));
-    }
-
-    private LocalDate getStartDayOfWeek(LocalDate endWeekDay) {
-        return endWeekDay.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
     }
 
     private ProjectResponse GetProjectResponseAfterSaveLists(Project project, List<SaveTechStackRequest> request,
