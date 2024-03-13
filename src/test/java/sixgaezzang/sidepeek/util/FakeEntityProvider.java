@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.comments.domain.Comment;
+import sixgaezzang.sidepeek.like.domain.Like;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.skill.domain.Skill;
@@ -104,4 +105,11 @@ public class FakeEntityProvider {
             .build();
     }
 
+    // Like
+    public static Like createLike(User user, Project project) {
+        return Like.builder()
+            .user(user)
+            .project(project)
+            .build();
+    }
 }

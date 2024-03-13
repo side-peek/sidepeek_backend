@@ -1,5 +1,8 @@
 package sixgaezzang.sidepeek.like.domain;
 
+import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateProject;
+import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateUser;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -25,18 +28,24 @@ public class Like extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
     @Builder
     public Like(User user, Project project) {
+        validateConstructorRequiredArguments(user, project);
+
         this.user = user;
         this.project = project;
     }
+
+    private static void validateConstructorRequiredArguments(User user, Project project) {
+        validateUser(user);
+        validateProject(project);
+    }
+
 }
