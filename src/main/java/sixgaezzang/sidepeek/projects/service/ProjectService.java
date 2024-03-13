@@ -79,7 +79,6 @@ public class ProjectService {
         return projectRepository.findByCondition(likedProjectIds, pageable);
     }
 
-
     @Transactional
     public ProjectResponse findById(Long id) {
 
