@@ -31,162 +31,162 @@ values (4, '훈오', 'whoknow@naver.com',
 
 -- PROJECT
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (1, '사이드픽👀', '요즘 사이드 플젝 뭐함? 사이드픽 👀', '데브코스 5기 육개짱팀의 좌충우돌 우당탕탕 프로젝트 개발 일대기',
         'https://thumbnail-images.sidepeek.com/1.png', 'https://github.com/side-peek', 20, 7,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# SidePeek 기능 Markdown');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# SidePeek 기능 Markdown', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, deploy_url, view_count,
                     like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (2, '스타일드', '스타일 No.1',
         'Styled는 자신의 ootd를 공유하며 소통하고자하는 사람들의 니즈를 충족하고자 기획된, OOTD만을 위한 패션 특화 소셜 네트워크 서비스 입니다.',
         'https://thumbnail-images.styled.com/1.png', 'https://github.com/sstyled',
         'https://styled.netlify.app/', 30, 20,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Styled 기능 Markdown');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Styled 기능 Markdown', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, deploy_url, view_count,
                     like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (3, '프로젝트3', '프로젝트3 더미데이터', '프로젝트3 더미데이터입니다.',
         'https://thumbnail-images.project.com/3.png', 'https://github.com/project',
         'https://project3.netlify.app/', 3, 3,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 3 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 3 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, deploy_url, view_count,
                     like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (4, '프로젝트4', '프로젝트4 더미데이터', '프로젝트4 더미데이터입니다.',
         'https://thumbnail-images.project.com/4.png', 'https://github.com/project',
         'https://project4.netlify.app/', 4, 4,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 4 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 4 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (5, '프로젝트5', '프로젝트5 더미데이터', '프로젝트5 더미데이터입니다.',
         'https://thumbnail-images.project.com/5.png', 'https://github.com/project', 5, 5,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 5 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 5 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (6, '프로젝트6', '프로젝트6 더미데이터', '프로젝트6 더미데이터입니다.',
         'https://thumbnail-images.project.com/6.png', 'https://github.com/project', 6, 6,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 6 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 6 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (7, '프로젝트7', '프로젝트7 더미데이터', '프로젝트7 더미데이터입니다.',
         'https://thumbnail-images.project.com/7.png', 'https://github.com/project', 7, 7,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 7 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 7 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (8, '프로젝트8', '프로젝트8 더미데이터', '프로젝트8 더미데이터입니다.',
         'https://thumbnail-images.project.com/8.png', 'https://github.com/project', 8, 8,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 8 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 8 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (9, '프로젝트9', '프로젝트9 더미데이터', '프로젝트9 더미데이터입니다.',
         'https://thumbnail-images.project.com/9.png', 'https://github.com/project', 9, 9,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 9 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 9 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (10, '프로젝트10', '프로젝트10 더미데이터', '프로젝트10 더미데이터입니다.',
         'https://thumbnail-images.project.com/10.png', 'https://github.com/project', 10, 10,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 10 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 10 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (11, '프로젝트11', '프로젝트11 더미데이터', '프로젝트11 더미데이터입니다.',
         'https://thumbnail-images.project.com/11.png', 'https://github.com/project', 11, 11,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 11 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 11 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (12, '프로젝트12', '프로젝트12 더미데이터', '프로젝트12 더미데이터입니다.',
         'https://thumbnail-images.project.com/12.png', 'https://github.com/project', 12, 12,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 12 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 12 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (13, '프로젝트13', '프로젝트13 더미데이터', '프로젝트13 더미데이터입니다.',
         'https://thumbnail-images.project.com/13.png', 'https://github.com/project', 13, 13,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 13 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 13 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (14, '프로젝트14', '프로젝트14 더미데이터', '프로젝트14 더미데이터입니다.',
         'https://thumbnail-images.project.com/14.png', 'https://github.com/project', 14, 14,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 14 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 14 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (15, '프로젝트15', '프로젝트15 더미데이터', '프로젝트15 더미데이터입니다.',
         'https://thumbnail-images.project.com/15.png', 'https://github.com/project', 15, 15,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 15 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 15 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (16, '프로젝트16', '프로젝트16 더미데이터', '프로젝트16 더미데이터입니다.',
         'https://thumbnail-images.project.com/16.png', 'https://github.com/project', 16, 16,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 16 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 16 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (17, '프로젝트17', '프로젝트17 더미데이터', '프로젝트17 더미데이터입니다.',
         'https://thumbnail-images.project.com/17.png', 'https://github.com/project', 17, 17,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 17 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 17 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (18, '프로젝트18', '프로젝트18 더미데이터', '프로젝트18 더미데이터입니다.',
         'https://thumbnail-images.project.com/18.png', 'https://github.com/project', 18, 18,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 18 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 18 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (19, '프로젝트19', '프로젝트19 더미데이터', '프로젝트19 더미데이터입니다.',
         'https://thumbnail-images.project.com/19.png', 'https://github.com/project', 19, 19,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 19 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 19 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (20, '프로젝트20', '프로젝트20 더미데이터', '프로젝트20 더미데이터입니다.',
         'https://thumbnail-images.project.com/20.png', 'https://github.com/project', 20, 20,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 20 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 20 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (21, '프로젝트21', '프로젝트21 더미데이터', '프로젝트21 더미데이터입니다.',
         'https://thumbnail-images.project.com/21.png', 'https://github.com/project', 21, 21,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 21 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 21 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (22, '프로젝트22', '프로젝트22 더미데이터', '프로젝트22 더미데이터입니다.',
         'https://thumbnail-images.project.com/12.png', 'https://github.com/project', 22, 22,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 22 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 22 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (23, '프로젝트23', '프로젝트23 더미데이터', '프로젝트23 더미데이터입니다.',
         'https://thumbnail-images.project.com/23.png', 'https://github.com/project', 23, 23,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 23 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 23 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (24, '프로젝트24', '프로젝트24 더미데이터', '프로젝트24 더미데이터입니다.',
         'https://thumbnail-images.project.com/24.png', 'https://github.com/project', 24, 24,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 24 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 24 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (25, '프로젝트25', '프로젝트25 더미데이터', '프로젝트25 더미데이터입니다.',
         'https://thumbnail-images.project.com/25.png', 'https://github.com/project', 25, 25,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 25 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 25 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (26, '프로젝트26', '프로젝트26 더미데이터', '프로젝트26 더미데이터입니다.',
         'https://thumbnail-images.project.com/26.png', 'https://github.com/project', 26, 26,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 26 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 26 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (27, '프로젝트27', '프로젝트27 더미데이터', '프로젝트27 더미데이터입니다.',
         'https://thumbnail-images.project.com/27.png', 'https://github.com/project', 27, 27,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 27 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 27 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (28, '프로젝트28', '프로젝트28 더미데이터', '프로젝트28 더미데이터입니다.',
         'https://thumbnail-images.project.com/28.png', 'https://github.com/project', 28, 28,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 28 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 28 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (29, '프로젝트29', '프로젝트29 더미데이터', '프로젝트29 더미데이터입니다.',
         'https://thumbnail-images.project.com/29.png', 'https://github.com/project', 29, 29,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 29 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 29 기능', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (30, '프로젝트30', '프로젝트30 더미데이터', '프로젝트30 더미데이터입니다.',
         'https://thumbnail-images.project.com/30.png', 'https://github.com/project', 30, 30,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 30 기능');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 30 기능', '');
 
 
 -- PROJECT_MEMBER
