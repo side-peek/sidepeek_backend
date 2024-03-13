@@ -11,8 +11,8 @@ public record UserSummary(
     @Schema(description = "회원 식별자(비회원은 null)", nullable = true, example = "1")
     Long id,
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @Schema(description = "소셜 로그인 회원 여부", nullable = true, example = "false")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     Boolean isSocialLogin,
 
     @Schema(description = "회원/비회원 닉네임", example = "의진")
