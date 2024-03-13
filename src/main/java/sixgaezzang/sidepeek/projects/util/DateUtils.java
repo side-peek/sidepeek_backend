@@ -35,7 +35,8 @@ public final class DateUtils {
     }
 
     /**
-     * {@code  localDate} 기준으로 {@code  localDate}에 해당하는 요일인 가장 가까운 과거 날짜를 찾는 메서드
+     * {@code  localDate} 기준으로 {@code  localDate}에 해당하는 요일인
+     * 가장 가까운 과거 날짜를 찾는 메서드
      * @param localDate 기준이 되는 날짜
      * @param dayOfWeek 찾고자 하는 가까운 과거 날짜의 요일
      * @return 가장 가까운 과거 요일 날짜를 {@code  LocalDate}로 반환한다.
