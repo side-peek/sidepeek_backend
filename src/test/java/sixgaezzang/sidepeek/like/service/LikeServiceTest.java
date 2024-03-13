@@ -83,6 +83,7 @@ class LikeServiceTest {
         void 좋아요한_이력이_없으면_좋아요_생성에_성공한다() {
             // given
             LikeRequest request = FakeDtoProvider.createLikeRequest(project.getId());
+            Long initialLikeCount = project.getLikeCount();
 
             // when
             LikeResponse response = likeService.save(user.getId(), request);
@@ -92,6 +93,7 @@ class LikeServiceTest {
             assertThat(like).isPresent();
             assertThat(like.get()).extracting("project", "user")
                 .containsExactly(project, user);
+            assertThat(project.getLikeCount()).isEqualTo(initialLikeCount + 1); // 좋아요 수 업데이트 반영 확인
         }
 
         @Test
@@ -170,6 +172,7 @@ class LikeServiceTest {
         void 좋아요한_이력이_있으면_좋아요_삭제에_성공한다() {
             // given
             Like existingLike = createAndSaveLike(user, project);
+            Long initialLikeCount = project.getLikeCount();
 
             // when
             likeService.delete(user.getId(), existingLike.getId());
@@ -177,6 +180,7 @@ class LikeServiceTest {
             // then
             Optional<Like> like = likeRepository.findById(existingLike.getId());
             assertThat(like).isNotPresent();
+            assertThat(project.getLikeCount()).isEqualTo(initialLikeCount - 1); // 좋아요 수 업데이트 반영 확인
         }
 
         @Test
