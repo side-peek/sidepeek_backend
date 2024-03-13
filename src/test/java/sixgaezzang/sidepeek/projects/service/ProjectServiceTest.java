@@ -223,7 +223,7 @@ class ProjectServiceTest {
         @Test
         void 최대_5개로_금주의_인기_프로젝트_조회를_성공한다() {
             // given
-            int overBannerProjectCount = (int) BANNER_PROJECT_COUNT * 2;
+            int overBannerProjectCount = BANNER_PROJECT_COUNT * 2;
             for (int i = 0; i < overBannerProjectCount; i++) {
                 Project project = createAndSaveProject(user);
                 User newUser = createAndSaveUser();
@@ -234,13 +234,13 @@ class ProjectServiceTest {
             List<ProjectBannerResponse> responses = projectService.findAllPopularThisWeek();
 
             // then
-            assertThat(responses).hasSize((int) BANNER_PROJECT_COUNT);
+            assertThat(responses).hasSize(BANNER_PROJECT_COUNT);
         }
 
         @Test
         void 좋아요를_많이_받은_순으로_금주의_인기_프로젝트_조회를_성공한다() {
             // given
-            for (int i = 0; i < (int) BANNER_PROJECT_COUNT; i++) {
+            for (int i = 0; i < BANNER_PROJECT_COUNT; i++) {
                 Project project = createAndSaveProject(user);
                 for (int j = 0; j < i + 1; j++) {
                     User newUser = createAndSaveUser();

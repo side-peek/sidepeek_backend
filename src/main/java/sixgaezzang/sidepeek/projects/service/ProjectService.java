@@ -101,7 +101,7 @@ public class ProjectService {
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = getStartDayOfWeek(endDate);
 
-        return projectRepository.findAllPopularOfPeriod(startDate, endDate, (int) BANNER_PROJECT_COUNT);
+        return projectRepository.findAllPopularOfPeriod(startDate, endDate, BANNER_PROJECT_COUNT);
     }
 
     public Page<ProjectListResponse> findByUser(Long userId, Long loginId,
