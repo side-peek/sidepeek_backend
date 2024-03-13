@@ -8,10 +8,10 @@ import jakarta.validation.constraints.NotBlank;
 
 @Schema(description = "로그인 요청")
 public record LoginRequest(
-    @Schema(description = "이메일", example = "sidepeek@gmail.com")
+    @Schema(description = "이메일", example = "uijin@naver.com")
     @NotBlank(message = EMAIL_IS_NULL)
     String email,
-    @Schema(description = "비밀번호", example = "sidepeek6!")
+    @Schema(description = "비밀번호", example = "sidepeek123!")
     @NotBlank(message = PASSWORD_IS_NULL)
     String password
 ) {

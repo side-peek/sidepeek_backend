@@ -48,7 +48,7 @@ insert into project(id, name, sub_name, overview, thumbnail_url, github_url, dep
                     start_date, end_date, owner_id, description)
 values (3, '프로젝트3', '프로젝트3 더미데이터', '프로젝트3 더미데이터입니다.',
         'https://thumbnail-images.project.com/3.png', 'https://github.com/project',
-         'https://project3.netlify.app/', 3, 3,
+        'https://project3.netlify.app/', 3, 3,
         '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# Project 3 기능');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, deploy_url, view_count,
                     like_count,
@@ -196,6 +196,64 @@ insert into project_member(id, project_id, user_id, role, nickname)
 values (2, 1, 2, '프론트', '동건');
 insert into project_member(id, project_id, role, nickname)
 values (3, 1, '오락부짱', '민호');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (4, 2, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (5, 3, 1, '디자인', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (6, 4, 1, 'BE', '지니');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (7, 5, 1, 'BE', 'uijin');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (8, 6, 1, 'PO', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (9, 7, 1, '디자인', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (10, 8, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (11, 9, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (12, 10, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (13, 11, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (14, 12, 1, 'BE & FE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (15, 13, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (16, 14, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (17, 15, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (18, 16, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (19, 17, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (20, 18, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (21, 19, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (22, 20, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (23, 21, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (24, 22, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (25, 23, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (26, 24, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (27, 25, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (28, 26, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (29, 27, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (30, 28, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (31, 29, 1, 'BE', '의진');
+insert into project_member(id, project_id, user_id, role, nickname)
+values (32, 30, 1, 'BE', '의진');
 
 -- FILE
 insert into files(id, project_id, type, url)
@@ -215,37 +273,49 @@ values (4, 'Figma', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/ski
 insert into skill(id, name, icon_image_url)
 values (5, 'Git', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/git-icon.png');
 insert into skill(id, name, icon_image_url)
-values (6, 'Github Actions', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/github-actions.png');
+values (6, 'Github Actions',
+        'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/github-actions.png');
 insert into skill(id, name, icon_image_url)
-values (7, 'Github', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/github-icon.png');
+values (7, 'Github',
+        'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/github-icon.png');
 insert into skill(id, name, icon_image_url)
 values (8, 'Java', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/java.png');
 insert into skill(id, name, icon_image_url)
-values (9, 'Javascript', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/javascript.png');
+values (9, 'Javascript',
+        'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/javascript.png');
 insert into skill(id, name, icon_image_url)
-values (10, 'Kotlin', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/kotlin-icon.png');
+values (10, 'Kotlin',
+        'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/kotlin-icon.png');
 insert into skill(id, name, icon_image_url)
-values (11, 'Notion', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/notion-icon.png');
+values (11, 'Notion',
+        'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/notion-icon.png');
 insert into skill(id, name, icon_image_url)
-values (12, 'PostgreSQL', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/postgresql.png');
+values (12, 'PostgreSQL',
+        'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/postgresql.png');
 insert into skill(id, name, icon_image_url)
-values (13, 'React Query', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/react-query-icon.png');
+values (13, 'React Query',
+        'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/react-query-icon.png');
 insert into skill(id, name, icon_image_url)
 values (14, 'React', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/react.png');
 insert into skill(id, name, icon_image_url)
-values (15, 'Slack', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/slack-icon.png');
+values (15, 'Slack',
+        'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/slack-icon.png');
 insert into skill(id, name, icon_image_url)
-values (16, 'Spring', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/spring-icon.png');
+values (16, 'Spring',
+        'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/spring-icon.png');
 insert into skill(id, name, icon_image_url)
 values (17, 'Swagger', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/swagger.png');
 insert into skill(id, name, icon_image_url)
-values (18, 'Thymeleaf', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/thymeleaf-icon.png');
+values (18, 'Thymeleaf',
+        'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/thymeleaf-icon.png');
 insert into skill(id, name, icon_image_url)
 values (19, 'Tomcat', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/tomcat.png');
 insert into skill(id, name, icon_image_url)
-values (20, 'Typescript', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/typescript-icon.png');
+values (20, 'Typescript',
+        'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/typescript-icon.png');
 insert into skill(id, name, icon_image_url)
-values (21, 'Vercel', 'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/vercel-icon.png');
+values (21, 'Vercel',
+        'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/skill/vercel-icon.png');
 
 -- PROJECT_SKILL
 insert into project_skill(id, project_id, skill_id, category)
