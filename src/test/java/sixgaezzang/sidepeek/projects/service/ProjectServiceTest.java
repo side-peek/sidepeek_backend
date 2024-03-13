@@ -16,19 +16,25 @@ import static sixgaezzang.sidepeek.util.FakeDtoProvider.createFellowSaveMemberRe
 import static sixgaezzang.sidepeek.util.FakeDtoProvider.createSaveProjectRequestOnlyRequired;
 import static sixgaezzang.sidepeek.util.FakeDtoProvider.createSaveProjectRequestWithOwnerIdAndOption;
 import static sixgaezzang.sidepeek.util.FakeDtoProvider.createUpdateUserSkillRequests;
+import static sixgaezzang.sidepeek.util.FakeEntityProvider.createComment;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createLike;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createProject;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createUser;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createContent;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createId;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createLongText;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createOverview;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createProjectName;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createRole;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createUserProjectSearchType;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
@@ -111,9 +117,6 @@ class ProjectServiceTest {
     @Autowired
     FileRepository fileRepository;
 
-    @Autowired
-    LikeRepository likeRepository;
-
     User user;
 
     private Skill createAndSaveSkill() {
@@ -138,13 +141,12 @@ class ProjectServiceTest {
     }
 
     private Comment createAndSaveComment(User user, Project project) {
-        Comment newComment = createComment(user, project);
-        Comment newComment = FakeEntityProvider.createComment(user, project, null);
+        Comment newComment = createComment(user, project, null);
         return commentRepository.save(newComment);
     }
 
     private Like createAndSaveLike(Project project, User user) {
-        Like newLike = createLike(project, user);
+        Like newLike = createLike(user, project);
         return likeRepository.save(newLike);
 
     }
@@ -161,30 +163,28 @@ class ProjectServiceTest {
             users.add(createUser());
         }
         userRepository.saveAll(users)
-            .stream()
             .forEach(user -> {
                 fellowMemberIds.add(user.getId());
-                members.add(FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
+                members.add(createFellowSaveMemberRequest(user.getId()));
             });
 
         user = createAndSaveUser();
         fellowMemberIds.add(0, user.getId());
         members.add(0, createFellowSaveMemberRequest(user.getId()));
-        
-        List<Long> createdSkillIds = new ArrayList<>();
-        members.add(0, FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
+
+        members.add(0, createFellowSaveMemberRequest(user.getId()));
 
         List<Skill> skills = new ArrayList<>();
         for (int i = 1; i <= SKILL_COUNT; i++) {
             skills.add(FakeEntityProvider.createSkill());
         }
-        techStacks = createUpdateUserSkillRequests(createdSkillIds);
+
         List<Long> createdSkillIds = skillRepository.saveAll(skills)
             .stream()
-            .map(skill -> skill.getId())
+            .map(Skill::getId)
             .toList();
 
-        techStacks = FakeDtoProvider.createUpdateUserSkillRequests(createdSkillIds);
+        techStacks = createUpdateUserSkillRequests(createdSkillIds);
     }
 
     @Nested
@@ -342,8 +342,8 @@ class ProjectServiceTest {
         @Test
         void 사용자가_존재하지_않는_경우_사용자_프로젝트_조회에_실패한다() {
             // given
-            Long invalidUserId = FakeValueProvider.createId();
-            UserProjectSearchType type = FakeValueProvider.createUserProjectSearchType();
+            Long invalidUserId = createId();
+            UserProjectSearchType type = createUserProjectSearchType();
 
             // when
             ThrowingCallable findByUser = () -> projectService.findByUser(invalidUserId,
@@ -414,7 +414,7 @@ class ProjectServiceTest {
                     .user(user)
                     .nickname(user.getNickname())
                     .project(project)
-                    .role(FakeValueProvider.createRole())
+                    .role(createRole())
                     .build())
                 );
         }
@@ -434,7 +434,7 @@ class ProjectServiceTest {
                     .user(user)
                     .project(project)
                     .isAnonymous(false)
-                    .content(FakeValueProvider.createContent())
+                    .content(createContent())
                     .build())
                 );
         }
