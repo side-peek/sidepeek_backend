@@ -2,19 +2,21 @@ package sixgaezzang.sidepeek.common.doc;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import sixgaezzang.sidepeek.common.exception.ErrorResponse;
+import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
+import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 
@@ -64,12 +66,9 @@ public interface ProjectControllerDoc {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true)
     })
-    @Parameters({
-        @Parameter(name = "sort", description = "정렬 조건 [ createdAt(default), view, like ]", in = ParameterIn.QUERY),
-        @Parameter(name = "isReleased", description = "출시 서비스만 보기", in = ParameterIn.QUERY)
-    })
-    ResponseEntity<List<ProjectListResponse>> getAll(@Parameter(hidden = true) Long loginId,
-        String sort, boolean isReleased);
+    ResponseEntity<CursorPaginationResponse<ProjectListResponse>> getByCondition(
+        @Parameter(hidden = true) Long loginId,
+        @Valid @ModelAttribute CursorPaginationInfoRequest pageable);
 
     @Operation(summary = "금주의 인기 프로젝트 조회(배너용)", description = "주간 좋아요 기록을 통해 프로젝트 인기순으로 정렬")
     @ApiResponses({

@@ -30,16 +30,18 @@ import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
+import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
-import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 
@@ -72,6 +74,16 @@ public class ProjectService {
     public Project getById(Long projectId) {
         return projectRepository.findById(projectId)
             .orElseThrow(() -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
+    }
+
+    public CursorPaginationResponse<ProjectListResponse> findByCondition(Long userId,
+        CursorPaginationInfoRequest pageable) {
+        // 사용자가 좋아요한 프로젝트 ID를 조회
+        List<Long> likedProjectIds =
+            (userId != null) ? likeRepository.findAllProjectIdsByUser(userId)
+                : Collections.emptyList();
+
+        return projectRepository.findByCondition(likedProjectIds, pageable);
     }
 
     @Transactional
@@ -128,12 +140,6 @@ public class ProjectService {
         }
     }
 
-    public List<ProjectListResponse> findAll(Long userId, String sort, boolean isReleased) {
-        List<Long> likedProjectIds = getLikedProjectIds(userId);
-
-        return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, isReleased);
-    }
-
     @Transactional
     public ProjectResponse update(Long loginId, Long projectId, UpdateProjectRequest request) {
         validateLoginId(loginId);
@@ -186,10 +192,12 @@ public class ProjectService {
         return Page.from(projectRepository.findAllByUserCommented(likedProjectIds, user, pageable));
     }
 
-    private ProjectResponse GetProjectResponseAfterSaveLists(Project project, List<SaveTechStackRequest> request,
-                                                             List<SaveMemberRequest> request1,
-                                                             List<String> request2) {
-        List<ProjectSkillSummary> techStacks = projectSkillService.cleanAndSaveAll(project, request);
+    private ProjectResponse GetProjectResponseAfterSaveLists(Project project,
+        List<SaveTechStackRequest> request,
+        List<SaveMemberRequest> request1,
+        List<String> request2) {
+        List<ProjectSkillSummary> techStacks = projectSkillService.cleanAndSaveAll(project,
+            request);
         List<MemberSummary> members = memberService.cleanAndSaveAll(project, request1);
         List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project, request2);
 

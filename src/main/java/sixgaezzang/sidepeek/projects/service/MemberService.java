@@ -13,7 +13,7 @@ import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
-import sixgaezzang.sidepeek.projects.repository.MemberRepository;
+import sixgaezzang.sidepeek.projects.repository.member.MemberRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.service.UserService;
 

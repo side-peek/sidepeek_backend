@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.projects.repository;
+package sixgaezzang.sidepeek.projects.repository.member;
 
 import static sixgaezzang.sidepeek.projects.domain.member.QMember.member;
 import static sixgaezzang.sidepeek.users.domain.QUser.user;
