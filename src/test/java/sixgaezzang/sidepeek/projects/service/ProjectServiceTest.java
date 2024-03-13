@@ -20,11 +20,15 @@ import static sixgaezzang.sidepeek.util.FakeEntityProvider.createComment;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createProject;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createSkill;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createUser;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createContent;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createGithubUrl;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createId;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createLongText;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createOverview;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createProjectName;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createRole;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createUserProjectSearchType;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.YearMonth;
@@ -50,6 +54,7 @@ import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.dto.response.Page;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
+import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
 import sixgaezzang.sidepeek.like.domain.Like;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
@@ -60,7 +65,10 @@ import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
+import sixgaezzang.sidepeek.projects.repository.FileRepository;
+import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -111,10 +119,6 @@ class ProjectServiceTest {
 
     User user;
 
-    private Skill createAndSaveSkill() {
-        return skillRepository.save(createSkill());
-    }
-
     private User createAndSaveUser() {
         User newUser = createUser();
         return userRepository.save(newUser);
@@ -133,7 +137,7 @@ class ProjectServiceTest {
     }
 
     private Comment createAndSaveComment(User user, Project project, Comment comment) {
-        Comment newComment = createComment(user, project, null);
+        Comment newComment = createComment(user, project, comment);
         return commentRepository.save(newComment);
     }
 
@@ -277,8 +281,8 @@ class ProjectServiceTest {
         @Test
         void 사용자가_존재하지_않는_경우_사용자_프로젝트_조회에_실패한다() {
             // given
-            Long invalidUserId = FakeValueProvider.createId();
-            UserProjectSearchType type = FakeValueProvider.createUserProjectSearchType();
+            Long invalidUserId = createId();
+            UserProjectSearchType type = createUserProjectSearchType();
 
             // when
             ThrowingCallable findByUser = () -> projectService.findByUser(invalidUserId,
@@ -349,7 +353,7 @@ class ProjectServiceTest {
                     .user(user)
                     .nickname(user.getNickname())
                     .project(project)
-                    .role(FakeValueProvider.createRole())
+                    .role(createRole())
                     .build())
                 );
         }
@@ -369,7 +373,7 @@ class ProjectServiceTest {
                     .user(user)
                     .project(project)
                     .isAnonymous(false)
-                    .content(FakeValueProvider.createContent())
+                    .content(createContent())
                     .build())
                 );
         }
