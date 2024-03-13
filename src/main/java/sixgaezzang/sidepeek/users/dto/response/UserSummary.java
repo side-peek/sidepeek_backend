@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.users.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -10,6 +11,7 @@ public record UserSummary(
     @Schema(description = "회원 식별자(비회원은 null)", nullable = true, example = "1")
     Long id,
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @Schema(description = "소셜 로그인 회원 여부", nullable = true, example = "false")
     Boolean isSocialLogin,
 
