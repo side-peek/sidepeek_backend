@@ -34,7 +34,7 @@ import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
 import sixgaezzang.sidepeek.projects.domain.Project;
-import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.projects.service.ProjectService;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
@@ -126,7 +126,8 @@ class CommentServiceTest {
                 user.getId(), subComment.getId());
 
             // when
-            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(), request);
+            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(),
+                request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(save)
@@ -140,7 +141,8 @@ class CommentServiceTest {
                 null, project.getId());
 
             // when
-            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(), request);
+            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(),
+                request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(save)
@@ -154,7 +156,8 @@ class CommentServiceTest {
                 null, parent.getId());
 
             // when
-            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(), request);
+            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(),
+                request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(save)
@@ -168,7 +171,8 @@ class CommentServiceTest {
                 user.getId(), null);
 
             // when
-            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(), request);
+            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(),
+                request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(save)
@@ -190,7 +194,8 @@ class CommentServiceTest {
             );
 
             // when
-            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(), request);
+            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(),
+                request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(save)
@@ -212,7 +217,8 @@ class CommentServiceTest {
             );
 
             // when
-            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(), request);
+            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(),
+                request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(save)
@@ -228,7 +234,8 @@ class CommentServiceTest {
                 user.getId(), project.getId());
 
             // when
-            ThrowableAssert.ThrowingCallable save = () -> commentService.save(newUser.getId(), request);
+            ThrowableAssert.ThrowingCallable save = () -> commentService.save(newUser.getId(),
+                request);
 
             // then
             assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(save)
@@ -244,7 +251,8 @@ class CommentServiceTest {
                 user.getId(), parent.getId());
 
             // when
-            ThrowableAssert.ThrowingCallable save = () -> commentService.save(newUser.getId(), request);
+            ThrowableAssert.ThrowingCallable save = () -> commentService.save(newUser.getId(),
+                request);
 
             // then
             assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(save)
@@ -288,7 +296,8 @@ class CommentServiceTest {
                 notExistingUserId, project.getId());
 
             // when
-            ThrowableAssert.ThrowingCallable save = () -> commentService.save(notExistingUserId, request);
+            ThrowableAssert.ThrowingCallable save = () -> commentService.save(notExistingUserId,
+                request);
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(save)
@@ -304,7 +313,8 @@ class CommentServiceTest {
                 user.getId(), notExistingProjectId);
 
             // when
-            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(), request);
+            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(),
+                request);
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(save)
@@ -320,7 +330,8 @@ class CommentServiceTest {
                 user.getId(), notExistingParentId);
 
             // when
-            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(), request);
+            ThrowableAssert.ThrowingCallable save = () -> commentService.save(user.getId(),
+                request);
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(save)
@@ -331,6 +342,7 @@ class CommentServiceTest {
 
     @Nested
     class 댓글_수정_테스트 {
+
         @Test
         void 프로젝트_댓글_수정에_성공한다() {
             // given
