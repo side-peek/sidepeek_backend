@@ -35,6 +35,7 @@ import static sixgaezzang.sidepeek.util.FakeValueProvider.createUserProjectSearc
 import jakarta.persistence.EntityNotFoundException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
@@ -60,7 +62,6 @@ import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.dto.response.Page;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
 import sixgaezzang.sidepeek.common.util.component.DateTimeProvider;
 import sixgaezzang.sidepeek.like.domain.Like;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
@@ -97,6 +98,9 @@ class ProjectServiceTest {
     static String OVERVIEW = createOverview();
     static String GITHUB_URL = createGithubUrl();
     static String DESCRIPTION = createLongText();
+
+    @MockBean
+    DateTimeProvider dateTimeProvider;
 
     @Autowired
     ProjectService projectService;
@@ -223,12 +227,6 @@ class ProjectServiceTest {
 
     @Nested
     class 지난_주_인기_프로젝트_조회_테스트 {
-
-        @MockBean
-        DateTimeProvider dateTimeProvider;
-
-        @Autowired
-        ProjectService projectService;
 
         LocalDate nextSunday;
 
@@ -539,7 +537,7 @@ class ProjectServiceTest {
             ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(saveProject)
+            assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(saveProject)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
@@ -709,6 +707,7 @@ class ProjectServiceTest {
         @Test
         void 프로젝트_소프트_삭제에_성공한다() {
             // given
+            given(dateTimeProvider.getCurrentDateTime()).willReturn(LocalDateTime.now());
             ProjectResponse project = getNewSavedProject(user.getId());
 
             // when
@@ -726,6 +725,7 @@ class ProjectServiceTest {
         @Test
         void 로그인하지_않은_사용자라서__프로젝트_삭제에_실패한다() {
             // given
+            given(dateTimeProvider.getCurrentDateTime()).willReturn(LocalDateTime.now());
             ProjectResponse project = getNewSavedProject(user.getId());
 
             // when
@@ -739,6 +739,7 @@ class ProjectServiceTest {
         @Test
         void 존재하지_않는_프로젝트_삭제에_실패한다() {
             // given
+            given(dateTimeProvider.getCurrentDateTime()).willReturn(LocalDateTime.now());
             ProjectResponse project = getNewSavedProject(user.getId());
 
             // when
@@ -752,6 +753,7 @@ class ProjectServiceTest {
         @Test
         void 프로젝트_작성자가_아니라서_프로젝트_삭제에_실패한다() {
             // given
+            given(dateTimeProvider.getCurrentDateTime()).willReturn(LocalDateTime.now());
             ProjectResponse project = getNewSavedProject(user.getId());
 
             User newUser = createAndSaveUser();
@@ -760,7 +762,7 @@ class ProjectServiceTest {
             ThrowingCallable delete = () -> projectService.delete(newUser.getId(), project.id());
 
             // then
-            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(delete)
+            assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(delete)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
