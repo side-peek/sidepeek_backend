@@ -46,7 +46,10 @@ public class LikeService {
             .project(project)
             .build();
 
-        return LikeResponse.from(likeRepository.save(like));
+        like = likeRepository.save(like);
+        project.increaseLikeCount();    // 좋아요 수 증가
+
+        return LikeResponse.from(like);
     }
 
     @Transactional
@@ -55,6 +58,9 @@ public class LikeService {
         validateLikeId(likeId);
 
         Like like = getById(likeId);
+
+        Project project = like.getProject();
+        project.decreaseLikeCount();    // 좋아요 수 감소
 
         likeRepository.delete(like);
     }
