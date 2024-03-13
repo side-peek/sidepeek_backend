@@ -7,6 +7,7 @@ import net.datafaker.Faker;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.comments.domain.Comment;
+import sixgaezzang.sidepeek.like.domain.Like;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -74,6 +75,13 @@ public class FakeEntityProvider {
             .user(user)
             .project(project)
             .content(FakeValueProvider.createContent())
+            .build();
+    }
+
+    public static Like createLike(User user, Project project) {
+        return Like.builder()
+            .user(user)
+            .project(project)
             .build();
     }
 }

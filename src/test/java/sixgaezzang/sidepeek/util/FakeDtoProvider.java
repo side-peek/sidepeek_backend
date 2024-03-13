@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
+import sixgaezzang.sidepeek.like.dto.request.LikeRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.users.domain.Career;
@@ -47,7 +48,8 @@ public class FakeDtoProvider {
     }
 
     public static SaveProjectRequest createSaveProjectRequestWithOwnerIdAndOption(
-        List<SaveTechStackRequest> techStacks, Long ownerId, String subName, String thumbnailUrl, String deployUrl,
+        List<SaveTechStackRequest> techStacks, Long ownerId, String subName, String thumbnailUrl,
+        String deployUrl,
         String troubleShooting, YearMonth startDate, YearMonth endDate
     ) {
         return new SaveProjectRequest(
@@ -77,5 +79,10 @@ public class FakeDtoProvider {
             FakeValueProvider.createUrl(),
             Collections.emptyList()
         );
+    }
+
+    // Like
+    public static LikeRequest createLikeRequest(Long projectId) {
+        return new LikeRequest(projectId);
     }
 }
