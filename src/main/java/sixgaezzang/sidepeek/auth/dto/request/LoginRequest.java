@@ -1,7 +1,7 @@
 package sixgaezzang.sidepeek.auth.dto.request;
 
-import static sixgaezzang.sidepeek.auth.exeption.message.AuthErrorMessage.EMAIL_IS_NULL;
-import static sixgaezzang.sidepeek.auth.exeption.message.AuthErrorMessage.PASSWORD_IS_NULL;
+import static sixgaezzang.sidepeek.auth.exception.message.AuthErrorMessage.EMAIL_IS_NULL;
+import static sixgaezzang.sidepeek.auth.exception.message.AuthErrorMessage.PASSWORD_IS_NULL;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
