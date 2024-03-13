@@ -7,7 +7,7 @@ import lombok.Builder;
 @Schema(description = "페이징 정보")
 @Builder
 public record Page<T>(
-    @Schema(description = "데이터 목록", example = "[]")
+    @Schema(description = "데이터 목록")
     List<T> data,
     @Schema(description = "전체 페이지 수", example = "3")
     int totalPages,
