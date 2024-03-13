@@ -3,19 +3,19 @@ package sixgaezzang.sidepeek.util;
 import static io.micrometer.common.util.StringUtils.isBlank;
 
 import java.time.YearMonth;
-import net.datafaker.Faker;
+import java.util.Objects;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.like.domain.Like;
 import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.users.domain.User;
 
 public class FakeEntityProvider {
 
-    private static final Faker FAKER = new Faker();
-
+    // Project
     public static Project createProject(User user) {
         YearMonth startDate = YearMonth.now();
         YearMonth endDate = startDate.plusMonths(3);
@@ -33,6 +33,7 @@ public class FakeEntityProvider {
             .build();
     }
 
+    // User
     public static User createUser() {
         String email = FakeValueProvider.createEmail();
         String password = FakeValueProvider.createPassword();
@@ -45,6 +46,7 @@ public class FakeEntityProvider {
             .build();
     }
 
+    // User
     public static User createUser(
         String email, String password, String nickname, PasswordEncoder passwordEncoder
     ) {
@@ -63,6 +65,7 @@ public class FakeEntityProvider {
             .build();
     }
 
+    // Skill
     public static Skill createSkill() {
         return Skill.builder()
             .name(FakeValueProvider.createSkillName())
@@ -70,14 +73,39 @@ public class FakeEntityProvider {
             .build();
     }
 
-    public static Comment createComment(User user, Project project) {
+    // Comment
+    public static Comment createComment(User user, Project project, Comment parent,
+        boolean isAnonymous) {
         return Comment.builder()
             .user(user)
-            .project(project)
+            .project(Objects.nonNull(project) ? project : parent.getProject())
+            .parent(parent)
+            .isAnonymous(isAnonymous)
             .content(FakeValueProvider.createContent())
             .build();
     }
 
+    public static Comment createComment(User user, Project project, Comment parent) {
+        return Comment.builder()
+            .user(user)
+            .project(Objects.nonNull(project) ? project : parent.getProject())
+            .parent(parent)
+            .isAnonymous(false)
+            .content(FakeValueProvider.createContent())
+            .build();
+    }
+
+    // Member
+    public static Member createMember(User user, Project project) {
+        return Member.builder()
+            .user(user)
+            .nickname(user.getNickname())
+            .project(project)
+            .role(FakeValueProvider.createRole())
+            .build();
+    }
+
+    // Like
     public static Like createLike(User user, Project project) {
         return Like.builder()
             .user(user)
