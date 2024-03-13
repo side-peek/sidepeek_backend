@@ -1,9 +1,9 @@
 package sixgaezzang.sidepeek.users.domain;
 
 import static java.util.Objects.isNull;
-import static sixgaezzang.sidepeek.common.util.SetUtils.isSetPossible;
+import static sixgaezzang.sidepeek.common.util.SetUtils.getBlankIfNullOrBlank;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateEmail;
-import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateGithubUrl;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateOptionGithubUrl;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAIL_FORMAT_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_NOT_REGISTERED;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ALREADY_DELETED;
@@ -28,6 +28,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -84,25 +85,32 @@ public class User extends BaseTimeEntity {
 
     @Builder
     public User(String nickname, String email, String password, PasswordEncoder passwordEncoder,
-        String introduction,
-        String profileImageUrl, Job job, Career career, String githubUrl, String blogUrl) {
+                String introduction,
+                String profileImageUrl, Job job, Career career, String githubUrl, String blogUrl) {
         validateConstructorArguments(nickname, email);
 
+        // required
         this.nickname = nickname;
         this.email = email;
-        this.password = isNull(password) ? null : new Password(password, passwordEncoder);
         this.introduction = introduction;
         this.profileImageUrl = profileImageUrl;
+
+        // option - auth
+        this.password = isNull(password) ? null : new Password(password, passwordEncoder);
+
+        // option - profile
+        this.introduction = getBlankIfNullOrBlank(introduction);
+        this.profileImageUrl = getBlankIfNullOrBlank(profileImageUrl);
         this.job = job;
         this.career = career;
-        this.githubUrl = githubUrl;
-        this.blogUrl = blogUrl;
+        this.githubUrl = getBlankIfNullOrBlank(githubUrl);
+        this.blogUrl = getBlankIfNullOrBlank(blogUrl);
     }
 
     public boolean checkPassword(String rawPassword, PasswordEncoder passwordEncoder) {
         ValidationUtils.validateNotNull(password, PASSWORD_NOT_REGISTERED);
 
-        return password != null && password.check(rawPassword, passwordEncoder);
+        return password.check(rawPassword, passwordEncoder);
     }
 
     public void update(UpdateUserProfileRequest request) {
@@ -123,7 +131,7 @@ public class User extends BaseTimeEntity {
     }
 
     public void softDelete() { // TODO: 회원탈퇴할 때 언젠가는 쓰일 것 같아서 구현
-        if (isNull(this.deletedAt)) {
+        if (Objects.isNull(this.deletedAt)) {
             this.deletedAt = LocalDateTime.now();
             return;
         }
@@ -131,40 +139,30 @@ public class User extends BaseTimeEntity {
     }
 
     private void validateConstructorArguments(String nickname, String email) {
-        if (nickname != null) {
+        if (Objects.nonNull(nickname)) {
             validateNickname(nickname);
         }
 
-        if (email != null) {
+        if (Objects.nonNull(email)) {
             validateEmail(email, EMAIL_FORMAT_INVALID);
         }
     }
 
+    // Required
     private void setNickname(String nickname) {
         validateNickname(nickname);
-        if (isSetPossible(this.nickname, nickname)) {
-            this.nickname = nickname;
-        }
+        this.nickname = nickname;
     }
 
+    // Option
     private void setIntroduction(String introduction) {
-        if (StringUtils.isNotBlank(introduction)) {
-            validateIntroduction(introduction);
-        }
-
-        if (isSetPossible(this.introduction, introduction)) {
-            this.introduction = introduction;
-        }
+        validateIntroduction(introduction);
+        this.introduction = introduction;
     }
 
     private void setProfileImageUrl(String profileImageUrl) {
-        if (StringUtils.isNotBlank(profileImageUrl)) {
-            validateProfileImageUrl(profileImageUrl);
-        }
-
-        if (isSetPossible(this.profileImageUrl, profileImageUrl)) {
-            this.profileImageUrl = profileImageUrl;
-        }
+        validateProfileImageUrl(profileImageUrl);
+        this.profileImageUrl = profileImageUrl;
     }
 
     private void setJob(String jobName) {
@@ -172,10 +170,7 @@ public class User extends BaseTimeEntity {
         if (StringUtils.isNotBlank(jobName)) {
             newJob = Job.get(jobName);
         }
-
-        if (isSetPossible(this.job, newJob)) {
-            this.job = newJob;
-        }
+        this.job = newJob;
     }
 
     private void setCareer(String careerDescription) {
@@ -183,29 +178,17 @@ public class User extends BaseTimeEntity {
         if (StringUtils.isNotBlank(careerDescription)) {
             newCareer = Career.get(careerDescription);
         }
-
-        if (isSetPossible(this.career, newCareer)) {
-            this.career = newCareer;
-        }
+        this.career = newCareer;
     }
 
     private void setGithubUrl(String githubUrl) {
-        if (StringUtils.isNotBlank(githubUrl)) {
-            validateGithubUrl(githubUrl);
-        }
+        validateOptionGithubUrl(githubUrl);
+        this.githubUrl = getBlankIfNullOrBlank(githubUrl);
 
-        if (isSetPossible(this.githubUrl, githubUrl)) {
-            this.githubUrl = githubUrl;
-        }
     }
 
     private void setBlogUrl(String blogUrl) {
-        if (StringUtils.isNotBlank(blogUrl)) {
-            validateBlogUrl(blogUrl);
-        }
-
-        if (isSetPossible(this.blogUrl, blogUrl)) {
-            this.blogUrl = blogUrl;
-        }
+        validateBlogUrl(blogUrl);
+        this.blogUrl = getBlankIfNullOrBlank(blogUrl);
     }
 }

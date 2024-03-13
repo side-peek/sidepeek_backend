@@ -18,9 +18,25 @@ import static sixgaezzang.sidepeek.util.FakeDtoProvider.createSaveProjectRequest
 import static sixgaezzang.sidepeek.util.FakeDtoProvider.createUpdateUserSkillRequests;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createComment;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createLike;
+import static sixgaezzang.sidepeek.util.FakeDtoProvider.createFellowSaveMemberRequest;
+import static sixgaezzang.sidepeek.util.FakeDtoProvider.createSaveProjectRequestOnlyRequired;
+import static sixgaezzang.sidepeek.util.FakeDtoProvider.createSaveProjectRequestWithOwnerIdAndOption;
+import static sixgaezzang.sidepeek.util.FakeDtoProvider.createSaveTechStackRequests;
+import static sixgaezzang.sidepeek.util.FakeDtoProvider.createUpdateProjectRequestOnlyRequired;
+import static sixgaezzang.sidepeek.util.FakeEntityProvider.createComment;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createProject;
+import static sixgaezzang.sidepeek.util.FakeEntityProvider.createSkill;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createUser;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createContent;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createId;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createLongText;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createOverview;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createProjectName;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createRole;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createUserProjectSearchType;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createContent;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createGithubUrl;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createId;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createLongText;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createOverview;
@@ -54,6 +70,7 @@ import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.dto.response.Page;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
+import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
 import sixgaezzang.sidepeek.like.domain.Like;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
@@ -62,6 +79,7 @@ import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
+import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
@@ -76,7 +94,7 @@ import sixgaezzang.sidepeek.util.FakeEntityProvider;
 
 @SpringBootTest
 @Transactional
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@DisplayNameGeneration(ReplaceUnderscores.class)
 class ProjectServiceTest {
 
     static final Faker faker = new Faker();
@@ -87,7 +105,7 @@ class ProjectServiceTest {
     static List<SaveTechStackRequest> techStacks;
     static String NAME = createProjectName();
     static String OVERVIEW = createOverview();
-    static String GITHUB_URL = createUrl();
+    static String GITHUB_URL = createGithubUrl();
     static String DESCRIPTION = createLongText();
 
     @Autowired
@@ -119,10 +137,6 @@ class ProjectServiceTest {
 
     User user;
 
-    private Skill createAndSaveSkill() {
-        return skillRepository.save(FakeEntityProvider.createSkill());
-    }
-
     private User createAndSaveUser() {
         User newUser = createUser();
         return userRepository.save(newUser);
@@ -137,11 +151,11 @@ class ProjectServiceTest {
         SaveProjectRequest request = createSaveProjectRequestOnlyRequired(
             NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, userId, techStacks, members
         );
-        return projectService.save(userId, null, request);
+        return projectService.save(userId, request);
     }
 
-    private Comment createAndSaveComment(User user, Project project) {
-        Comment newComment = createComment(user, project, null);
+    private Comment createAndSaveComment(User user, Project project, Comment comment) {
+        Comment newComment = createComment(user, project, comment);
         return commentRepository.save(newComment);
     }
 
@@ -172,11 +186,9 @@ class ProjectServiceTest {
         fellowMemberIds.add(0, user.getId());
         members.add(0, createFellowSaveMemberRequest(user.getId()));
 
-        members.add(0, createFellowSaveMemberRequest(user.getId()));
-
         List<Skill> skills = new ArrayList<>();
         for (int i = 1; i <= SKILL_COUNT; i++) {
-            skills.add(FakeEntityProvider.createSkill());
+            skills.add(createSkill());
         }
 
         List<Long> createdSkillIds = skillRepository.saveAll(skills)
@@ -184,7 +196,7 @@ class ProjectServiceTest {
             .map(Skill::getId)
             .toList();
 
-        techStacks = createUpdateUserSkillRequests(createdSkillIds);
+        techStacks = createSaveTechStackRequests(createdSkillIds);
     }
 
     @Nested
@@ -195,8 +207,8 @@ class ProjectServiceTest {
             // given
             User user = createAndSaveUser();
             Project project = createAndSaveProject(user);
-            Comment comment = createAndSaveComment(user, project);
-            CommentResponse commentResponse = CommentResponse.from(comment, true, null);
+            Comment comment = createAndSaveComment(user, project, null);
+            CommentResponse commentResponse = CommentResponse.from(comment, true, List.of());
 
             // when
             ProjectResponse response = projectService.findById(project.getId());
@@ -455,7 +467,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ProjectResponse response = projectService.save(user.getId(), null, request);
+            ProjectResponse response = projectService.save(user.getId(), request);
 
             // then
             assertThat(response).extracting("name", "overview", "githubUrl", "description",
@@ -477,7 +489,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
@@ -492,7 +504,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
@@ -507,10 +519,10 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(saveProject)
+            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(saveProject)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
@@ -526,7 +538,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
@@ -547,7 +559,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable saveProject = () -> projectService.save(user.getId(), null, request);
+            ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
             assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(saveProject)
@@ -562,7 +574,7 @@ class ProjectServiceTest {
             );
 
             // when
-            ThrowingCallable save = () -> projectService.save(null, null, request);
+            ThrowingCallable save = () -> projectService.save(null, request);
 
             // then
             assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(save)
@@ -583,13 +595,13 @@ class ProjectServiceTest {
                 // when
                 String newName = createProjectName();
                 String newOverview = createOverview();
-                String newGithubUrl = createUrl();
+                String newGithubUrl = createGithubUrl();
                 String newDescription = createLongText();
-                SaveProjectRequest newRequest = createSaveProjectRequestOnlyRequired(
-                    newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
+                UpdateProjectRequest newRequest = createUpdateProjectRequestOnlyRequired(
+                    newName, newOverview, newGithubUrl, newDescription, techStacks,
                     members
                 );
-                ProjectResponse savedProject = projectService.save(fellowMemberId,
+                ProjectResponse savedProject = projectService.update(fellowMemberId,
                     originalProject.id(), newRequest);
 
                 // then
@@ -609,13 +621,13 @@ class ProjectServiceTest {
             // when
             String newName = createProjectName();
             String newOverview = createOverview();
-            String newGithubUrl = createUrl();
+            String newGithubUrl = createGithubUrl();
             String newDescription = createLongText();
-            SaveProjectRequest newRequest = createSaveProjectRequestOnlyRequired(
-                newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
+            UpdateProjectRequest newRequest = createUpdateProjectRequestOnlyRequired(
+                newName, newOverview, newGithubUrl, newDescription, techStacks,
                 members
             );
-            ThrowingCallable update = () -> projectService.save(user.getId(),
+            ThrowingCallable update = () -> projectService.update(user.getId(),
                 originalProject.id() + 1, newRequest);
 
             // then
@@ -631,12 +643,12 @@ class ProjectServiceTest {
             // when
             String newName = createProjectName();
             String newOverview = createOverview();
-            String newGithubUrl = createUrl();
+            String newGithubUrl = createGithubUrl();
             String newDescription = createLongText();
-            SaveProjectRequest newRequest = createSaveProjectRequestOnlyRequired(
-                newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks, members
+            UpdateProjectRequest newRequest = createUpdateProjectRequestOnlyRequired(
+                newName, newOverview, newGithubUrl, newDescription, techStacks, members
             );
-            ThrowingCallable update = () -> projectService.save(null, originalProject.id(),
+            ThrowingCallable update = () -> projectService.update(null, originalProject.id(),
                 newRequest);
 
             // then
@@ -658,13 +670,13 @@ class ProjectServiceTest {
                 // when
                 String newName = createProjectName();
                 String newOverview = createOverview();
-                String newGithubUrl = createUrl();
+                String newGithubUrl = createGithubUrl();
                 String newDescription = createLongText();
-                SaveProjectRequest newRequest = createSaveProjectRequestOnlyRequired(
-                    newName, newOverview, newGithubUrl, newDescription, user.getId(), techStacks,
+                UpdateProjectRequest newRequest = createUpdateProjectRequestOnlyRequired(
+                    newName, newOverview, newGithubUrl, newDescription, techStacks,
                     members
                 );
-                ThrowingCallable update = () -> projectService.save(nonMemberId,
+                ThrowingCallable update = () -> projectService.update(nonMemberId,
                     originalProject.id(), newRequest);
 
                 // then
@@ -731,7 +743,7 @@ class ProjectServiceTest {
             ThrowingCallable delete = () -> projectService.delete(newUser.getId(), project.id());
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(delete)
+            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(delete)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 

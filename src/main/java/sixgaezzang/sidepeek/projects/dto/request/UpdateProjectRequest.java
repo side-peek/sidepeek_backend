@@ -7,7 +7,6 @@ import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessag
 import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.TECH_STACKS_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COUNT;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
-import static sixgaezzang.sidepeek.common.util.CommonConstant.MIN_ID;
 import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_EMPTY;
@@ -20,7 +19,6 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.NAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OVERVIEW_IS_NULL;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OVERVIEW_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.SUB_NAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_OVER_MAX_LENGTH;
@@ -33,19 +31,16 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.YEAR_MONTH_PATT
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.YearMonth;
 import java.util.List;
 import org.hibernate.validator.constraints.URL;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
-import sixgaezzang.sidepeek.projects.domain.Project;
 
-@Schema(description = "프로젝트 생성 요청")
-public record SaveProjectRequest(
+@Schema(description = "프로젝트 수정 요청")
+public record UpdateProjectRequest(
     // Required
     @Schema(description = "프로젝트 제목", example = "사이드픽👀")
     @Size(max = MAX_PROJECT_NAME_LENGTH, message = NAME_OVER_MAX_LENGTH)
@@ -56,11 +51,6 @@ public record SaveProjectRequest(
     @Size(max = MAX_OVERVIEW_LENGTH, message = OVERVIEW_OVER_MAX_LENGTH)
     @NotBlank(message = OVERVIEW_IS_NULL)
     String overview,
-
-    @Schema(description = "프로젝트 작성자 식별자(회원 식별자)", example = "1")
-    @Min(value = MIN_ID, message = "작성자 id는 " + MIN_ID + "보다 작을 수 없습니다.")
-    @NotNull(message = OWNER_ID_IS_NULL)
-    Long ownerId,
 
     @Schema(description = "프로젝트 Github URL", example = "https://github.com/side-peek")
     @Size(max = MAX_TEXT_LENGTH, message = GITHUB_URL_OVER_MAX_LENGTH)
@@ -114,20 +104,4 @@ public record SaveProjectRequest(
     @NotEmpty(message = MEMBER_IS_EMPTY)
     List<SaveMemberRequest> members
 ) {
-
-    public Project toEntity() {
-        return Project.builder()
-            .name(this.name)
-            .subName(this.subName)
-            .overview(this.overview)
-            .ownerId(this.ownerId)
-            .githubUrl(this.githubUrl)
-            .description(this.description)
-            .thumbnailUrl(this.thumbnailUrl)
-            .deployUrl(this.deployUrl)
-            .startDate(this.startDate)
-            .endDate(this.endDate)
-            .troubleshooting(this.troubleShooting)
-            .build();
-    }
 }

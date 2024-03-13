@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.util;
 
+import static sixgaezzang.sidepeek.util.FakeValueProvider.createGithubUrl;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createLongText;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createNickname;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createOverview;
@@ -18,6 +19,7 @@ import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.like.dto.request.LikeRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.users.domain.Career;
 import sixgaezzang.sidepeek.users.domain.Job;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
@@ -25,15 +27,15 @@ import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 public class FakeDtoProvider {
 
     // TechStack
-    public static SaveTechStackRequest createUpdateUserSkillRequest(Long skillId) {
+    public static SaveTechStackRequest createSaveTechStackRequest(Long skillId) {
         return new SaveTechStackRequest(skillId, createSkillCategory());
     }
 
-    public static List<SaveTechStackRequest> createUpdateUserSkillRequests(List<Long> skillIds) {
+    public static List<SaveTechStackRequest> createSaveTechStackRequests(List<Long> skillIds) {
         List<SaveTechStackRequest> requests = new ArrayList<>();
         for (Long skillId : skillIds) {
             requests.add(
-                FakeDtoProvider.createUpdateUserSkillRequest(skillId)
+                FakeDtoProvider.createSaveTechStackRequest(skillId)
             );
         }
         return requests;
@@ -56,8 +58,28 @@ public class FakeDtoProvider {
     ) {
         return new SaveProjectRequest(
             createProjectName(), createOverview(), ownerId,
-            createUrl(), createLongText(), techStacks, subName,
+            createGithubUrl(), createLongText(), techStacks, subName,
             thumbnailUrl, deployUrl, startDate, endDate, troubleShooting, null, null
+        );
+    }
+
+    public static UpdateProjectRequest createUpdateProjectRequestOnlyRequired(
+        String name, String overview, String githubUrl, String description,
+        List<SaveTechStackRequest> techStacks, List<SaveMemberRequest> members
+    ) {
+        return new UpdateProjectRequest(name, overview, githubUrl, description,
+            techStacks, null, null, null, null,
+            null, null, null, members);
+    }
+
+    public static UpdateProjectRequest createUpdateProjectRequestWithOption(
+        List<SaveTechStackRequest> techStacks, String subName, String thumbnailUrl,
+        String deployUrl, String troubleShooting, YearMonth startDate, YearMonth endDate
+    ) {
+        return new UpdateProjectRequest(
+            createProjectName(), createOverview(), createUrl(), createLongText(),
+            techStacks, subName, thumbnailUrl, deployUrl, startDate, endDate,
+            troubleShooting, null, null
         );
     }
 
@@ -77,7 +99,7 @@ public class FakeDtoProvider {
             FakeValueProvider.createIntroduction(),
             Job.BACKEND_DEVELOPER.getName(),
             Career.JUNIOR.getDescription(),
-            FakeValueProvider.createUrl(),
+            FakeValueProvider.createGithubUrl(),
             FakeValueProvider.createUrl(),
             Collections.emptyList()
         );
