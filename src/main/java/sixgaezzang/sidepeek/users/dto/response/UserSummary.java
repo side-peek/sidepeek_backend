@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.users.dto.response;
 
+import static sixgaezzang.sidepeek.common.util.CommonConstant.BLANK_STRING;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -61,7 +63,7 @@ public record UserSummary(
             .id(null)
             .isSocialLogin(null)
             .nickname(nickname)
-            .profileImageUrl(null)
+            .profileImageUrl(BLANK_STRING)
             .build();
     }
 
