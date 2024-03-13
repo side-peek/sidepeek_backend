@@ -10,7 +10,6 @@ import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.valida
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -73,10 +72,6 @@ public class CommentService {
         List<Comment> comments = commentRepository.findAll(project);
         AtomicLong commentCount = new AtomicLong((long) comments.size());    // 댓글 개수
 
-        if (comments.isEmpty()) {
-            return CommentWithCountResponse.from(Collections.emptyList(), commentCount.get()); // 댓글이 없는 경우 빈 배열 반환
-        }
-
         List<CommentResponse> results = comments.stream()
             .map(comment -> {
                 boolean isOwner = isSameOwner(comment, project);
@@ -119,10 +114,6 @@ public class CommentService {
 
     private List<ReplyResponse> mapReplies(Comment comment) {
         List<Comment> replies = commentRepository.findAllReplies(comment);
-
-        if (replies.isEmpty()) {
-            return null;    // 대댓글이 없는 경우 null 반환
-        }
 
         return replies.stream()
             .map(reply -> {
