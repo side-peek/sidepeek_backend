@@ -8,7 +8,6 @@ import static sixgaezzang.sidepeek.comments.util.validation.CommentValidator.val
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginIdEqualsOwnerId;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
-import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -27,7 +26,7 @@ import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.repository.UserRepository;
+import sixgaezzang.sidepeek.users.service.UserService;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,8 +34,8 @@ import sixgaezzang.sidepeek.users.repository.UserRepository;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
+    private final UserService userService;
 
     @Transactional
     public Long save(Long loginId, SaveCommentRequest request) {
@@ -44,8 +43,7 @@ public class CommentService {
         validateLoginIdEqualsOwnerId(loginId, request.ownerId());
         validateSaveCommentRequest(request);
 
-        User owner = userRepository.findById(request.ownerId())
-            .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
+        User owner = userService.getById(request.ownerId());
 
         Project project;
         Comment parent = null;
@@ -53,8 +51,7 @@ public class CommentService {
             project = projectRepository.findById(request.projectId())
                 .orElseThrow(() -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
         } else {
-            parent = commentRepository.findById(request.parentId())
-                .orElseThrow(() -> new EntityNotFoundException(PARENT_COMMENT_NOT_EXISTING));
+            parent = getById(request.parentId(), PARENT_COMMENT_NOT_EXISTING);
             validateParentCommentHasParent(parent);
 
             project = parent.getProject();
@@ -66,13 +63,14 @@ public class CommentService {
         return comment.getProject().getId();
     }
 
+    public Comment getById(Long id, String message) {
+        return commentRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(message));
+    }
+
     public CommentWithCountResponse findAll(Project project) {
         List<Comment> comments = commentRepository.findAll(project);
         AtomicLong commentCount = new AtomicLong((long) comments.size());    // 댓글 개수
-
-        if (comments.isEmpty()) {
-            return CommentWithCountResponse.from(null, commentCount.get()); // 댓글이 없는 경우 null 반환
-        }
 
         List<CommentResponse> results = comments.stream()
             .map(comment -> {
@@ -93,10 +91,9 @@ public class CommentService {
         validateLoginId(loginId);
         validateCommentId(commentId);
 
-        Comment comment = commentRepository.findById(commentId)
-            .orElseThrow(() -> new EntityNotFoundException(COMMENT_NOT_EXISTING));
+        Comment comment = getById(commentId, COMMENT_NOT_EXISTING);
 
-        validateLoginIdEqualsOwnerId(loginId, comment.getUser().getId());
+        validateLoginIdEqualsOwnerId(loginId, comment.getOwnerId());
         comment.update(request);
     }
 
@@ -105,23 +102,18 @@ public class CommentService {
         validateLoginId(loginId);
         validateCommentId(commentId);
 
-        Comment comment = commentRepository.findById(commentId)
-            .orElseThrow(() -> new EntityNotFoundException(COMMENT_NOT_EXISTING));
+        Comment comment = getById(commentId, COMMENT_NOT_EXISTING);
 
-        validateLoginIdEqualsOwnerId(loginId, comment.getUser().getId());
+        validateLoginIdEqualsOwnerId(loginId, comment.getOwnerId());
         commentRepository.delete(comment);
     }
 
     private boolean isSameOwner(Comment comment, Project project) {
-        return comment.getUser().getId().equals(project.getOwnerId());
+        return comment.getOwnerId().equals(project.getOwnerId());
     }
 
     private List<ReplyResponse> mapReplies(Comment comment) {
         List<Comment> replies = commentRepository.findAllReplies(comment);
-
-        if (replies.isEmpty()) {
-            return null;    // 대댓글이 없는 경우 null 반환
-        }
 
         return replies.stream()
             .map(reply -> {

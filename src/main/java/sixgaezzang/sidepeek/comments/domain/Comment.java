@@ -82,6 +82,10 @@ public class Comment extends BaseTimeEntity {
         setContent(request.content());
     }
 
+    public Long getOwnerId() {
+        return this.user.getId();
+    }
+
     private void setIsAnonymous(Boolean isAnonymous) {
         Assert.notNull(isAnonymous, IS_ANONYMOUS_IS_NULL);
         this.isAnonymous = isAnonymous;
