@@ -34,4 +34,13 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
             .where(comment.parent.eq(parent))
             .fetch();
     }
+
+    @Override
+    public long countRepliesByParent(Comment parent) {
+        return queryFactory
+            .select(comment.count())
+            .from(comment)
+            .where(comment.parent.eq(parent))
+            .fetchOne();
+    }
 }

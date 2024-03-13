@@ -10,4 +10,6 @@ public interface CommentRepositoryCustom {
 
     List<Comment> findAllReplies(Comment parent);
 
+    long countRepliesByParent(Comment parent);
+
 }
