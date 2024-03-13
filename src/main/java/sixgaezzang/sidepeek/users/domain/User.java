@@ -1,9 +1,11 @@
 package sixgaezzang.sidepeek.users.domain;
 
+import static java.util.Objects.isNull;
 import static sixgaezzang.sidepeek.common.util.SetUtils.getBlankIfNullOrBlank;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateEmail;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateOptionGithubUrl;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.EMAIL_FORMAT_INVALID;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.PASSWORD_NOT_REGISTERED;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ALREADY_DELETED;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_CAREER_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_EMAIL_LENGTH;
@@ -26,7 +28,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,6 +35,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sixgaezzang.sidepeek.common.domain.BaseTimeEntity;
+import sixgaezzang.sidepeek.common.util.validation.ValidationUtils;
 import sixgaezzang.sidepeek.users.dto.request.UpdateUserProfileRequest;
 
 @Entity
@@ -81,16 +83,19 @@ public class User extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public User(String nickname, String email, Password password, String introduction,
+    public User(String nickname, String email, String password, PasswordEncoder passwordEncoder,
+                String introduction,
                 String profileImageUrl, Job job, Career career, String githubUrl, String blogUrl) {
         validateConstructorArguments(nickname, email);
 
         // required
         this.nickname = nickname;
         this.email = email;
+        this.introduction = introduction;
+        this.profileImageUrl = profileImageUrl;
 
         // option - auth
-        this.password = password;
+        this.password = isNull(password) ? null : new Password(password, passwordEncoder);
 
         // option - profile
         this.introduction = getBlankIfNullOrBlank(introduction);
@@ -102,7 +107,9 @@ public class User extends BaseTimeEntity {
     }
 
     public boolean checkPassword(String rawPassword, PasswordEncoder passwordEncoder) {
-        return Objects.nonNull(password) && password.check(rawPassword, passwordEncoder);
+        ValidationUtils.validateNotNull(password, PASSWORD_NOT_REGISTERED);
+
+        return nonNull(password) && password.check(rawPassword, passwordEncoder);
     }
 
     public void update(UpdateUserProfileRequest request) {
@@ -118,8 +125,12 @@ public class User extends BaseTimeEntity {
         setBlogUrl(request.blogUrl());
     }
 
+    public void updatePassword(String newPassword, PasswordEncoder passwordEncoder) {
+        this.password = new Password(newPassword, passwordEncoder);
+    }
+
     public void softDelete() { // TODO: 회원탈퇴할 때 언젠가는 쓰일 것 같아서 구현
-        if (Objects.isNull(this.deletedAt)) {
+        if (isNull(this.deletedAt)) {
             this.deletedAt = LocalDateTime.now();
             return;
         }
@@ -179,5 +190,4 @@ public class User extends BaseTimeEntity {
         validateBlogUrl(blogUrl);
         this.blogUrl = getBlankIfNullOrBlank(blogUrl);
     }
-
 }

@@ -5,6 +5,7 @@ import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,8 +14,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import sixgaezzang.sidepeek.common.dto.response.Page;
 import sixgaezzang.sidepeek.common.exception.ErrorResponse;
+import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.users.dto.request.CheckEmailRequest;
 import sixgaezzang.sidepeek.users.dto.request.CheckNicknameRequest;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
@@ -90,4 +95,21 @@ public interface UserControllerDoc {
     @Parameter(name = "id", description = "수정할 회원 식별자", example = "1", in = ParameterIn.PATH)
     ResponseEntity<UserProfileResponse> update(@Parameter(hidden = true) Long loginId, Long id,
                                                @Valid UpdateUserProfileRequest request);
+
+    @Operation(summary = "회원 프로젝트 조회")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @Parameters({
+        @Parameter(name = "id", description = "조회할 회원 식별자", example = "1", in = ParameterIn.PATH),
+        @Parameter(name = "type", description = "프로젝트 조회 타입", in = ParameterIn.QUERY),
+        @Parameter(name = "page", description = "조회할 페이지 번호 (기본값: 0)", in = ParameterIn.QUERY),
+        @Parameter(name = "size", description = "한 페이지의 크기 (기본값: 12)", in = ParameterIn.QUERY)
+    })
+    ResponseEntity<Page<ProjectListResponse>> getProjects(
+        @Parameter(hidden = true) Long loginId,
+        Long id, UserProjectSearchType type, @Parameter(hidden = true) Pageable pageable);
 }
