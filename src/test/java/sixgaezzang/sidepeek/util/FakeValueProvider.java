@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.util;
 
+import static sixgaezzang.sidepeek.comments.util.CommentConstant.MAX_CONTENT_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TEXT_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_OVERVIEW_LENGTH;
@@ -12,6 +13,7 @@ import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 import java.util.ArrayList;
 import java.util.List;
 import net.datafaker.Faker;
+import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
 
 public class FakeValueProvider {
 
@@ -48,9 +50,19 @@ public class FakeValueProvider {
         return FAKER.text().text(1, 2);
     }
 
+    public static Boolean createBoolean() {
+        return FAKER.bool().bool();
+    }
+
     // Project
     public static String createProjectName() { // 프로젝트 제목/부제목
         return checkAndCutLength(FAKER.name().title(), MAX_PROJECT_NAME_LENGTH);
+    }
+
+    public static UserProjectSearchType createUserProjectSearchType() {
+        UserProjectSearchType[] userProjectSearchTypes = {UserProjectSearchType.JOINED,
+            UserProjectSearchType.LIKED, UserProjectSearchType.COMMENTED};
+        return userProjectSearchTypes[FAKER.random().nextInt(userProjectSearchTypes.length)];
     }
 
     public static String createOverview() {
@@ -85,7 +97,7 @@ public class FakeValueProvider {
 
     // Comment
     public static String createContent() {
-        return FAKER.lorem().sentence();
+        return FAKER.text().text(1, MAX_CONTENT_LENGTH);
     }
 
     // User

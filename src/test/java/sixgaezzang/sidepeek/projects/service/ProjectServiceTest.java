@@ -9,14 +9,18 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_NOT_EQUALS_LOGIN_ID;
+import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
+import static sixgaezzang.sidepeek.util.FakeEntityProvider.createProject;
+import static sixgaezzang.sidepeek.util.FakeEntityProvider.createUser;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -26,17 +30,28 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
+import sixgaezzang.sidepeek.common.dto.response.Page;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
+import sixgaezzang.sidepeek.like.domain.Like;
+import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
+import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
+import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
+import sixgaezzang.sidepeek.projects.repository.FileRepository;
+import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -76,6 +91,18 @@ class ProjectServiceTest {
     @Autowired
     CommentRepository commentRepository;
 
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
+    LikeRepository likeRepository;
+
+    @Autowired
+    ProjectSkillRepository projectSkillRepository;
+
+    @Autowired
+    FileRepository fileRepository;
+
     User user;
 
     private Skill createAndSaveSkill() {
@@ -83,12 +110,12 @@ class ProjectServiceTest {
     }
 
     private User createAndSaveUser() {
-        User newUser = FakeEntityProvider.createUser();
+        User newUser = createUser();
         return userRepository.save(newUser);
     }
 
     private Project createAndSaveProject(User user) {
-        Project newProject = FakeEntityProvider.createProject(user);
+        Project newProject = createProject(user);
         return projectRepository.save(newProject);
     }
 
@@ -100,7 +127,7 @@ class ProjectServiceTest {
     }
 
     private Comment createAndSaveComment(User user, Project project) {
-        Comment newComment = FakeEntityProvider.createComment(user, project);
+        Comment newComment = FakeEntityProvider.createComment(user, project, null);
         return commentRepository.save(newComment);
     }
 
@@ -108,20 +135,30 @@ class ProjectServiceTest {
     void setup() {
         members = new ArrayList<>();
         fellowMemberIds = new ArrayList<>();
+        List<User> users = new ArrayList<>();
         for (int i = 1; i <= MEMBER_COUNT - 1; i++) {
-            Long savedUserId = createAndSaveUser().getId();
-            fellowMemberIds.add(savedUserId);
-            members.add(FakeDtoProvider.createFellowSaveMemberRequest(savedUserId));
+            users.add(createUser());
         }
+        userRepository.saveAll(users)
+            .stream()
+            .forEach(user -> {
+                fellowMemberIds.add(user.getId());
+                members.add(FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
+            });
 
         user = createAndSaveUser();
         fellowMemberIds.add(0, user.getId());
         members.add(0, FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
 
-        List<Long> createdSkillIds = new ArrayList<>();
+        List<Skill> skills = new ArrayList<>();
         for (int i = 1; i <= SKILL_COUNT; i++) {
-            createdSkillIds.add(createAndSaveSkill().getId());
+            skills.add(FakeEntityProvider.createSkill());
         }
+        List<Long> createdSkillIds = skillRepository.saveAll(skills)
+            .stream()
+            .map(skill -> skill.getId())
+            .toList();
+
         techStacks = FakeDtoProvider.createUpdateUserSkillRequests(createdSkillIds);
     }
 
@@ -155,6 +192,181 @@ class ProjectServiceTest {
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(findById)
                 .withMessage(PROJECT_NOT_EXISTING);
+        }
+    }
+
+    @Nested
+    class 회원_관련_프로젝트_전체_조회_테스트 {
+
+        User user;
+        List<Project> projects;
+        long projectCount;
+        static int defaultPageSize = 12;
+
+        @BeforeEach
+        void setup() {
+            user = createAndSaveUser();
+            projectCount = faker.random().nextLong(1, 50);
+            projects = new ArrayList<>();
+            for (int i = 0; i < projectCount; i++) {
+                projects.add(createProject(user));
+            }
+            projectRepository.saveAll(projects);
+        }
+
+        @Test
+        void 유저가_참여한_프로젝트_조회에_성공한다() {
+            // given
+            Long loginId = user.getId();
+            joinProjects(user, projects);
+
+            // when
+            Page<ProjectListResponse> expected = projectService.findByUser(user.getId(), loginId,
+                UserProjectSearchType.JOINED, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThat(expected.data()).isNotEmpty();
+            assertThat(expected).extracting("totalElements", "totalPages", "pageSize", "pageNumber")
+                .containsExactly(projectCount, calculatePageNumber(projectCount, defaultPageSize),
+                    defaultPageSize, 0);
+        }
+
+        @Test
+        void 유저가_좋아요_한_프로젝트_조회에_성공한다() {
+            // given
+            Long loginId = user.getId();
+            likeProjects(user, projects);
+
+            // when
+            Page<ProjectListResponse> expected = projectService.findByUser(user.getId(), loginId,
+                UserProjectSearchType.LIKED, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThat(expected.data()).isNotEmpty();
+            assertThat(expected).extracting("totalElements", "totalPages", "pageSize", "pageNumber")
+                .containsExactly(projectCount, calculatePageNumber(projectCount, defaultPageSize),
+                    defaultPageSize, 0);
+        }
+
+        @Test
+        void 유저가_댓글_단_프로젝트_조회에_성공한다() {
+            // given
+            Long loginId = user.getId();
+            commentOnProjects(user, projects);
+
+            // when
+            Page<ProjectListResponse> expected = projectService.findByUser(user.getId(), loginId,
+                UserProjectSearchType.COMMENTED, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThat(expected.data()).isNotEmpty();
+            assertThat(expected).extracting("totalElements", "totalPages", "pageSize", "pageNumber")
+                .containsExactly(projectCount, calculatePageNumber(projectCount, defaultPageSize),
+                    defaultPageSize, 0);
+        }
+
+        @Test
+        void 사용자가_존재하지_않는_경우_사용자_프로젝트_조회에_실패한다() {
+            // given
+            Long invalidUserId = FakeValueProvider.createId();
+            UserProjectSearchType type = FakeValueProvider.createUserProjectSearchType();
+
+            // when
+            ThrowingCallable findByUser = () -> projectService.findByUser(invalidUserId,
+                user.getId(), type, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(findByUser)
+                .withMessage(USER_NOT_EXISTING);
+        }
+
+        @Test
+        void 로그인하지_않은_사용자일_경우_좋아요_한_프로젝트_조회에_실패한다() {
+            // when
+            ThrowingCallable findByUser = () -> projectService.findByUser(user.getId(), null,
+                UserProjectSearchType.LIKED, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(findByUser)
+                .withMessage(LOGIN_IS_REQUIRED);
+        }
+
+        @Test
+        void 로그인하지_않은_사용자일_경우_댓글_단_프로젝트_조회에_실패한다() {
+            // when
+            ThrowingCallable findByUser = () -> projectService.findByUser(user.getId(), null,
+                UserProjectSearchType.COMMENTED, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(findByUser)
+                .withMessage(LOGIN_IS_REQUIRED);
+        }
+
+        @Test
+        void 본인이_아닐_경우_좋아요_한_프로젝트_조회에_실패한다() {
+            // given
+            User anotherUser = createAndSaveUser();
+            likeProjects(user, projects);
+
+            // when
+            ThrowingCallable findByUser = () -> projectService.findByUser(user.getId(),
+                anotherUser.getId(),
+                UserProjectSearchType.LIKED, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(findByUser)
+                .withMessage(USER_ID_NOT_EQUALS_LOGIN_ID);
+        }
+
+        @Test
+        void 본인이_아닐_경우_댓글_단_프로젝트_조회에_실패한다() {
+            // given
+            User anotherUser = createAndSaveUser();
+            commentOnProjects(user, projects);
+
+            // when
+            ThrowingCallable findByUser = () -> projectService.findByUser(user.getId(),
+                anotherUser.getId(),
+                UserProjectSearchType.COMMENTED, Pageable.ofSize(defaultPageSize));
+
+            // then
+            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(findByUser)
+                .withMessage(USER_ID_NOT_EQUALS_LOGIN_ID);
+        }
+
+        private void joinProjects(User user, List<Project> projects) {
+            projects.stream()
+                .forEach(project -> memberRepository.save(Member.builder()
+                    .user(user)
+                    .nickname(user.getNickname())
+                    .project(project)
+                    .role(FakeValueProvider.createRole())
+                    .build())
+                );
+        }
+
+        private void likeProjects(User user, List<Project> projects) {
+            projects.stream()
+                .forEach(project -> likeRepository.save(Like.builder()
+                    .user(user)
+                    .project(project)
+                    .build())
+                );
+        }
+
+        private void commentOnProjects(User user, List<Project> projects) {
+            projects.stream()
+                .forEach(project -> commentRepository.save(Comment.builder()
+                    .user(user)
+                    .project(project)
+                    .isAnonymous(false)
+                    .content(FakeValueProvider.createContent())
+                    .build())
+                );
+        }
+
+        private int calculatePageNumber(long totalElements, int pageSize) {
+            return (int) Math.ceil((double) totalElements / pageSize);
         }
     }
 
@@ -390,7 +602,48 @@ class ProjectServiceTest {
     }
 
     @Nested
+    @Transactional(propagation = Propagation.NEVER)
     class 프로젝트_삭제_테스트 {
+
+        @BeforeEach
+        void setup() {
+            fileRepository.deleteAll();
+            memberRepository.deleteAll();
+            projectSkillRepository.deleteAll();
+            commentRepository.deleteAll();
+            projectRepository.deleteAll();
+            userRepository.deleteAll();
+            skillRepository.deleteAll();
+
+            members = new ArrayList<>();
+            fellowMemberIds = new ArrayList<>();
+            for (int i = 1; i <= MEMBER_COUNT - 1; i++) {
+                Long savedUserId = createAndSaveUser().getId();
+                fellowMemberIds.add(savedUserId);
+                members.add(FakeDtoProvider.createFellowSaveMemberRequest(savedUserId));
+            }
+
+            user = createAndSaveUser();
+            fellowMemberIds.add(0, user.getId());
+            members.add(0, FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
+
+            List<Long> createdSkillIds = new ArrayList<>();
+            for (int i = 1; i <= SKILL_COUNT; i++) {
+                createdSkillIds.add(createAndSaveSkill().getId());
+            }
+            techStacks = FakeDtoProvider.createUpdateUserSkillRequests(createdSkillIds);
+        }
+
+        @AfterEach
+        void cleanup() {
+            fileRepository.deleteAll();
+            memberRepository.deleteAll();
+            projectSkillRepository.deleteAll();
+            commentRepository.deleteAll();
+            projectRepository.deleteAll();
+            userRepository.deleteAll();
+            skillRepository.deleteAll();
+        }
 
         @Test
         void 프로젝트_소프트_삭제에_성공한다() {
@@ -400,13 +653,8 @@ class ProjectServiceTest {
             // when
             projectService.delete(user.getId(), project.id());
 
-            // TODO: @SQLRestriction("deleted_at IS NULL")이 안먹힌다. 왜지?
-            Optional<Project> deletedProject = projectRepository.findById(project.id());
-            projectService.findById(project.id());
-
             // then
-            assertThat(deletedProject).isNotEmpty();
-            assertThat(deletedProject.get().getDeletedAt()).isNotNull();
+            assertThat(projectRepository.findById(project.id())).isEmpty();
         }
 
         @Test
