@@ -2,6 +2,7 @@ package sixgaezzang.sidepeek.projects.controller;
 
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,8 +20,8 @@ import sixgaezzang.sidepeek.common.doc.ProjectControllerDoc;
 import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
-import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.service.ProjectService;
@@ -59,15 +60,13 @@ public class ProjectController implements ProjectControllerDoc {
 
     @Override
     @GetMapping
-    public ResponseEntity<List<ProjectListResponse>> getAll(
+    public ResponseEntity<CursorPaginationResponse<ProjectListResponse>> getByCondition(
         @Login Long loginId,
-        @RequestParam(required = false) String sort,
-        @RequestParam(required = false, defaultValue = "false") boolean isReleased
+        @Valid @ModelAttribute CursorPaginationInfoRequest pageable
     ) {
-        sort = (sort == null) ? "createdAt" : sort;
-        List<ProjectListResponse> responses = projectService.findAll(loginId, sort, isReleased);
-
-        return ResponseEntity.ok(responses);
+        CursorPaginationResponse<ProjectListResponse> responses = projectService.findByCondition(
+            loginId, pageable);
+        return ResponseEntity.ok().body(responses);
     }
 
     @Override
@@ -100,26 +99,5 @@ public class ProjectController implements ProjectControllerDoc {
 
         return ResponseEntity.noContent()
             .build();
-    }
-
-    @Override
-    @GetMapping("/{id}")
-    public ResponseEntity<ProjectResponse> getById(
-        @PathVariable Long id
-    ) {
-        ProjectResponse response = projectService.findById(id);
-
-        return ResponseEntity.ok(response);
-    }
-
-    @Override
-    @GetMapping
-    public ResponseEntity<CursorPaginationResponse<ProjectListResponse>> getByCondition(
-        @Login Long loginId,
-        @Valid @ModelAttribute CursorPaginationInfoRequest pageable
-    ) {
-        CursorPaginationResponse<ProjectListResponse> responses = projectService.findByCondition(
-            loginId, pageable);
-        return ResponseEntity.ok().body(responses);
     }
 }
