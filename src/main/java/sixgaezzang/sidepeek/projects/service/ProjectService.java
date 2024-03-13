@@ -25,8 +25,8 @@ import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
 import sixgaezzang.sidepeek.projects.domain.file.FileType;
-import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
@@ -126,12 +126,6 @@ public class ProjectService {
         }
     }
 
-    public List<ProjectListResponse> findAll(Long userId, String sort, boolean isReleased) {
-        List<Long> likedProjectIds = getLikedProjectIds(userId);
-
-        return projectRepository.findAllBySortAndStatus(likedProjectIds, sort, isReleased);
-    }
-
     @Transactional
     public ProjectResponse update(Long loginId, Long projectId, UpdateProjectRequest request) {
         validateLoginId(loginId);
@@ -184,10 +178,12 @@ public class ProjectService {
         return Page.from(projectRepository.findAllByUserCommented(likedProjectIds, user, pageable));
     }
 
-    private ProjectResponse GetProjectResponseAfterSaveLists(Project project, List<SaveTechStackRequest> request,
-                                                             List<SaveMemberRequest> request1,
-                                                             List<String> request2) {
-        List<ProjectSkillSummary> techStacks = projectSkillService.cleanAndSaveAll(project, request);
+    private ProjectResponse GetProjectResponseAfterSaveLists(Project project,
+        List<SaveTechStackRequest> request,
+        List<SaveMemberRequest> request1,
+        List<String> request2) {
+        List<ProjectSkillSummary> techStacks = projectSkillService.cleanAndSaveAll(project,
+            request);
         List<MemberSummary> members = memberService.cleanAndSaveAll(project, request1);
         List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project, request2);
 
