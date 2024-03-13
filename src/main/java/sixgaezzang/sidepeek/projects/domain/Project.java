@@ -120,9 +120,9 @@ public class Project extends BaseTimeEntity {
         this.viewCount++;
     }
 
-    public void softDelete() {
+    public void softDelete(LocalDateTime now) {
         if (Objects.isNull(this.deletedAt)) {
-            this.deletedAt = LocalDateTime.now();
+            this.deletedAt = now;
             return;
         }
         throw new IllegalStateException(PROJECT_ALREADY_DELETED);

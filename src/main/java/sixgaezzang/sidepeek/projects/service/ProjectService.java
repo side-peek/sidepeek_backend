@@ -25,6 +25,7 @@ import sixgaezzang.sidepeek.comments.service.CommentService;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.dto.response.Page;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
+import sixgaezzang.sidepeek.common.util.component.DateTimeProvider;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
@@ -47,6 +48,7 @@ import sixgaezzang.sidepeek.users.repository.UserRepository;
 @Transactional(readOnly = true)
 public class ProjectService {
 
+    private final DateTimeProvider dateTimeProvider;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final ProjectSkillService projectSkillService;
@@ -98,7 +100,7 @@ public class ProjectService {
     }
 
     public List<ProjectBannerResponse> findAllPopularLastWeek() {
-        LocalDate today = LocalDate.now();
+        LocalDate today = dateTimeProvider.getCurrentDate();
         LocalDate startDate = getStartDayOfLastWeek(today);
         LocalDate endDate = getEndDayOfLastWeek(today);
 
@@ -152,7 +154,7 @@ public class ProjectService {
         Project project = getById(projectId);
         validateLoginIdEqualsOwnerId(loginId, project.getOwnerId());
 
-        project.softDelete();
+        project.softDelete(dateTimeProvider.getCurrentDateTime());
     }
 
     private void validateLoginUserIncludeMembers(Long loginId, Project project) {
