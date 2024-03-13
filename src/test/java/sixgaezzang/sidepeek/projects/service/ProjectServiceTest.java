@@ -2,12 +2,14 @@ package sixgaezzang.sidepeek.projects.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.BDDMockito.given;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.LOGIN_IS_REQUIRED;
 import static sixgaezzang.sidepeek.common.exception.message.CommonErrorMessage.OWNER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.BANNER_PROJECT_COUNT;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_ID_NOT_EQUALS_LOGIN_ID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
@@ -17,6 +19,7 @@ import static sixgaezzang.sidepeek.util.FakeDtoProvider.createSaveProjectRequest
 import static sixgaezzang.sidepeek.util.FakeDtoProvider.createSaveTechStackRequests;
 import static sixgaezzang.sidepeek.util.FakeDtoProvider.createUpdateProjectRequestOnlyRequired;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createComment;
+import static sixgaezzang.sidepeek.util.FakeEntityProvider.createLike;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createProject;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createSkill;
 import static sixgaezzang.sidepeek.util.FakeEntityProvider.createUser;
@@ -27,11 +30,14 @@ import static sixgaezzang.sidepeek.util.FakeValueProvider.createLongText;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createOverview;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createProjectName;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createRole;
-import static sixgaezzang.sidepeek.util.FakeValueProvider.createUrl;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createUserProjectSearchType;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,14 +45,16 @@ import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
@@ -54,7 +62,7 @@ import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.dto.response.Page;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
+import sixgaezzang.sidepeek.common.util.component.DateTimeProvider;
 import sixgaezzang.sidepeek.like.domain.Like;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
@@ -63,6 +71,7 @@ import sixgaezzang.sidepeek.projects.domain.member.Member;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
@@ -76,7 +85,7 @@ import sixgaezzang.sidepeek.users.repository.UserRepository;
 
 @SpringBootTest
 @Transactional
-@DisplayNameGeneration(ReplaceUnderscores.class)
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ProjectServiceTest {
 
     static final Faker faker = new Faker();
@@ -89,6 +98,9 @@ class ProjectServiceTest {
     static String OVERVIEW = createOverview();
     static String GITHUB_URL = createGithubUrl();
     static String DESCRIPTION = createLongText();
+
+    @MockBean
+    DateTimeProvider dateTimeProvider;
 
     @Autowired
     ProjectService projectService;
@@ -141,6 +153,11 @@ class ProjectServiceTest {
         return commentRepository.save(newComment);
     }
 
+    private Like createAndSaveLike(Project project, User user) {
+        Like newLike = createLike(user, project);
+        return likeRepository.save(newLike);
+    }
+
     @BeforeEach
     void setup() {
         members = new ArrayList<>();
@@ -153,7 +170,6 @@ class ProjectServiceTest {
             users.add(createUser());
         }
         userRepository.saveAll(users)
-            .stream()
             .forEach(user -> {
                 fellowMemberIds.add(user.getId());
                 members.add(createFellowSaveMemberRequest(user.getId()));
@@ -167,9 +183,10 @@ class ProjectServiceTest {
         for (int i = 1; i <= SKILL_COUNT; i++) {
             skills.add(createSkill());
         }
+
         List<Long> createdSkillIds = skillRepository.saveAll(skills)
             .stream()
-            .map(skill -> skill.getId())
+            .map(Skill::getId)
             .toList();
 
         techStacks = createSaveTechStackRequests(createdSkillIds);
@@ -206,6 +223,77 @@ class ProjectServiceTest {
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(findById)
                 .withMessage(PROJECT_NOT_EXISTING);
         }
+    }
+
+    @Nested
+    class 지난_주_인기_프로젝트_조회_테스트 {
+
+        LocalDate nextSunday;
+
+        @BeforeEach
+        void setUp() {
+            LocalDate today = LocalDate.now();
+            if (!today.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+                today = today.with(TemporalAdjusters.next(DayOfWeek.SUNDAY));
+            }
+
+            nextSunday = today.with(TemporalAdjusters.next(DayOfWeek.SUNDAY));
+        }
+
+        @Test
+        void 최대_5개로_지난_주_인기_프로젝트_조회를_성공한다() {
+            // given
+            int overBannerProjectCount = BANNER_PROJECT_COUNT * 2;
+            for (int i = 0; i < overBannerProjectCount; i++) {
+                Project project = createAndSaveProject(user);
+                User newUser = createAndSaveUser();
+                createAndSaveLike(project, newUser);
+            }
+
+            // when
+            given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday);
+            List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
+
+            // then
+            assertThat(responses).hasSize(BANNER_PROJECT_COUNT);
+        }
+
+        @Test
+        void 좋아요를_많이_받은_순으로_지난_주_인기_프로젝트_조회를_성공한다() {
+            // TODO: project likeCount 반영 후 테스트 예정
+            //            // given
+            //            List<Project> projects = new ArrayList<>();
+            //            for (int i = 0; i < BANNER_PROJECT_COUNT; i++) {
+            //                Project project = createAndSaveProject(user);
+            //                projects.add(project);
+            //                for (int j = 0; j < i + 1; j++) {
+            //                    User newUser = createAndSaveUser();
+            //                    createAndSaveLike(project, newUser);
+            //                }
+            //            }
+            //            projects.sort(Comparator.comparing(Project::getLikeCount));
+            //            List<ProjectBannerResponse> expectResponses = projects.stream()
+            //                .map(ProjectBannerResponse::from)
+            //                .toList();
+            //
+            //            // when
+            //            given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday);
+            //            List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
+            //
+            //            // then
+            //            assertThat(responses).isEqualTo(expectResponses);
+        }
+
+        @Test
+        void 지난_주에_좋아요_기록이_없어_빈_배열로_지난_주_인기_프로젝트_조회를_성공한다() {
+            // given, when
+            given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday);
+            List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
+
+            // then
+            assertThat(responses).isEmpty();
+        }
+
     }
 
     @Nested
@@ -449,7 +537,7 @@ class ProjectServiceTest {
             ThrowingCallable saveProject = () -> projectService.save(user.getId(), request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(saveProject)
+            assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(saveProject)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
@@ -548,7 +636,7 @@ class ProjectServiceTest {
             // when
             String newName = createProjectName();
             String newOverview = createOverview();
-            String newGithubUrl = createUrl();
+            String newGithubUrl = createGithubUrl();
             String newDescription = createLongText();
             UpdateProjectRequest newRequest = createUpdateProjectRequestOnlyRequired(
                 newName, newOverview, newGithubUrl, newDescription, techStacks,
@@ -570,7 +658,7 @@ class ProjectServiceTest {
             // when
             String newName = createProjectName();
             String newOverview = createOverview();
-            String newGithubUrl = createUrl();
+            String newGithubUrl = createGithubUrl();
             String newDescription = createLongText();
             UpdateProjectRequest newRequest = createUpdateProjectRequestOnlyRequired(
                 newName, newOverview, newGithubUrl, newDescription, techStacks, members
@@ -597,7 +685,7 @@ class ProjectServiceTest {
                 // when
                 String newName = createProjectName();
                 String newOverview = createOverview();
-                String newGithubUrl = createUrl();
+                String newGithubUrl = createGithubUrl();
                 String newDescription = createLongText();
                 UpdateProjectRequest newRequest = createUpdateProjectRequestOnlyRequired(
                     newName, newOverview, newGithubUrl, newDescription, techStacks,
@@ -619,6 +707,7 @@ class ProjectServiceTest {
         @Test
         void 프로젝트_소프트_삭제에_성공한다() {
             // given
+            given(dateTimeProvider.getCurrentDateTime()).willReturn(LocalDateTime.now());
             ProjectResponse project = getNewSavedProject(user.getId());
 
             // when
@@ -636,6 +725,7 @@ class ProjectServiceTest {
         @Test
         void 로그인하지_않은_사용자라서__프로젝트_삭제에_실패한다() {
             // given
+            given(dateTimeProvider.getCurrentDateTime()).willReturn(LocalDateTime.now());
             ProjectResponse project = getNewSavedProject(user.getId());
 
             // when
@@ -649,6 +739,7 @@ class ProjectServiceTest {
         @Test
         void 존재하지_않는_프로젝트_삭제에_실패한다() {
             // given
+            given(dateTimeProvider.getCurrentDateTime()).willReturn(LocalDateTime.now());
             ProjectResponse project = getNewSavedProject(user.getId());
 
             // when
@@ -662,6 +753,7 @@ class ProjectServiceTest {
         @Test
         void 프로젝트_작성자가_아니라서_프로젝트_삭제에_실패한다() {
             // given
+            given(dateTimeProvider.getCurrentDateTime()).willReturn(LocalDateTime.now());
             ProjectResponse project = getNewSavedProject(user.getId());
 
             User newUser = createAndSaveUser();
@@ -670,7 +762,7 @@ class ProjectServiceTest {
             ThrowingCallable delete = () -> projectService.delete(newUser.getId(), project.id());
 
             // then
-            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(delete)
+            assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(delete)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 

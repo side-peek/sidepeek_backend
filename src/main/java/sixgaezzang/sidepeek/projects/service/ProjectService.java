@@ -5,10 +5,14 @@ import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.valida
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.USER_PROJECT_SEARCH_TYPE_IS_INVALID;
+import static sixgaezzang.sidepeek.projects.util.DateUtils.getEndDayOfLastWeek;
+import static sixgaezzang.sidepeek.projects.util.DateUtils.getStartDayOfLastWeek;
+import static sixgaezzang.sidepeek.projects.util.ProjectConstant.BANNER_PROJECT_COUNT;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateLoginIdEqualsUserId;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +25,7 @@ import sixgaezzang.sidepeek.comments.service.CommentService;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.dto.response.Page;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
+import sixgaezzang.sidepeek.common.util.component.DateTimeProvider;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
@@ -32,6 +37,7 @@ import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
@@ -44,6 +50,7 @@ import sixgaezzang.sidepeek.users.repository.UserRepository;
 @Transactional(readOnly = true)
 public class ProjectService {
 
+    private final DateTimeProvider dateTimeProvider;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final ProjectSkillService projectSkillService;
@@ -104,8 +111,16 @@ public class ProjectService {
         return ProjectResponse.from(project, overviewImages, techStacks, members, comments);
     }
 
+    public List<ProjectBannerResponse> findAllPopularLastWeek() {
+        LocalDate today = dateTimeProvider.getCurrentDate();
+        LocalDate startDate = getStartDayOfLastWeek(today);
+        LocalDate endDate = getEndDayOfLastWeek(today);
+
+        return projectRepository.findAllPopularOfPeriod(startDate, endDate, BANNER_PROJECT_COUNT);
+    }
+
     public Page<ProjectListResponse> findByUser(Long userId, Long loginId,
-        UserProjectSearchType type, Pageable pageable) {
+                                                UserProjectSearchType type, Pageable pageable) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
 
@@ -145,7 +160,7 @@ public class ProjectService {
         Project project = getById(projectId);
         validateLoginIdEqualsOwnerId(loginId, project.getOwnerId());
 
-        project.softDelete();
+        project.softDelete(dateTimeProvider.getCurrentDateTime());
     }
 
     private void validateLoginUserIncludeMembers(Long loginId, Project project) {
@@ -161,19 +176,19 @@ public class ProjectService {
     }
 
     private Page<ProjectListResponse> findJoinedProjectsByUser(User user,
-        List<Long> likedProjectIds,
-        Pageable pageable) {
+                                                               List<Long> likedProjectIds,
+                                                               Pageable pageable) {
         return Page.from(projectRepository.findAllByUserJoined(likedProjectIds, user, pageable));
     }
 
     private Page<ProjectListResponse> findLikedProjectsByUser(User user, List<Long> likedProjectIds,
-        Pageable pageable) {
+                                                              Pageable pageable) {
         return Page.from(projectRepository.findAllByUserLiked(likedProjectIds, user, pageable));
     }
 
     private Page<ProjectListResponse> findAllByUserCommentedByUser(User user,
-        List<Long> likedProjectIds,
-        Pageable pageable) {
+                                                                   List<Long> likedProjectIds,
+                                                                   Pageable pageable) {
         return Page.from(projectRepository.findAllByUserCommented(likedProjectIds, user, pageable));
     }
 

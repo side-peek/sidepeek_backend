@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.auth.exeption.message;
+package sixgaezzang.sidepeek.auth.exception.message;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

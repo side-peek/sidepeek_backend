@@ -9,6 +9,7 @@ public final class ProjectConstant {
     public static final int MAX_PROJECT_NAME_LENGTH = 50;
     public static final int MAX_OVERVIEW_LENGTH = 300;
     public static final String YEAR_MONTH_PATTERN = "yyyy-MM";
+    public static final int BANNER_PROJECT_COUNT = 5;
 
     // Member
     public static final int MAX_MEMBER_COUNT = 10;

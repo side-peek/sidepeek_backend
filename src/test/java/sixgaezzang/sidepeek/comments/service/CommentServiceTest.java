@@ -25,6 +25,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.domain.Comment;
@@ -32,7 +33,6 @@ import sixgaezzang.sidepeek.comments.dto.request.SaveCommentRequest;
 import sixgaezzang.sidepeek.comments.dto.request.UpdateCommentRequest;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthorityException;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.projects.service.ProjectService;
@@ -238,7 +238,7 @@ class CommentServiceTest {
                 request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(save)
+            assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(save)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
@@ -255,7 +255,7 @@ class CommentServiceTest {
                 request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(save)
+            assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(save)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
@@ -398,7 +398,7 @@ class CommentServiceTest {
                 newUser.getId(), comment.getId(), request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(update)
+            assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(update)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
@@ -514,7 +514,7 @@ class CommentServiceTest {
                 newUser.getId(), comment.getId());
 
             // then
-            assertThatExceptionOfType(InvalidAuthorityException.class).isThrownBy(delete)
+            assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(delete)
                 .withMessage(OWNER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
