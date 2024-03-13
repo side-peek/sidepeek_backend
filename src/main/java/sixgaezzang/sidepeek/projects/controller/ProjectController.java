@@ -2,23 +2,24 @@ package sixgaezzang.sidepeek.projects.controller;
 
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sixgaezzang.sidepeek.common.annotation.Login;
 import sixgaezzang.sidepeek.common.doc.ProjectControllerDoc;
+import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.service.ProjectService;
@@ -81,14 +82,12 @@ public class ProjectController implements ProjectControllerDoc {
 
     @Override
     @GetMapping
-    public ResponseEntity<List<ProjectListResponse>> getAll(
+    public ResponseEntity<CursorPaginationResponse<ProjectListResponse>> getByCondition(
         @Login Long loginId,
-        @RequestParam(required = false) String sort,
-        @RequestParam(required = false, defaultValue = "false") boolean isReleased
+        @Valid @ModelAttribute CursorPaginationInfoRequest pageable
     ) {
-        sort = (sort == null) ? "createdAt" : sort;
-        List<ProjectListResponse> responses = projectService.findAll(loginId, sort, isReleased);
-
-        return ResponseEntity.ok(responses);
+        CursorPaginationResponse<ProjectListResponse> responses = projectService.findByCondition(
+            loginId, pageable);
+        return ResponseEntity.ok().body(responses);
     }
 }

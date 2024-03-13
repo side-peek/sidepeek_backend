@@ -2,18 +2,20 @@ package sixgaezzang.sidepeek.common.doc;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import sixgaezzang.sidepeek.common.exception.ErrorResponse;
+import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
+import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 
@@ -27,7 +29,7 @@ public interface ProjectControllerDoc {
         @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     ResponseEntity<ProjectResponse> save(@Parameter(hidden = true) Long loginId,
-                                         SaveProjectRequest request);
+        SaveProjectRequest request);
 
     @Operation(summary = "프로젝트 수정", description = "프로젝트 작성자와 멤버만 수정이 가능합니다.")
     @ApiResponses({
@@ -39,7 +41,7 @@ public interface ProjectControllerDoc {
     })
     @Parameter(name = "id", description = "수정할 프로젝트 식별자", in = ParameterIn.PATH)
     ResponseEntity<ProjectResponse> update(@Parameter(hidden = true) Long loginId, Long projectId,
-                                           UpdateProjectRequest request);
+        UpdateProjectRequest request);
 
     @Operation(summary = "프로젝트 삭제", description = "프로젝트 작성자만 삭제가 가능합니다.")
     @ApiResponses({
@@ -63,10 +65,7 @@ public interface ProjectControllerDoc {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true)
     })
-    @Parameters({
-        @Parameter(name = "sort", description = "정렬 조건 [ createdAt(default), view, like ]", in = ParameterIn.QUERY),
-        @Parameter(name = "isReleased", description = "출시 서비스만 보기", in = ParameterIn.QUERY)
-    })
-    ResponseEntity<List<ProjectListResponse>> getAll(@Parameter(hidden = true) Long loginId,
-        String sort, boolean isReleased);
+    ResponseEntity<CursorPaginationResponse<ProjectListResponse>> getByCondition(
+        @Parameter(hidden = true) Long loginId,
+        @Valid @ModelAttribute CursorPaginationInfoRequest pageable);
 }

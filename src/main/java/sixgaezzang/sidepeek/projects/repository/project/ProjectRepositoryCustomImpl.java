@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.projects.repository;
+package sixgaezzang.sidepeek.projects.repository.project;
 
 import static sixgaezzang.sidepeek.comments.domain.QComment.comment;
 import static sixgaezzang.sidepeek.like.domain.QLike.like;
@@ -8,6 +8,8 @@ import static sixgaezzang.sidepeek.projects.domain.member.QMember.member;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.EntityPathBase;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
@@ -17,6 +19,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.QProject;
+import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
+import sixgaezzang.sidepeek.projects.dto.request.SortType;
+import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.users.domain.User;
 
@@ -30,19 +35,32 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
     }
 
     @Override
-    public List<ProjectListResponse> findAllBySortAndStatus(List<Long> likedProjectIds,
-        String sort,
-        boolean isReleased) {
-        BooleanExpression deployCondition = isReleased ? project.deployUrl.isNotNull() : null;
-        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(sort);
+    public CursorPaginationResponse<ProjectListResponse> findByCondition(
+        List<Long> likedProjectIds,
+        CursorPaginationInfoRequest pageable) {
+        BooleanExpression deployCondition =
+            pageable.isReleased() ? project.deployUrl.isNotNull() : null;
+        BooleanExpression cursorCondition = getCursorCondition(pageable.sort(),
+            pageable.lastProjectId(), pageable.lastOrderCount());
+        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(pageable.sort());
+        long totalElements = getTotalElementsByCondition(deployCondition);
 
-        List<Project> projects = queryFactory
+        List<ProjectListResponse> results = queryFactory
             .selectFrom(project)
-            .where(deployCondition)
-            .orderBy(orderSpecifier, project.id.asc())
-            .fetch();
+            .where(
+                deployCondition,
+                cursorCondition
+            )
+            .orderBy(orderSpecifier, project.id.desc())
+            .limit(pageable.pageSize() + 1)
+            .stream()
+            .map(project -> {
+                boolean isLiked = likedProjectIds.contains(project.getId());
+                return ProjectListResponse.from(project, isLiked);
+            })
+            .toList();
 
-        return toProjectListResponseList(likedProjectIds, projects);
+        return checkEndPage(results, pageable.pageSize(), totalElements);
     }
 
     @Override
@@ -105,11 +123,58 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             .toList();
     }
 
-    private OrderSpecifier<?> getOrderSpecifier(String sort) {
-        return switch (sort) {
-            case "like" -> project.likeCount.desc();
-            case "view" -> project.viewCount.desc();
-            default -> project.createdAt.desc();
-        };
+    private long getTotalElementsByCondition(BooleanExpression deployCondition) {
+        NumberTemplate<Long> countTemplate = Expressions.numberTemplate(Long.class, "COUNT({0})",
+            project.id);
+
+        return queryFactory
+            .select(countTemplate)
+            .from(project)
+            .where(deployCondition)
+            .fetchOne();
     }
+
+    private BooleanExpression getCursorCondition(SortType sort, Long lastProjectId,
+        Long orderCount) {
+        if (lastProjectId == null && orderCount == null) {  // 첫 번째 페이지
+            return null;
+        }
+
+        switch (sort) { // 다음 페이지
+            case like: // 좋아요순
+                return project.likeCount.eq(orderCount)
+                    .and(project.id.gt(lastProjectId))
+                    .or(project.likeCount.lt(orderCount));
+            case view: // 조회수순
+                return project.viewCount.eq(orderCount)
+                    .and(project.id.gt(lastProjectId))
+                    .or(project.viewCount.lt(orderCount));
+            default: // 최신순
+                return project.id.lt(lastProjectId);
+        }
+    }
+
+    private OrderSpecifier<?> getOrderSpecifier(SortType sort) {
+        switch (sort) {
+            case like:
+                return project.likeCount.desc();
+            case view:
+                return project.viewCount.desc();
+            default:
+                return project.createdAt.desc();
+        }
+    }
+
+    private CursorPaginationResponse<ProjectListResponse> checkEndPage(
+        List<ProjectListResponse> results, int pageSize, long totalElements) {
+        boolean hasNext = false;
+
+        if (results.size() > pageSize) { //다음 게시물이 있는 경우
+            hasNext = true;
+            results = results.subList(0, pageSize);
+        }
+
+        return CursorPaginationResponse.from(results, totalElements, hasNext);
+    }
+
 }

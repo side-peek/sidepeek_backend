@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.projects.repository;
+package sixgaezzang.sidepeek.projects.repository.member;
 
 import java.util.List;
 import sixgaezzang.sidepeek.projects.domain.Project;

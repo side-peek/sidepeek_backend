@@ -1,15 +1,18 @@
-package sixgaezzang.sidepeek.projects.repository;
+package sixgaezzang.sidepeek.projects.repository.project;
 
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
+import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.users.domain.User;
 
 public interface ProjectRepositoryCustom {
 
-    List<ProjectListResponse> findAllBySortAndStatus(List<Long> likedProjectIds, String sort,
-        boolean isReleased);
+    CursorPaginationResponse<ProjectListResponse> findByCondition(
+        List<Long> likedProjectIds,
+        CursorPaginationInfoRequest pageable);
 
     Page<ProjectListResponse> findAllByUserJoined(List<Long> likedProjectIds, User user,
         Pageable pageable);

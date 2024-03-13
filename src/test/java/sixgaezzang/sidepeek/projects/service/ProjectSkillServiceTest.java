@@ -30,8 +30,8 @@ import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.ProjectSkill;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
-import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
+import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -62,6 +62,7 @@ class ProjectSkillServiceTest {
     static final int SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
     static List<SaveTechStackRequest> techStacks;
     static List<SaveTechStackRequest> overLengthTechStacks;
+
     Project project;
     User user;
     Skill skill;

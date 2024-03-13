@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
-@Schema(description = "프로젝트 전체 조회 응답")
+@Schema(description = "프로젝트 조회 정보")
 @Builder
 public record ProjectListResponse(
     @Schema(description = "프로젝트 식별자", example = "1")
@@ -34,5 +34,4 @@ public record ProjectListResponse(
             .isLiked(isLiked)
             .build();
     }
-
 }
