@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.auth.service;
+package sixgaezzang.sidepeek.auth.oauth.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,9 +10,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import sixgaezzang.sidepeek.auth.domain.AuthProvider;
-import sixgaezzang.sidepeek.auth.dto.OAuth2UserImpl;
 import sixgaezzang.sidepeek.auth.dto.response.LoginResponse;
 import sixgaezzang.sidepeek.auth.dto.response.SocialLoginResponse;
+import sixgaezzang.sidepeek.auth.oauth.OAuth2UserImpl;
+import sixgaezzang.sidepeek.auth.service.AuthService;
 import sixgaezzang.sidepeek.users.domain.User;
 
 @Component

@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.auth.service.strategy;
+package sixgaezzang.sidepeek.auth.oauth.service.strategy;
 
 import java.util.Map;
 import sixgaezzang.sidepeek.users.domain.User;

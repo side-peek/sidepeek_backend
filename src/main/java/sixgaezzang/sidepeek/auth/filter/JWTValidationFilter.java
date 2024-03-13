@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.auth.jwt;
+package sixgaezzang.sidepeek.auth.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import sixgaezzang.sidepeek.auth.jwt.JWTManager;
 
 @Component
 @RequiredArgsConstructor

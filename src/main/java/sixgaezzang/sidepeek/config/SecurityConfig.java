@@ -12,8 +12,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import sixgaezzang.sidepeek.auth.jwt.JWTValidationFilter;
-import sixgaezzang.sidepeek.auth.service.OAuth2UserServiceImpl;
+import sixgaezzang.sidepeek.auth.filter.JWTValidationFilter;
+import sixgaezzang.sidepeek.auth.oauth.service.OAuth2UserServiceImpl;
 
 @Configuration
 @EnableWebSecurity
