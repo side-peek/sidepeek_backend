@@ -37,9 +37,7 @@ public class LikeService {
 
         Project project = projectService.getById(request.projectId());
 
-        if (likeRepository.existsByUserAndProject(user, project)) {
-            throw new EntityExistsException(LIKE_IS_DUPLICATED);
-        }
+        validateLikeExistence(user, project);
 
         Like like = Like.builder()
             .user(user)
@@ -68,5 +66,11 @@ public class LikeService {
     public Like getById(Long id) {
         return likeRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException(LIKE_NOT_EXISTING));
+    }
+
+    private void validateLikeExistence(User user, Project project) {
+        if (likeRepository.existsByUserAndProject(user, project)) {
+            throw new EntityExistsException(LIKE_IS_DUPLICATED);
+        }
     }
 }
