@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import sixgaezzang.sidepeek.auth.filter.AuthExceptionHandlerFilter;
 import sixgaezzang.sidepeek.auth.filter.JWTValidationFilter;
 import sixgaezzang.sidepeek.auth.oauth.service.OAuth2UserServiceImpl;
 
@@ -24,6 +25,7 @@ public class SecurityConfig {
     private final JWTValidationFilter jwtValidationFilter;
     private final OAuth2UserServiceImpl oauth2UserServiceImpl;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final AuthExceptionHandlerFilter authExceptionHandlerFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -36,6 +38,7 @@ public class SecurityConfig {
             .logout(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
             .addFilterBefore(jwtValidationFilter, BasicAuthenticationFilter.class)
+            .addFilterBefore(authExceptionHandlerFilter, JWTValidationFilter.class)
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
                     .userService(oauth2UserServiceImpl))
