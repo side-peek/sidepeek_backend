@@ -17,6 +17,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -65,6 +66,12 @@ public class UserService {
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
     }
 
+    public User getByIdOrNull(Long userId) {
+        return Optional.ofNullable(userId)
+            .map(this::getById)
+            .orElse(null);
+    }
+
     public UserSearchResponse searchByNickname(String keyword) {
         if (Objects.isNull(keyword) || keyword.isBlank()) {
             return UserSearchResponse.from(userRepository.findAll());
@@ -105,7 +112,7 @@ public class UserService {
 
     @Transactional
     public UserProfileResponse updateProfile(Long loginId, Long id,
-                                             UpdateUserProfileRequest request) {
+        UpdateUserProfileRequest request) {
         validateLoginIdEqualsUserId(loginId, id);
 
         User user = findUserById(id);
