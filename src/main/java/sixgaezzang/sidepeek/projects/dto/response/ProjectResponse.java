@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import lombok.Builder;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
-import sixgaezzang.sidepeek.comments.dto.response.CommentWithCountResponse;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
 @Schema(description = "프로젝트 상세 조회 응답")
@@ -60,13 +59,13 @@ public record ProjectResponse(
             overviewImageUrl,
             techStacks,
             members,
-            new CommentWithCountResponse(Collections.emptyList(), 0L)
+            Collections.emptyList()
         );
     }
 
     public static ProjectResponse from(Project project, List<OverviewImageSummary> overviewImageUrl,
         List<ProjectSkillSummary> techStacks, List<MemberSummary> members,
-        CommentWithCountResponse comments
+        List<CommentResponse> comments
     ) {
         return ProjectResponse.builder()
             .id(project.getId())
@@ -79,7 +78,7 @@ public record ProjectResponse(
             .deployUrl(project.getDeployUrl())
             .viewCount(project.getViewCount())
             .likeCount(project.getLikeCount())
-            .commentCount(comments.commentCount())  // 댓글 + 대댓글
+            .commentCount(project.getCommentCount())  // 댓글 + 대댓글
             .techStacks(techStacks)
             .ownerId(project.getOwnerId())
             .startDate(project.getStartDate())
@@ -87,7 +86,7 @@ public record ProjectResponse(
             .members(members)
             .description(project.getDescription())
             .troubleShooting(project.getTroubleshooting())
-            .comments(comments.results())
+            .comments(comments)
             .build();
     }
 

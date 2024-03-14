@@ -86,6 +86,9 @@ public class Project extends BaseTimeEntity {
     @Column(name = "view_count", nullable = false)
     private Long viewCount;
 
+    @Column(name = "comment_count", nullable = false)
+    private Long commentCount;
+
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
@@ -116,6 +119,7 @@ public class Project extends BaseTimeEntity {
         // Etc
         this.likeCount = 0L;
         this.viewCount = 0L;
+        this.commentCount = 0L;
     }
 
     public void increaseViewCount() {
@@ -128,6 +132,14 @@ public class Project extends BaseTimeEntity {
 
     public void decreaseLikeCount() {
         this.likeCount--;
+    }
+
+    public void increaseCommentCount() {
+        this.commentCount++;
+    }
+
+    public void decreaseCommentCount(long commentCount) {
+        this.commentCount -= commentCount;
     }
 
     public void softDelete(LocalDateTime now) {

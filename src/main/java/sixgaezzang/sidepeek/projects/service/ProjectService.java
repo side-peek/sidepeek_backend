@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.comments.dto.response.CommentWithCountResponse;
+import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.service.CommentService;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.dto.response.Page;
@@ -106,7 +106,7 @@ public class ProjectService {
 
         List<MemberSummary> members = memberService.findAllWithUser(project);
 
-        CommentWithCountResponse comments = commentService.findAll(project);
+        List<CommentResponse> comments = commentService.findAll(project);
 
         return ProjectResponse.from(project, overviewImages, techStacks, members, comments);
     }
@@ -120,7 +120,7 @@ public class ProjectService {
     }
 
     public Page<ProjectListResponse> findByUser(Long userId, Long loginId,
-                                                UserProjectSearchType type, Pageable pageable) {
+        UserProjectSearchType type, Pageable pageable) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
 
@@ -176,19 +176,19 @@ public class ProjectService {
     }
 
     private Page<ProjectListResponse> findJoinedProjectsByUser(User user,
-                                                               List<Long> likedProjectIds,
-                                                               Pageable pageable) {
+        List<Long> likedProjectIds,
+        Pageable pageable) {
         return Page.from(projectRepository.findAllByUserJoined(likedProjectIds, user, pageable));
     }
 
     private Page<ProjectListResponse> findLikedProjectsByUser(User user, List<Long> likedProjectIds,
-                                                              Pageable pageable) {
+        Pageable pageable) {
         return Page.from(projectRepository.findAllByUserLiked(likedProjectIds, user, pageable));
     }
 
     private Page<ProjectListResponse> findAllByUserCommentedByUser(User user,
-                                                                   List<Long> likedProjectIds,
-                                                                   Pageable pageable) {
+        List<Long> likedProjectIds,
+        Pageable pageable) {
         return Page.from(projectRepository.findAllByUserCommented(likedProjectIds, user, pageable));
     }
 
