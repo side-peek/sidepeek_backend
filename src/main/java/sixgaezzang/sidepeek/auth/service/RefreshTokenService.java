@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.auth.service;
 
+import static sixgaezzang.sidepeek.auth.exception.message.AuthErrorMessage.TOKEN_IS_INVALID;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sixgaezzang.sidepeek.auth.domain.RefreshToken;
@@ -24,6 +26,6 @@ public class RefreshTokenService {
 
     public RefreshToken getById(Long userId) {
         return refreshTokenRepository.findById(userId)
-            .orElseThrow(() -> new InvalidAuthenticationException("유효하지 않은 토큰입니다."));
+            .orElseThrow(() -> new InvalidAuthenticationException(TOKEN_IS_INVALID));
     }
 }

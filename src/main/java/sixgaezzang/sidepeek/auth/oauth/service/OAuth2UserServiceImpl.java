@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.auth.service;
+package sixgaezzang.sidepeek.auth.oauth.service;
 
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.auth.domain.AuthProvider;
 import sixgaezzang.sidepeek.auth.domain.ProviderType;
-import sixgaezzang.sidepeek.auth.dto.OAuth2UserImpl;
+import sixgaezzang.sidepeek.auth.oauth.OAuth2UserImpl;
+import sixgaezzang.sidepeek.auth.oauth.service.strategy.UserInfoMapper;
+import sixgaezzang.sidepeek.auth.oauth.service.strategy.UserInfoMapperFactory;
 import sixgaezzang.sidepeek.auth.repository.AuthProviderRepository;
-import sixgaezzang.sidepeek.auth.service.strategy.UserInfoMapper;
-import sixgaezzang.sidepeek.auth.service.strategy.UserInfoMapperFactory;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
 

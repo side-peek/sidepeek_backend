@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.auth.dto;
+package sixgaezzang.sidepeek.auth.oauth;
 
 import java.util.Collection;
 import java.util.Map;

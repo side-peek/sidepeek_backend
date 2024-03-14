@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.auth.service;
 
+import static sixgaezzang.sidepeek.auth.exception.message.AuthErrorMessage.PASSWORD_NOT_MATCH;
+import static sixgaezzang.sidepeek.auth.exception.message.AuthErrorMessage.TOKEN_IS_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -36,7 +38,7 @@ public class AuthService {
         User user = getUserById(userRepository.findByEmail(request.email()));
 
         if (!user.checkPassword(request.password(), passwordEncoder)) {
-            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+            throw new BadCredentialsException(PASSWORD_NOT_MATCH);
         }
 
         return createTokens(user);
@@ -83,7 +85,7 @@ public class AuthService {
 
     private void validateRefreshToken(String redisRefreshToken, String refreshToken) {
         if (!redisRefreshToken.equals(refreshToken)) {
-            throw new InvalidAuthenticationException("유효하지 않은 토큰입니다.");
+            throw new InvalidAuthenticationException(TOKEN_IS_INVALID);
         }
     }
 }
