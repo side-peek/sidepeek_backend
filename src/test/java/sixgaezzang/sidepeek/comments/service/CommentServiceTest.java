@@ -95,14 +95,14 @@ class CommentServiceTest {
             // given
             SaveCommentRequest request = FakeDtoProvider.createSaveCommentRequestWithProjectId(
                 user.getId(), project.getId());
-            Long initialLikeCount = project.getLikeCount();
+            Long initialCommentCount = project.getCommentCount();
 
             // when
             Long projectId = commentService.save(user.getId(), request);
 
             // then
             assertThat(projectId).isEqualTo(project.getId());
-            assertThat(project.getLikeCount()).isEqualTo(initialLikeCount + 1);
+            assertThat(project.getCommentCount()).isEqualTo(initialCommentCount + 1);
         }
 
         @Test
@@ -110,14 +110,14 @@ class CommentServiceTest {
             // given
             SaveCommentRequest request = FakeDtoProvider.createSaveCommentRequestWithParentId(
                 user.getId(), parent.getId());
-            Long initialLikeCount = project.getLikeCount();
+            Long initialCommentCount = project.getCommentCount();
 
             // when
             Long projectId = commentService.save(user.getId(), request);
 
             // then
             assertThat(projectId).isEqualTo(parent.getProject().getId());
-            assertThat(project.getLikeCount()).isEqualTo(initialLikeCount + 1);
+            assertThat(project.getCommentCount()).isEqualTo(initialCommentCount + 1);
         }
 
         @Test
@@ -443,21 +443,21 @@ class CommentServiceTest {
         @Test
         void 프로젝트_댓글_삭제에_성공한다() {
             // given
-            Long initialLikeCount = project.getLikeCount();
+            Long initialCommentCount = project.getCommentCount();
 
             // when
             commentService.delete(user.getId(), comment.getId());
 
             // then
             assertThat(commentRepository.findById(comment.getId())).isEmpty();
-            assertThat(project.getLikeCount()).isEqualTo(initialLikeCount - 1);
+            assertThat(project.getCommentCount()).isEqualTo(initialCommentCount - 1);
         }
 
         @Test
         void 대댓글이_있는_댓글_삭제에_성공한다() {
             // given
             Comment subComment = createAndSaveComment(user, null, comment);
-            Long initialLikeCount = project.getLikeCount();
+            Long initialCommentCount = project.getCommentCount();
 
             // when
             commentService.delete(user.getId(), comment.getId());
@@ -465,7 +465,7 @@ class CommentServiceTest {
             // then
             assertThat(commentRepository.findById(comment.getId())).isEmpty();
             assertThat(commentRepository.findById(subComment.getId())).isEmpty();
-            assertThat(project.getLikeCount()).isEqualTo(initialLikeCount - 2);
+            assertThat(project.getCommentCount()).isEqualTo(initialCommentCount - 2);
         }
 
         @Test
