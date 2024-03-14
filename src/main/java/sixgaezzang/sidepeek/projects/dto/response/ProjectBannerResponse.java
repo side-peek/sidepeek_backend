@@ -4,9 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
-@Schema(description = "프로젝트 조회 정보")
+@Schema(description = "배너용 프로젝트 응답")
 @Builder
-public record ProjectListResponse(
+public record ProjectBannerResponse(
     @Schema(description = "프로젝트 식별자", example = "1")
     Long id,
     @Schema(description = "프로젝트 제목", example = "사이드픽👀")
@@ -14,24 +14,16 @@ public record ProjectListResponse(
     @Schema(description = "프로젝트 부제목", example = "요즘 사이드 플젝 뭐함? 사이드픽 \uD83D\uDC40")
     String subName,
     @Schema(description = "프로젝트 썸네일 이미지 URL", example = "https://sidepeek.image/imageeUrl")
-    String thumbnailUrl,
-    @Schema(description = "프로젝트 조회수", example = "20")
-    Long viewCount,
-    @Schema(description = "프로젝트 좋아요수", example = "7")
-    Long likeCount,
-    @Schema(description = "로그인한 사용자가 좋아요한 프로젝트인지 여부", example = "false")
-    boolean isLiked
+    String thumbnailUrl
 ) {
 
-    public static ProjectListResponse from(Project project, boolean isLiked) {
-        return ProjectListResponse.builder()
+    public static ProjectBannerResponse from(Project project) {
+        return ProjectBannerResponse.builder()
             .id(project.getId())
             .name(project.getName())
             .subName(project.getSubName())
             .thumbnailUrl(project.getThumbnailUrl())
-            .viewCount(project.getViewCount())
-            .likeCount(project.getLikeCount())
-            .isLiked(isLiked)
             .build();
     }
+
 }

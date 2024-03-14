@@ -1,7 +1,7 @@
 package sixgaezzang.sidepeek.auth.service;
 
-import static sixgaezzang.sidepeek.auth.exeption.message.AuthErrorMessage.PASSWORD_NOT_MATCH;
-import static sixgaezzang.sidepeek.auth.exeption.message.AuthErrorMessage.TOKEN_IS_INVALID;
+import static sixgaezzang.sidepeek.auth.exception.message.AuthErrorMessage.PASSWORD_NOT_MATCH;
+import static sixgaezzang.sidepeek.auth.exception.message.AuthErrorMessage.TOKEN_IS_INVALID;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 
 import jakarta.persistence.EntityNotFoundException;

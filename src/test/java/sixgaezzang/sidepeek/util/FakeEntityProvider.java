@@ -75,7 +75,7 @@ public class FakeEntityProvider {
 
     // Comment
     public static Comment createComment(User user, Project project, Comment parent,
-        boolean isAnonymous) {
+                                        boolean isAnonymous) {
         return Comment.builder()
             .user(user)
             .project(Objects.nonNull(project) ? project : parent.getProject())
@@ -112,4 +112,5 @@ public class FakeEntityProvider {
             .project(project)
             .build();
     }
+
 }

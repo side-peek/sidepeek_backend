@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.auth.filter;
 
-import static sixgaezzang.sidepeek.auth.exeption.message.AuthErrorMessage.TOKEN_IS_INVALID;
+import static sixgaezzang.sidepeek.auth.exception.message.AuthErrorMessage.TOKEN_IS_INVALID;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

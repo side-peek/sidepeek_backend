@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.auth.oauth.handler;
 
-import static sixgaezzang.sidepeek.auth.exeption.message.AuthErrorMessage.OAUTH_USER_TYPE_IS_INVALID;
+import static sixgaezzang.sidepeek.auth.exception.message.AuthErrorMessage.OAUTH_USER_TYPE_IS_INVALID;
 import static sixgaezzang.sidepeek.common.util.ResponseUtils.sendResponse;
 
 import jakarta.servlet.http.HttpServletRequest;

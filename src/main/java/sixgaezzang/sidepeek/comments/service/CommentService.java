@@ -12,7 +12,6 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,11 +19,10 @@ import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.comments.dto.request.SaveCommentRequest;
 import sixgaezzang.sidepeek.comments.dto.request.UpdateCommentRequest;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
-import sixgaezzang.sidepeek.comments.dto.response.CommentWithCountResponse;
 import sixgaezzang.sidepeek.comments.dto.response.ReplyResponse;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
-import sixgaezzang.sidepeek.projects.repository.ProjectRepository;
+import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.service.UserService;
 
@@ -60,6 +58,8 @@ public class CommentService {
         Comment comment = request.toEntity(project, parent, owner);
         commentRepository.save(comment);
 
+        project.increaseCommentCount();    // 댓글 수 증가
+
         return comment.getProject().getId();
     }
 
@@ -68,22 +68,16 @@ public class CommentService {
             .orElseThrow(() -> new EntityNotFoundException(message));
     }
 
-    public CommentWithCountResponse findAll(Project project) {
+    public List<CommentResponse> findAll(Project project) {
         List<Comment> comments = commentRepository.findAll(project);
-        AtomicLong commentCount = new AtomicLong((long) comments.size());    // 댓글 개수
 
-        List<CommentResponse> results = comments.stream()
+        return comments.stream()
             .map(comment -> {
                 boolean isOwner = isSameOwner(comment, project);
                 List<ReplyResponse> replies = mapReplies(comment);
-                if (Objects.nonNull(replies)) {
-                    commentCount.addAndGet(replies.size()); // 대댓글 개수 추가
-                }
                 return CommentResponse.from(comment, isOwner, replies);
             })
             .toList();
-
-        return CommentWithCountResponse.from(results, commentCount.get());
     }
 
     @Transactional
@@ -105,6 +99,9 @@ public class CommentService {
         Comment comment = getById(commentId, COMMENT_NOT_EXISTING);
 
         validateLoginIdEqualsOwnerId(loginId, comment.getOwnerId());
+
+        decreaseAllCommentCount(comment);    // 댓글 수 감소
+
         commentRepository.delete(comment);
     }
 
@@ -121,6 +118,13 @@ public class CommentService {
                 return ReplyResponse.from(reply, isOwner);
             })
             .toList();
+    }
+
+    private void decreaseAllCommentCount(Comment comment) { // 댓글 삭제 시 대댓글도 삭제하기 위한 메서드
+        Project project = comment.getProject();
+
+        long replyCount = commentRepository.countRepliesByParent(comment);  // 대댓글 수 가져오기
+        project.decreaseCommentCount(replyCount + 1); // 대댓글 수 + 댓글 수(1) 감소
     }
 
 }

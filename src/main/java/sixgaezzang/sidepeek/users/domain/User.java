@@ -130,9 +130,9 @@ public class User extends BaseTimeEntity {
         this.password = new Password(newPassword, passwordEncoder);
     }
 
-    public void softDelete() { // TODO: 회원탈퇴할 때 언젠가는 쓰일 것 같아서 구현
+    public void softDelete(LocalDateTime now) { // TODO: 회원탈퇴할 때 언젠가는 쓰일 것 같아서 구현
         if (Objects.isNull(this.deletedAt)) {
-            this.deletedAt = LocalDateTime.now();
+            this.deletedAt = now;
             return;
         }
         throw new IllegalStateException(USER_ALREADY_DELETED);
@@ -157,12 +157,12 @@ public class User extends BaseTimeEntity {
     // Option
     private void setIntroduction(String introduction) {
         validateIntroduction(introduction);
-        this.introduction = introduction;
+        this.introduction = getBlankIfNullOrBlank(introduction);
     }
 
     private void setProfileImageUrl(String profileImageUrl) {
         validateProfileImageUrl(profileImageUrl);
-        this.profileImageUrl = profileImageUrl;
+        this.profileImageUrl = getBlankIfNullOrBlank(profileImageUrl);
     }
 
     private void setJob(String jobName) {

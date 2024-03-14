@@ -1,6 +1,6 @@
 package sixgaezzang.sidepeek.auth.service;
 
-import static sixgaezzang.sidepeek.auth.exeption.message.AuthErrorMessage.TOKEN_IS_INVALID;
+import static sixgaezzang.sidepeek.auth.exception.message.AuthErrorMessage.TOKEN_IS_INVALID;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
