@@ -1,13 +1,12 @@
 package sixgaezzang.sidepeek.auth.oauth.handler;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static sixgaezzang.sidepeek.auth.exeption.message.AuthErrorMessage.OAUTH_USER_TYPE_IS_INVALID;
+import static sixgaezzang.sidepeek.common.util.ResponseUtils.sendResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -17,7 +16,6 @@ import sixgaezzang.sidepeek.auth.dto.response.LoginResponse;
 import sixgaezzang.sidepeek.auth.dto.response.SocialLoginResponse;
 import sixgaezzang.sidepeek.auth.oauth.OAuth2UserImpl;
 import sixgaezzang.sidepeek.auth.service.AuthService;
-import sixgaezzang.sidepeek.config.properties.OAuth2RedirectUriProperties;
 import sixgaezzang.sidepeek.users.domain.User;
 
 @Component
@@ -25,19 +23,17 @@ import sixgaezzang.sidepeek.users.domain.User;
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final AuthService authService;
-    private final ObjectMapper objectMapper;
-    private final OAuth2RedirectUriProperties redirectUri;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-        Authentication authentication) throws IOException {
+        Authentication authentication) {
         OAuth2UserImpl oauth2User = extractOAuth2User(authentication);
         User user = oauth2User.getUser();
         AuthProvider authProvider = oauth2User.getAuthProvider();
 
         SocialLoginResponse socialLoginResponse = createSocialLoginResponse(user, authProvider);
 
-        sendResponse(response, socialLoginResponse);
+        sendResponse(HttpStatus.OK, socialLoginResponse, response);
     }
 
     private OAuth2UserImpl extractOAuth2User(Authentication authentication) {
@@ -50,22 +46,5 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private SocialLoginResponse createSocialLoginResponse(User user, AuthProvider authProvider) {
         LoginResponse loginResponse = authService.createTokens(user);
         return SocialLoginResponse.of(loginResponse, authProvider);
-    }
-
-    private void sendResponse(HttpServletResponse response, SocialLoginResponse socialLoginResponse)
-        throws IOException {
-        writeResponseAsJson(response, socialLoginResponse);
-
-        if (socialLoginResponse.isRegistrationComplete()) {
-            response.sendRedirect(redirectUri.basicUri());
-        } else {
-            response.sendRedirect(redirectUri.registrationUri());
-        }
-    }
-
-    private void writeResponseAsJson(HttpServletResponse response,
-        SocialLoginResponse socialLoginResponse) throws IOException {
-        response.setContentType(APPLICATION_JSON_VALUE);
-        objectMapper.writeValue(response.getOutputStream(), socialLoginResponse);
     }
 }
