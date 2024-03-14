@@ -1,12 +1,13 @@
 package sixgaezzang.sidepeek.like.service;
 
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
+import static sixgaezzang.sidepeek.like.exception.message.LikeErrorMessage.LIKE_IS_DUPLICATED;
+import static sixgaezzang.sidepeek.like.exception.message.LikeErrorMessage.LIKE_NOT_EXISTING;
+import static sixgaezzang.sidepeek.like.util.validation.LikeValidator.validateLikeId;
 import static sixgaezzang.sidepeek.like.util.validation.LikeValidator.validateLikeRequest;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
-import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,45 +16,61 @@ import sixgaezzang.sidepeek.like.dto.request.LikeRequest;
 import sixgaezzang.sidepeek.like.dto.response.LikeResponse;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
-import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
+import sixgaezzang.sidepeek.projects.service.ProjectService;
 import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.repository.UserRepository;
+import sixgaezzang.sidepeek.users.service.UserService;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class LikeService {
 
     private final LikeRepository likeRepository;
-    private final UserRepository userRepository;
-    private final ProjectRepository projectRepository;
+    private final UserService userService;
+    private final ProjectService projectService;
 
     @Transactional
-    public LikeResponse toggle(Long loginId, LikeRequest request) {
-
+    public LikeResponse save(Long loginId, LikeRequest request) {
         validateLoginId(loginId);
         validateLikeRequest(request);
 
-        User user = userRepository.findById(loginId)
-            .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
+        User user = userService.getById(loginId);
 
-        Project project = projectRepository.findById(request.projectId())
-            .orElseThrow(() -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
+        Project project = projectService.getById(request.projectId());
 
-        Optional<Like> existingLike = likeRepository.findByUserAndProject(user, project);
+        validateLikeExistence(user, project);
 
-        if (existingLike.isPresent()) {  // 좋아요 삭제(취소)
-            likeRepository.delete(existingLike.get());
-            return new LikeResponse(false);
-        }
-
-        Like like = Like.builder()  // 좋아요 생성
+        Like like = Like.builder()
             .user(user)
             .project(project)
             .build();
 
-        likeRepository.save(like);
+        like = likeRepository.save(like);
+        project.increaseLikeCount();    // 좋아요 수 증가
 
-        return new LikeResponse(true);
+        return LikeResponse.from(like);
+    }
+
+    @Transactional
+    public void delete(Long loginId, Long likeId) {
+        validateLoginId(loginId);
+        validateLikeId(likeId);
+
+        Like like = getById(likeId);
+
+        Project project = like.getProject();
+        project.decreaseLikeCount();    // 좋아요 수 감소
+
+        likeRepository.delete(like);
+    }
+
+    public Like getById(Long id) {
+        return likeRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(LIKE_NOT_EXISTING));
+    }
+
+    private void validateLikeExistence(User user, Project project) {
+        if (likeRepository.existsByUserAndProject(user, project)) {
+            throw new EntityExistsException(LIKE_IS_DUPLICATED);
+        }
     }
 }
