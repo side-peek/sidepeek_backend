@@ -14,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -84,9 +85,8 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectResponse findById(Long id) {
-
-        Project project = getById(id);
+    public ProjectResponse findById(Long loginId, Long projectId) {
+        Project project = getById(projectId);
 
         project.increaseViewCount();
 
@@ -105,7 +105,11 @@ public class ProjectService {
 
         List<CommentResponse> comments = commentService.findAll(project);
 
-        return ProjectResponse.from(project, overviewImages, techStacks, members, comments);
+        // 로그인한 사용자가 좋아요한 프로젝트라면, 좋아요 식별자 반환(아니라면 null)
+        User user = userService.getByIdOrNull(loginId);
+        Long likeId = findLikeIdByUserAndProject(user, project);
+
+        return ProjectResponse.from(project, overviewImages, techStacks, members, comments, likeId);
     }
 
     public List<ProjectBannerResponse> findAllPopularLastWeek() {
@@ -198,6 +202,13 @@ public class ProjectService {
         List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project, request2);
 
         return ProjectResponse.from(project, overviewImages, techStacks, members);
+    }
+
+    private Long findLikeIdByUserAndProject(User user, Project project) {
+        if (Objects.isNull(user)) {
+            return null;
+        }
+        return likeRepository.findIdByUserAndProject(user, project).orElse(null);
     }
 
 }
