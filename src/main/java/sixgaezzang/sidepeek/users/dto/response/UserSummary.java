@@ -1,6 +1,10 @@
 package sixgaezzang.sidepeek.users.dto.response;
 
+import static sixgaezzang.sidepeek.common.util.CommonConstant.BLANK_STRING;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Objects;
 import lombok.Builder;
 import sixgaezzang.sidepeek.users.domain.User;
 
@@ -11,6 +15,7 @@ public record UserSummary(
     Long id,
 
     @Schema(description = "소셜 로그인 회원 여부", nullable = true, example = "false")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     Boolean isSocialLogin,
 
     @Schema(description = "회원/비회원 닉네임", example = "의진")
@@ -22,7 +27,7 @@ public record UserSummary(
 ) {
 
     public UserSummary(Long id, String nickname, String profileImageUrl) {
-        this(id, null, nickname, profileImageUrl);
+        this(id, null, nickname, Objects.isNull(profileImageUrl) ? BLANK_STRING : profileImageUrl);
     }
 
     public static UserSummary fromWithIsSocialLogin(User user, boolean isSocialLogin) {
@@ -59,7 +64,7 @@ public record UserSummary(
             .id(null)
             .isSocialLogin(null)
             .nickname(nickname)
-            .profileImageUrl(null)
+            .profileImageUrl(BLANK_STRING)
             .build();
     }
 

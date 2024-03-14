@@ -126,6 +126,14 @@ public class Project extends BaseTimeEntity {
         this.viewCount++;
     }
 
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount--;
+    }
+
     public void increaseCommentCount() {
         this.commentCount++;
     }

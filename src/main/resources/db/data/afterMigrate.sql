@@ -32,10 +32,10 @@ values (4, '훈오', 'whoknow@naver.com',
 -- PROJECT
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
                     comment_count,
-                    start_date, end_date, owner_id, description)
+                    start_date, end_date, owner_id, description, troubleshooting)
 values (1, '사이드픽👀', '요즘 사이드 플젝 뭐함? 사이드픽 👀', '데브코스 5기 육개짱팀의 좌충우돌 우당탕탕 프로젝트 개발 일대기',
         'https://thumbnail-images.sidepeek.com/1.png', 'https://github.com/side-peek', 20, 7, 3,
-        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# SidePeek 기능 Markdown');
+        '2024-01-29 00:00:00', '2024-03-25 00:00:00', 1, '# SidePeek 기능 Markdown', '');
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, deploy_url, view_count,
                     like_count,
                     start_date, end_date, owner_id, description)

@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.users.dto.response;
 
+import static sixgaezzang.sidepeek.common.util.CommonConstant.BLANK_STRING;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.Objects;
@@ -40,10 +42,10 @@ public record UserProfileResponse(
 ) {
     public static UserProfileResponse from(User user, boolean isSocialLogin, List<UserSkillSummary> techStacks) {
         Job userJob = user.getJob();
-        String jobName = Objects.nonNull(userJob) ? userJob.getName() : null;
+        String jobName = Objects.nonNull(userJob) ? userJob.getName() : BLANK_STRING;
 
         Career userCareer = user.getCareer();
-        String careerDescription = Objects.nonNull(userCareer) ? userCareer.getDescription() : null;
+        String careerDescription = Objects.nonNull(userCareer) ? userCareer.getDescription() : BLANK_STRING;
 
         return UserProfileResponse.builder()
             .isSocialLogin(isSocialLogin)
