@@ -29,8 +29,7 @@ public final class ResponseUtils {
     public static void sendResponse(HttpStatus httpStatus, Object responseBody,
         HttpServletResponse response) {
         try {
-            response.setContentType(APPLICATION_JSON_VALUE);
-            response.setCharacterEncoding(UTF_8.name());
+            setResponseContentTypeAndEncoding(response);
             response.setStatus(httpStatus.value());
             response.getWriter().write(objectMapper.writeValueAsString(responseBody));
         } catch (IOException e) {
@@ -44,12 +43,16 @@ public final class ResponseUtils {
             ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR,
                 INTERNAL_SERVER_ERROR);
 
-            response.setContentType(APPLICATION_JSON_VALUE);
-            response.setCharacterEncoding(UTF_8.name());
+            setResponseContentTypeAndEncoding(response);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
         } catch (IOException e) {
             log.error(ERROR_OCCURRED_SENDING_RESPONSE, e);
         }
+    }
+
+    private static void setResponseContentTypeAndEncoding(HttpServletResponse response) {
+        response.setContentType(APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding(UTF_8.name());
     }
 }
