@@ -23,15 +23,15 @@ public final class ResponseUtils {
 
     public static void sendErrorResponse(HttpStatus httpStatus, String message,
         HttpServletResponse response) {
-        sendResponse(httpStatus.value(), ErrorResponse.of(httpStatus, message), response);
+        sendResponse(httpStatus, ErrorResponse.of(httpStatus, message), response);
     }
 
-    public static void sendResponse(int httpStatusCode, Object responseBody,
+    public static void sendResponse(HttpStatus httpStatus, Object responseBody,
         HttpServletResponse response) {
         try {
             response.setContentType(APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(UTF_8.name());
-            response.setStatus(httpStatusCode);
+            response.setStatus(httpStatus.value());
             response.getWriter().write(objectMapper.writeValueAsString(responseBody));
         } catch (IOException e) {
             log.error(ERROR_OCCURRED_WRITING_JSON, e);
@@ -43,7 +43,7 @@ public final class ResponseUtils {
         try {
             ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR,
                 INTERNAL_SERVER_ERROR);
-            
+
             response.setContentType(APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(UTF_8.name());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
