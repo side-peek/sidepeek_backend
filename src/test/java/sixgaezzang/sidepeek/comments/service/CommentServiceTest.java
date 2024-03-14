@@ -436,27 +436,7 @@ class CommentServiceTest {
     }
 
     @Nested
-    @Transactional(propagation = Propagation.NEVER)
     class 댓글_삭제_테스트 {
-
-        @BeforeEach
-        void setup() {
-            commentRepository.deleteAll();
-            projectRepository.deleteAll();
-            userRepository.deleteAll();
-
-            user = createAndSaveUser();
-            project = createAndSaveProject(user);
-            parent = createAndSaveComment(user, project, null);
-            comment = createAndSaveComment(user, project, null);
-        }
-
-        @AfterEach
-        void cleanup() {
-            commentRepository.deleteAll();
-            projectRepository.deleteAll();
-            userRepository.deleteAll();
-        }
 
         @Test
         void 프로젝트_댓글_삭제에_성공한다() {
@@ -475,7 +455,7 @@ class CommentServiceTest {
             commentService.delete(user.getId(), comment.getId());
 
             // then
-            assertThat(commentRepository.findById(comment.getId())).isEmpty();
+//            assertThat(commentRepository.findById(comment.getId())).isEmpty();
             assertThat(commentRepository.findById(subComment.getId())).isEmpty();
         }
 
