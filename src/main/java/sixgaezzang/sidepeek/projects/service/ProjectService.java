@@ -66,7 +66,7 @@ public class ProjectService {
         Project project = request.toEntity();
         projectRepository.save(project);
 
-        return GetProjectResponseAfterSaveLists(project, request.techStacks(), request.members(),
+        return getProjectResponseAfterSaveLists(project, request.techStacks(), request.members(),
             request.overviewImageUrls());
     }
 
@@ -145,7 +145,7 @@ public class ProjectService {
 
         project.update(request);
 
-        return GetProjectResponseAfterSaveLists(project, request.techStacks(), request.members(),
+        return getProjectResponseAfterSaveLists(project, request.techStacks(), request.members(),
             request.overviewImageUrls());
     }
 
@@ -188,7 +188,7 @@ public class ProjectService {
         return Page.from(projectRepository.findAllByUserCommented(likedProjectIds, user, pageable));
     }
 
-    private ProjectResponse GetProjectResponseAfterSaveLists(Project project,
+    private ProjectResponse getProjectResponseAfterSaveLists(Project project,
         List<SaveTechStackRequest> request,
         List<SaveMemberRequest> request1,
         List<String> request2) {
