@@ -8,7 +8,6 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.util.DateUtils.getEndDayOfLastWeek;
 import static sixgaezzang.sidepeek.projects.util.DateUtils.getStartDayOfLastWeek;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.BANNER_PROJECT_COUNT;
-import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateLoginIdEqualsUserId;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -43,7 +42,7 @@ import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.repository.UserRepository;
+import sixgaezzang.sidepeek.users.service.UserService;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +51,7 @@ public class ProjectService {
 
     private final DateTimeProvider dateTimeProvider;
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ProjectSkillService projectSkillService;
     private final MemberService memberService;
     private final FileService fileService;
@@ -121,8 +120,7 @@ public class ProjectService {
 
     public Page<ProjectListResponse> findByUser(Long userId, Long loginId,
         UserProjectSearchType type, Pageable pageable) {
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
+        User user = userService.getById(userId);
 
         List<Long> likedProjectIds = getLikedProjectIds(userId);
 
