@@ -75,7 +75,7 @@ public class ProjectService {
             .orElseThrow(() -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
     }
 
-    public CursorPaginationResponse<ProjectListResponse> findByCondition(Long userId,
+    public CursorPaginationResponse<ProjectListResponse> findByCondition(Long loginId,
         CursorPaginationInfoRequest pageable) {
         // 사용자가 좋아요한 프로젝트 ID를 조회
         List<Long> likedProjectIds = getLikedProjectIds(loginId);
