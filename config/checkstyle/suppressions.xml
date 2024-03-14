@@ -9,4 +9,8 @@
     <!-- DOC 패키지 하위에 대한 LineLength 검사를 무시 -->
     <suppress checks="LineLength"
         files="[\\/]common[\\/]doc[\\/]"/>
+
+    <!-- TEST 패키지 하위에 대한 VariableDeclarationUsageDistance 검사를 무시 -->
+    <suppress checks="VariableDeclarationUsageDistance"
+              files=".*src[/\\]test[/\\].*\.java"/>
 </suppressions>
