@@ -90,11 +90,13 @@ public class Project extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public Project(String name, String subName, String overview, YearMonth startDate, YearMonth endDate, Long ownerId,
-                   String thumbnailUrl, String deployUrl, String githubUrl, String description,
-                   String troubleshooting) {
+    public Project(String name, String subName, String overview, YearMonth startDate,
+        YearMonth endDate, Long ownerId,
+        String thumbnailUrl, String deployUrl, String githubUrl, String description,
+        String troubleshooting) {
         validateConstructorRequiredArguments(name, overview, githubUrl, description, ownerId);
-        validateConstructorOptionArguments(subName, thumbnailUrl, deployUrl, troubleshooting, startDate, endDate);
+        validateConstructorOptionArguments(subName, thumbnailUrl, deployUrl, troubleshooting,
+            startDate, endDate);
 
         // Required
         this.name = name;
@@ -120,6 +122,14 @@ public class Project extends BaseTimeEntity {
         this.viewCount++;
     }
 
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount--;
+    }
+
     public void softDelete(LocalDateTime now) {
         if (Objects.isNull(this.deletedAt)) {
             this.deletedAt = now;
@@ -128,8 +138,9 @@ public class Project extends BaseTimeEntity {
         throw new IllegalStateException(PROJECT_ALREADY_DELETED);
     }
 
-    private void validateConstructorRequiredArguments(String name, String overview, String githubUrl,
-                                                      String description, Long ownerId) {
+    private void validateConstructorRequiredArguments(String name, String overview,
+        String githubUrl,
+        String description, Long ownerId) {
         validateName(name);
         validateOverview(overview);
         validateRequiredGithubUrl(githubUrl);
@@ -137,8 +148,9 @@ public class Project extends BaseTimeEntity {
         validateOwnerId(ownerId);
     }
 
-    private void validateConstructorOptionArguments(String subName, String thumbnailUrl, String deployUrl,
-                                                    String troubleshooting, YearMonth startDate, YearMonth endDate) {
+    private void validateConstructorOptionArguments(String subName, String thumbnailUrl,
+        String deployUrl,
+        String troubleshooting, YearMonth startDate, YearMonth endDate) {
         validateSubName(subName);
         validateThumbnailUrl(thumbnailUrl);
         validateDeployUrl(deployUrl);
