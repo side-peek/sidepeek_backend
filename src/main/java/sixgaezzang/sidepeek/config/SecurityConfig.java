@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import sixgaezzang.sidepeek.auth.filter.AuthExceptionHandlerFilter;
 import sixgaezzang.sidepeek.auth.filter.JWTValidationFilter;
+import sixgaezzang.sidepeek.auth.oauth.handler.OAuth2LoginFailureHandler;
 import sixgaezzang.sidepeek.auth.oauth.handler.OAuth2LoginSuccessHandler;
 import sixgaezzang.sidepeek.auth.oauth.service.OAuth2UserServiceImpl;
 
@@ -26,6 +27,7 @@ public class SecurityConfig {
     private final OAuth2UserServiceImpl oauth2UserServiceImpl;
     private final AuthExceptionHandlerFilter authExceptionHandlerFilter;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -43,6 +45,7 @@ public class SecurityConfig {
                 .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
                     .userService(oauth2UserServiceImpl))
                 .successHandler(oAuth2LoginSuccessHandler)
+                .failureHandler(oAuth2LoginFailureHandler)
             );
 
         return httpSecurity.build();
