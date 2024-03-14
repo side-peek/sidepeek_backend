@@ -26,8 +26,8 @@ public class SecurityConfig {
     private final JWTValidationFilter jwtValidationFilter;
     private final OAuth2UserServiceImpl oauth2UserServiceImpl;
     private final AuthExceptionHandlerFilter authExceptionHandlerFilter;
-    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+    private final OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
+    private final OAuth2LoginFailureHandler oauth2LoginFailureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -44,8 +44,8 @@ public class SecurityConfig {
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
                     .userService(oauth2UserServiceImpl))
-                .successHandler(oAuth2LoginSuccessHandler)
-                .failureHandler(oAuth2LoginFailureHandler)
+                .successHandler(oauth2LoginSuccessHandler)
+                .failureHandler(oauth2LoginFailureHandler)
             );
 
         return httpSecurity.build();
