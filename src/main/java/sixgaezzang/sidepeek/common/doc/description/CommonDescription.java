@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CommonDescription {
-    public static final String REQUIRED_SUFFIX = "(필수)";
-    public static final String OPTION_SUFFIX = "(선택)";
     public static final String GITHUB_URL_DESCRIPTION =
-        "[Github URL] " + MAX_TEXT_LENGTH + "자 이하, " + GITHUB_URL + "로 시작" + REQUIRED_SUFFIX;
+        "Github URL, " + MAX_TEXT_LENGTH + "자 이하, " + GITHUB_URL + "로 시작";
 }
