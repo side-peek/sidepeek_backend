@@ -14,7 +14,6 @@ public final class CommonErrorMessage {
     public static final String ERROR_OCCURRED_SENDING_RESPONSE = "에러 응답 전송 중 에러가 발생했습니다.";
     public static final String INTERNAL_SERVER_ERROR = "서버 내부 에러가 발생했습니다.";
 
-
     // Project, Comment Owner
     public static final String OWNER_ID_NOT_EQUALS_LOGIN_ID = "작성자 Id가 로그인한 회원 Id와 일치하지 않습니다.";
 
