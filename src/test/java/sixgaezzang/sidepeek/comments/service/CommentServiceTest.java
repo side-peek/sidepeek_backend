@@ -15,7 +15,6 @@ import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER
 
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.ThrowableAssert;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -26,7 +25,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.comments.dto.request.SaveCommentRequest;
@@ -97,12 +95,14 @@ class CommentServiceTest {
             // given
             SaveCommentRequest request = FakeDtoProvider.createSaveCommentRequestWithProjectId(
                 user.getId(), project.getId());
+            Long initialLikeCount = project.getLikeCount();
 
             // when
             Long projectId = commentService.save(user.getId(), request);
 
             // then
             assertThat(projectId).isEqualTo(project.getId());
+            assertThat(project.getLikeCount()).isEqualTo(initialLikeCount + 1);
         }
 
         @Test
@@ -110,12 +110,14 @@ class CommentServiceTest {
             // given
             SaveCommentRequest request = FakeDtoProvider.createSaveCommentRequestWithParentId(
                 user.getId(), parent.getId());
+            Long initialLikeCount = project.getLikeCount();
 
             // when
             Long projectId = commentService.save(user.getId(), request);
 
             // then
             assertThat(projectId).isEqualTo(parent.getProject().getId());
+            assertThat(project.getLikeCount()).isEqualTo(initialLikeCount + 1);
         }
 
         @Test
@@ -436,47 +438,34 @@ class CommentServiceTest {
     }
 
     @Nested
-    @Transactional(propagation = Propagation.NEVER)
     class 댓글_삭제_테스트 {
-
-        @BeforeEach
-        void setup() {
-            commentRepository.deleteAll();
-            projectRepository.deleteAll();
-            userRepository.deleteAll();
-
-            user = createAndSaveUser();
-            project = createAndSaveProject(user);
-            parent = createAndSaveComment(user, project, null);
-            comment = createAndSaveComment(user, project, null);
-        }
-
-        @AfterEach
-        void cleanup() {
-            commentRepository.deleteAll();
-            projectRepository.deleteAll();
-            userRepository.deleteAll();
-        }
 
         @Test
         void 프로젝트_댓글_삭제에_성공한다() {
-            // given, when
+            // given
+            Long initialLikeCount = project.getLikeCount();
+
+            // when
             commentService.delete(user.getId(), comment.getId());
 
             // then
             assertThat(commentRepository.findById(comment.getId())).isEmpty();
+            assertThat(project.getLikeCount()).isEqualTo(initialLikeCount - 1);
         }
 
         @Test
         void 대댓글이_있는_댓글_삭제에_성공한다() {
-            // given, when
+            // given
             Comment subComment = createAndSaveComment(user, null, comment);
+            Long initialLikeCount = project.getLikeCount();
 
+            // when
             commentService.delete(user.getId(), comment.getId());
 
             // then
             assertThat(commentRepository.findById(comment.getId())).isEmpty();
             assertThat(commentRepository.findById(subComment.getId())).isEmpty();
+            assertThat(project.getLikeCount()).isEqualTo(initialLikeCount - 2);
         }
 
         @Test
