@@ -78,9 +78,7 @@ public class ProjectService {
     public CursorPaginationResponse<ProjectListResponse> findByCondition(Long userId,
         CursorPaginationInfoRequest pageable) {
         // 사용자가 좋아요한 프로젝트 ID를 조회
-        List<Long> likedProjectIds =
-            (userId != null) ? likeRepository.findAllProjectIdsByUser(userId)
-                : Collections.emptyList();
+        List<Long> likedProjectIds = getLikedProjectIds(loginId);
 
         return projectRepository.findByCondition(likedProjectIds, pageable);
     }
