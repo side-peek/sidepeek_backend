@@ -157,12 +157,12 @@ public class User extends BaseTimeEntity {
     // Option
     private void setIntroduction(String introduction) {
         validateIntroduction(introduction);
-        this.introduction = introduction;
+        this.introduction = getBlankIfNullOrBlank(introduction);
     }
 
     private void setProfileImageUrl(String profileImageUrl) {
         validateProfileImageUrl(profileImageUrl);
-        this.profileImageUrl = profileImageUrl;
+        this.profileImageUrl = getBlankIfNullOrBlank(profileImageUrl);
     }
 
     private void setJob(String jobName) {

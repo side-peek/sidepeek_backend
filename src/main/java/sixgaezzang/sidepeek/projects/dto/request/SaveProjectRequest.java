@@ -12,7 +12,6 @@ import static sixgaezzang.sidepeek.common.util.Regex.URL_REGEXP;
 import static sixgaezzang.sidepeek.projects.exception.message.FileErrorMessage.OVERVIEW_IMAGE_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_EMPTY;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_OVER_MAX_COUNT;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DEPLOY_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DEPLOY_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DESCRIPTION_IS_NULL;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.DESCRIPTION_OVER_MAX_LENGTH;
@@ -22,7 +21,6 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OVERVIEW_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.OWNER_ID_IS_NULL;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.SUB_NAME_OVER_MAX_LENGTH;
-import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_IS_INVALID;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.THUMBNAIL_URL_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.TROUBLESHOOTING_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
@@ -85,12 +83,10 @@ public record SaveProjectRequest(
 
     @Schema(description = "프로젝트 썸네일 이미지 URL", example = "https://sidepeek.image/imageeUrl")
     @Size(max = MAX_TEXT_LENGTH, message = THUMBNAIL_URL_OVER_MAX_LENGTH)
-    @URL(message = THUMBNAIL_URL_IS_INVALID, regexp = URL_REGEXP)
     String thumbnailUrl,
 
     @Schema(description = "프로젝트 배포 URL", example = "https://www.sidepeek.com")
     @Size(max = MAX_TEXT_LENGTH, message = DEPLOY_URL_OVER_MAX_LENGTH)
-    @URL(message = DEPLOY_URL_IS_INVALID, regexp = URL_REGEXP)
     String deployUrl,
 
     @Schema(description = "프로젝트 시작 연-월", example = "2024-02")
