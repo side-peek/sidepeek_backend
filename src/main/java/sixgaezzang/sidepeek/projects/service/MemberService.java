@@ -35,7 +35,7 @@ public class MemberService {
         List<Member> members = memberSaveRequests.stream()
             .map(member -> member.toEntity(
                 project,
-                Objects.nonNull(member.userId()) ? userService.getById(member.userId()) : null)
+                Objects.nonNull(member.id()) ? userService.getById(member.id()) : null)
             )
             .toList();
 

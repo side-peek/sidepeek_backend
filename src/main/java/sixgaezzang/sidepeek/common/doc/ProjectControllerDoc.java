@@ -33,7 +33,7 @@ public interface ProjectControllerDoc {
     ResponseEntity<ProjectResponse> save(@Parameter(hidden = true) Long loginId,
                                          SaveProjectRequest request);
 
-    @Operation(summary = "프로젝트 상세 조회", description = "로그인 선택")
+    @Operation(summary = "프로젝트 상세 조회", description = "프로젝트 하나의 상세 정보 조회, 로그인 선택")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))

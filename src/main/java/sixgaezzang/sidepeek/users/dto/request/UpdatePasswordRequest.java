@@ -10,12 +10,12 @@ import sixgaezzang.sidepeek.users.domain.Password;
 
 @Schema(description = "비밀번호 수정 요청")
 public record UpdatePasswordRequest(
-    @Schema(description = "기존 비밀번호", example = "sidepeek6!")
+    @Schema(description = "기존 비밀번호, 기존 비밀번호와 일치 확인, 비밀번호 형식 검사", example = "sidepeek6!")
     @NotBlank(message = PASSWORD_FORMAT_INVALID)
     @Pattern(regexp = Password.PASSWORD_REGXP, message = PASSWORD_FORMAT_INVALID)
     String originalPassword,
 
-    @Schema(description = "새로운 비밀번호", example = "sidepeek678!")
+    @Schema(description = "새로운 비밀번호, 비밀번호 형식 검사", example = "sidepeek678!")
     @NotBlank(message = NEW_PASSWORD_IS_NULL)
     @Pattern(regexp = Password.PASSWORD_REGXP, message = PASSWORD_FORMAT_INVALID)
     String password

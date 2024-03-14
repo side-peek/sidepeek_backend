@@ -21,7 +21,7 @@ public record UserSummary(
     @Schema(description = "회원/비회원 닉네임", example = "의진")
     String nickname,
 
-    @Schema(description = "회원 프로필 이미지(비회원은 null)", nullable = true,
+    @Schema(description = "회원 프로필 이미지, 비회원이거나 없으면 빈 문자열 반환", nullable = true,
         example = "https://user-images.githubusercontent.com/uijin.png")
     String profileImageUrl
 ) {

@@ -15,7 +15,7 @@ import sixgaezzang.sidepeek.common.exception.ErrorResponse;
 
 @Tag(name = "Comment", description = "댓글 API")
 public interface CommentControllerDoc {
-    @Operation(summary = "댓글 생성")
+    @Operation(summary = "댓글 생성, 로그인 필수")
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "CREATED"),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -23,7 +23,7 @@ public interface CommentControllerDoc {
     })
     ResponseEntity<Void> save(@Parameter(hidden = true) Long loginId, SaveCommentRequest request);
 
-    @Operation(summary = "댓글 수정")
+    @Operation(summary = "댓글 수정, 로그인 필수")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "NO_CONTENT"),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -34,7 +34,7 @@ public interface CommentControllerDoc {
     @Parameter(name = "id", description = "수정할 댓글 식별자", example = "1", in = ParameterIn.PATH)
     ResponseEntity<Void> update(@Parameter(hidden = true) Long loginId, Long commentId, UpdateCommentRequest request);
 
-    @Operation(summary = "댓글 삭제")
+    @Operation(summary = "댓글 삭제, 로그인 필수")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
         @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),

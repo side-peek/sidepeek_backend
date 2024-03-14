@@ -4,6 +4,7 @@ import static sixgaezzang.sidepeek.common.doc.description.CommonDescription.GITH
 import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.DEPLOY_URL_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.DESCRIPTION_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.END_DATE_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.MEMBER_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.NAME_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.OVERVIEW_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.OVERVIEW_IMAGE_URLS_DESCRIPTION;
@@ -111,7 +112,7 @@ public record UpdateProjectRequest(
     @Size(max = MAX_OVERVIEW_IMAGE_COUNT, message = OVERVIEW_IMAGE_OVER_MAX_COUNT)
     List<String> overviewImageUrls,
 
-    @Schema(description = OVERVIEW_IMAGE_URLS_DESCRIPTION)
+    @Schema(description = MEMBER_DESCRIPTION)
     @Size(max = MAX_MEMBER_COUNT, message = MEMBER_OVER_MAX_COUNT)
     @NotEmpty(message = MEMBER_IS_EMPTY)
     List<SaveMemberRequest> members

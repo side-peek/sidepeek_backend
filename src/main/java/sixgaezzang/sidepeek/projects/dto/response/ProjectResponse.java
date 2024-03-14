@@ -15,17 +15,17 @@ public record ProjectResponse(
     Long id,
     @Schema(description = "프로젝트 제목", example = "사이드픽👀")
     String name,
-    @Schema(description = "프로젝트 부제목", example = "좋은 아이디어? 사이드픽에서 찾아봐!")
+    @Schema(description = "프로젝트 부제목, 없으면 빈 문자열 반환", example = "좋은 아이디어? 사이드픽에서 찾아봐!")
     String subName,
     @Schema(description = "프로젝트 개요", example = "사이드 프로젝트를 공유하는 사이드픽입니다.")
     String overview,
-    @Schema(description = "프로젝트 썸네일 이미지 URL", example = "https://sidepeek.image/imageeUrl")
+    @Schema(description = "프로젝트 썸네일 이미지 URL, 없으면 빈 문자열 반환", example = "https://sidepeek.image/imageeUrl")
     String thumbnailUrl,
-    @Schema(description = "프로젝트 레이아웃 이미지 URL 목록")
+    @Schema(description = "프로젝트 레이아웃 이미지 URL 목록, 없으면 빈 배열 반환")
     List<OverviewImageSummary> overviewImageUrl,
     @Schema(description = "프로젝트 Github URL", example = "https://github.com/side-peek")
     String githubUrl,
-    @Schema(description = "프로젝트 배포 URL", example = "https://www.sidepeek.com")
+    @Schema(description = "프로젝트 배포 URL, 없으면 빈 문자열 반환", example = "https://www.sidepeek.com")
     String deployUrl,
     @Schema(description = "프로젝트 조회수", example = "1")
     Long viewCount,
@@ -33,11 +33,11 @@ public record ProjectResponse(
     Long likeCount,
     @Schema(description = "프로젝트 댓글수", example = "0")
     Long commentCount,
-    @Schema(description = "프로젝트 기술 스택 목록")
+    @Schema(description = "프로젝트 기술 스택 목록, 없으면 빈 배열 반환")
     List<ProjectSkillSummary> techStacks,
-    @Schema(description = "프로젝트 시작 연-월", example = "2024-02")
+    @Schema(description = "프로젝트 시작 연-월, 없으면 null 반환", example = "2024-02")
     YearMonth startDate,
-    @Schema(description = "프로젝트 종료 연-월", example = "2024-03")
+    @Schema(description = "프로젝트 종료 연-월, 없으면 null 반환", example = "2024-03")
     YearMonth endDate,
     @Schema(description = "프로젝트 작성자 식별자", example = "1")
     Long ownerId,
@@ -45,9 +45,9 @@ public record ProjectResponse(
     List<MemberSummary> members,
     @Schema(description = "프로젝트 기능 설명", example = "## 사이드픽 기능 설명 Markdown")
     String description,
-    @Schema(description = "프로젝트 트러블 슈팅", example = "## 사이드픽 트러블 슈팅 Markdown")
+    @Schema(description = "프로젝트 트러블 슈팅, 없으면 빈 문자열 반환", example = "## 사이드픽 트러블 슈팅 Markdown")
     String troubleShooting,
-    @Schema(description = "댓글 응답 정보")
+    @Schema(description = "댓글 응답 정보, 없으면 빈 배열 반환")
     List<CommentResponse> comments
 ) {
 

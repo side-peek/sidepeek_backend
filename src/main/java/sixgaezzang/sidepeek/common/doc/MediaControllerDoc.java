@@ -15,7 +15,7 @@ import sixgaezzang.sidepeek.media.dto.response.MediaUploadResponse;
 @Tag(name = "Media", description = "미디어(파일 업로드) API")
 public interface MediaControllerDoc {
 
-    @Operation(summary = "파일 업로드")
+    @Operation(summary = "파일 업로드, 로그인 필수")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),

@@ -9,7 +9,7 @@ import lombok.Builder;
 @Builder
 public record CursorPaginationResponse<T>(
 
-    @Schema(description = "프로젝트 목록")
+    @Schema(description = "프로젝트 목록, 없으면 빈 배열 반환")
     List<T> content,
 
     @Schema(description = "전체 데이터 개수")

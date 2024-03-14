@@ -16,7 +16,7 @@ public record UpdateCommentRequest(
     @NotNull(message = IS_ANONYMOUS_IS_NULL)
     Boolean isAnonymous,
 
-    @Schema(description = "댓글 내용", example = "우와 이 프로젝트 대박인데요?")
+    @Schema(description = "댓글 내용, " + MAX_CONTENT_LENGTH + "자 이하", example = "우와 이 프로젝트 대박인데요?")
     @Size(max = MAX_CONTENT_LENGTH, message = CONTENT_OVER_MAX_LENGTH)
     @NotBlank(message = CONTENT_IS_NULL)
     String content

@@ -30,7 +30,7 @@ public record CommentResponse(
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime createdAt,
 
-    @Schema(description = "대댓글 목록")
+    @Schema(description = "대댓글 목록, 없으면 빈 배열 반환")
     List<ReplyResponse> replies
 ) {
 

@@ -30,7 +30,7 @@ public final class MemberValidator {
         Assert.notEmpty(members, MEMBER_IS_EMPTY);
         Assert.isTrue(members.size() <= MAX_MEMBER_COUNT, MEMBER_OVER_MAX_COUNT);
 
-        validateInclude(members, (member, id) -> Objects.equals(member.userId(), id), ownerId,
+        validateInclude(members, (member, id) -> Objects.equals(member.id(), id), ownerId,
             MEMBER_NOT_INCLUDE_OWNER);
         validateCollection(members, MemberValidator::validateSaveMemberRequest);
         validateKeyDuplicate(members, (member) -> Pair.of(member.nickname(), member.role()), MEMBER_IS_DUPLICATED);

@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.common.doc;
 
+import static sixgaezzang.sidepeek.common.doc.description.UserDescription.USER_KEYWORD_DESCRIPTION;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 
@@ -39,7 +40,7 @@ public interface UserControllerDoc {
     })
     ResponseEntity<Void> signUp(@Valid SignUpRequest request);
 
-    @Operation(summary = "비밀번호 수정")
+    @Operation(summary = "비밀번호 수정, 로그인 필수")
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -70,7 +71,7 @@ public interface UserControllerDoc {
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @Parameter(name = "keyword", description = "검색어", example = "sixgaezzang6", in = ParameterIn.QUERY)
+    @Parameter(name = "keyword", description = USER_KEYWORD_DESCRIPTION, example = "sixgaezzang6", in = ParameterIn.QUERY)
     ResponseEntity<UserSearchResponse> searchByNickname(
         @Size(max = MAX_NICKNAME_LENGTH, message = NICKNAME_OVER_MAX_LENGTH)
         String keyword

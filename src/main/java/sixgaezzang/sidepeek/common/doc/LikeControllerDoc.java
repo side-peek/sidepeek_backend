@@ -16,7 +16,7 @@ import sixgaezzang.sidepeek.like.dto.response.LikeResponse;
 @Tag(name = "Like", description = "좋아요 API")
 public interface LikeControllerDoc {
 
-    @Operation(summary = "좋아요")
+    @Operation(summary = "좋아요, 로그인 필수")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -25,7 +25,7 @@ public interface LikeControllerDoc {
     })
     ResponseEntity<LikeResponse> save(@Parameter(hidden = true) Long loginId, LikeRequest request);
 
-    @Operation(summary = "좋아요 취소")
+    @Operation(summary = "좋아요 취소, 로그인 필수")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
