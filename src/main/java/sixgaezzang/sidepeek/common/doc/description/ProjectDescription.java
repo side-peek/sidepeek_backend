@@ -15,7 +15,7 @@ public final class ProjectDescription {
     public static final String NAME_DESCRIPTION = "제목, " + MAX_PROJECT_NAME_LENGTH + "자 이하";
     public static final String OVERVIEW_DESCRIPTION = "개요, " + MAX_OVERVIEW_LENGTH + "자 이하";
     public static final String DESCRIPTION_DESCRIPTION = "기능 설명, " + MAX_TEXT_LENGTH + "자 이하";
-    public static final String OWNER_ID_DESCRIPTION = "작성자 식별자 ";
+    public static final String OWNER_ID_DESCRIPTION = "작성자 식별자, 로그인 회원 식별자와 일치 검사";
     public static final String PROJECT_TECH_STACK_DESCRIPTION =
         "기술 스택, " + MAX_TECH_STACK_COUNT + "개 이하, 같은 카테고리 내 기술 스택 중복 불가";
     public static final String MEMBER_DESCRIPTION =

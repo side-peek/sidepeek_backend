@@ -40,7 +40,7 @@ public interface UserControllerDoc {
     })
     ResponseEntity<Void> signUp(@Valid SignUpRequest request);
 
-    @Operation(summary = "비밀번호 수정, 로그인 필수")
+    @Operation(summary = "비밀번호 수정", description = "로그인 필수")
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = "NO_CONTENT"),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -66,7 +66,7 @@ public interface UserControllerDoc {
     })
     ResponseEntity<CheckDuplicateResponse> checkNicknameDuplicate(@Valid CheckNicknameRequest request);
 
-    @Operation(summary = "회원 검색", description = "닉네임으로 회원을 검색합니다.")
+    @Operation(summary = "회원 검색", description = "회원 닉네임 검색")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
@@ -77,7 +77,7 @@ public interface UserControllerDoc {
         String keyword
     );
 
-    @Operation(summary = "회원 프로필 정보 조회")
+    @Operation(summary = "회원 프로필 상세 정보 조회", description = "로그인 선택")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
@@ -85,7 +85,7 @@ public interface UserControllerDoc {
     @Parameter(name = "id", description = "조회할 회원 식별자", example = "1", in = ParameterIn.PATH)
     ResponseEntity<UserProfileResponse> getById(Long id);
 
-    @Operation(summary = "회원 프로필 정보 수정")
+    @Operation(summary = "회원 프로필 정보 수정", description = "로그인 필수")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -93,11 +93,11 @@ public interface UserControllerDoc {
         @ApiResponse(responseCode = "403", description = "FORBIDDEN", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @Parameter(name = "id", description = "수정할 회원 식별자", example = "1", in = ParameterIn.PATH)
+    @Parameter(name = "id", description = "수정할 회원 식별자, 로그인 회원 식별자와 일치 검사", example = "1", in = ParameterIn.PATH)
     ResponseEntity<UserProfileResponse> update(@Parameter(hidden = true) Long loginId, Long id,
                                                @Valid UpdateUserProfileRequest request);
 
-    @Operation(summary = "회원 프로젝트 조회")
+    @Operation(summary = "회원 프로젝트 조회", description = "회원과 관련된 프로젝트 목록 조회(페이지네이션), 로그인 선택")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -106,7 +106,7 @@ public interface UserControllerDoc {
     })
     @Parameters({
         @Parameter(name = "id", description = "조회할 회원 식별자", example = "1", in = ParameterIn.PATH),
-        @Parameter(name = "type", description = "프로젝트 조회 타입", in = ParameterIn.QUERY),
+        @Parameter(name = "type", description = "프로젝트 조회 타입 [ JOINED(모두 확인 가능), LIKED(본인만 확인 가능), COMMENTED(본인만 확인 가능) ]", in = ParameterIn.QUERY),
         @Parameter(name = "page", description = "조회할 페이지 번호 (기본값: 0)", in = ParameterIn.QUERY),
         @Parameter(name = "size", description = "한 페이지의 크기 (기본값: 12)", in = ParameterIn.QUERY)
     })

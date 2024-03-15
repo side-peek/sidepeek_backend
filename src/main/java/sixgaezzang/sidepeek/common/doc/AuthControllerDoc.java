@@ -25,7 +25,7 @@ public interface AuthControllerDoc {
     })
     ResponseEntity<LoginResponse> login(LoginRequest request);
 
-    @Operation(summary = "Access Token 검증", description = "Access Token을 통해 현재 로그인 된 사용자의 정보를 응답받습니다.")
+    @Operation(summary = "Access Token 검증", description = "Access Token을 통해 현재 로그인 된 사용자의 정보 요청")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
@@ -33,7 +33,7 @@ public interface AuthControllerDoc {
     })
     ResponseEntity<UserSummary> validateToken(@Parameter(hidden = true) Long loginId);
 
-    @Operation(summary = "Access / Refresh Token 재발급")
+    @Operation(summary = "Access / Refresh Token 재발급", description = "Refresh Token을 통해 토큰 재발급")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),

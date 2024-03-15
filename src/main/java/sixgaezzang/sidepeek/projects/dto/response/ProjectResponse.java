@@ -48,7 +48,7 @@ public record ProjectResponse(
     @Schema(description = "프로젝트 트러블 슈팅, 없으면 빈 문자열 반환", example = "## 사이드픽 트러블 슈팅 Markdown")
     String troubleShooting,
     @Schema(description = "댓글 응답 정보, 없으면 빈 배열 반환")
-    List<CommentResponse> comments
+    List<CommentResponse> comments,
     @Schema(description = "로그인한 사용자가 누른 좋아요 식별자")
         Long likeId
 ) {
