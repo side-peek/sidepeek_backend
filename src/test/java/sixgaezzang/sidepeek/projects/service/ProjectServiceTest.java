@@ -196,19 +196,52 @@ class ProjectServiceTest {
     class 프로젝트_상세_조회_테스트 {
 
         @Test
-        void 프로젝트_상세_및_댓글_목록_조회를_성공한다() {
+        void 사용자가_로그인하지_않아도_프로젝트_상세_조회를_성공한다() {
             // given
-            User user = createAndSaveUser();
             Project project = createAndSaveProject(user);
             Comment comment = createAndSaveComment(user, project, null);
             CommentResponse commentResponse = CommentResponse.from(comment, true, List.of());
 
             // when
-            ProjectResponse response = projectService.findById(project.getId());
+            ProjectResponse response = projectService.findById(null, project.getId());
 
             // then
-            assertThat(response).extracting("id", "ownerId", "viewCount", "comments")
-                .containsExactly(project.getId(), user.getId(), 1L, List.of(commentResponse));
+            assertThat(response).extracting("id", "ownerId", "viewCount", "comments", "likeId")
+                .containsExactly(project.getId(), user.getId(), 1L, List.of(commentResponse),
+                    null);    // 이때, 좋아요 Id는 null
+        }
+
+        @Test
+        void 로그인한_사용자가_프로젝트_상세_조회를_성공한다() {
+            // given
+            Project project = createAndSaveProject(user);
+            Comment comment = createAndSaveComment(user, project, null);
+            CommentResponse commentResponse = CommentResponse.from(comment, true, List.of());
+
+            // when
+            ProjectResponse response = projectService.findById(user.getId(), project.getId());
+
+            // then
+            assertThat(response).extracting("id", "ownerId", "viewCount", "comments", "likeId")
+                .containsExactly(project.getId(), user.getId(), 1L, List.of(commentResponse), null);
+        }
+
+        @Test
+        void 로그인한_사용자가_좋아요한_프로젝트_상세_조회를_성공한다() {
+            // given
+            Project project = createAndSaveProject(user);
+            Comment comment = createAndSaveComment(user, project, null);
+            CommentResponse commentResponse = CommentResponse.from(comment, true, List.of());
+            Like like = createAndSaveLike(project,
+                user);   // 사용자가 프로젝트에 좋아요를 누르면 상세 조회 시 좋아요 식별자 반환
+
+            // when
+            ProjectResponse response = projectService.findById(user.getId(), project.getId());
+
+            // then
+            assertThat(response).extracting("id", "ownerId", "viewCount", "comments", "likeId")
+                .containsExactly(project.getId(), user.getId(), 1L, List.of(commentResponse),
+                    like.getId());
         }
 
         @Test
@@ -217,7 +250,7 @@ class ProjectServiceTest {
             Long invalidId = faker.random().nextLong(Long.MAX_VALUE);
 
             // when
-            ThrowingCallable findById = () -> projectService.findById(invalidId);
+            ThrowingCallable findById = () -> projectService.findById(user.getId(), invalidId);
 
             // then
             assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(findById)
@@ -715,7 +748,7 @@ class ProjectServiceTest {
 
             // TODO: @SQLRestriction("deleted_at IS NULL")이 안먹힌다. 왜지?
             Optional<Project> deletedProject = projectRepository.findById(project.id());
-            projectService.findById(project.id());
+            projectService.findById(user.getId(), project.id());
 
             // then
             assertThat(deletedProject).isNotEmpty();

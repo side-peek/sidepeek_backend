@@ -8,13 +8,13 @@ import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessag
 import static sixgaezzang.sidepeek.projects.util.DateUtils.getEndDayOfLastWeek;
 import static sixgaezzang.sidepeek.projects.util.DateUtils.getStartDayOfLastWeek;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.BANNER_PROJECT_COUNT;
-import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateLoginIdEqualsUserId;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +43,7 @@ import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.repository.UserRepository;
+import sixgaezzang.sidepeek.users.service.UserService;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +52,7 @@ public class ProjectService {
 
     private final DateTimeProvider dateTimeProvider;
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ProjectSkillService projectSkillService;
     private final MemberService memberService;
     private final FileService fileService;
@@ -67,7 +67,7 @@ public class ProjectService {
         Project project = request.toEntity();
         projectRepository.save(project);
 
-        return GetProjectResponseAfterSaveLists(project, request.techStacks(), request.members(),
+        return getProjectResponseAfterSaveLists(project, request.techStacks(), request.members(),
             request.overviewImageUrls());
     }
 
@@ -76,20 +76,17 @@ public class ProjectService {
             .orElseThrow(() -> new EntityNotFoundException(PROJECT_NOT_EXISTING));
     }
 
-    public CursorPaginationResponse<ProjectListResponse> findByCondition(Long userId,
+    public CursorPaginationResponse<ProjectListResponse> findByCondition(Long loginId,
         CursorPaginationInfoRequest pageable) {
         // 사용자가 좋아요한 프로젝트 ID를 조회
-        List<Long> likedProjectIds =
-            (userId != null) ? likeRepository.findAllProjectIdsByUser(userId)
-                : Collections.emptyList();
+        List<Long> likedProjectIds = getLikedProjectIds(loginId);
 
         return projectRepository.findByCondition(likedProjectIds, pageable);
     }
 
     @Transactional
-    public ProjectResponse findById(Long id) {
-
-        Project project = getById(id);
+    public ProjectResponse findById(Long loginId, Long projectId) {
+        Project project = getById(projectId);
 
         project.increaseViewCount();
 
@@ -108,7 +105,11 @@ public class ProjectService {
 
         List<CommentResponse> comments = commentService.findAll(project);
 
-        return ProjectResponse.from(project, overviewImages, techStacks, members, comments);
+        // 로그인한 사용자가 좋아요한 프로젝트라면, 좋아요 식별자 반환(아니라면 null)
+        User user = userService.getByIdOrNull(loginId);
+        Long likeId = findLikeIdByUserAndProject(user, project);
+
+        return ProjectResponse.from(project, overviewImages, techStacks, members, comments, likeId);
     }
 
     public List<ProjectBannerResponse> findAllPopularLastWeek() {
@@ -121,8 +122,7 @@ public class ProjectService {
 
     public Page<ProjectListResponse> findByUser(Long userId, Long loginId,
         UserProjectSearchType type, Pageable pageable) {
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new EntityNotFoundException(USER_NOT_EXISTING));
+        User user = userService.getById(userId);
 
         List<Long> likedProjectIds = getLikedProjectIds(userId);
 
@@ -149,7 +149,7 @@ public class ProjectService {
 
         project.update(request);
 
-        return GetProjectResponseAfterSaveLists(project, request.techStacks(), request.members(),
+        return getProjectResponseAfterSaveLists(project, request.techStacks(), request.members(),
             request.overviewImageUrls());
     }
 
@@ -192,7 +192,7 @@ public class ProjectService {
         return Page.from(projectRepository.findAllByUserCommented(likedProjectIds, user, pageable));
     }
 
-    private ProjectResponse GetProjectResponseAfterSaveLists(Project project,
+    private ProjectResponse getProjectResponseAfterSaveLists(Project project,
         List<SaveTechStackRequest> request,
         List<SaveMemberRequest> request1,
         List<String> request2) {
@@ -202,6 +202,13 @@ public class ProjectService {
         List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project, request2);
 
         return ProjectResponse.from(project, overviewImages, techStacks, members);
+    }
+
+    private Long findLikeIdByUserAndProject(User user, Project project) {
+        if (Objects.isNull(user)) {
+            return null;
+        }
+        return likeRepository.findIdByUserAndProject(user, project).orElse(null);
     }
 
 }

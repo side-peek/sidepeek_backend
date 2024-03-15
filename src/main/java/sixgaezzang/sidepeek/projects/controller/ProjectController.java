@@ -51,9 +51,10 @@ public class ProjectController implements ProjectControllerDoc {
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponse> getById(
-        @PathVariable Long id
+        @Login Long loginId,
+        @PathVariable(value = "id") Long projectId
     ) {
-        ProjectResponse response = projectService.findById(id);
+        ProjectResponse response = projectService.findById(loginId, projectId);
 
         return ResponseEntity.ok(response);
     }

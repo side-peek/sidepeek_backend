@@ -14,7 +14,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        boolean hasLoginAnnotation = parameter.getParameterAnnotation(Login.class) != null;
+        boolean hasLoginAnnotation = parameter.hasParameterAnnotation(Login.class);
         boolean hasLongType = parameter.getParameterType()
             .equals(Long.class);
 
@@ -29,15 +29,11 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         Authentication authentication = SecurityContextHolder.getContext()
             .getAuthentication();
 
-        if (authentication != null) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof Long) {
-                return principal;
-            }
+        if (authentication != null && authentication.getPrincipal() instanceof Long) {
+            return authentication.getPrincipal(); // 사용자가 로그인한 경우, 로그인 ID 반환
         }
 
-        // 로그인하지 않은 경우 null 반환
-        return null;
+        return null;    // 로그인하지 않은 경우 null 반환
     }
 
 }
