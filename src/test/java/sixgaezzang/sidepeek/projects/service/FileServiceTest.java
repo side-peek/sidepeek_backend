@@ -23,7 +23,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.File;
-import sixgaezzang.sidepeek.projects.domain.file.FileType;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
 import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
@@ -129,12 +128,12 @@ class FileServiceTest {
         void 기존_프로젝트_파일_목록을_지우고_파일_목록_수정에_성공한다() {
             // given
             fileService.cleanAndSaveAll(project, imageUrls);
-            List<File> originalFiles = fileService.findAllByType(project, FileType.OVERVIEW_IMAGE);
+            List<File> originalFiles = fileService.findAllByProject(project);
 
             // when
             List<String> emptyFile = Collections.emptyList();
             fileService.cleanAndSaveAll(project, emptyFile);
-            List<File> savedFiles = fileService.findAllByType(project, FileType.OVERVIEW_IMAGE);
+            List<File> savedFiles = fileService.findAllByProject(project);
 
             // then
             assertThat(originalFiles).isNotEqualTo(savedFiles);

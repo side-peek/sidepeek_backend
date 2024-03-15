@@ -29,7 +29,6 @@ import sixgaezzang.sidepeek.common.util.component.DateTimeProvider;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
-import sixgaezzang.sidepeek.projects.domain.file.FileType;
 import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
@@ -90,8 +89,7 @@ public class ProjectService {
 
         project.increaseViewCount();
 
-        List<OverviewImageSummary> overviewImages = fileService.findAllByType(
-                project, FileType.OVERVIEW_IMAGE)
+        List<OverviewImageSummary> overviewImages = fileService.findAllByProject(project)
             .stream()
             .map(OverviewImageSummary::from)
             .toList();
