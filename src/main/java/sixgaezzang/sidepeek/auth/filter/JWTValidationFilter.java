@@ -1,4 +1,6 @@
-package sixgaezzang.sidepeek.auth.jwt;
+package sixgaezzang.sidepeek.auth.filter;
+
+import static sixgaezzang.sidepeek.auth.exception.message.AuthErrorMessage.TOKEN_IS_INVALID;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import sixgaezzang.sidepeek.auth.jwt.JWTManager;
 
 @Component
 @RequiredArgsConstructor
@@ -36,7 +39,7 @@ public class JWTValidationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (Exception e) {
-                throw new BadCredentialsException("유효하지 않은 토큰입니다.");
+                throw new BadCredentialsException(TOKEN_IS_INVALID);
             }
         }
 

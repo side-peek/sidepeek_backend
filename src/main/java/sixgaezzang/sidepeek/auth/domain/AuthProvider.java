@@ -1,5 +1,8 @@
 package sixgaezzang.sidepeek.auth.domain;
 
+import static sixgaezzang.sidepeek.auth.util.AuthConstant.MAX_PROVIDER_ID_LENGTH;
+import static sixgaezzang.sidepeek.auth.util.AuthConstant.MAX_PROVIDER_TYPE_LENGTH;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -35,11 +38,11 @@ public class AuthProvider extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "provider_type", length = 50, nullable = false, columnDefinition = "VARCHAR")
+    @Column(name = "provider_type", length = MAX_PROVIDER_TYPE_LENGTH, nullable = false, columnDefinition = "VARCHAR")
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
 
-    @Column(name = "provider_id", length = 100)
+    @Column(name = "provider_id", length = MAX_PROVIDER_ID_LENGTH)
     private String providerId;
 
     @Column(name = "is_registration_complete", nullable = false, columnDefinition = "TINYINT")
