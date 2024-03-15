@@ -1,5 +1,8 @@
 package sixgaezzang.sidepeek.projects.dto.request;
 
+import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.MEMBER_NICKNAME_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.MEMBER_ROLE_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.MEMBER_USER_ID_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MIN_ID;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_ID_NEGATIVE_OR_ZERO;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.ROLE_IS_NULL;
@@ -19,21 +22,20 @@ import sixgaezzang.sidepeek.users.domain.User;
 
 @Schema(description = "프로젝트 생성 요청에서 프로젝트 멤버 정보")
 public record SaveMemberRequest(
-    @Schema(description = "회원 멤버 유저 식별자(비회원 멤버이면 null)", example = "1")
+    @Schema(description = MEMBER_USER_ID_DESCRIPTION, example = "1")
     @Min(value = MIN_ID, message = MEMBER_ID_NEGATIVE_OR_ZERO)
     Long id,
 
-    @Schema(description = "멤버 닉네임, 회원도 설정 가능, " + MAX_NICKNAME_LENGTH + "자 이하", example = "의진")
+    @Schema(description = MEMBER_NICKNAME_DESCRIPTION, example = "의진")
     @Size(max = MAX_NICKNAME_LENGTH, message = NICKNAME_OVER_MAX_LENGTH)
     @NotBlank(message = NICKNAME_IS_NULL)
     String nickname,
 
-    @Schema(description = "멤버 역할, " + MAX_ROLE_LENGTH + "자 이하", example = "백엔드")
+    @Schema(description = MEMBER_ROLE_DESCRIPTION, example = "백엔드")
     @Size(max = MAX_ROLE_LENGTH, message = ROLE_OVER_MAX_LENGTH)
     @NotBlank(message = ROLE_IS_NULL)
     String role
 ) {
-
     public Member toEntity(Project project, User user) {
         return Member.builder()
             .project(project)

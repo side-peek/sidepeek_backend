@@ -10,8 +10,14 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class UserDescription {
-    public static final String USER_KEYWORD_DESCRIPTION = "검색어, " + MAX_NICKNAME_LENGTH + "자 이하";
+    // CheckEmailRequest, SignUpRequest, UpdatePasswordRequest
+    public static final String EMAIL_DESCRIPTION = "이메일, 이메일 형식 검사";
+    public static final String ORIGINAL_PASSWORD_DESCRIPTION = "기존 비밀번호, 기존 비밀번호와 일치 확인, 비밀번호 형식 검사";
+    public static final String PASSWORD_DESCRIPTION = "새로운 비밀번호, 비밀번호 형식 검사";
+
+    // CheckNicknameRequest, SignUpRequest, UpdateUserProfileRequest
     public static final String NICKNAME_DESCRIPTION = "닉네임, " + MAX_NICKNAME_LENGTH + "자 이하";
+    public static final String USER_KEYWORD_DESCRIPTION = "검색어, " + MAX_NICKNAME_LENGTH + "자 이하";
     public static final String PROFILE_IMAGE_URL_DESCRIPTION = "프로필 이미지 URL, " + MAX_TEXT_LENGTH + "자 이하, URL 형식 검사";
     public static final String INTRODUCTION_DESCRIPTION = "소개, " + MAX_INTRODUCTION_LENGTH + "자 이하";
     public static final String JOB_DESCRIPTION = "직업 타입, [ 백엔드 개발자, 프론트엔드 개발자, IOS 개발자, 안드로이드 개발자, 디자이너, 데이터 분석가, 기타 ]";

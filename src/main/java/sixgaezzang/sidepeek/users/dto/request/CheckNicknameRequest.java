@@ -16,5 +16,4 @@ public record CheckNicknameRequest(
     @Size(max = MAX_NICKNAME_LENGTH, message = NICKNAME_OVER_MAX_LENGTH)
     String nickname
 ) {
-
 }

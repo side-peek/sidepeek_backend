@@ -14,5 +14,4 @@ public record CheckEmailRequest(
     @Email(message = EMAIL_FORMAT_INVALID)
     String email
 ) {
-
 }
