@@ -6,7 +6,7 @@ import sixgaezzang.sidepeek.users.domain.User;
 
 @Schema(description = "회원 검색 응답")
 public record UserSearchResponse(
-    @Schema(description = "회원 목록")
+    @Schema(description = "회원 목록, 없으면 빈 배열 반환")
     List<UserSummary> users
 ) {
 

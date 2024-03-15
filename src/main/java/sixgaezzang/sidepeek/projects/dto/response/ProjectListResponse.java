@@ -11,9 +11,9 @@ public record ProjectListResponse(
     Long id,
     @Schema(description = "프로젝트 제목", example = "사이드픽👀")
     String name,
-    @Schema(description = "프로젝트 부제목", example = "요즘 사이드 플젝 뭐함? 사이드픽 \uD83D\uDC40")
+    @Schema(description = "프로젝트 부제목, 없으면 빈 문자열 반환", example = "요즘 사이드 플젝 뭐함? 사이드픽 \uD83D\uDC40")
     String subName,
-    @Schema(description = "프로젝트 썸네일 이미지 URL", example = "https://sidepeek.image/imageeUrl")
+    @Schema(description = "프로젝트 썸네일 이미지 URL, 없으면 빈 문자열 반환", example = "https://sidepeek.image/imageeUrl")
     String thumbnailUrl,
     @Schema(description = "프로젝트 조회수", example = "20")
     Long viewCount,

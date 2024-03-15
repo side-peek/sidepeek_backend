@@ -1,5 +1,11 @@
 package sixgaezzang.sidepeek.projects.dto.request;
 
+import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.IS_RELEASED_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.LAST_ORDER_COUNT_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.LAST_PROJECT_ID_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.PAGE_SIZE_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ProjectDescription.SORT_DESCRIPTION;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import lombok.Builder;
@@ -8,30 +14,29 @@ import lombok.Builder;
 @Builder
 public record CursorPaginationInfoRequest(
 
-    @Schema(description = "더보기 이전 마지막으로 보여진 프로젝트 식별자(첫 페이지면 null)")
+    @Schema(description = LAST_PROJECT_ID_DESCRIPTION)
     @Nullable
     Long lastProjectId,
 
-    @Schema(description = "더보기 이전 마지막으로 보여진 좋아요수/조회수(첫 페이지면 null)")
+    @Schema(description = LAST_ORDER_COUNT_DESCRIPTION)
     @Nullable
     Long lastOrderCount,
 
-    @Schema(description = "한 페이지내 보여질 데이터의 개수")
+    @Schema(description = PAGE_SIZE_DESCRIPTION)
     @Nullable
     Integer pageSize,
 
-    @Schema(description = "정렬 조건 [ createdAt(default), view, like ]")
+    @Schema(description = SORT_DESCRIPTION)
     @Nullable
     SortType sort,
 
-    @Schema(description = "출시 서비스만 보기(기본 - false)")
+    @Schema(description = IS_RELEASED_DESCRIPTION)
     @Nullable
     Boolean isReleased
 ) {
-
     public CursorPaginationInfoRequest(@Nullable Long lastProjectId, Long lastOrderCount,
-        Integer pageSize, SortType sort,
-        Boolean isReleased) {
+                                       Integer pageSize, SortType sort,
+                                       Boolean isReleased) {
         this.lastProjectId = lastProjectId;
         this.lastOrderCount = lastOrderCount;
         this.pageSize = (pageSize != null) ? pageSize : 24;

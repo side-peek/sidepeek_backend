@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.common.dto.request;
 
+import static sixgaezzang.sidepeek.common.doc.description.CommonDescription.TECH_STACK_CATEGORY_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.CATEGORY_IS_NULL;
 import static sixgaezzang.sidepeek.common.exception.message.TechStackErrorMessage.CATEGORY_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_CATEGORY_LENGTH;
@@ -24,7 +25,7 @@ public record SaveTechStackRequest(
     @NotNull(message = SKILL_ID_IS_NULL)
     Long skillId,
 
-    @Schema(description = "기술 스택 카테고리", example = "프론트엔드")
+    @Schema(description = TECH_STACK_CATEGORY_DESCRIPTION, example = "프론트엔드")
     @Size(max = MAX_CATEGORY_LENGTH, message = CATEGORY_OVER_MAX_LENGTH)
     @NotBlank(message = CATEGORY_IS_NULL)
     String category
