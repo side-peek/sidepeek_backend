@@ -1,5 +1,8 @@
 package sixgaezzang.sidepeek.common.doc;
 
+import static sixgaezzang.sidepeek.common.doc.description.UserDescription.PROJECTS_PAGE_NUMBER_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.UserDescription.PROJECTS_PAGE_SIZE_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.UserDescription.PROJECTS_TYPE_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.UserDescription.USER_KEYWORD_DESCRIPTION;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.NICKNAME_OVER_MAX_LENGTH;
 import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
@@ -32,7 +35,6 @@ import sixgaezzang.sidepeek.users.dto.response.UserSearchResponse;
 
 @Tag(name = "User", description = "사용자 API")
 public interface UserControllerDoc {
-
     @Operation(summary = "회원가입")
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "CREATED", useReturnTypeSchema = true),
@@ -106,9 +108,9 @@ public interface UserControllerDoc {
     })
     @Parameters({
         @Parameter(name = "id", description = "조회할 회원 식별자", example = "1", in = ParameterIn.PATH),
-        @Parameter(name = "type", description = "프로젝트 조회 타입 [ JOINED(모두 확인 가능), LIKED(본인만 확인 가능), COMMENTED(본인만 확인 가능) ]", in = ParameterIn.QUERY),
-        @Parameter(name = "page", description = "조회할 페이지 번호 (기본값: 0)", in = ParameterIn.QUERY),
-        @Parameter(name = "size", description = "한 페이지의 크기 (기본값: 12)", in = ParameterIn.QUERY)
+        @Parameter(name = "type", description = PROJECTS_TYPE_DESCRIPTION, in = ParameterIn.QUERY),
+        @Parameter(name = "page", description = PROJECTS_PAGE_NUMBER_DESCRIPTION, in = ParameterIn.QUERY),
+        @Parameter(name = "size", description = PROJECTS_PAGE_SIZE_DESCRIPTION, in = ParameterIn.QUERY)
     })
     ResponseEntity<Page<ProjectListResponse>> getProjects(
         @Parameter(hidden = true) Long loginId,

@@ -10,6 +10,12 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class UserDescription {
+    // UserControllerDoc
+    public static final String PROJECTS_PAGE_NUMBER_DESCRIPTION = "조회할 페이지 번호 (기본값: 0)";
+    public static final String PROJECTS_PAGE_SIZE_DESCRIPTION = "한 페이지의 크기 (기본값: 12)";
+    public static final String PROJECTS_TYPE_DESCRIPTION =
+        "프로젝트 조회 타입 [ JOINED(모두 가능), LIKED(본인만 가능), COMMENTED(본인만 가능) ]";
+
     // CheckEmailRequest, SignUpRequest, UpdatePasswordRequest
     public static final String EMAIL_DESCRIPTION = "이메일, 이메일 형식 검사";
     public static final String ORIGINAL_PASSWORD_DESCRIPTION = "기존 비밀번호, 기존 비밀번호와 일치 확인, 비밀번호 형식 검사";
