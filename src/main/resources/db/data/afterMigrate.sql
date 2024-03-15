@@ -257,10 +257,10 @@ insert into project_member(id, project_id, user_id, role, nickname)
 values (32, 30, 1, 'BE', '의진');
 
 -- FILE
-insert into files(id, project_id, type, url)
-values (1, 1, 'OVERVIEW_IMAGE', 'https://project-images.sidepeek.com/1.png');
-insert into files(id, project_id, type, url)
-values (2, 1, 'OVERVIEW_IMAGE', 'https://project-images.sidepeek.com/2.png');
+insert into files(id, project_id, url)
+values (1, 1, 'https://project-images.sidepeek.com/1.png');
+insert into files(id, project_id, url)
+values (2, 1, 'https://project-images.sidepeek.com/2.png');
 
 -- SKILL
 insert into skill(id, name, icon_image_url)

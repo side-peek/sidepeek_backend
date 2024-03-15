@@ -1,0 +1,3 @@
+-- FILES
+ALTER TABLE files
+    DROP COLUMN type;
