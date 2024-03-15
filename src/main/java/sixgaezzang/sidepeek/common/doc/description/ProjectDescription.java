@@ -45,6 +45,4 @@ public final class ProjectDescription {
     public static final String MEMBER_ROLE_DESCRIPTION = "멤버 역할, " + MAX_ROLE_LENGTH + "자 이하";
     public static final String MEMBER_NICKNAME_DESCRIPTION = "멤버 닉네임, 회원도 설정 가능, " + MAX_NICKNAME_LENGTH + "자 이하";
     public static final String MEMBER_USER_ID_DESCRIPTION = "회원 멤버 유저 식별자(비회원 멤버이면 null)";
-
-
 }
