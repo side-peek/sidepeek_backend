@@ -89,7 +89,7 @@ public class ProjectService {
 
         project.increaseViewCount();
 
-        List<OverviewImageSummary> overviewImages = fileService.findAll(project)
+        List<OverviewImageSummary> overviewImages = fileService.findAllByProject(project)
             .stream()
             .map(OverviewImageSummary::from)
             .toList();

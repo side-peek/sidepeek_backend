@@ -128,12 +128,12 @@ class FileServiceTest {
         void 기존_프로젝트_파일_목록을_지우고_파일_목록_수정에_성공한다() {
             // given
             fileService.cleanAndSaveAll(project, imageUrls);
-            List<File> originalFiles = fileService.findAll(project);
+            List<File> originalFiles = fileService.findAllByProject(project);
 
             // when
             List<String> emptyFile = Collections.emptyList();
             fileService.cleanAndSaveAll(project, emptyFile);
-            List<File> savedFiles = fileService.findAll(project);
+            List<File> savedFiles = fileService.findAllByProject(project);
 
             // then
             assertThat(originalFiles).isNotEqualTo(savedFiles);

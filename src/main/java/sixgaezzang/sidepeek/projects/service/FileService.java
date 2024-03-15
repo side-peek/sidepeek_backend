@@ -42,7 +42,7 @@ public class FileService {
             .toList();
     }
 
-    public List<File> findAll(Project project) {
+    public List<File> findAllByProject(Project project) {
         return fileRepository.findAllByProject(project);
     }
 
