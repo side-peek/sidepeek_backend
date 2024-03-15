@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.file.File;
-import sixgaezzang.sidepeek.projects.domain.file.FileType;
 import sixgaezzang.sidepeek.projects.dto.response.OverviewImageSummary;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
 
@@ -43,13 +42,13 @@ public class FileService {
             .toList();
     }
 
-    public List<File> findAllByType(Project project, FileType fileType) {
-        return fileRepository.findAllByProjectAndType(project, fileType);
+    public List<File> findAll(Project project) {
+        return fileRepository.findAllByProject(project);
     }
 
     private void cleanExistingFilesByProject(Project project) {
         if (fileRepository.existsByProject(project)) {
-            fileRepository.deleteAllByProjectAndType(project, FileType.OVERVIEW_IMAGE);
+            fileRepository.deleteAllByProject(project);
         }
     }
 
@@ -57,7 +56,6 @@ public class FileService {
         return File.builder()
             .project(project)
             .url(overviewImage)
-            .type(FileType.OVERVIEW_IMAGE)
             .build();
     }
 
