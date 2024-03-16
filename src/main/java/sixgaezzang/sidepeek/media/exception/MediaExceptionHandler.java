@@ -48,6 +48,7 @@ public class MediaExceptionHandler {
     public ResponseEntity<ErrorResponse> handleS3Exception(S3Exception e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_GATEWAY,
             CANNOT_READ_FILE);
+        log.error(e.getMessage(), e.fillInStackTrace());
         Sentry.captureException(e);
 
         return ResponseEntity
