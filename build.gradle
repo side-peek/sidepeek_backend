@@ -157,7 +157,4 @@ jacocoTestCoverageVerification {
 // Sentry
 sentry {
     includeSourceContext = true
-    org = System.getenv("SENTRY_ORG")
-    projectName = System.getenv("SENTRY_PROJECT_NAME")
-    authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }
