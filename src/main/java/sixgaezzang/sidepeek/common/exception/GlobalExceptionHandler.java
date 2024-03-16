@@ -1,5 +1,6 @@
 package sixgaezzang.sidepeek.common.exception;
 
+import io.sentry.Sentry;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -82,7 +83,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidAuthenticationException(
         InvalidAuthenticationException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage());
-        log.warn(e.getMessage(), e.fillInStackTrace());
+        Sentry.captureException(e);
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(errorResponse);
@@ -103,7 +104,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleTokenValidationFailException(
         TokenValidationFailException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage());
-        log.warn(e.getMessage(), e.fillInStackTrace());
+        Sentry.captureException(e);
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(errorResponse);
@@ -112,7 +113,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.FORBIDDEN, e.getMessage());
-        log.warn(e.getMessage(), e.fillInStackTrace());
+        Sentry.captureException(e);
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
             .body(errorResponse);
@@ -122,7 +123,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR,
             e.getMessage());
-        log.error(e.getMessage(), e.fillInStackTrace());
+        Sentry.captureException(e);
 
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
