@@ -4,6 +4,7 @@ import static sixgaezzang.sidepeek.media.exception.message.MediaErrorMessage.CAN
 import static sixgaezzang.sidepeek.media.exception.message.MediaErrorMessage.CONTENT_TYPE_IS_UNSUPPORTED;
 import static sixgaezzang.sidepeek.media.exception.message.MediaErrorMessage.FILE_IS_EMPTY;
 
+import io.sentry.Sentry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -27,6 +28,7 @@ public class MediaExceptionHandler {
         HttpMediaTypeNotSupportedException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST,
             CONTENT_TYPE_IS_UNSUPPORTED);
+        log.debug(e.getMessage(), e.fillInStackTrace());
 
         return ResponseEntity.badRequest()
             .body(errorResponse);
@@ -36,6 +38,7 @@ public class MediaExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMultipartRequestExceptions(Exception e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST,
             FILE_IS_EMPTY);
+        log.debug(e.getMessage(), e.fillInStackTrace());
 
         return ResponseEntity.badRequest()
             .body(errorResponse);
@@ -43,9 +46,9 @@ public class MediaExceptionHandler {
 
     @ExceptionHandler(S3Exception.class)
     public ResponseEntity<ErrorResponse> handleS3Exception(S3Exception e) {
-        log.error(e.getMessage(), e.fillInStackTrace());
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_GATEWAY,
             CANNOT_READ_FILE);
+        Sentry.captureException(e);
 
         return ResponseEntity
             .status(HttpStatus.BAD_GATEWAY)
