@@ -67,7 +67,6 @@ public class ProjectController implements ProjectControllerDoc {
     ) {
         CursorPaginationResponse<ProjectListResponse> responses = projectService.findByCondition(
             loginId, request);
-        System.out.println(request);
         return ResponseEntity.ok().body(responses);
     }
 
