@@ -57,7 +57,11 @@ jobs:
                 shell: bash
                 run: |
                     touch ./src/main/resources/application.yml
-                    echo "${{ github.ref == 'refs/heads/main' ? secrets.PROD_APPLICATION : secrets.DEV_APPLICATION }}" >> ./src/main/resources/application.yml
+                    if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+                        echo "${{ secrets.PROD_APPLICATION }}" >> ./src/main/resources/application.yml
+                    else
+                        echo "${{ secrets.DEV_APPLICATION }}" >> ./src/main/resources/application.yml
+                    fi
 
             -   name: Grant execute permission for gradlew
                 run: chmod +x gradlew
@@ -110,13 +114,13 @@ jobs:
             -   name: Upload to S3
                 if: github.event_name == 'push'
                 run: |
-                    aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy/${{ github.ref == 'refs/heads/main' ? 'prod': 'dev' } }/$GITHUB_SHA.zip
+                    aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy/${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}/$GITHUB_SHA.zip
 
             -   name: Deploy with AWS codeDeploy
                 if: github.event_name == 'push'
                 run: |
                     aws deploy create-deployment
-                        --application-name ${{ github.ref == 'refs/heads/main' ? secrets.CODE_DEPLOY_PROD_APP_NAME: secrets.CODE_DEPLOY_DEV_APP_NAME }}
+                        --application-name ${{ github.ref == 'refs/heads/main' && secrets.CODE_DEPLOY_PROD_APP_NAME || secrets.CODE_DEPLOY_DEV_APP_NAME }}
                         --deployment-config-name CodeDeployDefault.AllAtOnce
-                        --deployment-group-name ${{ github.ref == 'refs/heads/main' ? secrets.CODE_DEPLOY_PROD_GROUP_NAME: secrets.CODE_DEPLOY_DEV_GROUP_NAME }}
-                        --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=deploy/${{ github.ref == 'refs/heads/main' ? 'prod': 'dev' } }/$GITHUB_SHA.zip
+                        --deployment-group-name ${{ github.ref == 'refs/heads/main' && secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME_PROD || secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME_DEV }}
+                        --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=deploy/${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}/$GITHUB_SHA.zip
