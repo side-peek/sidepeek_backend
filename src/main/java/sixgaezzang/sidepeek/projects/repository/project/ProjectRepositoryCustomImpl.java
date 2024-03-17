@@ -3,6 +3,7 @@ package sixgaezzang.sidepeek.projects.repository.project;
 import static sixgaezzang.sidepeek.comments.domain.QComment.comment;
 import static sixgaezzang.sidepeek.like.domain.QLike.like;
 import static sixgaezzang.sidepeek.projects.domain.QProject.project;
+import static sixgaezzang.sidepeek.projects.domain.QProjectSkill.projectSkill;
 import static sixgaezzang.sidepeek.projects.domain.member.QMember.member;
 
 import com.querydsl.core.types.OrderSpecifier;
@@ -11,51 +12,79 @@ import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberTemplate;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.QProject;
-import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
+import sixgaezzang.sidepeek.projects.dto.request.FindProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SortType;
 import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
+import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 
 @Repository
 public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+    private final SkillRepository skillRepository;
 
-    public ProjectRepositoryCustomImpl(EntityManager em) {
+    public ProjectRepositoryCustomImpl(EntityManager em, SkillRepository skillRepository) {
         this.queryFactory = new JPAQueryFactory(em);
+        this.skillRepository = skillRepository;
     }
 
     @Override
     public CursorPaginationResponse<ProjectListResponse> findByCondition(
         List<Long> likedProjectIds,
-        CursorPaginationInfoRequest pageable) {
+        FindProjectRequest request) {
+        // where
         BooleanExpression deployCondition =
-            pageable.isReleased() ? project.deployUrl.isNotNull() : null;
-        BooleanExpression cursorCondition = getCursorCondition(pageable.sort(),
-            pageable.lastProjectId(), pageable.lastOrderCount());
-        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(pageable.sort());
-        long totalElements = getTotalElementsByCondition(deployCondition);
+            request.isReleased() ? project.deployUrl.isNotNull() : null;
+        BooleanExpression cursorCondition = getCursorCondition(request.sort(),
+            request.lastProjectId(), request.lastOrderCount());
+        BooleanExpression searchCondition = getSearchCondition(request.search());
+        BooleanExpression skillCondition = getSkillCondition(request.skill());
 
-        List<ProjectListResponse> results = queryFactory
-            .selectFrom(project)
+        // orderBy
+        OrderSpecifier<?> orderSpecifier = getOrderSpecifier(request.sort());
+
+        long totalElements = 0;
+
+        JPAQuery<Project> query = queryFactory
+            .selectFrom(project);
+
+        if (searchCondition != null) {
+            query
+                .join(member).on(project.id.eq(member.project.id))
+                .where(searchCondition);
+            totalElements = getCount(member, searchCondition, member.project);
+        } else if (skillCondition != null) {    // TODO: 우선 기술스택 1개만 선택해서 검색하도록 적용, 추후 여러 개 검색 가능하도록
+            query
+                .join(projectSkill).on(project.id.eq(projectSkill.project.id))
+                .where(skillCondition);
+            totalElements = getCount(projectSkill, skillCondition, projectSkill.project);
+        } else {
+            totalElements = getTotalElementsByCondition(deployCondition);
+        }
+
+        List<ProjectListResponse> results = query
             .where(
                 deployCondition,
                 cursorCondition
             )
             .orderBy(orderSpecifier, project.id.desc())
-            .limit(pageable.pageSize() + 1)
+            .limit(request.pageSize() + 1)
+            .fetch()
             .stream()
             .map(project -> {
                 boolean isLiked = likedProjectIds.contains(project.getId());
@@ -63,12 +92,12 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             })
             .toList();
 
-        return checkEndPage(results, pageable.pageSize(), totalElements);
+        return checkEndPage(results, request.pageSize(), totalElements);
     }
 
     @Override
     public Page<ProjectListResponse> findAllByUserJoined(List<Long> likedProjectIds, User user,
-                                                         Pageable pageable) {
+        Pageable pageable) {
         BooleanExpression memberCondition = member.user.eq(user);
         return findPageByCondition(member, member.project, memberCondition, pageable,
             likedProjectIds);
@@ -76,22 +105,22 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
 
     @Override
     public Page<ProjectListResponse> findAllByUserLiked(List<Long> likedProjectIds, User user,
-                                                        Pageable pageable) {
+        Pageable pageable) {
         BooleanExpression likeCondition = like.user.eq(user);
         return findPageByCondition(like, like.project, likeCondition, pageable, likedProjectIds);
     }
 
     @Override
     public Page<ProjectListResponse> findAllByUserCommented(List<Long> likedProjectIds, User user,
-                                                            Pageable pageable) {
+        Pageable pageable) {
         BooleanExpression commentCondition = comment.user.eq(user);
         return findPageByCondition(comment, comment.project, commentCondition, pageable,
             likedProjectIds);
     }
 
     private Page<ProjectListResponse> findPageByCondition(EntityPathBase<?> from,
-                                                          QProject join, BooleanExpression condition, Pageable pageable,
-                                                          List<Long> likedProjectIds) {
+        QProject join, BooleanExpression condition, Pageable pageable,
+        List<Long> likedProjectIds) {
         List<Project> projects = queryFactory
             .select(project)
             .from(from)
@@ -119,7 +148,7 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
     }
 
     private List<ProjectListResponse> toProjectListResponseList(List<Long> likedProjectIds,
-                                                                List<Project> projects) {
+        List<Project> projects) {
         return projects.stream()
             .map(project -> ProjectListResponse.from(project,
                 likedProjectIds.contains(project.getId())))
@@ -127,7 +156,8 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
     }
 
     @Override
-    public List<ProjectBannerResponse> findAllPopularOfPeriod(LocalDate startDate, LocalDate endDate, int count) {
+    public List<ProjectBannerResponse> findAllPopularOfPeriod(LocalDate startDate,
+        LocalDate endDate, int count) {
         DateTemplate<LocalDate> createdAt = Expressions.dateTemplate(
             LocalDate.class, "DATE_FORMAT({0}, {1})", like.createdAt, "%Y-%m-%d");
 
@@ -175,6 +205,32 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             default: // 최신순
                 return project.id.lt(lastProjectId);
         }
+    }
+
+    private BooleanExpression getSearchCondition(String search) {
+        if (Objects.isNull(search) || search.isEmpty()) {
+            return null;
+        }
+
+        String keyword = "%" + search.trim() + "%";
+        return project.name.likeIgnoreCase(keyword)
+            .or(member.nickname.likeIgnoreCase(keyword));
+    }
+
+    private BooleanExpression getSkillCondition(List<String> skillNames) {
+        if (Objects.isNull(skillNames) || skillNames.isEmpty()) {
+            return null;
+        }
+
+        // 각 스킬 이름에 대한 조건을 생성합니다.
+        List<BooleanExpression> skillExpressions = skillNames.stream()
+            .map(name -> projectSkill.skill.name.eq(name))
+            .toList();
+
+        // Spring과 React를 동시에 가진 프로젝트를 찾기 위해 모든 조건을 AND로 결합합니다.
+        return skillExpressions.stream()
+            .reduce(BooleanExpression::and)
+            .orElse(null);
     }
 
     private OrderSpecifier<?> getOrderSpecifier(SortType sort) {
