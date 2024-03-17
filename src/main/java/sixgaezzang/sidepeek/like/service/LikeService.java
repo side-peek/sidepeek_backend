@@ -5,6 +5,7 @@ import static sixgaezzang.sidepeek.like.exception.message.LikeErrorMessage.LIKE_
 import static sixgaezzang.sidepeek.like.exception.message.LikeErrorMessage.LIKE_NOT_EXISTING;
 import static sixgaezzang.sidepeek.like.util.validation.LikeValidator.validateLikeId;
 import static sixgaezzang.sidepeek.like.util.validation.LikeValidator.validateLikeRequest;
+import static sixgaezzang.sidepeek.like.util.validation.LikeValidator.validateLoginIdEqualsLikeOwnerId;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -55,7 +56,7 @@ public class LikeService {
         validateLoginId(loginId);
         validateLikeId(likeId);
 
-        Like like = getById(likeId);
+        Like like = getById(loginId, likeId);
 
         Project project = like.getProject();
         project.decreaseLikeCount();    // 좋아요 수 감소
@@ -63,9 +64,14 @@ public class LikeService {
         likeRepository.delete(like);
     }
 
-    public Like getById(Long id) {
-        return likeRepository.findById(id)
+    public Like getById(Long loginId, Long id) {
+        Like like = likeRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException(LIKE_NOT_EXISTING));
+
+        validateLoginIdEqualsLikeOwnerId(loginId,
+            like.getUser().getId());  // 로그인한 사용자와 좋아요 Id한 사용자가 동일한지 확인
+
+        return like;
     }
 
     private void validateLikeExistence(User user, Project project) {
