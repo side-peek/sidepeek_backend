@@ -50,7 +50,7 @@ public record ProjectResponse(
     @Schema(description = "댓글 응답 정보, 없으면 빈 배열 반환")
     List<CommentResponse> comments,
     @Schema(description = "로그인한 사용자가 누른 좋아요 식별자")
-        Long likeId
+    Long likeId
 ) {
 
     public static ProjectResponse from(Project project, List<OverviewImageSummary> overviewImageUrl,
@@ -68,7 +68,7 @@ public record ProjectResponse(
 
     public static ProjectResponse from(Project project, List<OverviewImageSummary> overviewImageUrl,
         List<ProjectSkillSummary> techStacks, List<MemberSummary> members,
-                                       List<CommentResponse> comments, Long likeId
+        List<CommentResponse> comments, Long likeId
     ) {
         return ProjectResponse.builder()
             .id(project.getId())
