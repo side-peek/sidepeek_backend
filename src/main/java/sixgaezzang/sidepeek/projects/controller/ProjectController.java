@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sixgaezzang.sidepeek.common.annotation.Login;
 import sixgaezzang.sidepeek.common.doc.ProjectControllerDoc;
-import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
+import sixgaezzang.sidepeek.projects.dto.request.FindProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
@@ -63,10 +63,11 @@ public class ProjectController implements ProjectControllerDoc {
     @GetMapping
     public ResponseEntity<CursorPaginationResponse<ProjectListResponse>> getByCondition(
         @Login Long loginId,
-        @Valid @ModelAttribute CursorPaginationInfoRequest pageable
+        @Valid @ModelAttribute FindProjectRequest request
     ) {
         CursorPaginationResponse<ProjectListResponse> responses = projectService.findByCondition(
-            loginId, pageable);
+            loginId, request);
+        System.out.println(request);
         return ResponseEntity.ok().body(responses);
     }
 

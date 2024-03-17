@@ -29,7 +29,7 @@ import sixgaezzang.sidepeek.common.util.component.DateTimeProvider;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
-import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
+import sixgaezzang.sidepeek.projects.dto.request.FindProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
@@ -76,11 +76,11 @@ public class ProjectService {
     }
 
     public CursorPaginationResponse<ProjectListResponse> findByCondition(Long loginId,
-        CursorPaginationInfoRequest pageable) {
+        FindProjectRequest request) {
         // 사용자가 좋아요한 프로젝트 ID를 조회
         List<Long> likedProjectIds = getLikedProjectIds(loginId);
 
-        return projectRepository.findByCondition(likedProjectIds, pageable);
+        return projectRepository.findByCondition(likedProjectIds, request);
     }
 
     @Transactional
