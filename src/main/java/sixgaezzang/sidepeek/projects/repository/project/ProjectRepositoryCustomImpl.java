@@ -11,7 +11,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -58,7 +57,7 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
         // orderBy
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(request.sort());
 
-        long totalElements = 0;
+        Long totalElements = 0L;
 
         JPAQuery<Project> query = queryFactory
             .selectFrom(project);
@@ -67,14 +66,16 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             query
                 .join(member).on(project.id.eq(member.project.id))
                 .where(searchCondition);
-            totalElements = getCount(member, searchCondition, member.project);
+            totalElements = getTotalElementsByCondition(member, deployCondition, searchCondition,
+                member.project);
         } else if (skillCondition != null) {    // TODO: 우선 기술스택 1개만 선택해서 검색하도록 적용, 추후 여러 개 검색 가능하도록
             query
-                .join(projectSkill).on(project.id.eq(projectSkill.project.id))
                 .where(skillCondition);
-            totalElements = getCount(projectSkill, skillCondition, projectSkill.project);
+            totalElements = getTotalElementsByCondition(projectSkill, deployCondition,
+                skillCondition,
+                projectSkill.project);
         } else {
-            totalElements = getTotalElementsByCondition(deployCondition);
+            totalElements = getTotalElements(deployCondition);
         }
 
         List<ProjectListResponse> results = query
@@ -140,10 +141,34 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
 
     private Long getCount(EntityPathBase<?> from, BooleanExpression condition, QProject join) {
         return queryFactory
-            .select(project.count())
+            .select(project.countDistinct())
             .from(from)
             .join(join, project)
             .where(condition)
+            .fetchOne();
+    }
+
+    private long getTotalElements(BooleanExpression deployCondition) {
+        return queryFactory
+            .select(project.countDistinct())
+            .from(project)
+            .where(deployCondition)
+            .fetchOne();
+    }
+
+    private Long getTotalElementsByCondition(EntityPathBase<?> from,
+        BooleanExpression deployCondition,
+        BooleanExpression filterCondition,
+        QProject join) {
+
+        return queryFactory
+            .select(project.countDistinct())
+            .from(from)
+            .join(join, project)
+            .where(
+                deployCondition,
+                filterCondition
+            )
             .fetchOne();
     }
 
@@ -176,17 +201,6 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             .toList();
     }
 
-    private long getTotalElementsByCondition(BooleanExpression deployCondition) {
-        NumberTemplate<Long> countTemplate = Expressions.numberTemplate(Long.class, "COUNT({0})",
-            project.id);
-
-        return queryFactory
-            .select(countTemplate)
-            .from(project)
-            .where(deployCondition)
-            .fetchOne();
-    }
-
     private BooleanExpression getCursorCondition(SortType sort, Long lastProjectId,
         Long orderCount) {
         if (lastProjectId == null && orderCount == null) {  // 첫 번째 페이지
@@ -217,20 +231,22 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             .or(member.nickname.likeIgnoreCase(keyword));
     }
 
-    private BooleanExpression getSkillCondition(List<String> skillNames) {
+    public BooleanExpression getSkillCondition(List<String> skillNames) {
         if (Objects.isNull(skillNames) || skillNames.isEmpty()) {
             return null;
         }
 
-        // 각 스킬 이름에 대한 조건을 생성합니다.
-        List<BooleanExpression> skillExpressions = skillNames.stream()
-            .map(name -> projectSkill.skill.name.eq(name))
-            .toList();
+        // 프로젝트 ID 서브쿼리를 생성하여 스킬을 모두 포함하는 프로젝트를 찾기
+        JPAQuery<Long> projectHasSkillsSubQuery = queryFactory
+            .select(projectSkill.project.id)
+            .from(projectSkill)
+            .join(projectSkill.skill)
+            .where(projectSkill.skill.name.in(skillNames))
+            .groupBy(projectSkill.project.id)
+            .having(projectSkill.project.id.count().eq(Expressions.constant(skillNames.size())));
 
-        // Spring과 React를 동시에 가진 프로젝트를 찾기 위해 모든 조건을 AND로 결합합니다.
-        return skillExpressions.stream()
-            .reduce(BooleanExpression::and)
-            .orElse(null);
+        // 프로젝트 ID 서브쿼리와 매칭되는 프로젝트를 찾는 조건을 반환합니다.
+        return project.id.in(projectHasSkillsSubQuery);
     }
 
     private OrderSpecifier<?> getOrderSpecifier(SortType sort) {
