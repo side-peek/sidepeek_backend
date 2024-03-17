@@ -100,11 +100,11 @@ jobs:
 
             # CD
             -   name: Make Zip File
-                if: github.event_name == 'push'
+                # if: github.event_name == 'push'
                 run: zip -qq -r ./$GITHUB_SHA.zip .
 
             -   name: Configure AWS credentials
-                if: github.event_name == 'push'
+                # if: github.event_name == 'push'
                 uses: aws-actions/configure-aws-credentials@v2
                 with:
                     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -112,12 +112,12 @@ jobs:
                     aws-region: ap-northeast-2
 
             -   name: Upload to S3
-                if: github.event_name == 'push'
+                # if: github.event_name == 'push'
                 run: |
                     aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy/${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}/$GITHUB_SHA.zip
 
             -   name: Deploy with AWS codeDeploy
-                if: github.event_name == 'push'
+                # if: github.event_name == 'push'
                 run: |
                     aws deploy create-deployment
                         --application-name ${{ github.ref == 'refs/heads/main' && secrets.CODE_DEPLOY_PROD_APP_NAME || secrets.CODE_DEPLOY_DEV_APP_NAME }}
