@@ -68,13 +68,13 @@ public class CommentService {
             .orElseThrow(() -> new EntityNotFoundException(message));
     }
 
-    public List<CommentResponse> findAll(Project project) {
+    public List<CommentResponse> findAll(Long loginId, Project project) {
         List<Comment> comments = commentRepository.findAll(project);
 
         return comments.stream()
             .map(comment -> {
-                boolean isOwner = isSameOwner(comment, project);
-                List<ReplyResponse> replies = mapReplies(comment);
+                boolean isOwner = isSameOwner(comment, loginId);
+                List<ReplyResponse> replies = mapReplies(comment, loginId);
                 return CommentResponse.from(comment, isOwner, replies);
             })
             .toList();
@@ -105,16 +105,16 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    private boolean isSameOwner(Comment comment, Project project) {
-        return comment.getOwnerId().equals(project.getOwnerId());
+    private boolean isSameOwner(Comment comment, Long userId) {
+        return comment.getOwnerId().equals(userId);
     }
 
-    private List<ReplyResponse> mapReplies(Comment comment) {
+    private List<ReplyResponse> mapReplies(Comment comment, Long userId) {
         List<Comment> replies = commentRepository.findAllReplies(comment);
 
         return replies.stream()
             .map(reply -> {
-                boolean isOwner = isSameOwner(reply, reply.getProject());
+                boolean isOwner = isSameOwner(reply, userId);
                 return ReplyResponse.from(reply, isOwner);
             })
             .toList();
