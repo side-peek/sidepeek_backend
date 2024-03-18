@@ -28,18 +28,15 @@ import sixgaezzang.sidepeek.projects.dto.request.SortType;
 import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
-import sixgaezzang.sidepeek.skill.repository.SkillRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 
 @Repository
 public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    private final SkillRepository skillRepository;
 
-    public ProjectRepositoryCustomImpl(EntityManager em, SkillRepository skillRepository) {
+    public ProjectRepositoryCustomImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
-        this.skillRepository = skillRepository;
     }
 
     @Override
@@ -68,7 +65,7 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
                 .where(searchCondition);
             totalElements = getTotalElementsByCondition(member, deployCondition, searchCondition,
                 member.project);
-        } else if (skillCondition != null) {    // TODO: 우선 기술스택 1개만 선택해서 검색하도록 적용, 추후 여러 개 검색 가능하도록
+        } else if (skillCondition != null) {
             query
                 .where(skillCondition);
             totalElements = getTotalElementsByCondition(projectSkill, deployCondition,
