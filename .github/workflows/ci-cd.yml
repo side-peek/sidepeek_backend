@@ -1,6 +1,10 @@
-name: SidePeek CI with Gradle
+name: SidePeek CI/CD with Gradle
 
 on:
+    push:
+        branches:
+            - main
+            - dev
     pull_request:
         branches:
             - main
@@ -21,6 +25,12 @@ jobs:
         strategy:
             matrix:
                 redis-version: [ latest ]
+
+        env:
+            APPLICATION: ${{ github.ref == 'refs/heads/main' && secrets.PROD_APPLICATION || secrets.DEV_APPLICATION }}
+            CODE_DEPLOY_APP_NAME: ${{ github.ref == 'refs/heads/main' && secrets.CODE_DEPLOY_PROD_APP_NAME || secrets.CODE_DEPLOY_DEV_APP_NAME }}
+            CODE_DEPLOY_GROUP_NAME: ${{ github.ref == 'refs/heads/main' && secrets.CODE_DEPLOY_PROD_GROUP_NAME || secrets.CODE_DEPLOY_DEV_GROUP_NAME }}
+            ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
 
         steps:
             -   name: Repository Checkout
@@ -49,13 +59,21 @@ jobs:
                     mysql database: ${{ secrets.TEST_DB }}
                     host port: ${{ secrets.TEST_DB_PORT }}
 
+            -   name: create applications.yml
+                shell: bash
+                run: |
+                    touch ./src/main/resources/application.yml
+                    echo "$APPLICATION" >> ./src/main/resources/application.yml
+
             -   name: Grant execute permission for gradlew
                 run: chmod +x gradlew
 
             -   name: Build with Gradle
-                run: ./gradlew build -Dspring.profiles.active=local
+                run: ./gradlew build
 
+            # CI
             -   name: Test Jacoco Coverage Report
+                if: github.event_name == 'pull_request'
                 id: jacoco
                 uses: madrapps/jacoco-report@v1.6.1
                 with:
@@ -66,12 +84,14 @@ jobs:
                     min-coverage-changed-files: 80
 
             -   name: Test Checkstyle Report
+                if: github.event_name == 'pull_request'
                 uses: lcollins/checkstyle-github-action@v2.0.0
                 with:
                     path: '**/build/reports/checkstyle/**.xml'
                     title: 📝 Checkstyle report
 
             -   name: Send Slack Notification
+                if: github.event_name == 'pull_request'
                 uses: 8398a7/action-slack@v3
                 with:
                     status: ${{ job.status }}
@@ -79,4 +99,28 @@ jobs:
                     fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
                 env:
                     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-                if: always()
+
+            # CD
+            -   name: Make Zip File
+                if: github.event_name == 'push'
+                run: zip -qq -r ./$GITHUB_SHA.zip .
+
+            -   name: Configure AWS credentials
+                if: github.event_name == 'push'
+                uses: aws-actions/configure-aws-credentials@v2
+                with:
+                    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                    aws-region: ap-northeast-2
+
+            -   name: Upload to S3
+                if: github.event_name == 'push'
+                run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy/$ENVIRONMENT/$GITHUB_SHA.zip
+
+            -   name: Deploy with AWS codeDeploy
+                if: github.event_name == 'push'
+                run: aws deploy create-deployment
+                    --application-name $CODE_DEPLOY_APP_NAME
+                    --deployment-config-name CodeDeployDefault.AllAtOnce
+                    --deployment-group-name $CODE_DEPLOY_GROUP_NAME
+                    --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=deploy/$ENVIRONMENT/$GITHUB_SHA.zip
