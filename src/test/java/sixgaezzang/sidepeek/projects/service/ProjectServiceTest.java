@@ -203,7 +203,7 @@ class ProjectServiceTest {
             CommentResponse commentResponse = CommentResponse.from(comment, true, List.of());
 
             // when
-            ProjectResponse response = projectService.findById(null, project.getId());
+            ProjectResponse response = projectService.findById(user.getId(), project.getId());
 
             // then
             assertThat(response).extracting("id", "ownerId", "viewCount", "comments", "likeId")
