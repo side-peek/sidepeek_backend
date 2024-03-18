@@ -1,5 +1,7 @@
 package sixgaezzang.sidepeek.common.doc;
 
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_400_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.OK_200_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.SkillDescription.SKILL_KEYWORD_DESCRIPTION;
 import static sixgaezzang.sidepeek.skill.domain.Skill.MAX_SKILL_NAME_LENGTH;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_NAME_OVER_MAX_LENGTH;
@@ -21,8 +23,8 @@ import sixgaezzang.sidepeek.skill.dto.response.SkillSearchResponse;
 public interface SkillControllerDoc {
     @Operation(summary = "기술 스택 검색", description = "로그인 선택")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
-        @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+        @ApiResponse(responseCode = "200", description = OK_200_DESCRIPTION, useReturnTypeSchema = true),
+        @ApiResponse(responseCode = "400", description = BAD_REQUEST_400_DESCRIPTION, content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameter(name = "keyword", description = SKILL_KEYWORD_DESCRIPTION, example = "spring", in = ParameterIn.QUERY)
     ResponseEntity<SkillSearchResponse> searchByName(
