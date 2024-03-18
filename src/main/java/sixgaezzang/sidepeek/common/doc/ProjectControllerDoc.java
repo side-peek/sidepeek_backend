@@ -27,7 +27,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
+import sixgaezzang.sidepeek.projects.dto.request.FindProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
@@ -71,7 +71,7 @@ public interface ProjectControllerDoc {
     })
     ResponseEntity<CursorPaginationResponse<ProjectListResponse>> getByCondition(
         @Parameter(hidden = true) Long loginId,
-        @Valid @ModelAttribute CursorPaginationInfoRequest pageable);
+        @Valid @ModelAttribute FindProjectRequest pageable);
 
     @Operation(summary = "지난 주 인기 프로젝트 조회", description = "지난 주 좋아요를 많이 받은 순으로 최대 5개 프로젝트 목록 조회, 로그인 선택")
     @ApiResponses({

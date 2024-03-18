@@ -320,13 +320,62 @@ values (21, 'Vercel',
 
 -- PROJECT_SKILL
 insert into project_skill(id, project_id, skill_id, category)
-values (21, 1, 1, '프론트');
+values (1, 1, 14, '프론트');
 insert into project_skill(id, project_id, skill_id, category)
-values (22, 1, 2, '백');
+values (2, 1, 16, '백');
 insert into project_skill(id, project_id, skill_id, category)
-values (23, 1, 3, '협업툴');
+values (3, 1, 11, '협업툴');
 insert into project_skill(id, project_id, skill_id, category)
-values (24, 1, 4, '프론트');
+values (4, 1, 1, '인프라');
+insert into project_skill(id, project_id, skill_id, category)
+values (5, 1, 2, '인프라');
+insert into project_skill(id, project_id, skill_id, category)
+values (6, 2, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (7, 2, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (8, 2, 6, '협업툴');
+insert into project_skill(id, project_id, skill_id, category)
+values (9, 2, 1, '인프라');
+insert into project_skill(id, project_id, skill_id, category)
+values (10, 2, 4, '디자인');
+insert into project_skill(id, project_id, skill_id, category)
+values (11, 3, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (12, 3, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (13, 4, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (14, 4, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (15, 5, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (16, 5, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (17, 6, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (18, 6, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (19, 7, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (20, 7, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (21, 8, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (22, 8, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (23, 9, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (24, 9, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (25, 10, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (26, 10, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (27, 11, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (28, 11, 16, '백');
+
 
 -- LIKE
 insert into likes(id, user_id, project_id)
