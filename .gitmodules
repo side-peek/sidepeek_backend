@@ -1,0 +1,4 @@
+[submodule "sidepeek_backend_secret"]
+	path = sidepeek_backend_secret
+	url = git@github.com:side-peek/sidepeek_backend_secret.git
+

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<suppressions>
+    <!-- DTO 패키지 하위의 Java 파일에 대한 LineLength 검사를 무시 -->
+    <suppress checks="LineLength"
+        files="[/\\]dto[/\\]"/>
+
+    <!-- DOC 패키지 하위에 대한 LineLength 검사를 무시 -->
+    <suppress checks="LineLength"
+        files="[\\/]common[\\/]doc[\\/]"/>
+
+    <!-- TEST 패키지 하위에 대한 VariableDeclarationUsageDistance 검사를 무시 -->
+    <suppress checks="VariableDeclarationUsageDistance"
+              files=".*src[/\\]test[/\\].*\.java"/>
+</suppressions>
