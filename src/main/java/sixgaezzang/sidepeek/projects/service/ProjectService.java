@@ -11,6 +11,7 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.BANNER_PROJECT_
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateLoginIdEqualsUserId;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
@@ -57,6 +59,7 @@ public class ProjectService {
     private final FileService fileService;
     private final LikeRepository likeRepository;
     private final CommentService commentService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public ProjectResponse save(Long loginId, SaveProjectRequest request) {
@@ -84,10 +87,8 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectResponse findById(Long loginId, Long projectId) {
+    public ProjectResponse findById(String ip, Long loginId, Long projectId) {
         Project project = getById(projectId);
-
-        project.increaseViewCount();
 
         List<OverviewImageSummary> overviewImages = fileService.findAllByProject(project)
             .stream()
@@ -106,6 +107,8 @@ public class ProjectService {
         // 로그인한 사용자가 좋아요한 프로젝트라면, 좋아요 식별자 반환(아니라면 null)
         User user = userService.getByIdOrNull(loginId);
         Long likeId = findLikeIdByUserAndProject(user, project);
+
+        increaseViewCount(ip, project); // 조회수 증가
 
         return ProjectResponse.from(project, overviewImages, techStacks, members, comments, likeId);
     }
@@ -209,4 +212,12 @@ public class ProjectService {
         return likeRepository.findIdByUserAndProject(user, project).orElse(null);
     }
 
+    private void increaseViewCount(String ip, Project project) {
+        String viewCountKey = ip + "-" + project.getId();
+
+        if (!redisTemplate.hasKey(viewCountKey)) {
+            project.increaseViewCount();
+            redisTemplate.opsForValue().set(viewCountKey, "ON", Duration.ofDays(1));
+        }
+    }
 }
