@@ -101,7 +101,7 @@ public class ProjectService {
 
         List<MemberSummary> members = memberService.findAllWithUser(project);
 
-        List<CommentResponse> comments = commentService.findAll(project);
+        List<CommentResponse> comments = commentService.findAll(loginId, project);
 
         // 로그인한 사용자가 좋아요한 프로젝트라면, 좋아요 식별자 반환(아니라면 null)
         User user = userService.getByIdOrNull(loginId);
