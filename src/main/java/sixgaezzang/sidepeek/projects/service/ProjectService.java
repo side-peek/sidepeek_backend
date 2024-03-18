@@ -214,7 +214,6 @@ public class ProjectService {
 
     private void increaseViewCount(String ip, Project project) {
         String viewCountKey = ip + "-" + project.getId();
-        System.out.println(viewCountKey);
 
         if (!redisTemplate.hasKey(viewCountKey)) {
             project.increaseViewCount();

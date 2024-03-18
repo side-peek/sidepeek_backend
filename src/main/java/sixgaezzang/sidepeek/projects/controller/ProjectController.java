@@ -56,7 +56,6 @@ public class ProjectController implements ProjectControllerDoc {
         @Login Long loginId,
         @PathVariable(value = "id") Long projectId
     ) {
-        System.out.println(ip);
         ProjectResponse response = projectService.findById(ip, loginId, projectId);
 
         return ResponseEntity.ok(response);
