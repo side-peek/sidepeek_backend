@@ -1,12 +1,12 @@
 package sixgaezzang.sidepeek.common.doc;
 
-import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_400_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.CREATED_201_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.FORBIDDEN_403_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.NOT_FOUND_404_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.NO_CONTENT_204_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.OK_200_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.UNAUTHORIZED_401_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.response.ResponseCodeDescription.BAD_REQUEST_400_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.response.ResponseCodeDescription.CREATED_201_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.response.ResponseCodeDescription.FORBIDDEN_403_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.response.ResponseCodeDescription.NOT_FOUND_404_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.response.ResponseCodeDescription.NO_CONTENT_204_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.response.ResponseCodeDescription.OK_200_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.response.ResponseCodeDescription.UNAUTHORIZED_401_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.UserDescription.PROJECTS_PAGE_NUMBER_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.UserDescription.PROJECTS_PAGE_SIZE_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.UserDescription.PROJECTS_TYPE_DESCRIPTION;

@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.common.doc.description;
+package sixgaezzang.sidepeek.common.doc.description.response;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

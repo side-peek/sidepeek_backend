@@ -1,7 +1,7 @@
 package sixgaezzang.sidepeek.common.doc;
 
-import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_400_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.OK_200_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.response.ResponseCodeDescription.BAD_REQUEST_400_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.response.ResponseCodeDescription.OK_200_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.SkillDescription.SKILL_KEYWORD_DESCRIPTION;
 import static sixgaezzang.sidepeek.skill.domain.Skill.MAX_SKILL_NAME_LENGTH;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_NAME_OVER_MAX_LENGTH;
