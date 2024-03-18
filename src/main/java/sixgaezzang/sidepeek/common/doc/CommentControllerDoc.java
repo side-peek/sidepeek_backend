@@ -1,10 +1,10 @@
 package sixgaezzang.sidepeek.common.doc;
 
-import static sixgaezzang.sidepeek.common.doc.description.response.ResponseCodeDescription.BAD_REQUEST_400_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.description.response.ResponseCodeDescription.CREATED_201_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.description.response.ResponseCodeDescription.FORBIDDEN_403_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.description.response.ResponseCodeDescription.NOT_FOUND_404_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.description.response.ResponseCodeDescription.UNAUTHORIZED_401_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.response.ResponseCodeDescription.BAD_REQUEST_400_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.response.ResponseCodeDescription.CREATED_201_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.response.ResponseCodeDescription.FORBIDDEN_403_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.response.ResponseCodeDescription.NOT_FOUND_404_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.response.ResponseCodeDescription.UNAUTHORIZED_401_DESCRIPTION;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
