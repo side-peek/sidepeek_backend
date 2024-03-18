@@ -1,17 +1,20 @@
 package sixgaezzang.sidepeek.common.doc;
 
-import static sixgaezzang.sidepeek.common.doc.description.UserDescription.PROJECTS_PAGE_NUMBER_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.description.UserDescription.PROJECTS_PAGE_SIZE_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.description.UserDescription.PROJECTS_TYPE_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.description.UserDescription.USER_KEYWORD_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_DESCRIPTION1;
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_DESCRIPTION2;
 import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.CREATED_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.FORBIDDEN_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.NOT_FOUND_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.NO_CONTENT_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.OK_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.UNAUTHORIZED_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.BAD_REQUEST_RESPONSE;
+import static sixgaezzang.sidepeek.common.doc.description.UserDescription.PROJECTS_PAGE_NUMBER_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.UserDescription.PROJECTS_PAGE_SIZE_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.UserDescription.PROJECTS_TYPE_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.UserDescription.USER_KEYWORD_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.BAD_REQUEST_RESPONSE1;
+import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.BAD_REQUEST_RESPONSE2;
 import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.FORBIDDEN_RESPONSE;
 import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.NOT_FOUND_RESPONSE;
 import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.UNAUTHORIZED_RESPONSE;
@@ -50,7 +53,11 @@ public interface UserControllerDoc {
         @ApiResponse(responseCode = "201", description = CREATED_DESCRIPTION,
             useReturnTypeSchema = true),
         @ApiResponse(responseCode = "400", description = BAD_REQUEST_DESCRIPTION,
-            content = @Content(examples = @ExampleObject(value = BAD_REQUEST_RESPONSE)))
+            content = @Content(examples = {
+                @ExampleObject(name = "Example1: One Field Error", description = BAD_REQUEST_DESCRIPTION1,
+                    value = BAD_REQUEST_RESPONSE1),
+                @ExampleObject(name = "Example2: Multiple Field Error", description = BAD_REQUEST_DESCRIPTION2,
+                    value = BAD_REQUEST_RESPONSE2)}))
     })
     ResponseEntity<Void> signUp(@Valid SignUpRequest request);
 
@@ -58,7 +65,11 @@ public interface UserControllerDoc {
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = NO_CONTENT_DESCRIPTION),
         @ApiResponse(responseCode = "400", description = BAD_REQUEST_DESCRIPTION,
-            content = @Content(examples = @ExampleObject(value = BAD_REQUEST_RESPONSE))),
+            content = @Content(examples = {
+                @ExampleObject(name = "Example1: One Field Error", description = BAD_REQUEST_DESCRIPTION1,
+                    value = BAD_REQUEST_RESPONSE1),
+                @ExampleObject(name = "Example2: Multiple Field Error", description = BAD_REQUEST_DESCRIPTION2,
+                    value = BAD_REQUEST_RESPONSE2)})),
         @ApiResponse(responseCode = "401", description = UNAUTHORIZED_DESCRIPTION,
             content = @Content(examples = @ExampleObject(value = UNAUTHORIZED_RESPONSE))),
         @ApiResponse(responseCode = "403", description = FORBIDDEN_DESCRIPTION,
@@ -74,7 +85,11 @@ public interface UserControllerDoc {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = OK_DESCRIPTION),
         @ApiResponse(responseCode = "400", description = BAD_REQUEST_DESCRIPTION,
-            content = @Content(examples = @ExampleObject(value = BAD_REQUEST_RESPONSE)))
+            content = @Content(examples = {
+                @ExampleObject(name = "Example1: One Field Error", description = BAD_REQUEST_DESCRIPTION1,
+                    value = BAD_REQUEST_RESPONSE1),
+                @ExampleObject(name = "Example2: Multiple Field Error", description = BAD_REQUEST_DESCRIPTION2,
+                    value = BAD_REQUEST_RESPONSE2)}))
     })
     ResponseEntity<CheckDuplicateResponse> checkEmailDuplicate(@Valid CheckEmailRequest request);
 
@@ -82,7 +97,11 @@ public interface UserControllerDoc {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = OK_DESCRIPTION),
         @ApiResponse(responseCode = "400", description = BAD_REQUEST_DESCRIPTION,
-            content = @Content(examples = @ExampleObject(value = BAD_REQUEST_RESPONSE)))
+            content = @Content(examples = {
+                @ExampleObject(name = "Example1: One Field Error", description = BAD_REQUEST_DESCRIPTION1,
+                    value = BAD_REQUEST_RESPONSE1),
+                @ExampleObject(name = "Example2: Multiple Field Error", description = BAD_REQUEST_DESCRIPTION2,
+                    value = BAD_REQUEST_RESPONSE2)}))
     })
     ResponseEntity<CheckDuplicateResponse> checkNicknameDuplicate(@Valid CheckNicknameRequest request);
 
@@ -90,7 +109,11 @@ public interface UserControllerDoc {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = OK_DESCRIPTION),
         @ApiResponse(responseCode = "400", description = BAD_REQUEST_DESCRIPTION,
-            content = @Content(examples = @ExampleObject(value = BAD_REQUEST_RESPONSE)))
+            content = @Content(examples = {
+                @ExampleObject(name = "Example1: One Field Error", description = BAD_REQUEST_DESCRIPTION1,
+                    value = BAD_REQUEST_RESPONSE1),
+                @ExampleObject(name = "Example2: Multiple Field Error", description = BAD_REQUEST_DESCRIPTION2,
+                    value = BAD_REQUEST_RESPONSE2)}))
     })
     @Parameter(name = "keyword", description = USER_KEYWORD_DESCRIPTION, example = "sixgaezzang6", in = ParameterIn.QUERY)
     ResponseEntity<UserSearchResponse> searchByNickname(
@@ -102,7 +125,11 @@ public interface UserControllerDoc {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = OK_DESCRIPTION),
         @ApiResponse(responseCode = "400", description = BAD_REQUEST_DESCRIPTION,
-            content = @Content(examples = @ExampleObject(value = BAD_REQUEST_RESPONSE)))
+            content = @Content(examples = {
+                @ExampleObject(name = "Example1: One Field Error", description = BAD_REQUEST_DESCRIPTION1,
+                    value = BAD_REQUEST_RESPONSE1),
+                @ExampleObject(name = "Example2: Multiple Field Error", description = BAD_REQUEST_DESCRIPTION2,
+                    value = BAD_REQUEST_RESPONSE2)}))
     })
     @Parameter(name = "id", description = "조회할 회원 식별자", example = "1", in = ParameterIn.PATH)
     ResponseEntity<UserProfileResponse> getById(Long id);
@@ -111,7 +138,11 @@ public interface UserControllerDoc {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = OK_DESCRIPTION),
         @ApiResponse(responseCode = "400", description = BAD_REQUEST_DESCRIPTION,
-            content = @Content(examples = @ExampleObject(value = BAD_REQUEST_RESPONSE))),
+            content = @Content(examples = {
+                @ExampleObject(name = "Example1: One Field Error", description = BAD_REQUEST_DESCRIPTION1,
+                    value = BAD_REQUEST_RESPONSE1),
+                @ExampleObject(name = "Example2: Multiple Field Error", description = BAD_REQUEST_DESCRIPTION2,
+                    value = BAD_REQUEST_RESPONSE2)})),
         @ApiResponse(responseCode = "401", description = UNAUTHORIZED_DESCRIPTION,
             content = @Content(examples = @ExampleObject(value = UNAUTHORIZED_RESPONSE))),
         @ApiResponse(responseCode = "403", description = FORBIDDEN_DESCRIPTION,
@@ -127,7 +158,11 @@ public interface UserControllerDoc {
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = OK_DESCRIPTION),
         @ApiResponse(responseCode = "400", description = BAD_REQUEST_DESCRIPTION,
-            content = @Content(examples = @ExampleObject(value = BAD_REQUEST_RESPONSE))),
+            content = @Content(examples = {
+                @ExampleObject(name = "Example1: One Field Error", description = BAD_REQUEST_DESCRIPTION1,
+                    value = BAD_REQUEST_RESPONSE1),
+                @ExampleObject(name = "Example2: Multiple Field Error", description = BAD_REQUEST_DESCRIPTION2,
+                    value = BAD_REQUEST_RESPONSE2)})),
         @ApiResponse(responseCode = "401", description = UNAUTHORIZED_DESCRIPTION,
             content = @Content(examples = @ExampleObject(value = UNAUTHORIZED_RESPONSE))),
         @ApiResponse(responseCode = "404", description = NOT_FOUND_DESCRIPTION,

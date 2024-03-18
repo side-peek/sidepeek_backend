@@ -1,9 +1,12 @@
 package sixgaezzang.sidepeek.common.doc;
 
-import static sixgaezzang.sidepeek.common.doc.description.SkillDescription.SKILL_KEYWORD_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_DESCRIPTION1;
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_DESCRIPTION2;
 import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.OK_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.BAD_REQUEST_RESPONSE;
+import static sixgaezzang.sidepeek.common.doc.description.SkillDescription.SKILL_KEYWORD_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.BAD_REQUEST_RESPONSE1;
+import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.BAD_REQUEST_RESPONSE2;
 import static sixgaezzang.sidepeek.skill.domain.Skill.MAX_SKILL_NAME_LENGTH;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_NAME_OVER_MAX_LENGTH;
 
@@ -26,7 +29,11 @@ public interface SkillControllerDoc {
         @ApiResponse(responseCode = "200", description = OK_DESCRIPTION,
             useReturnTypeSchema = true),
         @ApiResponse(responseCode = "400", description = BAD_REQUEST_DESCRIPTION,
-            content = @Content(examples = @ExampleObject(value = BAD_REQUEST_RESPONSE)))
+            content = @Content(examples = {
+                @ExampleObject(name = "Example1: One Field Error", description = BAD_REQUEST_DESCRIPTION1,
+                    value = BAD_REQUEST_RESPONSE1),
+                @ExampleObject(name = "Example2: Multiple Field Error", description = BAD_REQUEST_DESCRIPTION2,
+                    value = BAD_REQUEST_RESPONSE2)}))
     })
     @Parameter(name = "keyword", description = SKILL_KEYWORD_DESCRIPTION, example = "spring", in = ParameterIn.QUERY)
     ResponseEntity<SkillSearchResponse> searchByName(

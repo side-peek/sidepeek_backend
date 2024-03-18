@@ -1,10 +1,13 @@
 package sixgaezzang.sidepeek.common.doc;
 
 import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_DESCRIPTION1;
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_DESCRIPTION2;
 import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.INTERNAL_SERVER_ERROR_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.OK_DESCRIPTION;
 import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.UNAUTHORIZED_DESCRIPTION;
-import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.BAD_REQUEST_RESPONSE;
+import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.BAD_REQUEST_RESPONSE1;
+import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.BAD_REQUEST_RESPONSE2;
 import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.INTERNAL_SERVER_ERROR_RESPONSE;
 import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.UNAUTHORIZED_RESPONSE;
 
@@ -27,7 +30,11 @@ public interface MediaControllerDoc {
         @ApiResponse(responseCode = "200", description = OK_DESCRIPTION,
             useReturnTypeSchema = true),
         @ApiResponse(responseCode = "400", description = BAD_REQUEST_DESCRIPTION,
-            content = @Content(examples = @ExampleObject(value = BAD_REQUEST_RESPONSE))),
+            content = @Content(examples = {
+                @ExampleObject(name = "Example1: One Field Error", description = BAD_REQUEST_DESCRIPTION1,
+                    value = BAD_REQUEST_RESPONSE1),
+                @ExampleObject(name = "Example2: Multiple Field Error", description = BAD_REQUEST_DESCRIPTION2,
+                    value = BAD_REQUEST_RESPONSE2)})),
         @ApiResponse(responseCode = "401", description = UNAUTHORIZED_DESCRIPTION,
             content = @Content(examples = @ExampleObject(value = UNAUTHORIZED_RESPONSE))),
         @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR_DESCRIPTION,
