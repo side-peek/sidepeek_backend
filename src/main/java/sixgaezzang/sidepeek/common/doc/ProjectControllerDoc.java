@@ -62,7 +62,8 @@ public interface ProjectControllerDoc {
             content = @Content(examples = @ExampleObject(value = NOT_FOUND_RESPONSE)))
     })
     @Parameter(name = "id", description = "조회할 프로젝트 식별자", in = ParameterIn.PATH)
-    ResponseEntity<ProjectResponse> getById(@Parameter(hidden = true) Long loginId, Long projectId);
+    ResponseEntity<ProjectResponse> getById(@Parameter(hidden = true) String ip,
+        @Parameter(hidden = true) Long loginId, Long projectId);
 
     @Operation(summary = "프로젝트 전체 조회", description = "프로젝트 게시글 목록을 조건에 따라 조회(커서 기반 페이지네이션), 로그인 선택")
     @ApiResponses({

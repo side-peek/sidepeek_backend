@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import sixgaezzang.sidepeek.common.annotation.Ip;
 import sixgaezzang.sidepeek.common.annotation.Login;
 import sixgaezzang.sidepeek.common.doc.ProjectControllerDoc;
 import sixgaezzang.sidepeek.projects.dto.request.FindProjectRequest;
@@ -51,10 +52,12 @@ public class ProjectController implements ProjectControllerDoc {
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponse> getById(
+        @Ip String ip,
         @Login Long loginId,
         @PathVariable(value = "id") Long projectId
     ) {
-        ProjectResponse response = projectService.findById(loginId, projectId);
+        System.out.println(ip);
+        ProjectResponse response = projectService.findById(ip, loginId, projectId);
 
         return ResponseEntity.ok(response);
     }
