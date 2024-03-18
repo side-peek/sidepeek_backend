@@ -1,15 +1,27 @@
 package sixgaezzang.sidepeek.common.doc;
 
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_DESCRIPTION1;
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.BAD_REQUEST_DESCRIPTION2;
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.CONFLICT_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.NOT_FOUND_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.OK_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.description.ResponseCodeDescription.UNAUTHORIZED_DESCRIPTION;
+import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.BAD_REQUEST_RESPONSE1;
+import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.BAD_REQUEST_RESPONSE2;
+import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.CONFLICT_RESPONSE;
+import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.NOT_FOUND_RESPONSE;
+import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.UNAUTHORIZED_RESPONSE;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import sixgaezzang.sidepeek.common.exception.ErrorResponse;
 import sixgaezzang.sidepeek.like.dto.request.LikeRequest;
 import sixgaezzang.sidepeek.like.dto.response.LikeResponse;
 
@@ -18,19 +30,37 @@ public interface LikeControllerDoc {
 
     @Operation(summary = "좋아요", description = "로그인 필수")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
-        @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+        @ApiResponse(responseCode = "200", description = OK_DESCRIPTION,
+            useReturnTypeSchema = true),
+        @ApiResponse(responseCode = "400", description = BAD_REQUEST_DESCRIPTION,
+            content = @Content(examples = {
+                @ExampleObject(name = "Example1: One Field Error", description = BAD_REQUEST_DESCRIPTION1,
+                    value = BAD_REQUEST_RESPONSE1),
+                @ExampleObject(name = "Example2: Multiple Field Error", description = BAD_REQUEST_DESCRIPTION2,
+                    value = BAD_REQUEST_RESPONSE2)})),
+        @ApiResponse(responseCode = "401", description = UNAUTHORIZED_DESCRIPTION,
+            content = @Content(examples = @ExampleObject(value = UNAUTHORIZED_RESPONSE))),
+        @ApiResponse(responseCode = "404", description = NOT_FOUND_DESCRIPTION,
+            content = @Content(examples = @ExampleObject(value = NOT_FOUND_RESPONSE))),
+        @ApiResponse(responseCode = "409", description = CONFLICT_DESCRIPTION,
+            content = @Content(examples = @ExampleObject(value = CONFLICT_RESPONSE)))
     })
     ResponseEntity<LikeResponse> save(@Parameter(hidden = true) Long loginId, LikeRequest request);
 
     @Operation(summary = "좋아요 취소", description = "로그인 필수")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
-        @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+        @ApiResponse(responseCode = "200", description = OK_DESCRIPTION,
+            useReturnTypeSchema = true),
+        @ApiResponse(responseCode = "400", description = BAD_REQUEST_DESCRIPTION,
+            content = @Content(examples = {
+                @ExampleObject(name = "Example1: One Field Error", description = BAD_REQUEST_DESCRIPTION1,
+                    value = BAD_REQUEST_RESPONSE1),
+                @ExampleObject(name = "Example2: Multiple Field Error", description = BAD_REQUEST_DESCRIPTION2,
+                    value = BAD_REQUEST_RESPONSE2)})),
+        @ApiResponse(responseCode = "401", description = UNAUTHORIZED_DESCRIPTION,
+            content = @Content(examples = @ExampleObject(value = UNAUTHORIZED_RESPONSE))),
+        @ApiResponse(responseCode = "404", description = NOT_FOUND_DESCRIPTION,
+            content = @Content(examples = @ExampleObject(value = NOT_FOUND_RESPONSE)))
     })
     @Parameter(name = "likeId", description = "삭제할 좋아요 식별자", example = "1", in = ParameterIn.PATH)
     ResponseEntity<Void> delete(@Parameter(hidden = true) Long loginId, Long likeId);
