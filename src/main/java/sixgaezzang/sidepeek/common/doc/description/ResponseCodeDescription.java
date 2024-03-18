@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ResponseCodeDescription {
     public static final String OK_200_DESCRIPTION = "[OK] 요청 성공 후 Body와 함께 응답";
-    public static final String CREATED_201_DESCRIPTION = "[OK] 생성 요청 성공 후 Location(Header), Body(옵션)와 함께 응답";
+    public static final String CREATED_201_DESCRIPTION = "[CREATED] 생성 요청 성공 후 Location(Header), Body(옵션)와 함께 응답";
     public static final String NO_CONTENT_204_DESCRIPTION = "[NO_CONTENT] 요청 성공 후 Body 없이 응답";
     public static final String BAD_REQUEST_400_DESCRIPTION =
         "[BAD_REQUEST] 요청 형식이 잘못되었거나, 요청 값이 유효하지 않은 경우 메시지와 응답(여러 필드가 있는 요청에서 여러 필드 값이 유효하지 않은 경우 리스트 형태로 응답)";
