@@ -28,6 +28,22 @@ insert into users(id, nickname, email, password, profile_image_url)
 values (4, '훈오', 'whoknow@naver.com',
         '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
         'https://user-images.githubusercontent.com/whoknow.png');
+insert into users(id, nickname, email, password, profile_image_url)
+values (5, '승민', 'seungmin@naver.com',
+        '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
+        'https://user-images.githubusercontent.com/seungmin.png');
+insert into users(id, nickname, email, password, profile_image_url)
+values (6, '민호', 'minho@naver.com',
+        '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
+        'https://user-images.githubusercontent.com/minho.png');
+insert into users(id, nickname, email, password, profile_image_url)
+values (7, '종혁', 'jonghk@naver.com',
+        '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
+        'https://user-images.githubusercontent.com/jonghk.png');
+insert into users(id, nickname, email, password, profile_image_url)
+values (8, '예림', 'yen@naver.com',
+        '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
+        'https://user-images.githubusercontent.com/yen.png');
 
 -- PROJECT
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
@@ -379,11 +395,43 @@ values (28, 11, 16, '백');
 
 -- LIKE
 insert into likes(id, user_id, project_id)
-values (1, 2, 2);
+values (1, 1, 1);
 insert into likes(id, user_id, project_id)
-values (2, 3, 1);
+values (2, 2, 1);
 insert into likes(id, user_id, project_id)
-values (3, 3, 2);
+values (3, 3, 1);
+insert into likes(id, user_id, project_id)
+values (4, 4, 1);
+insert into likes(id, user_id, project_id)
+values (5, 5, 1);
+insert into likes(id, user_id, project_id)
+values (6, 6, 1);
+insert into likes(id, user_id, project_id)
+values (7, 7, 1);
+insert into likes(id, user_id, project_id)
+values (8, 8, 1);
+insert into likes(id, user_id, project_id)
+values (9, 1, 2);
+insert into likes(id, user_id, project_id)
+values (10, 2, 2);
+insert into likes(id, user_id, project_id)
+values (11, 3, 2);
+insert into likes(id, user_id, project_id)
+values (12, 4, 2);
+insert into likes(id, user_id, project_id)
+values (13, 5, 2);
+insert into likes(id, user_id, project_id)
+values (14, 6, 2);
+insert into likes(id, user_id, project_id)
+values (15, 7, 2);
+insert into likes(id, user_id, project_id)
+values (16, 1, 3);
+insert into likes(id, user_id, project_id)
+values (17, 2, 3);
+insert into likes(id, user_id, project_id)
+values (18, 3, 3);
+insert into likes(id, user_id, project_id)
+values (19, 4, 3);
 
 -- COMMENT
 insert into comments(id, project_id, user_id, parent_id, is_anonymous, content)
