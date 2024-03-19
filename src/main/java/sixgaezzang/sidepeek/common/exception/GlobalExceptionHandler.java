@@ -89,7 +89,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidAuthenticationException(
         InvalidAuthenticationException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage());
-        log.error(e.getMessage(), e.fillInStackTrace());
+        log.warn(e.getMessage(), e.fillInStackTrace());
         Sentry.captureException(e);
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -133,7 +133,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR,
             e.getMessage());
         log.error(e.getMessage(), e.fillInStackTrace());
-        Sentry.captureException(e);
+        slackClient.sendErrorMessage(e, Sentry.captureException(e));
 
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
