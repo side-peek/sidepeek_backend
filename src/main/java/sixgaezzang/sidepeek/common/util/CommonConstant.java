@@ -8,6 +8,7 @@ public final class CommonConstant {
     public static final long MIN_ID = 1;
     public static final int MAX_TEXT_LENGTH = 21_844;
     public static final String BLANK_STRING = "";
+    public static final String DOT_SEPARATOR = ".";
 
     // Github
     public static final String GITHUB_URL = "https://github.com";

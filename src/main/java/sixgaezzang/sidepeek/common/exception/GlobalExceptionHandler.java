@@ -4,6 +4,8 @@ import io.sentry.Sentry;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +16,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import sixgaezzang.sidepeek.common.util.component.SlackClient;
 
 @RestControllerAdvice
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class GlobalExceptionHandler {
+
+    private final SlackClient slackClient;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<ErrorResponse>> handleMethodArgumentNotValidException(
@@ -83,7 +89,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidAuthenticationException(
         InvalidAuthenticationException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage());
-        log.error(e.getMessage(), e.fillInStackTrace());
+        log.warn(e.getMessage(), e.fillInStackTrace());
         Sentry.captureException(e);
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -127,7 +133,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR,
             e.getMessage());
         log.error(e.getMessage(), e.fillInStackTrace());
-        Sentry.captureException(e);
+        slackClient.sendErrorMessage(e, Sentry.captureException(e));
 
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
