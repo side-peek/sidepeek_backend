@@ -15,8 +15,6 @@ public record SocialLoginResponse(
     String refreshToken,
     @Schema(description = "소셜 로그인 타입", example = "GITHUB")
     ProviderType providerType,
-    @Schema(description = "회원가입 완료 여부", example = "true")
-    boolean isRegistrationComplete,
     @Schema(description = "로그인 사용자 정보")
     UserSummary user
 ) {
@@ -26,7 +24,6 @@ public record SocialLoginResponse(
             .accessToken(loginResponse.accessToken())
             .refreshToken(loginResponse.refreshToken())
             .providerType(authProvider.getProviderType())
-            .isRegistrationComplete(authProvider.isRegistrationComplete())
             .user(loginResponse.user())
             .build();
     }

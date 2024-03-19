@@ -63,7 +63,6 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
             .providerType(providerType)
             .providerId(providerId)
             .user(user)
-            .isRegistrationComplete(user.getEmail() != null && user.getNickname() != null)
             .build();
 
         return authProviderRepository.save(authProvider);
