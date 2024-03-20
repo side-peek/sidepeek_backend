@@ -5,6 +5,9 @@ import static sixgaezzang.sidepeek.media.exception.message.MediaErrorMessage.CON
 import static sixgaezzang.sidepeek.media.exception.message.MediaErrorMessage.FILE_IS_EMPTY;
 
 import io.sentry.Sentry;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -16,12 +19,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import sixgaezzang.sidepeek.common.exception.ErrorResponse;
+import sixgaezzang.sidepeek.common.util.component.SlackClient;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 
-@Slf4j
-@Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
+@Slf4j
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class MediaExceptionHandler {
+
+    private final SlackClient slackClient;
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleHttpMediaTypeNotSupportedException(
@@ -45,11 +52,11 @@ public class MediaExceptionHandler {
     }
 
     @ExceptionHandler(S3Exception.class)
-    public ResponseEntity<ErrorResponse> handleS3Exception(S3Exception e) {
+    public ResponseEntity<ErrorResponse> handleS3Exception(HttpServletRequest request, S3Exception e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_GATEWAY,
             CANNOT_READ_FILE);
         log.error(e.getMessage(), e.fillInStackTrace());
-        Sentry.captureException(e);
+        slackClient.sendErrorMessage(e, Sentry.captureException(e), request);
 
         return ResponseEntity
             .status(HttpStatus.BAD_GATEWAY)

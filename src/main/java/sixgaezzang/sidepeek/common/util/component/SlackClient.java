@@ -14,6 +14,7 @@ import com.slack.api.model.block.SectionBlock;
 import com.slack.api.model.block.element.ButtonElement;
 import com.slack.api.model.block.element.ImageElement;
 import io.sentry.protocol.SentryId;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import sixgaezzang.sidepeek.config.properties.SentryAlertProperties;
@@ -27,21 +28,22 @@ public class SlackClient {
     private final SlackProperties slackProperties;
     private final SentryAlertProperties sentryAlertProperties;
 
-    public void sendErrorMessage(Exception exception, SentryId sentryId) {
+    public void sendErrorMessage(Exception exception, SentryId sentryId, HttpServletRequest request) {
         HeaderBlock headerBlock = header(header -> header
             .text(plainText("🚨 " + getExceptionClassName(exception) + " 감지")));
 
         SectionBlock messageSectionBlock = section(section -> section
             .text(markdownText("*Environment:* " + sentryAlertProperties.environment()
-                + "\n*Message:* " + exception.getMessage()
-                + "\n*Sentry Issue ID:* " + sentryId + "\n"))
+                + "\n*Request Method:* " + request.getMethod()
+                + "\n*Request Path:* " + request.getRequestURI()
+                + "\n*Error Message:* " + exception.getMessage()))
             .accessory(ImageElement.builder()
                 .imageUrl(slackProperties.getErrorImageUrl())
                 .altText(slackProperties.getErrorImageAlt())
                 .build()));
 
         SectionBlock linkButtonSectionBlock = section(section -> section
-            .text(markdownText("*Sentry Issue* 보러가기 \uD83D\uDC49"))
+            .text(markdownText("*Sentry Issue(ID: " + sentryId + ")* 보러가기 \uD83D\uDC49"))
             .accessory(ButtonElement.builder()
                 .text(plainText("Click 👀"))
                 .value("sentry_issue")

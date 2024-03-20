@@ -3,6 +3,7 @@ package sixgaezzang.sidepeek.common.exception;
 import io.sentry.Sentry;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -143,11 +144,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleException(HttpServletRequest request, Exception e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR,
             e.getMessage());
         log.error(e.getMessage(), e.fillInStackTrace());
-        slackClient.sendErrorMessage(e, Sentry.captureException(e));
+        slackClient.sendErrorMessage(e, Sentry.captureException(e), request);
 
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
