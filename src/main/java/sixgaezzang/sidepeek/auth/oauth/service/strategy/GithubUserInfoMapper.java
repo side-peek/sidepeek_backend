@@ -17,7 +17,6 @@ public class GithubUserInfoMapper implements UserInfoMapper {
     private static final String ATTRIBUTE_BLOG_URL = "blog";
     private static final String ATTRIBUTE_PROFILE_IMAGE_URL = "avatar_url";
 
-
     private final UserService userService;
 
     @Override
