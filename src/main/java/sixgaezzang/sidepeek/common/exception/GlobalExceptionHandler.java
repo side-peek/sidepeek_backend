@@ -3,21 +3,42 @@ package sixgaezzang.sidepeek.common.exception;
 import io.sentry.Sentry;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import sixgaezzang.sidepeek.common.util.component.SlackClient;
 
 @RestControllerAdvice
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class GlobalExceptionHandler {
+
+    private final SlackClient slackClient;
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
+        HttpRequestMethodNotSupportedException e) {
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.METHOD_NOT_ALLOWED,
+            "해당 요청에서 " + e.getMethod() + " Method는 지원하지 않습니다.");
+        log.debug(e.getMessage(), e.fillInStackTrace());
+
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+            .allow(e.getSupportedHttpMethods().toArray(new HttpMethod[0]))
+            .body(errorResponse);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<ErrorResponse>> handleMethodArgumentNotValidException(
@@ -83,7 +104,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidAuthenticationException(
         InvalidAuthenticationException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage());
-        log.error(e.getMessage(), e.fillInStackTrace());
+        log.warn(e.getMessage(), e.fillInStackTrace());
         Sentry.captureException(e);
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -123,11 +144,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleException(HttpServletRequest request, Exception e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR,
             e.getMessage());
         log.error(e.getMessage(), e.fillInStackTrace());
-        Sentry.captureException(e);
+        slackClient.sendErrorMessage(e, Sentry.captureException(e), request);
 
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)

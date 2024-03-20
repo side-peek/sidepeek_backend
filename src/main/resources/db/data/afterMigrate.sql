@@ -28,6 +28,22 @@ insert into users(id, nickname, email, password, profile_image_url)
 values (4, '훈오', 'whoknow@naver.com',
         '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
         'https://user-images.githubusercontent.com/whoknow.png');
+insert into users(id, nickname, email, password, profile_image_url)
+values (5, '승민', 'seungmin@naver.com',
+        '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
+        'https://user-images.githubusercontent.com/seungmin.png');
+insert into users(id, nickname, email, password, profile_image_url)
+values (6, '민호', 'minho@naver.com',
+        '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
+        'https://user-images.githubusercontent.com/minho.png');
+insert into users(id, nickname, email, password, profile_image_url)
+values (7, '종혁', 'jonghk@naver.com',
+        '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
+        'https://user-images.githubusercontent.com/jonghk.png');
+insert into users(id, nickname, email, password, profile_image_url)
+values (8, '예림', 'yen@naver.com',
+        '$2a$12$Wk6AU7Z419AVDcyRLDKSHOEO1oAmdirbidsrqcW8S620SQXcOfEI.',
+        'https://user-images.githubusercontent.com/yen.png');
 
 -- PROJECT
 insert into project(id, name, sub_name, overview, thumbnail_url, github_url, view_count, like_count,
@@ -320,21 +336,102 @@ values (21, 'Vercel',
 
 -- PROJECT_SKILL
 insert into project_skill(id, project_id, skill_id, category)
-values (21, 1, 1, '프론트');
+values (1, 1, 14, '프론트');
 insert into project_skill(id, project_id, skill_id, category)
-values (22, 1, 2, '백');
+values (2, 1, 16, '백');
 insert into project_skill(id, project_id, skill_id, category)
-values (23, 1, 3, '협업툴');
+values (3, 1, 11, '협업툴');
 insert into project_skill(id, project_id, skill_id, category)
-values (24, 1, 4, '프론트');
+values (4, 1, 1, '인프라');
+insert into project_skill(id, project_id, skill_id, category)
+values (5, 1, 2, '인프라');
+insert into project_skill(id, project_id, skill_id, category)
+values (6, 2, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (7, 2, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (8, 2, 6, '협업툴');
+insert into project_skill(id, project_id, skill_id, category)
+values (9, 2, 1, '인프라');
+insert into project_skill(id, project_id, skill_id, category)
+values (10, 2, 4, '디자인');
+insert into project_skill(id, project_id, skill_id, category)
+values (11, 3, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (12, 3, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (13, 4, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (14, 4, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (15, 5, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (16, 5, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (17, 6, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (18, 6, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (19, 7, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (20, 7, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (21, 8, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (22, 8, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (23, 9, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (24, 9, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (25, 10, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (26, 10, 16, '백');
+insert into project_skill(id, project_id, skill_id, category)
+values (27, 11, 14, '프론트');
+insert into project_skill(id, project_id, skill_id, category)
+values (28, 11, 16, '백');
+
 
 -- LIKE
 insert into likes(id, user_id, project_id)
-values (1, 2, 2);
+values (1, 1, 1);
 insert into likes(id, user_id, project_id)
-values (2, 3, 1);
+values (2, 2, 1);
 insert into likes(id, user_id, project_id)
-values (3, 3, 2);
+values (3, 3, 1);
+insert into likes(id, user_id, project_id)
+values (4, 4, 1);
+insert into likes(id, user_id, project_id)
+values (5, 5, 1);
+insert into likes(id, user_id, project_id)
+values (6, 6, 1);
+insert into likes(id, user_id, project_id)
+values (7, 7, 1);
+insert into likes(id, user_id, project_id)
+values (8, 8, 1);
+insert into likes(id, user_id, project_id)
+values (9, 1, 2);
+insert into likes(id, user_id, project_id)
+values (10, 2, 2);
+insert into likes(id, user_id, project_id)
+values (11, 3, 2);
+insert into likes(id, user_id, project_id)
+values (12, 4, 2);
+insert into likes(id, user_id, project_id)
+values (13, 5, 2);
+insert into likes(id, user_id, project_id)
+values (14, 6, 2);
+insert into likes(id, user_id, project_id)
+values (15, 7, 2);
+insert into likes(id, user_id, project_id)
+values (16, 1, 3);
+insert into likes(id, user_id, project_id)
+values (17, 2, 3);
+insert into likes(id, user_id, project_id)
+values (18, 3, 3);
+insert into likes(id, user_id, project_id)
+values (19, 4, 3);
 
 -- COMMENT
 insert into comments(id, project_id, user_id, parent_id, is_anonymous, content)

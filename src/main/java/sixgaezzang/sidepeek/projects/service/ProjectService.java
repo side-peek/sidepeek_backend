@@ -11,6 +11,7 @@ import static sixgaezzang.sidepeek.projects.util.ProjectConstant.BANNER_PROJECT_
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateLoginIdEqualsUserId;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -18,19 +19,18 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.service.CommentService;
-import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.dto.response.Page;
 import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.common.util.component.DateTimeProvider;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
-import sixgaezzang.sidepeek.projects.dto.request.CursorPaginationInfoRequest;
-import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
+import sixgaezzang.sidepeek.projects.dto.request.FindProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SaveProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
@@ -57,6 +57,7 @@ public class ProjectService {
     private final FileService fileService;
     private final LikeRepository likeRepository;
     private final CommentService commentService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public ProjectResponse save(Long loginId, SaveProjectRequest request) {
@@ -66,8 +67,11 @@ public class ProjectService {
         Project project = request.toEntity();
         projectRepository.save(project);
 
-        return getProjectResponseAfterSaveLists(project, request.techStacks(), request.members(),
-            request.overviewImageUrls());
+        List<ProjectSkillSummary> techStacks = projectSkillService.cleanAndSaveAll(project, request.techStacks());
+        List<MemberSummary> members = memberService.cleanAndSaveAll(project, request.members());
+        List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project, request.overviewImageUrls());
+
+        return ProjectResponse.from(project, overviewImages, techStacks, members, Collections.emptyList(), null);
     }
 
     public Project getById(Long projectId) {
@@ -76,18 +80,16 @@ public class ProjectService {
     }
 
     public CursorPaginationResponse<ProjectListResponse> findByCondition(Long loginId,
-        CursorPaginationInfoRequest pageable) {
+        FindProjectRequest request) {
         // 사용자가 좋아요한 프로젝트 ID를 조회
         List<Long> likedProjectIds = getLikedProjectIds(loginId);
 
-        return projectRepository.findByCondition(likedProjectIds, pageable);
+        return projectRepository.findByCondition(likedProjectIds, request);
     }
 
     @Transactional
-    public ProjectResponse findById(Long loginId, Long projectId) {
+    public ProjectResponse findById(String ip, Long loginId, Long projectId) {
         Project project = getById(projectId);
-
-        project.increaseViewCount();
 
         List<OverviewImageSummary> overviewImages = fileService.findAllByProject(project)
             .stream()
@@ -106,6 +108,8 @@ public class ProjectService {
         // 로그인한 사용자가 좋아요한 프로젝트라면, 좋아요 식별자 반환(아니라면 null)
         User user = userService.getByIdOrNull(loginId);
         Long likeId = findLikeIdByUserAndProject(user, project);
+
+        increaseViewCount(ip, project); // 조회수 증가
 
         return ProjectResponse.from(project, overviewImages, techStacks, members, comments, likeId);
     }
@@ -147,8 +151,16 @@ public class ProjectService {
 
         project.update(request);
 
-        return getProjectResponseAfterSaveLists(project, request.techStacks(), request.members(),
-            request.overviewImageUrls());
+        List<ProjectSkillSummary> techStacks = projectSkillService.cleanAndSaveAll(project, request.techStacks());
+        List<MemberSummary> members = memberService.cleanAndSaveAll(project, request.members());
+        List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project, request.overviewImageUrls());
+
+        List<CommentResponse> comments = commentService.findAll(loginId, project);
+
+        User user = userService.getByIdOrNull(loginId);
+        Long likeId = findLikeIdByUserAndProject(user, project);
+
+        return ProjectResponse.from(project, overviewImages, techStacks, members, comments, likeId);
     }
 
     @Transactional
@@ -190,18 +202,6 @@ public class ProjectService {
         return Page.from(projectRepository.findAllByUserCommented(likedProjectIds, user, pageable));
     }
 
-    private ProjectResponse getProjectResponseAfterSaveLists(Project project,
-        List<SaveTechStackRequest> request,
-        List<SaveMemberRequest> request1,
-        List<String> request2) {
-        List<ProjectSkillSummary> techStacks = projectSkillService.cleanAndSaveAll(project,
-            request);
-        List<MemberSummary> members = memberService.cleanAndSaveAll(project, request1);
-        List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project, request2);
-
-        return ProjectResponse.from(project, overviewImages, techStacks, members);
-    }
-
     private Long findLikeIdByUserAndProject(User user, Project project) {
         if (Objects.isNull(user)) {
             return null;
@@ -209,4 +209,12 @@ public class ProjectService {
         return likeRepository.findIdByUserAndProject(user, project).orElse(null);
     }
 
+    private void increaseViewCount(String ip, Project project) {
+        String viewCountKey = ip + "-" + project.getId();
+
+        if (!redisTemplate.hasKey(viewCountKey)) {
+            project.increaseViewCount();
+            redisTemplate.opsForValue().set(viewCountKey, "ON", Duration.ofDays(1));
+        }
+    }
 }

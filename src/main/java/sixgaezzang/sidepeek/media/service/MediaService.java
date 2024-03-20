@@ -1,8 +1,8 @@
 package sixgaezzang.sidepeek.media.service;
 
+import static sixgaezzang.sidepeek.common.util.CommonConstant.DOT_SEPARATOR;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateLoginId;
 import static sixgaezzang.sidepeek.media.exception.message.MediaErrorMessage.CANNOT_READ_FILE;
-import static sixgaezzang.sidepeek.media.util.MediaConstant.FILE_EXTENSION_SEPARATOR;
 import static sixgaezzang.sidepeek.media.util.MediaConstant.FOLDER_PATH_SEPARATOR;
 import static sixgaezzang.sidepeek.media.util.validation.MediaValidator.validateFile;
 
@@ -50,7 +50,7 @@ public class MediaService {
     private String createUniqueFileName(MultipartFile file) {
         String originalFileName = file.getOriginalFilename();
 
-        int fileExtensionIndex = originalFileName.lastIndexOf(FILE_EXTENSION_SEPARATOR);
+        int fileExtensionIndex = originalFileName.lastIndexOf(DOT_SEPARATOR);
         String fileExtension = originalFileName.substring(fileExtensionIndex);
 
         return UUID.randomUUID() + fileExtension;

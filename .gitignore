@@ -195,3 +195,5 @@ docker/redis/data/
 
 # Ignore QueryDSL generated files
 /src/main/generated/
+
+src/main/resources/application.yml
