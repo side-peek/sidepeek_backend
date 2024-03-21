@@ -197,20 +197,20 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
     }
 
     private BooleanExpression getCursorCondition(SortType sort, Long lastProjectId,
-        Long orderCount) {
-        if (lastProjectId == null && orderCount == null) {  // 첫 번째 페이지
+        Long lastOrderCount) {
+        if (lastProjectId == null && lastOrderCount == null) {  // 첫 번째 페이지
             return null;
         }
 
         switch (sort) { // 다음 페이지
             case like: // 좋아요순
-                return project.likeCount.eq(orderCount)
+                return project.likeCount.eq(lastOrderCount)
                     .and(project.id.gt(lastProjectId))
-                    .or(project.likeCount.lt(orderCount));
+                    .or(project.likeCount.lt(lastOrderCount));
             case view: // 조회수순
-                return project.viewCount.eq(orderCount)
+                return project.viewCount.eq(lastOrderCount)
                     .and(project.id.gt(lastProjectId))
-                    .or(project.viewCount.lt(orderCount));
+                    .or(project.viewCount.lt(lastOrderCount));
             default: // 최신순
                 return project.id.lt(lastProjectId);
         }
