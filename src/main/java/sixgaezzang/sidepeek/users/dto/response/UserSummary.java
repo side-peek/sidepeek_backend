@@ -57,5 +57,4 @@ public record UserSummary(
             .build();
     }
 
-
 }
