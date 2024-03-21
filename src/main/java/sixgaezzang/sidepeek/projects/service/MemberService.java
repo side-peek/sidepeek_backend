@@ -31,7 +31,8 @@ public class MemberService {
     private final UserService userService;
 
     @Transactional
-    public List<MemberSummary> cleanAndSaveAll(Project project, List<SaveMemberRequest> memberSaveRequests) {
+    public List<MemberSummary> cleanAndSaveAll(Project project,
+        List<SaveMemberRequest> memberSaveRequests) {
         validateProject(project);
         validateMembers(project.getOwnerId(), memberSaveRequests);
 
@@ -44,14 +45,13 @@ public class MemberService {
             )
             .toList();
 
-        return memberRepository.saveAll(members)
-            .stream()
-            .map(MemberSummary::from)
-            .toList();
+        return generateMemberSummaries(memberRepository.saveAll(members));
     }
 
-    public List<MemberSummary> findAllWithUser(Project project) {
-        return memberRepository.findAllWithUser(project);
+    public List<MemberSummary> findAll(Project project) {
+        List<Member> members = memberRepository.findAllByProject(project);
+
+        return generateMemberSummaries(members);
     }
 
     public Optional<User> findFellowMemberByProject(Long userId, Project project) {
