@@ -1,4 +1,4 @@
-package sixgaezzang.sidepeek.projects.repository.member;
+package sixgaezzang.sidepeek.projects.repository;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
