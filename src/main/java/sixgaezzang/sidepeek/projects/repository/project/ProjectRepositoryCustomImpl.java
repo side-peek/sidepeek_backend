@@ -15,6 +15,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.data.domain.Page;
@@ -46,10 +47,12 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
         // where
         BooleanExpression deployCondition =
             request.isReleased() ? project.deployUrl.isNotNull() : null;
+        BooleanExpression skillCondition = getSkillCondition(request.skill());
+
+        BooleanExpression searchCondition = getSearchCondition(request.search());
+
         BooleanExpression cursorCondition = getCursorCondition(request.sort(),
             request.lastProjectId(), request.lastOrderCount());
-        BooleanExpression searchCondition = getSearchCondition(request.search());
-        BooleanExpression skillCondition = getSkillCondition(request.skill());
 
         // orderBy
         OrderSpecifier<?> orderSpecifier = getOrderSpecifier(request.sort());
@@ -63,21 +66,18 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             query
                 .join(member).on(project.id.eq(member.project.id))
                 .where(searchCondition);
-            totalElements = getTotalElementsByCondition(member, deployCondition, searchCondition,
+            totalElements = getTotalElements(member,
+                Arrays.asList(deployCondition, skillCondition, searchCondition),
                 member.project);
-        } else if (skillCondition != null) {
-            query
-                .where(skillCondition);
-            totalElements = getTotalElementsByCondition(projectSkill, deployCondition,
-                skillCondition,
-                projectSkill.project);
         } else {
-            totalElements = getTotalElements(deployCondition);
+            totalElements = getTotalElements(project,
+                Arrays.asList(deployCondition, skillCondition), project);
         }
 
         List<ProjectListResponse> results = query
             .where(
                 deployCondition,
+                skillCondition,
                 cursorCondition
             )
             .orderBy(orderSpecifier, project.id.desc())
@@ -145,27 +145,25 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             .fetchOne();
     }
 
-    private long getTotalElements(BooleanExpression deployCondition) {
-        return queryFactory
-            .select(project.countDistinct())
-            .from(project)
-            .where(deployCondition)
-            .fetchOne();
-    }
-
-    private Long getTotalElementsByCondition(EntityPathBase<?> from,
-        BooleanExpression deployCondition,
-        BooleanExpression filterCondition,
+    private Long getTotalElements(EntityPathBase<?> from,
+        List<BooleanExpression> conditions,
         QProject join) {
+        BooleanExpression combinedCondition = conditions.stream()
+            .filter(Objects::nonNull)
+            .reduce(BooleanExpression::and)
+            .orElse(null);
 
-        return queryFactory
+        JPAQuery<Long> query = queryFactory
             .select(project.countDistinct())
-            .from(from)
-            .join(join, project)
-            .where(
-                deployCondition,
-                filterCondition
-            )
+            .from(from);
+
+        // 조인 대상 엔티티와 기준 엔티티가 다를 경우에만 조인을 수행하도록 합니다.
+        if (!from.equals(join)) {
+            query.join(join, project);
+        }
+
+        return query
+            .where(combinedCondition)
             .fetchOne();
     }
 
