@@ -1,9 +1,13 @@
 package sixgaezzang.sidepeek.projects.service;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
 import static sixgaezzang.sidepeek.projects.util.validation.MemberValidator.validateMembers;
 import static sixgaezzang.sidepeek.projects.util.validation.ProjectValidator.validateProject;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +19,7 @@ import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 import sixgaezzang.sidepeek.projects.dto.response.MemberSummary;
 import sixgaezzang.sidepeek.projects.repository.member.MemberRepository;
 import sixgaezzang.sidepeek.users.domain.User;
+import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 import sixgaezzang.sidepeek.users.service.UserService;
 
 @Service
@@ -61,5 +66,16 @@ public class MemberService {
         if (memberRepository.existsByProject(project)) {
             memberRepository.deleteAllByProject(project);
         }
+    }
+
+    private List<MemberSummary> generateMemberSummaries(List<Member> members) {
+        Map<String, List<UserSummary>> memberMap = members.stream()
+            .collect(groupingBy(Member::getRole,
+                mapping(member -> UserSummary.of(member.getUser(), member.getNickname()),
+                    toList())));
+
+        return memberMap.entrySet().stream()
+            .map(entry -> MemberSummary.of(entry.getKey(), entry.getValue()))
+            .toList();
     }
 }
