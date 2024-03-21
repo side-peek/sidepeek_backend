@@ -9,6 +9,8 @@ import static sixgaezzang.sidepeek.common.util.CommonConstant.MAX_TECH_STACK_COU
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_ID_IS_NULL;
 import static sixgaezzang.sidepeek.skill.exception.message.SkillErrorMessage.SKILL_NOT_EXISTING;
+import static sixgaezzang.sidepeek.util.FakeDtoProvider.createSaveTechStackRequests;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.getSkillCountByCategory;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ class ProjectSkillServiceTest {
     static final int SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
     static List<SaveTechStackRequest> techStacks;
     static List<SaveTechStackRequest> overLengthTechStacks;
+    static int SKILL_COUNT_BY_CATEGORY;
 
     @Autowired
     ProjectSkillService projectSkillService;
@@ -72,8 +75,9 @@ class ProjectSkillServiceTest {
         for (int i = 1; i <= MAX_TECH_STACK_COUNT + 1; i++) {
             createdSkillIds.add(createAndSaveSkill().getId());
         }
-        overLengthTechStacks = FakeDtoProvider.createSaveTechStackRequests(createdSkillIds);
+        overLengthTechStacks = createSaveTechStackRequests(createdSkillIds);
         techStacks = overLengthTechStacks.subList(0, SKILL_COUNT);
+        SKILL_COUNT_BY_CATEGORY = getSkillCountByCategory(techStacks);
 
         user = createAndSaveUser();
         project = createAndSaveProject(user);
@@ -105,7 +109,7 @@ class ProjectSkillServiceTest {
                 techStacks);
 
             // then
-            assertThat(savedTechStacks).hasSize(SKILL_COUNT);
+            assertThat(savedTechStacks).hasSize(SKILL_COUNT_BY_CATEGORY);
         }
 
         @ParameterizedTest

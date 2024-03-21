@@ -9,6 +9,7 @@ import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_IS_NULL;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.MAX_MEMBER_COUNT;
 import static sixgaezzang.sidepeek.users.exception.message.UserErrorMessage.USER_NOT_EXISTING;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.getMemberCountByRole;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ class MemberServiceTest {
     static List<SaveMemberRequest> members;
     static int USER_INDEX = 0;
     static List<SaveMemberRequest> overLengthMembers;
+    static int MEMBER_COUNT_BY_ROLE;
+
     @Autowired
     MemberService memberService;
     @Autowired
@@ -57,6 +60,7 @@ class MemberServiceTest {
     ProjectRepository projectRepository;
     @Autowired
     UserRepository userRepository;
+
     Project project;
     User user;
 
@@ -77,6 +81,7 @@ class MemberServiceTest {
         overLengthMembers.add(USER_INDEX,
             FakeDtoProvider.createFellowSaveMemberRequest(user.getId()));
         members = overLengthMembers.subList(0, MEMBER_COUNT);
+        MEMBER_COUNT_BY_ROLE = getMemberCountByRole(members);
 
         project = createAndSaveProject(user);
     }
@@ -100,7 +105,7 @@ class MemberServiceTest {
             List<MemberSummary> savedMembers = memberService.cleanAndSaveAll(project, members);
 
             // then
-            assertThat(savedMembers).hasSize(MEMBER_COUNT);
+            assertThat(savedMembers).hasSize(MEMBER_COUNT_BY_ROLE);
         }
 
         @Test
