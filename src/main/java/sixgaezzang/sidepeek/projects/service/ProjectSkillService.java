@@ -56,4 +56,15 @@ public class ProjectSkillService {
             .toList();
     }
 
+    private List<ProjectSkillSummary> generateProjectSkillSummaries(List<ProjectSkill> skills) {
+        Map<String, List<SkillResponse>> techStack = skills.stream()
+            .collect(groupingBy(ProjectSkill::getCategory,
+                mapping(skill -> SkillResponse.from(skill.getSkill()),
+                    toList())));
+
+        return techStack.entrySet().stream()
+            .map(entry -> ProjectSkillSummary.of(entry.getKey(), entry.getValue()))
+            .toList();
+    }
+
 }
