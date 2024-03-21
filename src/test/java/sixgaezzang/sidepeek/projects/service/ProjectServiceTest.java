@@ -31,6 +31,8 @@ import static sixgaezzang.sidepeek.util.FakeValueProvider.createOverview;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createProjectName;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createRole;
 import static sixgaezzang.sidepeek.util.FakeValueProvider.createUserProjectSearchType;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.getMemberCountByRole;
+import static sixgaezzang.sidepeek.util.FakeValueProvider.getSkillCountByCategory;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.time.DayOfWeek;
@@ -75,8 +77,8 @@ import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
+import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
-import sixgaezzang.sidepeek.projects.repository.member.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.skill.domain.Skill;
 import sixgaezzang.sidepeek.skill.repository.SkillRepository;
@@ -92,8 +94,10 @@ class ProjectServiceTest {
     static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
     static final int SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
     static List<SaveMemberRequest> members;
+    static int MEMBER_COUNT_BY_ROLE;
     static List<Long> fellowMemberIds;
     static List<SaveTechStackRequest> techStacks;
+    static int SKILL_COUNT_BY_CATEGORY;
     static String NAME = createProjectName();
     static String OVERVIEW = createOverview();
     static String GITHUB_URL = createGithubUrl();
@@ -178,6 +182,7 @@ class ProjectServiceTest {
         user = createAndSaveUser();
         fellowMemberIds.add(0, user.getId());
         members.add(0, createFellowSaveMemberRequest(user.getId()));
+        MEMBER_COUNT_BY_ROLE = getMemberCountByRole(members);
 
         List<Skill> skills = new ArrayList<>();
         for (int i = 1; i <= SKILL_COUNT; i++) {
@@ -190,6 +195,8 @@ class ProjectServiceTest {
             .toList();
 
         techStacks = createSaveTechStackRequests(createdSkillIds);
+        SKILL_COUNT_BY_CATEGORY = getSkillCountByCategory(techStacks);
+
     }
 
     @Nested
@@ -525,8 +532,8 @@ class ProjectServiceTest {
             assertThat(response).extracting("name", "overview", "githubUrl", "description",
                     "ownerId")
                 .containsExactly(NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId());
-            assertThat(response.techStacks()).hasSize(techStacks.size());
-            assertThat(response.members()).hasSize(members.size());
+            assertThat(response.techStacks()).hasSize(SKILL_COUNT_BY_CATEGORY);
+            assertThat(response.members()).hasSize(MEMBER_COUNT_BY_ROLE);
         }
 
         @ParameterizedTest(name = "[{index}] {0}이(가) 누락된 경우 실패한다.")
@@ -660,8 +667,8 @@ class ProjectServiceTest {
                 assertThat(savedProject).isNotEqualTo(originalProject);
                 assertThat(savedProject).extracting("name", "overview", "githubUrl", "description")
                     .containsExactly(newName, newOverview, newGithubUrl, newDescription);
-                assertThat(savedProject.techStacks()).hasSize(techStacks.size());
-                assertThat(savedProject.members()).hasSize(members.size());
+                assertThat(savedProject.techStacks()).hasSize(SKILL_COUNT_BY_CATEGORY);
+                assertThat(savedProject.members()).hasSize(MEMBER_COUNT_BY_ROLE);
             });
         }
 
