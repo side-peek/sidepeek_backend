@@ -92,7 +92,7 @@ public final class ProjectValidator {
         }
 
         if (Objects.nonNull(startDate) && Objects.nonNull(endDate)) {
-            if (startDate.compareTo(endDate) >= 0) {
+            if (startDate.compareTo(endDate) > 0) {
                 throw new IllegalArgumentException(DURATION_IS_REVERSED);
             }
             return;
