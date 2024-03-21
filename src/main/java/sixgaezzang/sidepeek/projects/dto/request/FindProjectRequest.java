@@ -43,6 +43,7 @@ public record FindProjectRequest(
     @Nullable
     List<String> skill,
 
+    // Search
     @Schema(description = SEARCH_DESCRIPTION)
     @Nullable
     String search
