@@ -115,7 +115,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
         HttpMessageNotReadableException e) {
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST,
-            "API 요청 형식이 올바르지 않습니다.");
+            "API 요청 형식이 올바르지 않습니다.(" + e.getRootCause() + ")");
         log.debug(e.getMessage(), e.fillInStackTrace());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
