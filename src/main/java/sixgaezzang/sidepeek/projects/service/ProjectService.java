@@ -101,7 +101,7 @@ public class ProjectService {
 
         List<ProjectSkillSummary> techStacks = projectSkillService.findAll(project);
 
-        List<MemberSummary> members = memberService.findAllWithUser(project);
+        List<MemberSummary> members = memberService.findAll(project);
 
         List<CommentResponse> comments = commentService.findAll(loginId, project);
 
