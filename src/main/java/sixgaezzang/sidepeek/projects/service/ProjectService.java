@@ -67,11 +67,14 @@ public class ProjectService {
         Project project = request.toEntity();
         projectRepository.save(project);
 
-        List<ProjectSkillSummary> techStacks = projectSkillService.cleanAndSaveAll(project, request.techStacks());
+        List<ProjectSkillSummary> techStacks = projectSkillService.cleanAndSaveAll(project,
+            request.techStacks());
         List<MemberSummary> members = memberService.cleanAndSaveAll(project, request.members());
-        List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project, request.overviewImageUrls());
+        List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project,
+            request.overviewImageUrls());
 
-        return ProjectResponse.from(project, overviewImages, techStacks, members, Collections.emptyList(), null);
+        return ProjectResponse.from(project, overviewImages, techStacks, members,
+            Collections.emptyList(), null);
     }
 
     public Project getById(Long projectId) {
@@ -96,10 +99,7 @@ public class ProjectService {
             .map(OverviewImageSummary::from)
             .toList();
 
-        List<ProjectSkillSummary> techStacks = projectSkillService.findAll(project)
-            .stream()
-            .map(ProjectSkillSummary::from)
-            .toList();
+        List<ProjectSkillSummary> techStacks = projectSkillService.findAll(project);
 
         List<MemberSummary> members = memberService.findAllWithUser(project);
 
@@ -151,9 +151,11 @@ public class ProjectService {
 
         project.update(request);
 
-        List<ProjectSkillSummary> techStacks = projectSkillService.cleanAndSaveAll(project, request.techStacks());
+        List<ProjectSkillSummary> techStacks = projectSkillService.cleanAndSaveAll(project,
+            request.techStacks());
         List<MemberSummary> members = memberService.cleanAndSaveAll(project, request.members());
-        List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project, request.overviewImageUrls());
+        List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project,
+            request.overviewImageUrls());
 
         List<CommentResponse> comments = commentService.findAll(loginId, project);
 
