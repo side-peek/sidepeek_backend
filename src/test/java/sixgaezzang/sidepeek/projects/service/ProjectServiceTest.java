@@ -92,8 +92,10 @@ class ProjectServiceTest {
     static final int MEMBER_COUNT = MAX_MEMBER_COUNT / 2;
     static final int SKILL_COUNT = MAX_TECH_STACK_COUNT / 2;
     static List<SaveMemberRequest> members;
+    static int uniqueMembersByRole;
     static List<Long> fellowMemberIds;
     static List<SaveTechStackRequest> techStacks;
+    static int uniqueTechStacksByCategory;
     static String NAME = createProjectName();
     static String OVERVIEW = createOverview();
     static String GITHUB_URL = createGithubUrl();
@@ -178,6 +180,11 @@ class ProjectServiceTest {
         user = createAndSaveUser();
         fellowMemberIds.add(0, user.getId());
         members.add(0, createFellowSaveMemberRequest(user.getId()));
+        // 중복을 제외한 role의 개수 구하기
+        uniqueMembersByRole = (int) members.stream()
+            .map(SaveMemberRequest::role)
+            .distinct()
+            .count();
 
         List<Skill> skills = new ArrayList<>();
         for (int i = 1; i <= SKILL_COUNT; i++) {
@@ -190,6 +197,11 @@ class ProjectServiceTest {
             .toList();
 
         techStacks = createSaveTechStackRequests(createdSkillIds);
+        // 중복을 제외한 category의 개수 구하기
+        uniqueTechStacksByCategory = (int) techStacks.stream()
+            .map(SaveTechStackRequest::category)
+            .distinct()
+            .count();
     }
 
     @Nested
@@ -525,8 +537,8 @@ class ProjectServiceTest {
             assertThat(response).extracting("name", "overview", "githubUrl", "description",
                     "ownerId")
                 .containsExactly(NAME, OVERVIEW, GITHUB_URL, DESCRIPTION, user.getId());
-            assertThat(response.techStacks()).hasSize(techStacks.size());
-            assertThat(response.members()).hasSize(members.size());
+            assertThat(response.techStacks()).hasSize(uniqueTechStacksByCategory);
+            assertThat(response.members()).hasSize(uniqueMembersByRole);
         }
 
         @ParameterizedTest(name = "[{index}] {0}이(가) 누락된 경우 실패한다.")
@@ -660,8 +672,8 @@ class ProjectServiceTest {
                 assertThat(savedProject).isNotEqualTo(originalProject);
                 assertThat(savedProject).extracting("name", "overview", "githubUrl", "description")
                     .containsExactly(newName, newOverview, newGithubUrl, newDescription);
-                assertThat(savedProject.techStacks()).hasSize(techStacks.size());
-                assertThat(savedProject.members()).hasSize(members.size());
+                assertThat(savedProject.techStacks()).hasSize(uniqueTechStacksByCategory);
+                assertThat(savedProject.members()).hasSize(uniqueMembersByRole);
             });
         }
 
