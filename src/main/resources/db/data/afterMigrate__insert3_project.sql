@@ -543,455 +543,455 @@ insert into project_member(id, project_id, user_id, role, nickname)
 values (120, 10, 8, '백엔드', 'Yen');
 
 -- FILE
-insert into files(id, project_id, type, url)
-values (1, 1, '',
+insert into files(id, project_id, url)
+values (1, 1,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (2, 2, '',
+insert into files(id, project_id, url)
+values (2, 2,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (3, 3, '',
+insert into files(id, project_id, url)
+values (3, 3,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (4, 4, '',
+insert into files(id, project_id, url)
+values (4, 4,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (5, 5, '',
+insert into files(id, project_id, url)
+values (5, 5,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (6, 6, '',
+insert into files(id, project_id, url)
+values (6, 6,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (7, 7, '',
+insert into files(id, project_id, url)
+values (7, 7,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (8, 8, '',
+insert into files(id, project_id, url)
+values (8, 8,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (9, 9, '',
+insert into files(id, project_id, url)
+values (9, 9,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (10, 10, '',
+insert into files(id, project_id, url)
+values (10, 10,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (11, 11, '',
+insert into files(id, project_id, url)
+values (11, 11,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (12, 12, '',
+insert into files(id, project_id, url)
+values (12, 12,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (13, 13, '',
+insert into files(id, project_id, url)
+values (13, 13,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (14, 14, '',
+insert into files(id, project_id, url)
+values (14, 14,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (15, 15, '',
+insert into files(id, project_id, url)
+values (15, 15,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (16, 16, '',
+insert into files(id, project_id, url)
+values (16, 16,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (17, 17, '',
+insert into files(id, project_id, url)
+values (17, 17,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (18, 18, '',
+insert into files(id, project_id, url)
+values (18, 18,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (19, 19, '',
+insert into files(id, project_id, url)
+values (19, 19,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (20, 20, '',
+insert into files(id, project_id, url)
+values (20, 20,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (21, 21, '',
+insert into files(id, project_id, url)
+values (21, 21,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (22, 22, '',
+insert into files(id, project_id, url)
+values (22, 22,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (23, 23, '',
+insert into files(id, project_id, url)
+values (23, 23,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (24, 24, '',
+insert into files(id, project_id, url)
+values (24, 24,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (25, 25, '',
+insert into files(id, project_id, url)
+values (25, 25,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (26, 26, '',
+insert into files(id, project_id, url)
+values (26, 26,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (27, 27, '',
+insert into files(id, project_id, url)
+values (27, 27,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (28, 28, '',
+insert into files(id, project_id, url)
+values (28, 28,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (29, 29, '',
+insert into files(id, project_id, url)
+values (29, 29,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (30, 30, '',
+insert into files(id, project_id, url)
+values (30, 30,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (31, 31, '',
+insert into files(id, project_id, url)
+values (31, 31,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (32, 32, '',
+insert into files(id, project_id, url)
+values (32, 32,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (33, 33, '',
+insert into files(id, project_id, url)
+values (33, 33,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (34, 34, '',
+insert into files(id, project_id, url)
+values (34, 34,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (35, 35, '',
+insert into files(id, project_id, url)
+values (35, 35,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (36, 36, '',
+insert into files(id, project_id, url)
+values (36, 36,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (37, 37, '',
+insert into files(id, project_id, url)
+values (37, 37,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (38, 38, '',
+insert into files(id, project_id, url)
+values (38, 38,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (39, 39, '',
+insert into files(id, project_id, url)
+values (39, 39,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (40, 40, '',
+insert into files(id, project_id, url)
+values (40, 40,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (41, 41, '',
+insert into files(id, project_id, url)
+values (41, 41,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (42, 42, '',
+insert into files(id, project_id, url)
+values (42, 42,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (43, 43, '',
+insert into files(id, project_id, url)
+values (43, 43,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (44, 44, '',
+insert into files(id, project_id, url)
+values (44, 44,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (45, 45, '',
+insert into files(id, project_id, url)
+values (45, 45,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (46, 46, '',
+insert into files(id, project_id, url)
+values (46, 46,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (47, 47, '',
+insert into files(id, project_id, url)
+values (47, 47,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (48, 48, '',
+insert into files(id, project_id, url)
+values (48, 48,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (49, 49, '',
+insert into files(id, project_id, url)
+values (49, 49,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (50, 50, '',
+insert into files(id, project_id, url)
+values (50, 50,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg');
-insert into files(id, project_id, type, url)
-values (51, 1, '',
+insert into files(id, project_id, url)
+values (51, 1,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (52, 2, '',
+insert into files(id, project_id, url)
+values (52, 2,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (53, 3, '',
+insert into files(id, project_id, url)
+values (53, 3,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (54, 4, '',
+insert into files(id, project_id, url)
+values (54, 4,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (55, 5, '',
+insert into files(id, project_id, url)
+values (55, 5,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (56, 6, '',
+insert into files(id, project_id, url)
+values (56, 6,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (57, 7, '',
+insert into files(id, project_id, url)
+values (57, 7,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (58, 8, '',
+insert into files(id, project_id, url)
+values (58, 8,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (59, 9, '',
+insert into files(id, project_id, url)
+values (59, 9,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (60, 10, '',
+insert into files(id, project_id, url)
+values (60, 10,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (61, 11, '',
+insert into files(id, project_id, url)
+values (61, 11,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (62, 12, '',
+insert into files(id, project_id, url)
+values (62, 12,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (63, 13, '',
+insert into files(id, project_id, url)
+values (63, 13,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (64, 14, '',
+insert into files(id, project_id, url)
+values (64, 14,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (65, 15, '',
+insert into files(id, project_id, url)
+values (65, 15,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (66, 16, '',
+insert into files(id, project_id, url)
+values (66, 16,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (67, 17, '',
+insert into files(id, project_id, url)
+values (67, 17,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (68, 18, '',
+insert into files(id, project_id, url)
+values (68, 18,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (69, 19, '',
+insert into files(id, project_id, url)
+values (69, 19,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (70, 20, '',
+insert into files(id, project_id, url)
+values (70, 20,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (71, 21, '',
+insert into files(id, project_id, url)
+values (71, 21,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (72, 22, '',
+insert into files(id, project_id, url)
+values (72, 22,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (73, 23, '',
+insert into files(id, project_id, url)
+values (73, 23,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (74, 24, '',
+insert into files(id, project_id, url)
+values (74, 24,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (75, 25, '',
+insert into files(id, project_id, url)
+values (75, 25,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (76, 26, '',
+insert into files(id, project_id, url)
+values (76, 26,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (77, 27, '',
+insert into files(id, project_id, url)
+values (77, 27,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (78, 28, '',
+insert into files(id, project_id, url)
+values (78, 28,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (79, 29, '',
+insert into files(id, project_id, url)
+values (79, 29,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (80, 30, '',
+insert into files(id, project_id, url)
+values (80, 30,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (81, 31, '',
+insert into files(id, project_id, url)
+values (81, 31,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (82, 32, '',
+insert into files(id, project_id, url)
+values (82, 32,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (83, 33, '',
+insert into files(id, project_id, url)
+values (83, 33,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (84, 34, '',
+insert into files(id, project_id, url)
+values (84, 34,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (85, 35, '',
+insert into files(id, project_id, url)
+values (85, 35,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (86, 36, '',
+insert into files(id, project_id, url)
+values (86, 36,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (87, 37, '',
+insert into files(id, project_id, url)
+values (87, 37,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (88, 38, '',
+insert into files(id, project_id, url)
+values (88, 38,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (89, 39, '',
+insert into files(id, project_id, url)
+values (89, 39,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (90, 40, '',
+insert into files(id, project_id, url)
+values (90, 40,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (91, 41, '',
+insert into files(id, project_id, url)
+values (91, 41,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (92, 42, '',
+insert into files(id, project_id, url)
+values (92, 42,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (93, 43, '',
+insert into files(id, project_id, url)
+values (93, 43,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (94, 44, '',
+insert into files(id, project_id, url)
+values (94, 44,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (95, 45, '',
+insert into files(id, project_id, url)
+values (95, 45,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (96, 46, '',
+insert into files(id, project_id, url)
+values (96, 46,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (97, 47, '',
+insert into files(id, project_id, url)
+values (97, 47,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (98, 48, '',
+insert into files(id, project_id, url)
+values (98, 48,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (99, 49, '',
+insert into files(id, project_id, url)
+values (99, 49,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (100, 50, '',
+insert into files(id, project_id, url)
+values (100, 50,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c919a5f1-0b87-461c-b936-33213a449067.png');
-insert into files(id, project_id, type, url)
-values (101, 1, '',
+insert into files(id, project_id, url)
+values (101, 1,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (102, 2, '',
+insert into files(id, project_id, url)
+values (102, 2,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (103, 3, '',
+insert into files(id, project_id, url)
+values (103, 3,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (104, 4, '',
+insert into files(id, project_id, url)
+values (104, 4,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (105, 5, '',
+insert into files(id, project_id, url)
+values (105, 5,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (106, 6, '',
+insert into files(id, project_id, url)
+values (106, 6,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (107, 7, '',
+insert into files(id, project_id, url)
+values (107, 7,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (108, 8, '',
+insert into files(id, project_id, url)
+values (108, 8,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (109, 9, '',
+insert into files(id, project_id, url)
+values (109, 9,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (110, 10, '',
+insert into files(id, project_id, url)
+values (110, 10,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (111, 11, '',
+insert into files(id, project_id, url)
+values (111, 11,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (112, 12, '',
+insert into files(id, project_id, url)
+values (112, 12,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (113, 13, '',
+insert into files(id, project_id, url)
+values (113, 13,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (114, 14, '',
+insert into files(id, project_id, url)
+values (114, 14,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (115, 15, '',
+insert into files(id, project_id, url)
+values (115, 15,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (116, 16, '',
+insert into files(id, project_id, url)
+values (116, 16,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (117, 17, '',
+insert into files(id, project_id, url)
+values (117, 17,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (118, 18, '',
+insert into files(id, project_id, url)
+values (118, 18,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (119, 19, '',
+insert into files(id, project_id, url)
+values (119, 19,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (120, 20, '',
+insert into files(id, project_id, url)
+values (120, 20,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (121, 21, '',
+insert into files(id, project_id, url)
+values (121, 21,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (122, 22, '',
+insert into files(id, project_id, url)
+values (122, 22,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (123, 23, '',
+insert into files(id, project_id, url)
+values (123, 23,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (124, 24, '',
+insert into files(id, project_id, url)
+values (124, 24,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (125, 25, '',
+insert into files(id, project_id, url)
+values (125, 25,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (126, 26, '',
+insert into files(id, project_id, url)
+values (126, 26,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (127, 27, '',
+insert into files(id, project_id, url)
+values (127, 27,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (128, 28, '',
+insert into files(id, project_id, url)
+values (128, 28,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (129, 29, '',
+insert into files(id, project_id, url)
+values (129, 29,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (130, 30, '',
+insert into files(id, project_id, url)
+values (130, 30,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (131, 31, '',
+insert into files(id, project_id, url)
+values (131, 31,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (132, 32, '',
+insert into files(id, project_id, url)
+values (132, 32,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (133, 33, '',
+insert into files(id, project_id, url)
+values (133, 33,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (134, 34, '',
+insert into files(id, project_id, url)
+values (134, 34,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (135, 35, '',
+insert into files(id, project_id, url)
+values (135, 35,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (136, 36, '',
+insert into files(id, project_id, url)
+values (136, 36,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (137, 37, '',
+insert into files(id, project_id, url)
+values (137, 37,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (138, 38, '',
+insert into files(id, project_id, url)
+values (138, 38,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (139, 39, '',
+insert into files(id, project_id, url)
+values (139, 39,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (140, 40, '',
+insert into files(id, project_id, url)
+values (140, 40,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (141, 41, '',
+insert into files(id, project_id, url)
+values (141, 41,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (142, 42, '',
+insert into files(id, project_id, url)
+values (142, 42,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (143, 43, '',
+insert into files(id, project_id, url)
+values (143, 43,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (144, 44, '',
+insert into files(id, project_id, url)
+values (144, 44,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (145, 45, '',
+insert into files(id, project_id, url)
+values (145, 45,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (146, 46, '',
+insert into files(id, project_id, url)
+values (146, 46,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (147, 47, '',
+insert into files(id, project_id, url)
+values (147, 47,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (148, 48, '',
+insert into files(id, project_id, url)
+values (148, 48,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (149, 49, '',
+insert into files(id, project_id, url)
+values (149, 49,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
-insert into files(id, project_id, type, url)
-values (150, 50, '',
+insert into files(id, project_id, url)
+values (150, 50,
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/dev/c487821e-4cd5-497b-9741-beebef2e2a6d.png');
 
 -- PROJECT_SKILL
