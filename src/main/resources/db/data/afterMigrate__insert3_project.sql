@@ -3,61 +3,61 @@ insert into project(id, name, sub_name, overview, thumbnail_url, deploy_url, git
                     comment_count, start_date, end_date, owner_id, description, troubleshooting)
 values (1, '프로젝트 1', '프로젝트 1 더미데이터', '프로젝트 1 더미데이터 입니다.',
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg',
-        'https://github.com', 'https://github.com', 0, 1, 0, '2024-01-01', '2024-03-01', 1, '# 프로젝트 1 기능',
+        'https://github.com', 'https://github.com', 7, 1, 10, '2024-01-01', '2024-03-01', 1, '# 프로젝트 1 기능',
         '# 프로젝트 프로젝트 1 기능');
 insert into project(id, name, sub_name, overview, thumbnail_url, deploy_url, github_url, like_count, view_count,
                     comment_count, start_date, end_date, owner_id, description, troubleshooting)
 values (2, '프로젝트 2', '프로젝트 2 더미데이터', '프로젝트 2 더미데이터 입니다.',
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg',
-        'https://github.com', 'https://github.com', 0, 2, 0, '2024-01-01', '2024-03-01', 1, '# 프로젝트 2 기능',
+        'https://github.com', 'https://github.com', 7, 2, 10, '2024-01-01', '2024-03-01', 1, '# 프로젝트 2 기능',
         '# 프로젝트 프로젝트 2 기능');
 insert into project(id, name, sub_name, overview, thumbnail_url, deploy_url, github_url, like_count, view_count,
                     comment_count, start_date, end_date, owner_id, description, troubleshooting)
 values (3, '프로젝트 3', '프로젝트 3 더미데이터', '프로젝트 3 더미데이터 입니다.',
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg',
-        'https://github.com', 'https://github.com', 0, 3, 0, '2024-01-01', '2024-03-01', 1, '# 프로젝트 3 기능',
+        'https://github.com', 'https://github.com', 7, 3, 10, '2024-01-01', '2024-03-01', 1, '# 프로젝트 3 기능',
         '# 프로젝트 프로젝트 3 기능');
 insert into project(id, name, sub_name, overview, thumbnail_url, deploy_url, github_url, like_count, view_count,
                     comment_count, start_date, end_date, owner_id, description, troubleshooting)
 values (4, '프로젝트 4', '프로젝트 4 더미데이터', '프로젝트 4 더미데이터 입니다.',
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg',
-        'https://github.com', 'https://github.com', 0, 4, 0, '2024-01-01', '2024-03-01', 1, '# 프로젝트 4 기능',
+        'https://github.com', 'https://github.com', 7, 4, 10, '2024-01-01', '2024-03-01', 1, '# 프로젝트 4 기능',
         '# 프로젝트 프로젝트 4 기능');
 insert into project(id, name, sub_name, overview, thumbnail_url, deploy_url, github_url, like_count, view_count,
                     comment_count, start_date, end_date, owner_id, description, troubleshooting)
 values (5, '프로젝트 5', '프로젝트 5 더미데이터', '프로젝트 5 더미데이터 입니다.',
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg',
-        'https://github.com', 'https://github.com', 0, 5, 0, '2024-01-01', '2024-03-01', 1, '# 프로젝트 5 기능',
+        'https://github.com', 'https://github.com', 7, 5, 10, '2024-01-01', '2024-03-01', 1, '# 프로젝트 5 기능',
         '# 프로젝트 프로젝트 5 기능');
 insert into project(id, name, sub_name, overview, thumbnail_url, deploy_url, github_url, like_count, view_count,
                     comment_count, start_date, end_date, owner_id, description, troubleshooting)
 values (6, '프로젝트 6', '프로젝트 6 더미데이터', '프로젝트 6 더미데이터 입니다.',
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg',
-        'https://github.com', 'https://github.com', 0, 6, 0, '2024-01-01', '2024-03-01', 1, '# 프로젝트 6 기능',
+        'https://github.com', 'https://github.com', 6, 6, 10, '2024-01-01', '2024-03-01', 1, '# 프로젝트 6 기능',
         '# 프로젝트 프로젝트 6 기능');
 insert into project(id, name, sub_name, overview, thumbnail_url, deploy_url, github_url, like_count, view_count,
                     comment_count, start_date, end_date, owner_id, description, troubleshooting)
 values (7, '프로젝트 7', '프로젝트 7 더미데이터', '프로젝트 7 더미데이터 입니다.',
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg',
-        'https://github.com', 'https://github.com', 0, 7, 0, '2024-01-01', '2024-03-01', 1, '# 프로젝트 7 기능',
+        'https://github.com', 'https://github.com', 5, 7, 10, '2024-01-01', '2024-03-01', 1, '# 프로젝트 7 기능',
         '# 프로젝트 프로젝트 7 기능');
 insert into project(id, name, sub_name, overview, thumbnail_url, deploy_url, github_url, like_count, view_count,
                     comment_count, start_date, end_date, owner_id, description, troubleshooting)
 values (8, '프로젝트 8', '프로젝트 8 더미데이터', '프로젝트 8 더미데이터 입니다.',
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg',
-        'https://github.com', 'https://github.com', 0, 8, 0, '2024-01-01', '2024-03-01', 1, '# 프로젝트 8 기능',
+        'https://github.com', 'https://github.com', 4, 8, 10, '2024-01-01', '2024-03-01', 1, '# 프로젝트 8 기능',
         '# 프로젝트 프로젝트 8 기능');
 insert into project(id, name, sub_name, overview, thumbnail_url, deploy_url, github_url, like_count, view_count,
                     comment_count, start_date, end_date, owner_id, description, troubleshooting)
 values (9, '프로젝트 9', '프로젝트 9 더미데이터', '프로젝트 9 더미데이터 입니다.',
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg',
-        'https://github.com', 'https://github.com', 0, 9, 0, '2024-01-01', '2024-03-01', 1, '# 프로젝트 9 기능',
+        'https://github.com', 'https://github.com', 3, 9, 10, '2024-01-01', '2024-03-01', 1, '# 프로젝트 9 기능',
         '# 프로젝트 프로젝트 9 기능');
 insert into project(id, name, sub_name, overview, thumbnail_url, deploy_url, github_url, like_count, view_count,
                     comment_count, start_date, end_date, owner_id, description, troubleshooting)
 values (10, '프로젝트 10', '프로젝트 10 더미데이터', '프로젝트 10 더미데이터 입니다.',
         'https://sidepeek-bucket.s3.ap-northeast-2.amazonaws.com/image/prod/c43ae359-8200-4683-a3f7-363044699f31.jpg',
-        'https://github.com', 'https://github.com', 0, 10, 0, '2024-01-01', '2024-03-01', 1, '# 프로젝트 10 기능',
+        'https://github.com', 'https://github.com', 2, 10, 10, '2024-01-01', '2024-03-01', 1, '# 프로젝트 10 기능',
         '# 프로젝트 프로젝트 10 기능');
 insert into project(id, name, sub_name, overview, thumbnail_url, deploy_url, github_url, like_count, view_count,
                     comment_count, start_date, end_date, owner_id, description, troubleshooting)
