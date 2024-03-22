@@ -304,243 +304,243 @@ values (50, '프로젝트 50', '프로젝트 50 더미데이터', '프로젝트 
 insert into project_member(id, project_id, user_id, role, nickname)
 values (1, 1, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (2, 1, 2, '기획', 'Jinny');
+values (2, 2, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (3, 1, 3, '기획', 'Jinny');
+values (3, 3, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (4, 1, 4, '기획', 'Jinny');
+values (4, 4, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (5, 1, 5, '기획', 'Jinny');
+values (5, 5, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (6, 1, 6, '기획', 'Jinny');
+values (6, 6, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (7, 1, 7, '기획', 'Jinny');
+values (7, 7, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (8, 1, 8, '기획', 'Jinny');
+values (8, 8, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (9, 1, 9, '기획', 'Jinny');
+values (9, 9, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (10, 1, 10, '기획', 'Jinny');
+values (10, 10, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (11, 1, 11, '기획', 'Jinny');
+values (11, 11, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (12, 1, 12, '기획', 'Jinny');
+values (12, 12, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (13, 1, 13, '기획', 'Jinny');
+values (13, 13, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (14, 1, 14, '기획', 'Jinny');
+values (14, 14, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (15, 1, 15, '기획', 'Jinny');
+values (15, 15, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (16, 1, 16, '기획', 'Jinny');
+values (16, 16, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (17, 1, 17, '기획', 'Jinny');
+values (17, 17, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (18, 1, 18, '기획', 'Jinny');
+values (18, 18, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (19, 1, 19, '기획', 'Jinny');
+values (19, 19, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (20, 1, 20, '기획', 'Jinny');
+values (20, 20, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (21, 1, 21, '기획', 'Jinny');
+values (21, 21, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (22, 1, 22, '기획', 'Jinny');
+values (22, 22, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (23, 1, 23, '기획', 'Jinny');
+values (23, 23, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (24, 1, 24, '기획', 'Jinny');
+values (24, 24, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (25, 1, 25, '기획', 'Jinny');
+values (25, 25, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (26, 1, 26, '기획', 'Jinny');
+values (26, 26, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (27, 1, 27, '기획', 'Jinny');
+values (27, 27, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (28, 1, 28, '기획', 'Jinny');
+values (28, 28, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (29, 1, 29, '기획', 'Jinny');
+values (29, 29, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (30, 1, 30, '기획', 'Jinny');
+values (30, 30, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (31, 1, 31, '기획', 'Jinny');
+values (31, 31, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (32, 1, 32, '기획', 'Jinny');
+values (32, 32, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (33, 1, 33, '기획', 'Jinny');
+values (33, 33, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (34, 1, 34, '기획', 'Jinny');
+values (34, 34, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (35, 1, 35, '기획', 'Jinny');
+values (35, 35, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (36, 1, 36, '기획', 'Jinny');
+values (36, 36, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (37, 1, 37, '기획', 'Jinny');
+values (37, 37, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (38, 1, 38, '기획', 'Jinny');
+values (38, 38, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (39, 1, 39, '기획', 'Jinny');
+values (39, 39, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (40, 1, 40, '기획', 'Jinny');
+values (40, 40, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (41, 1, 41, '기획', 'Jinny');
+values (41, 41, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (42, 1, 42, '기획', 'Jinny');
+values (42, 42, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (43, 1, 43, '기획', 'Jinny');
+values (43, 43, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (44, 1, 44, '기획', 'Jinny');
+values (44, 44, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (45, 1, 45, '기획', 'Jinny');
+values (45, 45, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (46, 1, 46, '기획', 'Jinny');
+values (46, 46, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (47, 1, 47, '기획', 'Jinny');
+values (47, 47, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (48, 1, 48, '기획', 'Jinny');
+values (48, 48, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (49, 1, 49, '기획', 'Jinny');
+values (49, 49, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (50, 1, 50, '기획', 'Jinny');
+values (50, 50, 1, '기획', 'Jinny');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (51, 2, 1, '프론트엔드', 'Donggun');
+values (51, 1, 2, '프론트엔드', 'Donggun');
 insert into project_member(id, project_id, user_id, role, nickname)
 values (52, 2, 2, '프론트엔드', 'Donggun');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (53, 2, 3, '프론트엔드', 'Donggun');
+values (53, 3, 2, '프론트엔드', 'Donggun');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (54, 2, 4, '프론트엔드', 'Donggun');
+values (54, 4, 2, '프론트엔드', 'Donggun');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (55, 2, 5, '프론트엔드', 'Donggun');
+values (55, 5, 2, '프론트엔드', 'Donggun');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (56, 2, 6, '프론트엔드', 'Donggun');
+values (56, 6, 2, '프론트엔드', 'Donggun');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (57, 2, 7, '프론트엔드', 'Donggun');
+values (57, 7, 2, '프론트엔드', 'Donggun');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (58, 2, 8, '프론트엔드', 'Donggun');
+values (58, 8, 2, '프론트엔드', 'Donggun');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (59, 2, 9, '프론트엔드', 'Donggun');
+values (59, 9, 2, '프론트엔드', 'Donggun');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (60, 2, 10, '프론트엔드', 'Donggun');
+values (60, 10, 2, '프론트엔드', 'Donggun');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (61, 3, 1, '백엔드', 'Hailey');
+values (61, 1, 3, '백엔드', 'Hailey');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (62, 3, 2, '백엔드', 'Hailey');
+values (62, 2, 3, '백엔드', 'Hailey');
 insert into project_member(id, project_id, user_id, role, nickname)
 values (63, 3, 3, '백엔드', 'Hailey');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (64, 3, 4, '백엔드', 'Hailey');
+values (64, 4, 3, '백엔드', 'Hailey');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (65, 3, 5, '백엔드', 'Hailey');
+values (65, 5, 3, '백엔드', 'Hailey');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (66, 3, 6, '백엔드', 'Hailey');
+values (66, 6, 3, '백엔드', 'Hailey');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (67, 3, 7, '백엔드', 'Hailey');
+values (67, 7, 3, '백엔드', 'Hailey');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (68, 3, 8, '백엔드', 'Hailey');
+values (68, 8, 3, '백엔드', 'Hailey');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (69, 3, 9, '백엔드', 'Hailey');
+values (69, 9, 3, '백엔드', 'Hailey');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (70, 3, 10, '백엔드', 'Hailey');
+values (70, 10, 3, '백엔드', 'Hailey');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (71, 4, 1, '프론트엔드', 'Hun Oh');
+values (71, 1, 4, '프론트엔드', 'Hun Oh');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (72, 4, 2, '프론트엔드', 'Hun Oh');
+values (72, 2, 4, '프론트엔드', 'Hun Oh');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (73, 4, 3, '프론트엔드', 'Hun Oh');
+values (73, 3, 4, '프론트엔드', 'Hun Oh');
 insert into project_member(id, project_id, user_id, role, nickname)
 values (74, 4, 4, '프론트엔드', 'Hun Oh');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (75, 4, 5, '프론트엔드', 'Hun Oh');
+values (75, 5, 4, '프론트엔드', 'Hun Oh');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (76, 4, 6, '프론트엔드', 'Hun Oh');
+values (76, 6, 4, '프론트엔드', 'Hun Oh');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (77, 4, 7, '프론트엔드', 'Hun Oh');
+values (77, 7, 4, '프론트엔드', 'Hun Oh');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (78, 4, 8, '프론트엔드', 'Hun Oh');
+values (78, 8, 4, '프론트엔드', 'Hun Oh');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (79, 4, 9, '프론트엔드', 'Hun Oh');
+values (79, 9, 4, '프론트엔드', 'Hun Oh');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (80, 4, 10, '프론트엔드', 'Hun Oh');
+values (80, 10, 4, '프론트엔드', 'Hun Oh');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (81, 5, 1, '디자인', '밀루');
+values (81, 1, 5, '디자인', '밀루');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (82, 5, 2, '디자인', '밀루');
+values (82, 2, 5, '디자인', '밀루');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (83, 5, 3, '디자인', '밀루');
+values (83, 3, 5, '디자인', '밀루');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (84, 5, 4, '디자인', '밀루');
+values (84, 4, 5, '디자인', '밀루');
 insert into project_member(id, project_id, user_id, role, nickname)
 values (85, 5, 5, '디자인', '밀루');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (86, 5, 6, '디자인', '밀루');
+values (86, 6, 5, '디자인', '밀루');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (87, 5, 7, '디자인', '밀루');
+values (87, 7, 5, '디자인', '밀루');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (88, 5, 8, '디자인', '밀루');
+values (88, 8, 5, '디자인', '밀루');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (89, 5, 9, '디자인', '밀루');
+values (89, 9, 5, '디자인', '밀루');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (90, 5, 10, '디자인', '밀루');
+values (90, 10, 5, '디자인', '밀루');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (91, 6, 1, '프론트엔드', 'mino');
+values (91, 1, 6, '프론트엔드', 'mino');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (92, 6, 2, '프론트엔드', 'mino');
+values (92, 2, 6, '프론트엔드', 'mino');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (93, 6, 3, '프론트엔드', 'mino');
+values (93, 3, 6, '프론트엔드', 'mino');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (94, 6, 4, '프론트엔드', 'mino');
+values (94, 4, 6, '프론트엔드', 'mino');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (95, 6, 5, '프론트엔드', 'mino');
+values (95, 5, 6, '프론트엔드', 'mino');
 insert into project_member(id, project_id, user_id, role, nickname)
 values (96, 6, 6, '프론트엔드', 'mino');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (97, 6, 7, '프론트엔드', 'mino');
+values (97, 7, 6, '프론트엔드', 'mino');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (98, 6, 8, '프론트엔드', 'mino');
+values (98, 8, 6, '프론트엔드', 'mino');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (99, 6, 9, '프론트엔드', 'mino');
+values (99, 9, 6, '프론트엔드', 'mino');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (100, 6, 10, '프론트엔드', 'mino');
+values (100, 10, 6, '프론트엔드', 'mino');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (101, 7, 1, '프론트엔드', 'jong');
+values (101, 1, 7, '프론트엔드', 'jong');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (102, 7, 2, '프론트엔드', 'jong');
+values (102, 2, 7, '프론트엔드', 'jong');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (103, 7, 3, '프론트엔드', 'jong');
+values (103, 3, 7, '프론트엔드', 'jong');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (104, 7, 4, '프론트엔드', 'jong');
+values (104, 4, 7, '프론트엔드', 'jong');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (105, 7, 5, '프론트엔드', 'jong');
+values (105, 5, 7, '프론트엔드', 'jong');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (106, 7, 6, '프론트엔드', 'jong');
+values (106, 6, 7, '프론트엔드', 'jong');
 insert into project_member(id, project_id, user_id, role, nickname)
 values (107, 7, 7, '프론트엔드', 'jong');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (108, 7, 8, '프론트엔드', 'jong');
+values (108, 8, 7, '프론트엔드', 'jong');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (109, 7, 9, '프론트엔드', 'jong');
+values (109, 9, 7, '프론트엔드', 'jong');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (110, 7, 10, '프론트엔드', 'jong');
+values (110, 10, 7, '프론트엔드', 'jong');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (111, 8, 1, '백엔드', 'Yen');
+values (111, 1, 8, '백엔드', 'Yen');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (112, 8, 2, '백엔드', 'Yen');
+values (112, 2, 8, '백엔드', 'Yen');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (113, 8, 3, '백엔드', 'Yen');
+values (113, 3, 8, '백엔드', 'Yen');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (114, 8, 4, '백엔드', 'Yen');
+values (114, 4, 8, '백엔드', 'Yen');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (115, 8, 5, '백엔드', 'Yen');
+values (115, 5, 8, '백엔드', 'Yen');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (116, 8, 6, '백엔드', 'Yen');
+values (116, 6, 8, '백엔드', 'Yen');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (117, 8, 7, '백엔드', 'Yen');
+values (117, 7, 8, '백엔드', 'Yen');
 insert into project_member(id, project_id, user_id, role, nickname)
 values (118, 8, 8, '백엔드', 'Yen');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (119, 8, 9, '백엔드', 'Yen');
+values (119, 9, 8, '백엔드', 'Yen');
 insert into project_member(id, project_id, user_id, role, nickname)
-values (120, 8, 10, '백엔드', 'Yen');
+values (120, 10, 8, '백엔드', 'Yen');
 
 -- FILE
 insert into files(id, project_id, type, url)
