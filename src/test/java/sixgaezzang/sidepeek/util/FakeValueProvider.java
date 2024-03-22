@@ -14,7 +14,9 @@ import static sixgaezzang.sidepeek.users.util.UserConstant.MAX_NICKNAME_LENGTH;
 import java.util.ArrayList;
 import java.util.List;
 import net.datafaker.Faker;
+import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.projects.domain.UserProjectSearchType;
+import sixgaezzang.sidepeek.projects.dto.request.SaveMemberRequest;
 
 public class FakeValueProvider {
 
@@ -83,6 +85,13 @@ public class FakeValueProvider {
         return FAKER.text().text(10, MAX_SKILL_NAME_LENGTH);
     }
 
+    public static int getSkillCountByCategory(List<SaveTechStackRequest> techStacks) {
+        return (int) techStacks.stream()
+            .map(SaveTechStackRequest::category)
+            .distinct()
+            .count();
+    }
+
     // Member
     public static String createRole() {
         return checkAndCutLength(FAKER.job().position(), MAX_ROLE_LENGTH);
@@ -98,6 +107,13 @@ public class FakeValueProvider {
 
     public static String createPassword() {
         return FAKER.internet().password(8, 100, true, true, true);
+    }
+
+    public static int getMemberCountByRole(List<SaveMemberRequest> members) {
+        return (int) members.stream()
+            .map(SaveMemberRequest::role)
+            .distinct()
+            .count();
     }
 
     // Comment

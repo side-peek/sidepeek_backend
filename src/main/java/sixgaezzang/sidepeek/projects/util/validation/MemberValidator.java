@@ -5,8 +5,10 @@ import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.valida
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateKeyDuplicate;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateMaxLength;
 import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateNotBlank;
+import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.validateNotNull;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_DUPLICATED;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_EMPTY;
+import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_IS_NULL;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_NOT_INCLUDE_OWNER;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.MEMBER_OVER_MAX_COUNT;
 import static sixgaezzang.sidepeek.projects.exception.message.MemberErrorMessage.ROLE_IS_NULL;
@@ -38,6 +40,7 @@ public final class MemberValidator {
 
     // Required
     public static void validateSaveMemberRequest(SaveMemberRequest member) {
+        validateNotNull(member, MEMBER_IS_NULL);
         validateNickname(member.nickname());
         validateRole(member.role());
     }
