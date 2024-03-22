@@ -118,7 +118,7 @@ public record SaveProjectRequest(
 
     @Schema(description = OVERVIEW_IMAGE_URLS_DESCRIPTION, example = "[\"https://sidepeek.image/img1.jpg\"]")
     @Size(max = MAX_OVERVIEW_IMAGE_COUNT, message = OVERVIEW_IMAGE_OVER_MAX_COUNT)
-    List<String> overviewImageUrls,
+    List<String> overviewImageUrl,
 
     @Schema(description = MEMBER_DESCRIPTION)
     @Size(max = MAX_MEMBER_COUNT, message = MEMBER_OVER_MAX_COUNT)

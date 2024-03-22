@@ -69,7 +69,7 @@ public class ProjectService {
 
         List<ProjectSkillSummary> techStacks = projectSkillService.cleanAndSaveAll(project, request.techStacks());
         List<MemberSummary> members = memberService.cleanAndSaveAll(project, request.members());
-        List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project, request.overviewImageUrls());
+        List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project, request.overviewImageUrl());
 
         return ProjectResponse.from(project, overviewImages, techStacks, members, Collections.emptyList(), null);
     }
@@ -153,7 +153,7 @@ public class ProjectService {
 
         List<ProjectSkillSummary> techStacks = projectSkillService.cleanAndSaveAll(project, request.techStacks());
         List<MemberSummary> members = memberService.cleanAndSaveAll(project, request.members());
-        List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project, request.overviewImageUrls());
+        List<OverviewImageSummary> overviewImages = fileService.cleanAndSaveAll(project, request.overviewImageUrl());
 
         List<CommentResponse> comments = commentService.findAll(loginId, project);
 
