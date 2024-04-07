@@ -20,9 +20,9 @@ import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.config.properties.S3Properties;
 import sixgaezzang.sidepeek.media.dto.response.MediaUploadResponse;
 import sixgaezzang.sidepeek.users.domain.User;
@@ -150,7 +150,7 @@ class MediaServiceTest {
             ThrowingCallable upload = () -> mediaService.uploadFile(null, file);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(upload)
+            assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(upload)
                 .withMessage(LOGIN_IS_REQUIRED);
         }
 

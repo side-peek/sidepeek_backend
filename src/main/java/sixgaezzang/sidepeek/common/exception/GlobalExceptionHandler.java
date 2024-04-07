@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -100,17 +101,6 @@ public class GlobalExceptionHandler {
             .body(errorResponse);
     }
 
-    @ExceptionHandler(InvalidAuthenticationException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidAuthenticationException(
-        InvalidAuthenticationException e) {
-        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage());
-        log.warn(e.getMessage(), e.fillInStackTrace());
-        Sentry.captureException(e);
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(errorResponse);
-    }
-
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
         HttpMessageNotReadableException e) {
@@ -119,6 +109,17 @@ public class GlobalExceptionHandler {
         log.debug(e.getMessage(), e.fillInStackTrace());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(errorResponse);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(
+        BadCredentialsException e) {
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage());
+        log.warn(e.getMessage(), e.fillInStackTrace());
+        Sentry.captureException(e);
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(errorResponse);
     }
 

@@ -1,5 +1,8 @@
 package sixgaezzang.sidepeek.auth.jwt;
 
+import static sixgaezzang.sidepeek.auth.exception.message.AuthErrorMessage.TOKEN_IS_EXPIRED;
+import static sixgaezzang.sidepeek.auth.exception.message.AuthErrorMessage.TOKEN_IS_INVALID;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -69,9 +72,9 @@ public class JWTManager {
                 .parseClaimsJws(token)
                 .getBody();
         } catch (ExpiredJwtException e) {
-            throw new TokenValidationFailException("만료된 토큰입니다.");
+            throw new TokenValidationFailException(TOKEN_IS_EXPIRED);
         } catch (Exception e) {
-            throw new TokenValidationFailException("유효하지 않은 토큰입니다.");
+            throw new TokenValidationFailException(TOKEN_IS_INVALID);
         }
     }
 }

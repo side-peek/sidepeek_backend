@@ -21,8 +21,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.like.domain.Like;
 import sixgaezzang.sidepeek.like.dto.request.LikeRequest;
 import sixgaezzang.sidepeek.like.dto.response.LikeResponse;
@@ -105,7 +105,7 @@ class LikeServiceTest {
             ThrowingCallable save = () -> likeService.save(null, request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(save)
+            assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(save)
                 .withMessage(LOGIN_IS_REQUIRED);
         }
 
@@ -192,7 +192,7 @@ class LikeServiceTest {
             ThrowingCallable delete = () -> likeService.delete(null, existingLike.getId());
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(delete)
+            assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(delete)
                 .withMessage(LOGIN_IS_REQUIRED);
         }
 

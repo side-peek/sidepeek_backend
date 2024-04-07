@@ -40,9 +40,9 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.users.domain.Password;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.request.SignUpRequest;
@@ -364,7 +364,7 @@ class UserServiceTest {
                 request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(
+            assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(
                     updateProfile)
                 .withMessage(LOGIN_IS_REQUIRED);
         }
@@ -379,7 +379,7 @@ class UserServiceTest {
                 user.getId(), request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(
+            assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(
                     updateProfile)
                 .withMessage(USER_ID_NOT_EQUALS_LOGIN_ID);
         }
@@ -536,7 +536,7 @@ class UserServiceTest {
                 user.getId(), request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(
+            assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(
                     updatePassword)
                 .withMessage(USER_ID_NOT_EQUALS_LOGIN_ID);
         }
@@ -553,7 +553,7 @@ class UserServiceTest {
                 request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(
+            assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(
                     updatePassword)
                 .withMessage(LOGIN_IS_REQUIRED);
         }

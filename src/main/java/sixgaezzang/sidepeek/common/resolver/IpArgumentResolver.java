@@ -7,7 +7,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import sixgaezzang.sidepeek.common.annotation.Ip;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 
 public class IpArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -24,7 +23,7 @@ public class IpArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(
         MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
         WebDataBinderFactory binderFactory
-    ) throws InvalidAuthenticationException {
+    ) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String ip = request.getHeader("X-Forwarded-For");   // 클라이언트가 서버로 전달되는 IP 주소를 포함
 
