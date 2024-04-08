@@ -95,7 +95,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoResourceFoundException(
         NoResourceFoundException e) {
-        String errorMessage = e.getHttpMethod() + " /" + e.getResourcePath() + "요청은 정의되지 않아 응답할 수 없습니다.";
+        String errorMessage = e.getHttpMethod() + " /" + e.getResourcePath() + " 요청은 정의되지 않아 응답할 수 없습니다.";
         ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.NOT_ACCEPTABLE, errorMessage);
         log.debug(e.getMessage(), e.fillInStackTrace());
 
