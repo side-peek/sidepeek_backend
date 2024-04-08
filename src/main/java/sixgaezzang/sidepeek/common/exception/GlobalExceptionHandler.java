@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import sixgaezzang.sidepeek.common.util.component.SlackClient;
 
 @RestControllerAdvice
@@ -91,6 +92,17 @@ public class GlobalExceptionHandler {
             .body(errorResponse);
     }
 
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(
+        NoResourceFoundException e) {
+        String errorMessage = e.getHttpMethod() + " " + e.getResourcePath() + "라는 요청은 유효하지 않습니다.";
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST, errorMessage);
+        log.debug(e.getMessage(), e.fillInStackTrace());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(errorResponse);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
         IllegalArgumentException e) {
@@ -113,13 +125,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorResponse> handleAuthenticationException(
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(
         BadCredentialsException e) {
-        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage());
         log.warn(e.getMessage(), e.fillInStackTrace());
         Sentry.captureException(e);
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(errorResponse);
     }
 
