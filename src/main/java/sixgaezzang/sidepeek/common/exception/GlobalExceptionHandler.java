@@ -13,12 +13,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import sixgaezzang.sidepeek.common.util.component.SlackClient;
 
 @RestControllerAdvice
@@ -90,6 +92,17 @@ public class GlobalExceptionHandler {
             .body(errorResponse);
     }
 
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(
+        NoResourceFoundException e) {
+        String errorMessage = e.getHttpMethod() + " /" + e.getResourcePath() + " 요청은 정의되지 않아 응답할 수 없습니다.";
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.NOT_ACCEPTABLE, errorMessage);
+        log.debug(e.getMessage(), e.fillInStackTrace());
+
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+            .body(errorResponse);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
         IllegalArgumentException e) {
@@ -97,17 +110,6 @@ public class GlobalExceptionHandler {
         log.debug(e.getMessage(), e.fillInStackTrace());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(errorResponse);
-    }
-
-    @ExceptionHandler(InvalidAuthenticationException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidAuthenticationException(
-        InvalidAuthenticationException e) {
-        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage());
-        log.warn(e.getMessage(), e.fillInStackTrace());
-        Sentry.captureException(e);
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(errorResponse);
     }
 
@@ -119,6 +121,17 @@ public class GlobalExceptionHandler {
         log.debug(e.getMessage(), e.fillInStackTrace());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(errorResponse);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(
+        BadCredentialsException e) {
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage());
+        log.warn(e.getMessage(), e.fillInStackTrace());
+        Sentry.captureException(e);
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(errorResponse);
     }
 

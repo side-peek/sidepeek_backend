@@ -3,6 +3,7 @@ package sixgaezzang.sidepeek.auth.service;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static sixgaezzang.sidepeek.auth.domain.RefreshToken.MILLISECONDS_PER_SECOND;
+import static sixgaezzang.sidepeek.auth.exception.message.AuthErrorMessage.TOKEN_IS_INVALID;
 
 import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.auth.domain.RefreshToken;
 import sixgaezzang.sidepeek.auth.jwt.JWTManager;
 import sixgaezzang.sidepeek.auth.repository.RefreshTokenRepository;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.common.exception.TokenValidationFailException;
 
 @SpringBootTest
@@ -69,7 +69,7 @@ class RefreshTokenServiceTest {
 
             // then
             assertThatThrownBy(saven).isInstanceOf(TokenValidationFailException.class)
-                .hasMessage("유효하지 않은 토큰입니다.");
+                .hasMessage(TOKEN_IS_INVALID);
         }
     }
 
@@ -100,8 +100,8 @@ class RefreshTokenServiceTest {
             ThrowingCallable getById = () -> refreshTokenService.getById(userId);
 
             // then
-            assertThatThrownBy(getById).isInstanceOf(InvalidAuthenticationException.class)
-                .hasMessage("유효하지 않은 토큰입니다.");
+            assertThatThrownBy(getById).isInstanceOf(TokenValidationFailException.class)
+                .hasMessage(TOKEN_IS_INVALID);
         }
     }
 

@@ -18,7 +18,7 @@ import sixgaezzang.sidepeek.auth.dto.response.LoginResponse;
 import sixgaezzang.sidepeek.auth.jwt.JWTManager;
 import sixgaezzang.sidepeek.auth.repository.AuthProviderRepository;
 import sixgaezzang.sidepeek.common.annotation.Login;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
+import sixgaezzang.sidepeek.common.exception.TokenValidationFailException;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.dto.response.UserSummary;
 import sixgaezzang.sidepeek.users.repository.UserRepository;
@@ -85,7 +85,7 @@ public class AuthService {
 
     private void validateRefreshToken(String redisRefreshToken, String refreshToken) {
         if (!redisRefreshToken.equals(refreshToken)) {
-            throw new InvalidAuthenticationException(TOKEN_IS_INVALID);
+            throw new TokenValidationFailException(TOKEN_IS_INVALID);
         }
     }
 }

@@ -25,12 +25,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.comments.dto.request.SaveCommentRequest;
 import sixgaezzang.sidepeek.comments.dto.request.UpdateCommentRequest;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.projects.domain.Project;
 import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.projects.service.ProjectService;
@@ -271,7 +271,7 @@ class CommentServiceTest {
             ThrowableAssert.ThrowingCallable save = () -> commentService.save(null, request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(save)
+            assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(save)
                 .withMessage(LOGIN_IS_REQUIRED);
         }
 
@@ -285,7 +285,7 @@ class CommentServiceTest {
             ThrowableAssert.ThrowingCallable save = () -> commentService.save(null, request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(save)
+            assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(save)
                 .withMessage(LOGIN_IS_REQUIRED);
         }
 
@@ -384,7 +384,7 @@ class CommentServiceTest {
                 null, comment.getId(), request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(update)
+            assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(update)
                 .withMessage(LOGIN_IS_REQUIRED);
         }
 
@@ -490,7 +490,7 @@ class CommentServiceTest {
                 null, comment.getId());
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(delete)
+            assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(delete)
                 .withMessage(LOGIN_IS_REQUIRED);
         }
 
