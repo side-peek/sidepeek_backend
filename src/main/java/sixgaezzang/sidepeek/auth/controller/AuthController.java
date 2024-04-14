@@ -3,9 +3,11 @@ package sixgaezzang.sidepeek.auth.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import sixgaezzang.sidepeek.auth.dto.request.LoginRequest;
 import sixgaezzang.sidepeek.auth.dto.request.ReissueTokenRequest;
@@ -26,6 +28,15 @@ public class AuthController implements AuthControllerDoc {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
         LoginResponse response = authService.login(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @PostMapping("/login/{provider}")
+    public ResponseEntity<LoginResponse> socialLogin(@PathVariable String provider,
+        @RequestParam String code) {
+        LoginResponse response = authService.socialLogin(provider, code);
 
         return ResponseEntity.ok(response);
     }

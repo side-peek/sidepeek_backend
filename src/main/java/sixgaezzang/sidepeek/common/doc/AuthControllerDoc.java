@@ -13,6 +13,7 @@ import static sixgaezzang.sidepeek.common.doc.response.error.ErrorResponseDoc.UN
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,6 +42,21 @@ public interface AuthControllerDoc {
             content = @Content(examples = @ExampleObject(value = NOT_FOUND_RESPONSE)))
     })
     ResponseEntity<LoginResponse> login(LoginRequest request);
+
+    @Operation(summary = "소셜 로그인")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = OK_DESCRIPTION,
+            useReturnTypeSchema = true),
+        @ApiResponse(responseCode = "400", description = BAD_REQUEST_DESCRIPTION,
+            content = @Content(examples = {
+                @ExampleObject(name = "Example1: One Field Error", description = BAD_REQUEST_DESCRIPTION1,
+                    value = BAD_REQUEST_RESPONSE1),
+                @ExampleObject(name = "Example2: Multiple Field Error", description = BAD_REQUEST_DESCRIPTION2,
+                    value = BAD_REQUEST_RESPONSE2)}))
+    })
+    @Parameter(name = "provider", description = "소셜 로그인 타입(github, kako, google)", in = ParameterIn.PATH)
+    @Parameter(name = "code", description = "인가 코드", in = ParameterIn.QUERY)
+    ResponseEntity<LoginResponse> socialLogin(String provider, String code);
 
     @Operation(summary = "Access Token 검증", description = "Access Token을 통해 현재 로그인 된 사용자의 정보 요청")
     @ApiResponses({
