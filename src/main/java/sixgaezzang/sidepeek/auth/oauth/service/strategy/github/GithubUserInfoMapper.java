@@ -1,13 +1,11 @@
-package sixgaezzang.sidepeek.auth.oauth.service.strategy;
+package sixgaezzang.sidepeek.auth.oauth.service.strategy.github;
 
 import static java.util.Objects.isNull;
 
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
+import sixgaezzang.sidepeek.auth.oauth.service.strategy.UserInfoMapper;
 import sixgaezzang.sidepeek.users.domain.User;
-import sixgaezzang.sidepeek.users.service.UserService;
 
-@RequiredArgsConstructor
 public class GithubUserInfoMapper implements UserInfoMapper {
 
     private static final String ATTRIBUTE_ID = "id";
@@ -16,8 +14,6 @@ public class GithubUserInfoMapper implements UserInfoMapper {
     private static final String ATTRIBUTE_GITHUB_URL = "html_url";
     private static final String ATTRIBUTE_BLOG_URL = "blog";
     private static final String ATTRIBUTE_PROFILE_IMAGE_URL = "avatar_url";
-
-    private final UserService userService;
 
     @Override
     public User mapToUser(Map<String, Object> attributes) {
@@ -43,7 +39,7 @@ public class GithubUserInfoMapper implements UserInfoMapper {
     private String getEmail(Map<String, Object> attributes) {
         String email = getAttribute(attributes, ATTRIBUTE_EMAIL);
 
-        if (isNull(email) || userService.checkEmailDuplicate(email).isDuplicated()) {
+        if (isNull(email)) {
             return null;
         }
 
@@ -53,7 +49,7 @@ public class GithubUserInfoMapper implements UserInfoMapper {
     private String getNickname(Map<String, Object> attributes) {
         String nickname = getAttribute(attributes, ATTRIBUTE_NICKNAME);
 
-        if (isNull(nickname) || userService.checkNicknameDuplicate(nickname).isDuplicated()) {
+        if (isNull(nickname)) {
             return null;
         }
 
