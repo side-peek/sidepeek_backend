@@ -18,9 +18,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import sixgaezzang.sidepeek.auth.filter.AuthExceptionHandlerFilter;
 import sixgaezzang.sidepeek.auth.filter.JWTValidationFilter;
-import sixgaezzang.sidepeek.auth.oauth.handler.OAuth2LoginFailureHandler;
-import sixgaezzang.sidepeek.auth.oauth.handler.OAuth2LoginSuccessHandler;
-import sixgaezzang.sidepeek.auth.oauth.service.OAuth2UserServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -29,10 +26,7 @@ import sixgaezzang.sidepeek.auth.oauth.service.OAuth2UserServiceImpl;
 public class SecurityConfig {
 
     private final JWTValidationFilter jwtValidationFilter;
-    private final OAuth2UserServiceImpl oauth2UserServiceImpl;
     private final AuthExceptionHandlerFilter authExceptionHandlerFilter;
-    private final OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
-    private final OAuth2LoginFailureHandler oauth2LoginFailureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -46,13 +40,7 @@ public class SecurityConfig {
             .logout(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
             .addFilterBefore(jwtValidationFilter, BasicAuthenticationFilter.class)
-            .addFilterBefore(authExceptionHandlerFilter, JWTValidationFilter.class)
-            .oauth2Login(oauth2 -> oauth2
-                .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
-                    .userService(oauth2UserServiceImpl))
-                .successHandler(oauth2LoginSuccessHandler)
-                .failureHandler(oauth2LoginFailureHandler)
-            );
+            .addFilterBefore(authExceptionHandlerFilter, JWTValidationFilter.class);
 
         return httpSecurity.build();
     }
