@@ -13,5 +13,5 @@ public class AuthErrorMessage {
     public static final String TOKEN_IS_INVALID = "유효하지 않은 토큰입니다.";
     public static final String PASSWORD_NOT_MATCH = "비밀번호가 일치하지 않습니다.";
     public static final String OAUTH_USER_TYPE_IS_INVALID = "유효하지 않은 OAuth 사용자 타입입니다.";
-
+    public static final String OAUTH_CREDENTIALS_IS_INVALID = "유효하지 않은 사용자의 인증 정보입니다.";
 }
