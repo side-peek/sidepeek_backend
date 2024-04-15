@@ -9,13 +9,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.flywaydb.core.internal.util.StringUtils;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import sixgaezzang.sidepeek.auth.jwt.JWTManager;
+import sixgaezzang.sidepeek.common.exception.TokenValidationFailException;
 
 @Component
 @RequiredArgsConstructor
@@ -39,7 +39,7 @@ public class JWTValidationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (Exception e) {
-                throw new BadCredentialsException(TOKEN_IS_INVALID);
+                throw new TokenValidationFailException(TOKEN_IS_INVALID);
             }
         }
 

@@ -26,8 +26,8 @@ import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.util.Assert;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ValidationUtils {
@@ -41,7 +41,7 @@ public final class ValidationUtils {
 
     public static void validateLoginId(Long loginId) {
         if (Objects.isNull(loginId)) {
-            throw new InvalidAuthenticationException(LOGIN_IS_REQUIRED);
+            throw new BadCredentialsException(LOGIN_IS_REQUIRED);
         }
     }
 

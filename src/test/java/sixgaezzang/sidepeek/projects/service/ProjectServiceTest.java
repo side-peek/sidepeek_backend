@@ -57,13 +57,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.domain.Comment;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.repository.CommentRepository;
 import sixgaezzang.sidepeek.common.dto.request.SaveTechStackRequest;
 import sixgaezzang.sidepeek.common.dto.response.Page;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.common.util.component.DateTimeProvider;
 import sixgaezzang.sidepeek.like.domain.Like;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
@@ -432,7 +432,7 @@ class ProjectServiceTest {
                 UserProjectSearchType.LIKED, Pageable.ofSize(defaultPageSize));
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(findByUser)
+            assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(findByUser)
                 .withMessage(LOGIN_IS_REQUIRED);
         }
 
@@ -443,7 +443,7 @@ class ProjectServiceTest {
                 UserProjectSearchType.COMMENTED, Pageable.ofSize(defaultPageSize));
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(findByUser)
+            assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(findByUser)
                 .withMessage(LOGIN_IS_REQUIRED);
         }
 
@@ -459,7 +459,7 @@ class ProjectServiceTest {
                 UserProjectSearchType.LIKED, Pageable.ofSize(defaultPageSize));
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(findByUser)
+            assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(findByUser)
                 .withMessage(USER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
@@ -475,7 +475,7 @@ class ProjectServiceTest {
                 UserProjectSearchType.COMMENTED, Pageable.ofSize(defaultPageSize));
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(findByUser)
+            assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(findByUser)
                 .withMessage(USER_ID_NOT_EQUALS_LOGIN_ID);
         }
 
@@ -636,7 +636,7 @@ class ProjectServiceTest {
             ThrowingCallable save = () -> projectService.save(null, request);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(save)
+            assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(save)
                 .withMessage(LOGIN_IS_REQUIRED);
         }
 
@@ -711,7 +711,7 @@ class ProjectServiceTest {
                 newRequest);
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(update)
+            assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(update)
                 .withMessage(LOGIN_IS_REQUIRED);
         }
 
@@ -739,7 +739,7 @@ class ProjectServiceTest {
                     originalProject.id(), newRequest);
 
                 // then
-                assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(update)
+                assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(update)
                     .withMessage(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE);
             });
         }
@@ -777,7 +777,7 @@ class ProjectServiceTest {
             ThrowingCallable delete = () -> projectService.delete(null, project.id());
 
             // then
-            assertThatExceptionOfType(InvalidAuthenticationException.class).isThrownBy(delete)
+            assertThatExceptionOfType(BadCredentialsException.class).isThrownBy(delete)
                 .withMessage(LOGIN_IS_REQUIRED);
         }
 

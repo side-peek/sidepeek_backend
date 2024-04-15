@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import sixgaezzang.sidepeek.auth.domain.RefreshToken;
 import sixgaezzang.sidepeek.auth.jwt.JWTManager;
 import sixgaezzang.sidepeek.auth.repository.RefreshTokenRepository;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
+import sixgaezzang.sidepeek.common.exception.TokenValidationFailException;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +26,6 @@ public class RefreshTokenService {
 
     public RefreshToken getById(Long userId) {
         return refreshTokenRepository.findById(userId)
-            .orElseThrow(() -> new InvalidAuthenticationException(TOKEN_IS_INVALID));
+            .orElseThrow(() -> new TokenValidationFailException(TOKEN_IS_INVALID));
     }
 }

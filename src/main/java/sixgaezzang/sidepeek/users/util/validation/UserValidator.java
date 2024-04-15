@@ -22,8 +22,8 @@ import io.micrometer.common.util.StringUtils;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.util.Assert;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.users.domain.User;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -43,7 +43,7 @@ public final class UserValidator {
         validateUserId(id);
 
         if (!Objects.equals(loginId, id)) {
-            throw new InvalidAuthenticationException(USER_ID_NOT_EQUALS_LOGIN_ID);
+            throw new AccessDeniedException(USER_ID_NOT_EQUALS_LOGIN_ID);
         }
     }
 

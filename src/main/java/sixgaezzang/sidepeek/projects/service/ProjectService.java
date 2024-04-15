@@ -20,12 +20,12 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sixgaezzang.sidepeek.comments.dto.response.CommentResponse;
 import sixgaezzang.sidepeek.comments.service.CommentService;
 import sixgaezzang.sidepeek.common.dto.response.Page;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 import sixgaezzang.sidepeek.common.util.component.DateTimeProvider;
 import sixgaezzang.sidepeek.like.repository.LikeRepository;
 import sixgaezzang.sidepeek.projects.domain.Project;
@@ -178,7 +178,7 @@ public class ProjectService {
     private void validateLoginUserIncludeMembers(Long loginId, Project project) {
         memberService.findFellowMemberByProject(loginId, project)
             .orElseThrow(
-                () -> new InvalidAuthenticationException(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE));
+                () -> new AccessDeniedException(ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE));
     }
 
     private List<Long> getLikedProjectIds(Long userId) {

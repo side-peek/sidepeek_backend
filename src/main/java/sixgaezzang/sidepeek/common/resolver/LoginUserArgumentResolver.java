@@ -8,7 +8,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import sixgaezzang.sidepeek.common.annotation.Login;
-import sixgaezzang.sidepeek.common.exception.InvalidAuthenticationException;
 
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -25,7 +24,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     public Object resolveArgument(
         MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
         WebDataBinderFactory binderFactory
-    ) throws InvalidAuthenticationException {
+    ) {
         Authentication authentication = SecurityContextHolder.getContext()
             .getAuthentication();
 
