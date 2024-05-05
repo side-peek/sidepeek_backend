@@ -113,8 +113,7 @@
 
 ## ERD
 
-> [!CAUTION]
-> 이미지 추가 필요
+![스크린샷 2024-05-04 223724](https://github.com/side-peek/sidepeek_backend/assets/85275893/d384b7a3-c941-4baf-83b8-64de5a2876ab)
 
 ## 트러블슈팅
 
