@@ -1,7 +1,9 @@
-![image](https://github.com/side-peek/sidepeek_backend/assets/85275893/bec19891-9987-49bc-a55c-a4edd83adf80)
+![image](https://github.com/side-peek/sidepeek_backend/assets/85275893/264774cd-f9e7-4351-9032-c7bea5d8b704)
 
 > [!NOTE]
-> 사이드픽(Side Peek)은 다른 개발자들의 사이드 프로젝트에서 인사이트를 얻고 싶은 개발자들을 위한 사이드 프로젝트 공유 플랫폼입니다.
+> 사이드픽 Backend 레포지토리입니다!
+
+[사이드픽(Side Peek)👀](https://www.sidepeek.site/)은 다른 개발자들의 사이드 프로젝트에서 인사이트를 얻고 싶은 개발자들을 위한 사이드 프로젝트 공유 플랫폼입니다.
 
 ## Backend 구성원
 
