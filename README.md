@@ -1,11 +1,15 @@
-![image](https://github.com/side-peek/sidepeek_backend/assets/85275893/264774cd-f9e7-4351-9032-c7bea5d8b704)
 
 > [!NOTE]
 > 사이드픽 Backend 레포지토리입니다!
 
+![image](https://github.com/side-peek/sidepeek_backend/assets/85275893/264774cd-f9e7-4351-9032-c7bea5d8b704)
+
 [사이드픽(Side Peek)👀](https://www.sidepeek.site/)은 다른 개발자들의 사이드 프로젝트에서 인사이트를 얻고 싶은 개발자들을 위한 사이드 프로젝트 공유 플랫폼입니다.
 
-## Backend 구성원
+## 구성원
+
+> [!IMPORTANT]
+> 총 3명의 구성원으로 2024년 2월 1일부터 백엔드 개발을 진행하고 있습니다.
 
 <table>
 <tr align="center">
@@ -30,10 +34,6 @@
 <td><a href="https://github.com/yenzip">@yenzip</a></td>
 </tr>
 </table>
-
-
-> [!IMPORTANT]
-> 총 3명의 구성원으로 2024년 2월 1일부터 백엔드 개발을 진행하고 있습니다.
 
 ## 팀 문화
 
