@@ -41,7 +41,13 @@
 > 팀 문화를 기반으로 팀원 간의 신뢰를 쌓으며 생산성을 높여왔습니다.
 
 1. 문제가 발생하면 해결방안 기록하고 공유하자🚨
-2. 혼자 고민해보고 안되면 빠르게 공유하자🫠
+
+- 팀 내에서 새로 배운 내용, 트러블 슈팅을 노션에 기록해서 공유하고 있어요.
+
+    <img src="https://github.com/side-peek/sidepeek_backend/assets/85275893/cbb37b88-0455-449e-a238-5cec076a531e" width="50%">
+
+3. 혼자 고민해보고 안되면 빠르게 공유하자🫠
+- 어떤 문제가 발생도 함께 해결하는 분위기를 만들었어요.
 
 ## 개발 컨벤션
 
@@ -59,40 +65,39 @@
 
 ## 기술 스택
 
-- JAVA 17
-- Spring Boot 3.2.2
-- Spring Security
-- Spring Data JPA
-- MySQL
-- Redis
-- Flyway
-- QueryDSL
-- AWS
-- Swagger
-- Data Faker
-- Docker
-- GiHub Action
-- Slack API
-- Sentry
+- **Language:** JAVA 17
+- **Server:** Spring Boot 3.2.2, Spring Security
+- **ORM:** Spring Data JPA, QueryDSL
+- **API Docs:** Swagger
+- **DB:** Flyway, MySQL, Redis
+- **Infra:** Docker, GiHub Action, Amazon EC2, S3, RDS, IAM, CodeDeploy
+- **Test:** JUnit5, Mockito, Data Faker
+- **Etc:** Slack API Client, Sentry
 
 ## 핵심 기능
 
 > [!CAUTION]
 > 내용 정리 필요
 
+### 게시글
 - 게시글
-    - 게시글 생성/수정/삭제
-    - 게시글 단건 조회
-    - 게시글 목록 조회 및 검색
-    - 댓글 생성/수정/삭제
-    - 댓글 조회
-    - 게시글 좋아요
+    - 생성
+    - 수정([@Sehee-Lee-01](https://github.com/Sehee-Lee-01))
+        - 
+    - 삭제
+    - 단건 조회
+    - 목록 조회 및 검색
+    - 좋아요
+- 댓글
+    - 생성
+    - 수정
+    - 삭제
 
-- 회원 정보
-    - 회원가입
-    - 로그인
-    - 프로필 수정
-    - 프로필 조회
+### 회원(사용자)
+- 회원가입
+- 로그인
+- 프로필 수정
+- 프로필 조회
 
 ## 아키텍쳐
 
@@ -111,14 +116,14 @@
         - PROD 환경은 서브넷 구성하여 RDS 외부 접근 제한
     - CodeDeploy 설정으로 CD 구현
 
-## ERD
-
-![스크린샷 2024-05-04 223724](https://github.com/side-peek/sidepeek_backend/assets/85275893/d384b7a3-c941-4baf-83b8-64de5a2876ab)
-
-## 트러블슈팅
+## 문제 해결트러블슈팅
 
 > [!CAUTION]
 > 각자 대표적인 트러블 슈팅 하나씩 작성해주세용!
+
+## ERD
+
+<img src="https://github.com/side-peek/sidepeek_backend/assets/85275893/d384b7a3-c941-4baf-83b8-64de5a2876ab" width="50%">
 
 ## API 목록
 
@@ -126,61 +131,61 @@
 
 | Method | PATH                     | 설명                       | 담당       |
 |--------|--------------------------|--------------------------|----------|
-| POST   | `/auth/reissue`          | Access/Refresh Token 재발급 | @uijin-j |
-| POST   | `/auth/me`               | Access Token 검증          | @uijin-j |
-| POST   | `/auth/login`            | 이메일 로그인(기본 로그인)          | @uijin-j |
-| POST   | `/auth/login/{provider}` | 소셜 로그인                   | @uijin-j |
+| POST   | `/auth/reissue`          | Access/Refresh Token 재발급 | [@uijin-j](https://github.com/uijin-j) |
+| POST   | `/auth/me`               | Access Token 검증          | [@uijin-j](https://github.com/uijin-j) |
+| POST   | `/auth/login`            | 이메일 로그인(기본 로그인)          | [@uijin-j](https://github.com/uijin-j) |
+| POST   | `/auth/login/{provider}` | 소셜 로그인                   | [@uijin-j](https://github.com/uijin-j) |
 
 ### 회원 API
 
 | Method | PATH                    | 설명                       | 담당            |
 |--------|-------------------------|--------------------------|---------------|
-| GET    | `/users/{id}`           | 회원 프로필 상세 정보 조회          | @Sehee-Lee-01 |
-| GET    | `/users/{id}/projects`  | 회원 관련 프로젝트 조회(참여/좋아요/댓글) | @uijin-j      |
-| GET    | `/users/nickname`       | 회원 닉네임 검색                | @Sehee-Lee-01 |
-| POST   | `/users`                | 회원 가입                    | @uijin-j      |
-| POST   | `/users/nickname/check` | 닉네임 중복 확인                | @uijin-j      |
-| POST   | `/users/email/check`    | 이메일 중복 확인                | @uijin-j      |
-| PUT    | `/users/{id}`           | 회원 프로필 상세 정보 수정          | @Sehee-Lee-01 |
-| PUT    | `/users/{id}/password`  | 비밀번호 수정                  | @uijin-j      |
+| GET    | `/users/{id}`           | 회원 프로필 상세 정보 조회          | [@Sehee-Lee-01](https://github.com/Sehee-Lee-01) |
+| GET    | `/users/{id}/projects`  | 회원 관련 프로젝트 조회(참여/좋아요/댓글) | [@uijin-j](https://github.com/uijin-j)      |
+| GET    | `/users/nickname`       | 회원 닉네임 검색                | [@Sehee-Lee-01](https://github.com/Sehee-Lee-01) |
+| POST   | `/users`                | 회원 가입                    | [@uijin-j](https://github.com/uijin-j)      |
+| POST   | `/users/nickname/check` | 닉네임 중복 확인                | [@uijin-j](https://github.com/uijin-j)      |
+| POST   | `/users/email/check`    | 이메일 중복 확인                | [@uijin-j](https://github.com/uijin-j)      |
+| PUT    | `/users/{id}`           | 회원 프로필 상세 정보 수정          | [@Sehee-Lee-01](https://github.com/Sehee-Lee-01) |
+| PUT    | `/users/{id}/password`  | 비밀번호 수정                  | [@uijin-j](https://github.com/uijin-j)     |
 
 ### 프로젝트(게시글) API
 
 | Method | PATH               | 설명                             | 담당            |
 |--------|--------------------|--------------------------------|---------------|
-| GET    | `/projects`        | 프로젝트 전체 조회(검색)                 | @yenzip       |
-| GET    | `/projects/{id}`   | 프로젝트 상세 조회(조회수, 좋아요 수, 댓글/대댓글) | @yenzip       |
-| GET    | `/projects/weekly` | 지난 주 인기 프로젝트 조회(최대 5개)         | @Sehee-Lee-01 |
-| POST   | `/projects`        | 프로젝트 생성                        | @Sehee-Lee-01 |
-| PUT    | `/projects`        | 프로젝트 수정                        | @Sehee-Lee-01 |
-| DELETE | `/projects`        | 프로젝트 삭제                        | @Sehee-Lee-01 |
+| GET    | `/projects`        | 프로젝트 전체 조회(검색)                 | [@yenzip](https://github.com/yenzip)       |
+| GET    | `/projects/{id}`   | 프로젝트 상세 조회(조회수, 좋아요 수, 댓글/대댓글) | [@yenzip](https://github.com/yenzip)       |
+| GET    | `/projects/weekly` | 지난 주 인기 프로젝트 조회(최대 5개)         | [@Sehee-Lee-01](https://github.com/Sehee-Lee-01) |
+| POST   | `/projects`        | 프로젝트 생성                        | [@Sehee-Lee-01](https://github.com/Sehee-Lee-01) |
+| PUT    | `/projects`        | 프로젝트 수정                        | [@Sehee-Lee-01](https://github.com/Sehee-Lee-01) |
+| DELETE | `/projects`        | 프로젝트 삭제                        | [@Sehee-Lee-01](https://github.com/Sehee-Lee-01) |
 
 ### 댓글 API
 
 | Method | PATH             | 설명    | 담당            |
 |--------|------------------|-------|---------------|
-| POST   | `/comments`      | 댓글 생성 | @Sehee-Lee-01 |
-| PUT    | `/comments/{id}` | 댓글 수정 | @Sehee-Lee-01 |
-| DELETE | `/comments/{id}` | 댓글 삭제 | @Sehee-Lee-01 |
+| POST   | `/comments`      | 댓글 생성 | [@Sehee-Lee-01](https://github.com/Sehee-Lee-01) |
+| PUT    | `/comments/{id}` | 댓글 수정 | [@Sehee-Lee-01](https://github.com/Sehee-Lee-01) |
+| DELETE | `/comments/{id}` | 댓글 삭제 | [@Sehee-Lee-01](https://github.com/Sehee-Lee-01) |
 
 ### 좋아요 API
 
 | Method | PATH          | 설명     | 담당      |
 |--------|---------------|--------|---------|
-| POST   | `/likes`      | 좋아요 생성 | @yenzip |
-| DELETE | `/likes/{id}` | 좋아요 삭제 | @yenzip |
+| POST   | `/likes`      | 좋아요 생성 | [@yenzip](https://github.com/yenzip) |
+| DELETE | `/likes/{id}` | 좋아요 삭제 | [@yenzip](https://github.com/yenzip) |
 
 ### 미디어(파일) API
 
 | Method | PATH     | 설명         | 담당            |
 |--------|----------|------------|---------------|
-| POST   | `/files` | 이미지 파일 업로드 | @Sehee-Lee-01 |
+| POST   | `/files` | 이미지 파일 업로드 | [@Sehee-Lee-01](https://github.com/Sehee-Lee-01) |
 
 ### 기술스택 API
 
 | Method | PATH      | 설명      | 담당            |
 |--------|-----------|---------|---------------|
-| GET    | `/skills` | 기술스택 검색 | @Sehee-Lee-01 |
+| GET    | `/skills` | 기술스택 검색 | [@Sehee-Lee-01](https://github.com/Sehee-Lee-01) |
 
 ## 관련 링크
 
