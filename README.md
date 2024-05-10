@@ -118,8 +118,8 @@
 
 ## 🏗️ 아키텍쳐
 
-> [!CAUTION]
-> 구조도 제작중
+<img src="https://github.com/side-peek/sidepeek_backend/assets/85275893/9247c6c6-831b-41f4-9bbf-8c5da1317b74" width="80%">
+
 
 ### **역할 분리, 가독성**에 초점을 두고 개발 진행
 - 외부 의존성 추가시 Config Class 정의
