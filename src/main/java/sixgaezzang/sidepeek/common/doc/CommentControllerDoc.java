@@ -28,6 +28,7 @@ import sixgaezzang.sidepeek.comments.dto.request.UpdateCommentRequest;
 
 @Tag(name = "Comment", description = "댓글 API")
 public interface CommentControllerDoc {
+
     @Operation(summary = "댓글 생성", description = "로그인 필수")
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = CREATED_DESCRIPTION),
@@ -59,7 +60,8 @@ public interface CommentControllerDoc {
             content = @Content(examples = @ExampleObject(value = NOT_FOUND_RESPONSE)))
     })
     @Parameter(name = "id", description = "수정할 댓글 식별자", example = "1", in = ParameterIn.PATH)
-    ResponseEntity<Void> update(@Parameter(hidden = true) Long loginId, Long commentId, UpdateCommentRequest request);
+    ResponseEntity<Void> update(@Parameter(hidden = true) Long loginId, Long commentId,
+        UpdateCommentRequest request);
 
     @Operation(summary = "댓글 삭제", description = "로그인 필수")
     @ApiResponses(value = {
