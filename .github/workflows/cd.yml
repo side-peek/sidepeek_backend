@@ -1,23 +1,10 @@
-name: SidePeek CI/CD with Gradle
+name: SidePeek CD with Gradle
 
 on:
     push:
         branches:
-            - main
+            - prod
             - dev
-    pull_request:
-        branches:
-            - main
-            - dev
-            - 'feat/**'
-            - 'fix/**'
-            - 'refactor/**'
-            - 'chore/**'
-
-permissions:
-    contents: read
-    checks: write
-    pull-requests: write
 
 jobs:
     build:
@@ -70,35 +57,6 @@ jobs:
 
             -   name: Build with Gradle
                 run: ./gradlew build
-
-            # CI
-            -   name: Test Jacoco Coverage Report
-                if: github.event_name == 'pull_request'
-                id: jacoco
-                uses: madrapps/jacoco-report@v1.6.1
-                with:
-                    title: 📝 Jacoco Test Coverage
-                    paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
-                    token: ${{ secrets.GITHUB_TOKEN }}
-                    min-coverage-overall: 80
-                    min-coverage-changed-files: 80
-
-            -   name: Test Checkstyle Report
-                if: github.event_name == 'pull_request'
-                uses: lcollins/checkstyle-github-action@v2.0.0
-                with:
-                    path: '**/build/reports/checkstyle/**.xml'
-                    title: 📝 Checkstyle report
-
-            -   name: Send Slack Notification
-                if: github.event_name == 'pull_request'
-                uses: 8398a7/action-slack@v3
-                with:
-                    status: ${{ job.status }}
-                    author_name: Github Action Test
-                    fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-                env:
-                    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
             # CD
             -   name: Make Zip File
