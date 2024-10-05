@@ -4,7 +4,10 @@
 > [!NOTE]
 > 사이드픽 Backend 레포지토리입니다!
 
-[사이드픽(Side Peek)👀](https://www.sidepeek.site/)은 다른 개발자들의 사이드 프로젝트에서 인사이트를 얻고 싶은 개발자들을 위한 사이드 프로젝트 공유 플랫폼입니다.
+<b>사이드픽(Side Peek)👀</b>은 다른 개발자들의 사이드 프로젝트에서 인사이트를 얻고 싶은 개발자들을 위한 사이드 프로젝트 공유 플랫폼입니다. 
+
+🔗 서비스 링크(현재는 접속❌): [https://www.sidepeek.site/](https://www.sidepeek.site/) </br>
+🔗 스웨거 링크: [http://15.165.135.134:8080/api/v1/swagger-ui/index.html](http://15.165.135.134:8080/api/v1/swagger-ui/index.html)
 
 ## 👥 구성원
 
