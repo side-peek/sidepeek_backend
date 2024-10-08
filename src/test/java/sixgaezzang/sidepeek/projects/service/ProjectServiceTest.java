@@ -41,6 +41,7 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import net.datafaker.Faker;
@@ -159,6 +160,7 @@ class ProjectServiceTest {
 
     private Like createAndSaveLike(Project project, User user) {
         Like newLike = createLike(user, project);
+        project.increaseLikeCount();
         return likeRepository.save(newLike);
     }
 
@@ -288,14 +290,16 @@ class ProjectServiceTest {
         void 최대_5개로_지난_주_인기_프로젝트_조회를_성공한다() {
             // given
             int overBannerProjectCount = BANNER_PROJECT_COUNT * 2;
-            for (int i = 0; i < overBannerProjectCount; i++) {
+            for (int i = 0; i < overBannerProjectCount;
+                i++) {  // 오늘 날짜로 프로젝트 생성 및 각 프로젝트 당 좋아요 1개 생성
                 Project project = createAndSaveProject(user);
                 User newUser = createAndSaveUser();
                 createAndSaveLike(project, newUser);
             }
 
+            given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday); // 조회 날짜를 다음 주 일요일로 설정
+
             // when
-            given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday);
             List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
 
             // then
@@ -304,28 +308,31 @@ class ProjectServiceTest {
 
         @Test
         void 좋아요를_많이_받은_순으로_지난_주_인기_프로젝트_조회를_성공한다() {
-            // TODO: project likeCount 반영 후 테스트 예정
-            //            // given
-            //            List<Project> projects = new ArrayList<>();
-            //            for (int i = 0; i < BANNER_PROJECT_COUNT; i++) {
-            //                Project project = createAndSaveProject(user);
-            //                projects.add(project);
-            //                for (int j = 0; j < i + 1; j++) {
-            //                    User newUser = createAndSaveUser();
-            //                    createAndSaveLike(project, newUser);
-            //                }
-            //            }
-            //            projects.sort(Comparator.comparing(Project::getLikeCount));
-            //            List<ProjectBannerResponse> expectResponses = projects.stream()
-            //                .map(ProjectBannerResponse::from)
-            //                .toList();
-            //
-            //            // when
-            //            given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday);
-            //            List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
-            //
-            //            // then
-            //            assertThat(responses).isEqualTo(expectResponses);
+            // given
+            List<Project> projects = new ArrayList<>();
+            for (int i = 0; i < BANNER_PROJECT_COUNT;
+                i++) { // 오늘 날짜로 프로젝트 생성 및 각 프로젝트 당 좋아요 i(1, 2...)개 생성
+                Project project = createAndSaveProject(user);
+                projects.add(project);
+                for (int j = 0; j < i + 1; j++) {
+                    User newUser = createAndSaveUser();
+                    createAndSaveLike(project, newUser);
+                }
+            }
+
+            projects.sort(Comparator.comparing(Project::getLikeCount).reversed());
+
+            List<ProjectBannerResponse> expectResponses = projects.stream() // 좋아요가 많은 순서대로 응답될 것을 예상
+                .map(ProjectBannerResponse::from)
+                .toList();
+
+            given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday);
+
+            // when
+            List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
+
+            // then
+            assertThat(responses).isEqualTo(expectResponses);
         }
 
         @Test
@@ -337,7 +344,6 @@ class ProjectServiceTest {
             // then
             assertThat(responses).isEmpty();
         }
-
     }
 
     @Nested
