@@ -5,8 +5,6 @@ import static sixgaezzang.sidepeek.common.util.validation.ValidationUtils.valida
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.ONLY_OWNER_AND_FELLOW_MEMBER_CAN_UPDATE;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.PROJECT_NOT_EXISTING;
 import static sixgaezzang.sidepeek.projects.exception.message.ProjectErrorMessage.USER_PROJECT_SEARCH_TYPE_IS_INVALID;
-import static sixgaezzang.sidepeek.projects.util.DateUtils.getEndDayOfLastWeek;
-import static sixgaezzang.sidepeek.projects.util.DateUtils.getStartDayOfLastWeek;
 import static sixgaezzang.sidepeek.projects.util.ProjectConstant.BANNER_PROJECT_COUNT;
 import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateLoginIdEqualsUserId;
 
@@ -42,6 +40,7 @@ import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
 import sixgaezzang.sidepeek.projects.repository.project.PopularProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
+import sixgaezzang.sidepeek.projects.util.DateUtils;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.service.UserService;
 
@@ -52,6 +51,7 @@ public class ProjectService {
 
     private final DateTimeProvider dateTimeProvider;
     private final ProjectRepository projectRepository;
+    private final PopularProjectRepository popularProjectRepository;
     private final UserService userService;
     private final ProjectSkillService projectSkillService;
     private final MemberService memberService;
@@ -117,8 +117,8 @@ public class ProjectService {
 
     public List<ProjectBannerResponse> findAllPopularLastWeek() {
         LocalDate today = dateTimeProvider.getCurrentDate();
-        LocalDate startDate = getStartDayOfLastWeek(today);
-        LocalDate endDate = getEndDayOfLastWeek(today);
+        LocalDate startDate = DateUtils.getStartDayOfLastWeek(today);
+        LocalDate endDate = DateUtils.getEndDayOfLastWeek(today);
 
         return popularProjectRepository.findRankBetweenPeriod(startDate, endDate,
             BANNER_PROJECT_COUNT);
