@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import sixgaezzang.sidepeek.projects.domain.Project;
 
-@Schema(description = "배너용 프로젝트 응답")
+@Schema(description = "인기 프로젝트 응답")
 @Builder
 public record ProjectBannerResponse(
     @Schema(description = "프로젝트 식별자", example = "1")
