@@ -11,6 +11,8 @@ import static sixgaezzang.sidepeek.users.util.validation.UserValidator.validateL
 import jakarta.persistence.EntityNotFoundException;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -38,6 +40,7 @@ import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectSummary;
 import sixgaezzang.sidepeek.projects.repository.project.PopularProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.projects.util.DateUtils;
@@ -59,6 +62,8 @@ public class ProjectService {
     private final LikeRepository likeRepository;
     private final CommentService commentService;
     private final RedisTemplate<String, String> redisTemplate;
+    private final PopularProjectCacheService popularProjectCacheService;
+
 
     @Transactional
     public ProjectResponse save(Long loginId, SaveProjectRequest request) {
@@ -119,15 +124,9 @@ public class ProjectService {
      * 지난 주 인기 프로젝트 조회
      */
     public ProjectBannerResponse findAllPopularLastWeek() {
-        LocalDate today = dateTimeProvider.getCurrentDate();
-        LocalDate startDate = DateUtils.getStartDayOfLastWeek(today);
-        LocalDate endDate = DateUtils.getEndDayOfLastWeek(today);
-
-        List<ProjectSummary> projects = popularProjectRepository.findRankBetweenPeriod(
-            startDate, endDate, BANNER_PROJECT_COUNT);
-        ProjectBannerResponse response = ProjectBannerResponse.from(projects);
-
-        return response;
+        // Step 1. 캐시 조회 -> Step 2. (캐시가 존재하지 않다면) DB에서 조회 후 캐시
+        return popularProjectCacheService.getPopularProjects()
+            .orElseGet(this::updateWeeklyPopularProjectsCache);
     }
 
     public Page<ProjectListResponse> findByUser(Long userId, Long loginId,
@@ -226,5 +225,22 @@ public class ProjectService {
             project.increaseViewCount();
             redisTemplate.opsForValue().set(viewCountKey, "ON", Duration.ofDays(1));
         }
+    }
+
+    private ProjectBannerResponse updateWeeklyPopularProjectsCache() {
+        // Step 1-2. 캐시가 존재하지 않거나 비어있다면 DB에서 조회
+        LocalDate today = dateTimeProvider.getCurrentDate();
+        LocalDate startDate = DateUtils.getStartDayOfLastWeek(today);
+        LocalDate endDate = DateUtils.getEndDayOfLastWeek(today);
+
+        List<ProjectSummary> projects = popularProjectRepository.findRankBetweenPeriod(
+            startDate, endDate, BANNER_PROJECT_COUNT);
+        ProjectBannerResponse response = ProjectBannerResponse.from(projects);
+
+        // Step 2. 응답 결과를 캐시에 저장 (이번주 일요일 자정까지 캐시 유효)
+        LocalDateTime expireTime = DateUtils.getLastDayOfWeek(today).atTime(LocalTime.MAX);
+        popularProjectCacheService.putPopularProjects(response, expireTime);
+
+        return response;
     }
 }
