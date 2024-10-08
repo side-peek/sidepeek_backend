@@ -40,6 +40,7 @@ import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectSkillSummary;
+import sixgaezzang.sidepeek.projects.repository.project.PopularProjectRepository;
 import sixgaezzang.sidepeek.projects.repository.project.ProjectRepository;
 import sixgaezzang.sidepeek.users.domain.User;
 import sixgaezzang.sidepeek.users.service.UserService;
@@ -119,7 +120,8 @@ public class ProjectService {
         LocalDate startDate = getStartDayOfLastWeek(today);
         LocalDate endDate = getEndDayOfLastWeek(today);
 
-        return projectRepository.findAllPopularOfPeriod(startDate, endDate, BANNER_PROJECT_COUNT);
+        return popularProjectRepository.findRankBetweenPeriod(startDate, endDate,
+            BANNER_PROJECT_COUNT);
     }
 
     public Page<ProjectListResponse> findByUser(Long userId, Long loginId,

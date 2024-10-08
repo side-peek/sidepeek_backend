@@ -8,13 +8,11 @@ import static sixgaezzang.sidepeek.projects.domain.member.QMember.member;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +25,6 @@ import sixgaezzang.sidepeek.projects.domain.QProject;
 import sixgaezzang.sidepeek.projects.dto.request.FindProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SortType;
 import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
-import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.users.domain.User;
 
@@ -172,27 +169,6 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
         return projects.stream()
             .map(project -> ProjectListResponse.from(project,
                 likedProjectIds.contains(project.getId())))
-            .toList();
-    }
-
-    @Override
-    public List<ProjectBannerResponse> findAllPopularOfPeriod(LocalDate startDate,
-        LocalDate endDate, int count) {
-        DateTemplate<LocalDate> createdAt = Expressions.dateTemplate(
-            LocalDate.class, "DATE_FORMAT({0}, {1})", like.createdAt, "%Y-%m-%d");
-
-        List<Project> projects = queryFactory
-            .select(project)
-            .from(like)
-            .join(like.project, project)
-            .where(createdAt.between(startDate, endDate))
-            .groupBy(project)
-            .orderBy(like.count().desc())
-            .limit(count)
-            .fetch();
-
-        return projects.stream()
-            .map(ProjectBannerResponse::from)
             .toList();
     }
 
