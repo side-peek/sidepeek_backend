@@ -2,7 +2,6 @@ package sixgaezzang.sidepeek.projects.controller;
 
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -77,8 +76,8 @@ public class ProjectController implements ProjectControllerDoc {
      */
     @Override
     @GetMapping("/weekly")
-    public ResponseEntity<List<ProjectBannerResponse>> getWeeklyPopular() {
-        List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
+    public ResponseEntity<ProjectBannerResponse> getWeeklyPopular() {
+        ProjectBannerResponse responses = projectService.findAllPopularLastWeek();
 
         return ResponseEntity.ok(responses);
     }

@@ -115,13 +115,19 @@ public class ProjectService {
         return ProjectResponse.from(project, overviewImages, techStacks, members, comments, likeId);
     }
 
-    public List<ProjectBannerResponse> findAllPopularLastWeek() {
+    /**
+     * 지난 주 인기 프로젝트 조회
+     */
+    public ProjectBannerResponse findAllPopularLastWeek() {
         LocalDate today = dateTimeProvider.getCurrentDate();
         LocalDate startDate = DateUtils.getStartDayOfLastWeek(today);
         LocalDate endDate = DateUtils.getEndDayOfLastWeek(today);
 
-        return popularProjectRepository.findRankBetweenPeriod(startDate, endDate,
-            BANNER_PROJECT_COUNT);
+        List<ProjectSummary> projects = popularProjectRepository.findRankBetweenPeriod(
+            startDate, endDate, BANNER_PROJECT_COUNT);
+        ProjectBannerResponse response = ProjectBannerResponse.from(projects);
+
+        return response;
     }
 
     public Page<ProjectListResponse> findByUser(Long userId, Long loginId,

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import sixgaezzang.sidepeek.projects.domain.Project;
-import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectSummary;
 
 @Repository
 public class QuerydslPopularProjectRepository implements PopularProjectRepository {
@@ -30,7 +30,7 @@ public class QuerydslPopularProjectRepository implements PopularProjectRepositor
      *  3. 최신 순
      */
     @Override
-    public List<ProjectBannerResponse> findRankBetweenPeriod(
+    public List<ProjectSummary> findRankBetweenPeriod(
         LocalDate startDate,
         LocalDate endDate,
         int count
@@ -49,7 +49,7 @@ public class QuerydslPopularProjectRepository implements PopularProjectRepositor
             .fetch();
 
         return projects.stream()
-            .map(ProjectBannerResponse::from)
+            .map(ProjectSummary::from)
             .toList();
     }
 }

@@ -77,6 +77,7 @@ import sixgaezzang.sidepeek.projects.dto.request.UpdateProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectResponse;
+import sixgaezzang.sidepeek.projects.dto.response.ProjectSummary;
 import sixgaezzang.sidepeek.projects.repository.FileRepository;
 import sixgaezzang.sidepeek.projects.repository.MemberRepository;
 import sixgaezzang.sidepeek.projects.repository.ProjectSkillRepository;
@@ -300,10 +301,10 @@ class ProjectServiceTest {
             given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday); // 조회 날짜를 다음 주 일요일로 설정
 
             // when
-            List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
+            ProjectBannerResponse responses = projectService.findAllPopularLastWeek();
 
             // then
-            assertThat(responses).hasSize(BANNER_PROJECT_COUNT);
+            assertThat(responses.projects()).hasSize(BANNER_PROJECT_COUNT);
         }
 
         @Test
@@ -322,27 +323,27 @@ class ProjectServiceTest {
 
             projects.sort(Comparator.comparing(Project::getLikeCount).reversed());
 
-            List<ProjectBannerResponse> expectResponses = projects.stream() // 좋아요가 많은 순서대로 응답될 것을 예상
-                .map(ProjectBannerResponse::from)
+            List<ProjectSummary> expectResponses = projects.stream() // 좋아요가 많은 순서대로 응답될 것을 예상
+                .map(ProjectSummary::from)
                 .toList();
 
             given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday);
 
             // when
-            List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
+            ProjectBannerResponse responses = projectService.findAllPopularLastWeek();
 
             // then
-            assertThat(responses).isEqualTo(expectResponses);
+            assertThat(responses.projects()).isEqualTo(expectResponses);
         }
 
         @Test
         void 지난_주에_좋아요_기록이_없어_빈_배열로_지난_주_인기_프로젝트_조회를_성공한다() {
             // given, when
             given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday);
-            List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
+            ProjectBannerResponse responses = projectService.findAllPopularLastWeek();
 
             // then
-            assertThat(responses).isEmpty();
+            assertThat(responses.projects()).isEmpty();
         }
     }
 
