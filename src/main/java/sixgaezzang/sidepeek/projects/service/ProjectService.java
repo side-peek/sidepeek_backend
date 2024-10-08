@@ -63,8 +63,7 @@ public class ProjectService {
     private final CommentService commentService;
     private final RedisTemplate<String, String> redisTemplate;
     private final PopularProjectCacheService popularProjectCacheService;
-
-
+    
     @Transactional
     public ProjectResponse save(Long loginId, SaveProjectRequest request) {
         validateLoginId(loginId);
