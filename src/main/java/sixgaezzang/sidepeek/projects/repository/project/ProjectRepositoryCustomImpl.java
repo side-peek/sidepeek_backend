@@ -113,6 +113,24 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             likedProjectIds);
     }
 
+    public BooleanExpression getSkillCondition(List<String> skillNames) {
+        if (Objects.isNull(skillNames) || skillNames.isEmpty()) {
+            return null;
+        }
+
+        // 프로젝트 ID 서브쿼리를 생성하여 스킬을 모두 포함하는 프로젝트를 찾기
+        JPAQuery<Long> projectHasSkillsSubQuery = queryFactory
+            .select(projectSkill.project.id)
+            .from(projectSkill)
+            .join(projectSkill.skill)
+            .where(projectSkill.skill.name.in(skillNames))
+            .groupBy(projectSkill.project.id)
+            .having(projectSkill.project.id.count().eq(Expressions.constant(skillNames.size())));
+
+        // 프로젝트 ID 서브쿼리와 매칭되는 프로젝트를 찾는 조건을 반환합니다.
+        return project.id.in(projectHasSkillsSubQuery);
+    }
+
     private Page<ProjectListResponse> findPageByCondition(EntityPathBase<?> from,
         QProject join, BooleanExpression condition, Pageable pageable,
         List<Long> likedProjectIds) {
@@ -200,24 +218,6 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
         String keyword = "%" + search.trim() + "%";
         return project.name.likeIgnoreCase(keyword)
             .or(member.nickname.likeIgnoreCase(keyword));
-    }
-
-    public BooleanExpression getSkillCondition(List<String> skillNames) {
-        if (Objects.isNull(skillNames) || skillNames.isEmpty()) {
-            return null;
-        }
-
-        // 프로젝트 ID 서브쿼리를 생성하여 스킬을 모두 포함하는 프로젝트를 찾기
-        JPAQuery<Long> projectHasSkillsSubQuery = queryFactory
-            .select(projectSkill.project.id)
-            .from(projectSkill)
-            .join(projectSkill.skill)
-            .where(projectSkill.skill.name.in(skillNames))
-            .groupBy(projectSkill.project.id)
-            .having(projectSkill.project.id.count().eq(Expressions.constant(skillNames.size())));
-
-        // 프로젝트 ID 서브쿼리와 매칭되는 프로젝트를 찾는 조건을 반환합니다.
-        return project.id.in(projectHasSkillsSubQuery);
     }
 
     private OrderSpecifier<?> getOrderSpecifier(SortType sort) {
