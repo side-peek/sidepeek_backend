@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Optional;
 import net.datafaker.Faker;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -57,6 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.transaction.annotation.Transactional;
@@ -134,6 +136,9 @@ class ProjectServiceTest {
 
     @Autowired
     FileRepository fileRepository;
+
+    @Autowired
+    RedisTemplate<String, String> redisTemplate;
 
     User user;
 
@@ -287,18 +292,25 @@ class ProjectServiceTest {
             nextSunday = today.with(TemporalAdjusters.next(DayOfWeek.SUNDAY));
         }
 
+        @AfterEach
+        void tearDown() {
+            redisTemplate.delete("popularProjectsLastWeek");
+        }
+
         @Test
         void 최대_5개로_지난_주_인기_프로젝트_조회를_성공한다() {
             // given
             int overBannerProjectCount = BANNER_PROJECT_COUNT * 2;
-            for (int i = 0; i < overBannerProjectCount;
-                i++) {  // 오늘 날짜로 프로젝트 생성 및 각 프로젝트 당 좋아요 1개 생성
+
+            // 오늘 날짜로 프로젝트 생성 및 각 프로젝트 당 좋아요 1개 생성
+            for (int i = 0; i < overBannerProjectCount; i++) {
                 Project project = createAndSaveProject(user);
                 User newUser = createAndSaveUser();
                 createAndSaveLike(project, newUser);
             }
 
-            given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday); // 조회 날짜를 다음 주 일요일로 설정
+            // 조회 날짜를 다음 주 일요일로 설정
+            given(dateTimeProvider.getCurrentDate()).willReturn(nextSunday);
 
             // when
             ProjectBannerResponse responses = projectService.findAllPopularLastWeek();
