@@ -1,0 +1,3 @@
+UPDATE project
+SET created_at = DATE_SUB(NOW(), INTERVAL 7 DAY)
+WHERE id BETWEEN 1 AND 50;
