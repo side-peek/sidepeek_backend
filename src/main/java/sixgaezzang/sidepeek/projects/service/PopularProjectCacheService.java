@@ -55,8 +55,6 @@ public class PopularProjectCacheService {
         // 현재 시각과 lastDayOfWeek 자정 사이의 차이를 계산
         Duration duration = Duration.between(now, expireTime);
 
-        log.info("캐시 만료 시간: {}", duration.getSeconds());
-
         return duration.getSeconds();
     }
 }
