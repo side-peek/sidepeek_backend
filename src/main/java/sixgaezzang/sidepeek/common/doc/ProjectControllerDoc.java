@@ -79,7 +79,7 @@ public interface ProjectControllerDoc {
         @ApiResponse(responseCode = "200", description = OK_DESCRIPTION,
             useReturnTypeSchema = true)
     })
-    ResponseEntity<List<ProjectBannerResponse>> getAllPopularThisWeek();
+    ResponseEntity<List<ProjectBannerResponse>> getWeeklyPopular();
 
     @Operation(summary = "프로젝트 수정", description = "작성자와 등록된 프로젝트 회원 멤버만 수정 가능, 로그인 필수")
     @ApiResponses({

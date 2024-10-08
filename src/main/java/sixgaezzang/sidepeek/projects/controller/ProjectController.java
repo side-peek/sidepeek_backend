@@ -72,9 +72,12 @@ public class ProjectController implements ProjectControllerDoc {
         return ResponseEntity.ok().body(responses);
     }
 
+    /**
+     * 지난 주 인기 프로젝트 조회 API
+     */
     @Override
     @GetMapping("/weekly")
-    public ResponseEntity<List<ProjectBannerResponse>> getAllPopularThisWeek() {
+    public ResponseEntity<List<ProjectBannerResponse>> getWeeklyPopular() {
         List<ProjectBannerResponse> responses = projectService.findAllPopularLastWeek();
 
         return ResponseEntity.ok(responses);
