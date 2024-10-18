@@ -8,13 +8,11 @@ import static sixgaezzang.sidepeek.projects.domain.member.QMember.member;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +25,6 @@ import sixgaezzang.sidepeek.projects.domain.QProject;
 import sixgaezzang.sidepeek.projects.dto.request.FindProjectRequest;
 import sixgaezzang.sidepeek.projects.dto.request.SortType;
 import sixgaezzang.sidepeek.projects.dto.response.CursorPaginationResponse;
-import sixgaezzang.sidepeek.projects.dto.response.ProjectBannerResponse;
 import sixgaezzang.sidepeek.projects.dto.response.ProjectListResponse;
 import sixgaezzang.sidepeek.users.domain.User;
 
@@ -116,6 +113,24 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             likedProjectIds);
     }
 
+    public BooleanExpression getSkillCondition(List<String> skillNames) {
+        if (Objects.isNull(skillNames) || skillNames.isEmpty()) {
+            return null;
+        }
+
+        // 프로젝트 ID 서브쿼리를 생성하여 스킬을 모두 포함하는 프로젝트를 찾기
+        JPAQuery<Long> projectHasSkillsSubQuery = queryFactory
+            .select(projectSkill.project.id)
+            .from(projectSkill)
+            .join(projectSkill.skill)
+            .where(projectSkill.skill.name.in(skillNames))
+            .groupBy(projectSkill.project.id)
+            .having(projectSkill.project.id.count().eq(Expressions.constant(skillNames.size())));
+
+        // 프로젝트 ID 서브쿼리와 매칭되는 프로젝트를 찾는 조건을 반환합니다.
+        return project.id.in(projectHasSkillsSubQuery);
+    }
+
     private Page<ProjectListResponse> findPageByCondition(EntityPathBase<?> from,
         QProject join, BooleanExpression condition, Pageable pageable,
         List<Long> likedProjectIds) {
@@ -175,27 +190,6 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
             .toList();
     }
 
-    @Override
-    public List<ProjectBannerResponse> findAllPopularOfPeriod(LocalDate startDate,
-        LocalDate endDate, int count) {
-        DateTemplate<LocalDate> createdAt = Expressions.dateTemplate(
-            LocalDate.class, "DATE_FORMAT({0}, {1})", like.createdAt, "%Y-%m-%d");
-
-        List<Project> projects = queryFactory
-            .select(project)
-            .from(like)
-            .join(like.project, project)
-            .where(createdAt.between(startDate, endDate))
-            .groupBy(project)
-            .orderBy(like.count().desc())
-            .limit(count)
-            .fetch();
-
-        return projects.stream()
-            .map(ProjectBannerResponse::from)
-            .toList();
-    }
-
     private BooleanExpression getCursorCondition(SortType sort, Long lastProjectId,
         Long lastOrderCount) {
         if (lastProjectId == null && lastOrderCount == null) {  // 첫 번째 페이지
@@ -224,24 +218,6 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
         String keyword = "%" + search.trim() + "%";
         return project.name.likeIgnoreCase(keyword)
             .or(member.nickname.likeIgnoreCase(keyword));
-    }
-
-    public BooleanExpression getSkillCondition(List<String> skillNames) {
-        if (Objects.isNull(skillNames) || skillNames.isEmpty()) {
-            return null;
-        }
-
-        // 프로젝트 ID 서브쿼리를 생성하여 스킬을 모두 포함하는 프로젝트를 찾기
-        JPAQuery<Long> projectHasSkillsSubQuery = queryFactory
-            .select(projectSkill.project.id)
-            .from(projectSkill)
-            .join(projectSkill.skill)
-            .where(projectSkill.skill.name.in(skillNames))
-            .groupBy(projectSkill.project.id)
-            .having(projectSkill.project.id.count().eq(Expressions.constant(skillNames.size())));
-
-        // 프로젝트 ID 서브쿼리와 매칭되는 프로젝트를 찾는 조건을 반환합니다.
-        return project.id.in(projectHasSkillsSubQuery);
     }
 
     private OrderSpecifier<?> getOrderSpecifier(SortType sort) {

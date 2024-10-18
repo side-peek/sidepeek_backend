@@ -24,7 +24,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import sixgaezzang.sidepeek.projects.dto.request.FindProjectRequest;
@@ -79,7 +78,7 @@ public interface ProjectControllerDoc {
         @ApiResponse(responseCode = "200", description = OK_DESCRIPTION,
             useReturnTypeSchema = true)
     })
-    ResponseEntity<List<ProjectBannerResponse>> getAllPopularThisWeek();
+    ResponseEntity<ProjectBannerResponse> getWeeklyPopular();
 
     @Operation(summary = "프로젝트 수정", description = "작성자와 등록된 프로젝트 회원 멤버만 수정 가능, 로그인 필수")
     @ApiResponses({

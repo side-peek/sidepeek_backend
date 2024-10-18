@@ -34,6 +34,18 @@ public final class DateUtils {
         return getNearestPastDayOfWeek(localDate, DayOfWeek.SUNDAY);
     }
 
+    public static LocalDate getLastDayOfWeek(LocalDate date) {
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+
+        // 오늘이 일요일이면 그대로 반환
+        if (dayOfWeek == DayOfWeek.SUNDAY) {
+            return date;
+        }
+
+        int daysUntilSunday = DayOfWeek.SUNDAY.getValue() - dayOfWeek.getValue();
+        return date.plusDays(daysUntilSunday); // 오늘로부터 일요일까지의 날짜를 더한다.
+    }
+
     /**
      * {@code  localDate} 기준으로 {@code  localDate}에 해당하는 요일인
      * 가장 가까운 과거 날짜를 찾는 메서드
@@ -44,5 +56,4 @@ public final class DateUtils {
     public static LocalDate getNearestPastDayOfWeek(LocalDate localDate, DayOfWeek dayOfWeek) {
         return localDate.with(TemporalAdjusters.previous(dayOfWeek));
     }
-
 }
